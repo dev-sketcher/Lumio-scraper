@@ -17,6 +17,10 @@ Each plugin should have:
 - `README.md`
 - `CHANGELOG.md`
 
+Optional when the plugin is ready for external runtime loading:
+
+- `dist/runtime.js`
+
 And each published plugin should also have an entry in the root `marketplace.json`.
 
 ## Release flow
@@ -27,8 +31,9 @@ Recommended flow:
 2. update the version in `plugins/<slug>/plugin.json`
 3. update the matching version in `marketplace.json`
 4. update `plugins/<slug>/CHANGELOG.md`
-5. commit and push
-6. create a GitHub release if you want ZIP-based distribution
+5. build and publish `dist/runtime.js` if this release includes executable runtime
+6. commit and push
+7. create a GitHub release if you want ZIP-based distribution
 
 ## Versioning
 
@@ -52,6 +57,8 @@ plugins/
     plugin.json
     README.md
     CHANGELOG.md
+    dist/
+      runtime.js
 ```
 
 Lumio can also read ZIPs that only contain plugin folders with `plugin.json`, but
@@ -67,6 +74,8 @@ plugins/
     plugin.json
     README.md
     CHANGELOG.md
+    dist/
+      runtime.js
 ```
 
 This is useful for:
@@ -113,6 +122,7 @@ Verify:
 - metadata is readable
 - version looks correct
 - README/changelog links resolve as expected
+- runtime bundle downloads only if the plugin explicitly publishes one
 
 ## GitHub source support
 

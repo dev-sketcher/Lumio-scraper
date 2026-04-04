@@ -14,6 +14,7 @@ the app.
 - focused on scraper-oriented and streaming-related plugins
 - works with Lumio's GitHub source flow
 - works with ZIP import and release assets
+- publishes metadata and docs now, with runtime bundles added plugin-by-plugin later
 - currently includes `streams-scraper`
 
 ## Quick start
@@ -30,6 +31,10 @@ https://github.com/dev-sketcher/Lumio-scraper
 
 4. Lumio reads `marketplace.json`
 5. Install the plugin you want from the discovered list
+
+At the moment this source publishes plugin metadata and install information.
+External runtime bundles can be added later per plugin when they are packaged
+for source-based loading.
 
 ### Or import a ZIP
 
@@ -55,6 +60,8 @@ That makes this repo useful for:
   Public plugin documentation.
 - `plugins/<slug>/CHANGELOG.md`
   Release notes per plugin.
+- `plugins/<slug>/dist/runtime.js` (optional)
+  Published runtime bundle when a plugin is ready for external runtime loading.
 - `docs/`
   Notes for maintainers and developers working on scraper plugins.
 
@@ -72,6 +79,9 @@ That means users can:
 - add the repo directly as a GitHub source
 - install from a release ZIP
 - keep scraper plugins separate from other plugin collections
+
+Runtime bundles are intentionally optional, so plugins can be published in a
+metadata-first state before their executable runtime is packaged for source installs.
 
 ## Compatibility with Lumio
 
@@ -132,6 +142,8 @@ Lumio-scraper.zip
       plugin.json
       README.md
       CHANGELOG.md
+      dist/
+        runtime.js
 ```
 
 That gives Lumio the cleanest import path.
@@ -166,6 +178,8 @@ streams-scraper.zip
       plugin.json
       README.md
       CHANGELOG.md
+      dist/
+        runtime.js
 ```
 
 Both can work, but the full source ZIP gives Lumio more context and is the

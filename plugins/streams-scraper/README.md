@@ -18,6 +18,10 @@ from a GitHub source or a compatible ZIP package.
 It is distributed from its own repository so it can evolve independently while
 still integrating cleanly with Lumio.
 
+Right now the repository publishes the plugin metadata and documentation needed
+for source discovery. A standalone external runtime bundle can be added later
+when the plugin is packaged for source-based execution as well.
+
 ## Install
 
 In Lumio:
