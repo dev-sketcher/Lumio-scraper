@@ -1,0 +1,22 @@
+{
+  "id": "lumio-scraper-source",
+  "name": "Lumio Scraper Plugins",
+  "description": "Dedicated source for scraper-oriented Lumio plugins.",
+  "repoUrl": "https://github.com/dev-sketcher/Lumio-scraper",
+  "plugins": [
+    {
+      "id": "com.lumio.streams-scraper",
+      "slug": "streams-scraper",
+      "name": "Streams Scraper",
+      "version": "1.0.0",
+      "description": "Adds streaming sources through multiple scraper backends and plugin-managed playback.",
+      "path": "plugins/streams-scraper",
+      "readmePath": "plugins/streams-scraper/README.md",
+      "changelogPath": "plugins/streams-scraper/CHANGELOG.md",
+      "official": false,
+      "bundled": false,
+      "removable": true
+    }
+  ]
+}
+
