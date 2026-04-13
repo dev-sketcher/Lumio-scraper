@@ -18,9 +18,14 @@ from a GitHub source or a compatible ZIP package.
 It is distributed from its own repository so it can evolve independently while
 still integrating cleanly with Lumio.
 
-Right now the repository publishes the plugin metadata and documentation needed
-for source discovery. A standalone external runtime bundle can be added later
-when the plugin is packaged for source-based execution as well.
+This plugin now contains two runtime slices:
+- scraper settings UI
+- playback capability checks for the main play button
+- scraper-provided download action
+
+The more sensitive stream sidebar and playback/provider pipeline still remain in
+Lumio core until they can be migrated behind safer stream-provider SDK
+contracts without breaking existing settings.
 
 ## Install
 
