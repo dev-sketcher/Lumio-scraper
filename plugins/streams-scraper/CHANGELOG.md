@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.8
+
+- Publishes a freshly minified runtime bundle for lower plugin-cache footprint.
+- Keeps full stream-provider/sidebar/playback contract behavior from 1.0.7.
+
 ## 1.0.7
 
 - Restores full stream-provider registration in external runtime (same sidebar contract and play flow as baseline).

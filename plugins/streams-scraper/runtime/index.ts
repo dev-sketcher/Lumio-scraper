@@ -8,7 +8,7 @@ import { StreamsSidebarSection } from '@/lib/plugins/streams-scraper/streams-sid
 export const StreamsScraperPlugin: LumioPlugin = {
   id: 'com.lumio.streams-scraper',
   name: { en: 'Streams Scraper', sv: 'Streams Scraper' },
-  version: '1.0.7',
+  version: '1.0.8',
   description: {
     en: 'Configure scraper-backed streaming sources through the plugin runtime.',
     sv: 'Konfigurera scraper-baserade streamkallor via pluginets runtime.',
