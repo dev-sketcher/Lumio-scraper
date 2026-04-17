@@ -3,15 +3,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { StreamResult } from '@/app/api/streams/route'
-import type { DownloadJob, MediaDownloadActionProps } from '@/lib/plugin-sdk'
+import type { DownloadJob } from '@/lib/download-manager'
+import type { MediaDownloadActionProps } from '@/lib/plugin-sdk'
+import { getPrimaryStreamProviderRequestContext, isPluginDesktopHost } from '@/lib/plugin-sdk'
 import {
   getPlaybackAccessKey,
   getPlaybackSourceInfo,
-  getPrimaryStreamProviderRequestContext,
   queueMagnetForPlayback,
   resolvePlaybackLink,
   selectPlaybackFiles,
-} from '@/lib/plugin-sdk'
+} from '@/lib/plugins/streams-scraper/playback/stream-provider-playback'
 
 interface RdStream {
   name: string
@@ -37,6 +38,18 @@ const VIDEO_EXTS = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i
 
 function sleep(ms: number) {
   return new Promise<void>((resolve) => setTimeout(resolve, ms))
+}
+
+function triggerBrowserDownload(url: string, filename?: string | null) {
+  if (typeof document === 'undefined') return
+  const anchor = document.createElement('a')
+  anchor.href = url
+  if (filename) anchor.download = filename
+  anchor.rel = 'noopener noreferrer'
+  anchor.target = '_blank'
+  document.body.appendChild(anchor)
+  anchor.click()
+  anchor.remove()
 }
 
 async function resolveDownloadFromStream(stream: StreamResult): Promise<{ url: string; filename: string }> {
@@ -172,6 +185,19 @@ export function StreamsScraperDetailsDownloadButton({ item, className }: MediaDo
   }
 
   async function handlePickStream(stream: StreamResult) {
+    if (!isPluginDesktopHost()) {
+      setState({ type: 'loading-streams' })
+      try {
+        const resolved = await resolveDownloadFromStream(stream)
+        triggerBrowserDownload(resolved.url, resolved.filename)
+        setState({ type: 'done', filename: resolved.filename })
+        timerRef.current = setTimeout(() => setState({ type: 'idle' }), 3000)
+      } catch (err) {
+        setState({ type: 'error', message: err instanceof Error ? err.message : 'Kunde inte starta nedladdning' })
+      }
+      return
+    }
+
     setState({ type: 'picking-folder', stream })
     try {
       const res = await fetch('/api/pick-folder', { method: 'POST' })

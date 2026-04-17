@@ -2,22 +2,24 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { Input, Select, SelectItem, Switch } from '@heroui/react'
+import { useLang } from '@/lib/i18n'
 import {
-  MF_QUALITY_CATEGORIES,
-  type CometOptions,
-  type CustomOptions,
-  type MediaFusionOptions,
-  type OrionOptions,
+  getStreamProviderConfigs,
+  setStreamProviderConfigs,
   type ScraperConfig,
-  type ScraperPresetId,
   type TorrentioOptions,
   type TorrentsDbOptions,
-  getScraperConfigs,
+  type CometOptions,
+  type MediaFusionOptions,
+  type OrionOptions,
+  type CustomOptions,
+  type ScraperPresetId,
+} from '@/lib/plugins/streams-scraper/stream-provider-settings'
+import { MF_QUALITY_CATEGORIES } from '@/lib/plugins/streams-scraper/stream-provider-url-builder'
+import {
   getStreamProviderAccessKey,
-  setScraperConfigs,
   setStreamProviderAccessKey,
-  useLang,
-} from '@/lib/plugin-sdk'
+} from '@/lib/plugins/streams-scraper/stream-provider-storage'
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -169,7 +171,7 @@ async function fetchScraperManifest(preset: ScraperPresetId, customUrl?: string)
   } else {
     params.set('preset', preset)
   }
-  const res = await fetch(`/api/scraper-manifest?${params.toString()}`)
+  const res = await fetch(`/api/plugins/streams-scraper/manifest?${params.toString()}`)
   const data = await res.json() as { name?: string; version?: string; error?: string }
   if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
   return data
@@ -279,7 +281,7 @@ function DebridKeyField({
   return (
     <div className="space-y-2">
       <div className="space-y-1.5">
-        <FieldHeader label={t('scraperDebridProvider')} />
+        <FieldHeader label={t('streamProviderSelection')} />
         <DebridSelect
           value={debridProvider}
           onChange={(v) => {
@@ -297,7 +299,7 @@ function DebridKeyField({
             setKeyValue(v)
                   setStreamProviderAccessKey(debridProvider, v)
           }}
-          placeholder={t('scraperRdApiPlaceholder')}
+          placeholder={t('streamProviderApiKeyPlaceholder')}
           radius="lg"
           classNames={heroInputClassNames}
         />
@@ -307,7 +309,11 @@ function DebridKeyField({
 }
 
 function getScraperSnapshot(config: ScraperConfig): string {
-  const debridProvider = (config.options as { debridProvider?: string }).debridProvider?.trim().toLowerCase() ?? ''
+  const debridProvider = (
+    config.options as { debridProvider?: string; streamProvider?: string }
+  ).streamProvider?.trim().toLowerCase()
+    ?? (config.options as { debridProvider?: string }).debridProvider?.trim().toLowerCase()
+    ?? ''
   const providerKey = debridProvider && debridProvider !== 'none'
     ? getStreamProviderAccessKey(debridProvider).trim()
     : ''
@@ -396,7 +402,7 @@ function ScraperCard({
       const key = getStreamProviderAccessKey(debridProvider)
       setStreamProviderAccessKey(debridProvider, key)
       }
-      setScraperConfigs(getScraperConfigs())
+      setStreamProviderConfigs(getStreamProviderConfigs())
       setSavedSnapshot(getScraperSnapshot(config))
       setSaveState('saved')
       saveTimerRef.current = setTimeout(() => {
@@ -418,7 +424,7 @@ function ScraperCard({
 
   const isCustom = config.preset === 'custom'
   const title = isCustom
-    ? (manifest.state === 'ok' && manifest.name ? manifest.name : t('scraperCustomUrl'))
+    ? (manifest.state === 'ok' && manifest.name ? manifest.name : t('streamProviderCustomUrl'))
     : PRESET_NAMES[config.preset]
 
   return (
@@ -460,7 +466,7 @@ function ScraperCard({
             <span className="text-xs text-slate-600">
               {(() => {
                 const rawUrl = (config.options as CustomOptions).rawUrl
-                if (!rawUrl) return t('scraperNoUrl')
+                if (!rawUrl) return t('streamProviderNoUrl')
                 try {
                   return new URL(rawUrl.replace(/^stremio:\/\//, 'https://').replace(/\/manifest\.json$/i, '')).hostname
                 } catch {
@@ -509,35 +515,35 @@ function ScraperCard({
               <>
                 <DebridKeyField
                   debridProvider={opts.debridProvider}
-                  onProviderChange={(v) => updateOptions({ debridProvider: v })}
+                  onProviderChange={(v) => updateOptions({ streamProvider: v, debridProvider: v })}
                 />
 
                 <div className="space-y-2">
-                  <FieldHeader label={t('scraperQualityFilter')} />
+                  <FieldHeader label={t('streamProviderQualityFilter')} />
                   <MultiSelectDropdown
                     value={opts.qualityFilter}
                     onChange={(v) => updateOptions({ qualityFilter: v })}
-                    placeholder={t('scraperSelectQualities')}
+                    placeholder={t('streamProviderSelectQualities')}
                     options={TORRENTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q.toUpperCase() }))}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <FieldHeader label={t('scraperLanguages')} />
+                  <FieldHeader label={t('streamProviderLanguages')} />
                   <MultiSelectDropdown
                     value={opts.languages}
                     onChange={(v) => updateOptions({ languages: v })}
-                    placeholder={t('scraperSelectLanguages')}
+                    placeholder={t('streamProviderSelectLanguages')}
                     options={TORRENTIO_LANGUAGE_OPTIONS}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <FieldHeader label={t('scraperProviders')} />
+                  <FieldHeader label={t('streamProviderSources')} />
                   <MultiSelectDropdown
                     value={opts.providers}
                     onChange={(v) => updateOptions({ providers: v })}
-                    placeholder={t('scraperSelectProviders')}
+                    placeholder={t('streamProviderSelectSources')}
                     options={TORRENTIO_PROVIDERS.map((p) => ({ id: p, label: p }))}
                   />
                 </div>
@@ -583,25 +589,25 @@ function ScraperCard({
               <>
                 <DebridKeyField
                   debridProvider={opts.debridProvider}
-                  onProviderChange={(v) => updateOptions({ debridProvider: v })}
+                  onProviderChange={(v) => updateOptions({ streamProvider: v, debridProvider: v })}
                 />
 
                 <div className="space-y-2">
-                  <FieldHeader label={t('scraperQualityFilter')} />
+                  <FieldHeader label={t('streamProviderQualityFilter')} />
                   <MultiSelectDropdown
                     value={opts.qualityFilter}
                     onChange={(v) => updateOptions({ qualityFilter: v })}
-                    placeholder={t('scraperSelectQualities')}
+                    placeholder={t('streamProviderSelectQualities')}
                     options={TORRENTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q.toUpperCase() }))}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <FieldHeader label={t('scraperLanguages')} />
+                  <FieldHeader label={t('streamProviderLanguages')} />
                   <MultiSelectDropdown
                     value={opts.languages}
                     onChange={(v) => updateOptions({ languages: v })}
-                    placeholder={t('scraperSelectLanguages')}
+                    placeholder={t('streamProviderSelectLanguages')}
                     options={ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))}
                   />
                 </div>
@@ -615,32 +621,32 @@ function ScraperCard({
               <>
                 <DebridKeyField
                   debridProvider={opts.debridProvider}
-                  onProviderChange={(v) => updateOptions({ debridProvider: v })}
+                  onProviderChange={(v) => updateOptions({ streamProvider: v, debridProvider: v })}
                 />
 
                 <div className="space-y-2">
-                  <FieldHeader label={t('scraperQualityFilter')} />
+                  <FieldHeader label={t('streamProviderQualityFilter')} />
                   <MultiSelectDropdown
                     value={opts.qualityFilter}
                     onChange={(v) => updateOptions({ qualityFilter: v })}
-                    placeholder={t('scraperSelectQualities')}
+                    placeholder={t('streamProviderSelectQualities')}
                     options={COMET_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <FieldHeader label={t('scraperLanguages')} />
+                  <FieldHeader label={t('streamProviderLanguages')} />
                   <MultiSelectDropdown
                     value={opts.languages}
                     onChange={(v) => updateOptions({ languages: v })}
-                    placeholder={t('scraperSelectLanguages')}
+                    placeholder={t('streamProviderSelectLanguages')}
                     options={ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <FieldHeader label={t('scraperMaxResults')} />
+                    <FieldHeader label={t('streamProviderMaxResults')} />
                     <Input
                       type="number"
                       value={String(opts.maxResults)}
@@ -697,7 +703,7 @@ function ScraperCard({
               <>
                 <DebridKeyField
                   debridProvider={opts.debridProvider}
-                  onProviderChange={(v) => updateOptions({ debridProvider: v })}
+                  onProviderChange={(v) => updateOptions({ streamProvider: v, debridProvider: v })}
                 />
 
                 <div className="space-y-2">
@@ -712,11 +718,11 @@ function ScraperCard({
                 </div>
 
                 <div className="space-y-2">
-                  <FieldHeader label={t('scraperLanguages')} />
+                  <FieldHeader label={t('streamProviderLanguages')} />
                   <MultiSelectDropdown
                     value={opts.languages}
                     onChange={(v) => updateOptions({ languages: v })}
-                    placeholder={t('scraperSelectLanguages')}
+                    placeholder={t('streamProviderSelectLanguages')}
                     options={ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))}
                   />
                 </div>
@@ -765,7 +771,7 @@ function ScraperCard({
 
                 <DebridKeyField
                   debridProvider={opts.debridProvider}
-                  onProviderChange={(v) => updateOptions({ debridProvider: v })}
+                  onProviderChange={(v) => updateOptions({ streamProvider: v, debridProvider: v })}
                 />
               </>
             )
@@ -775,12 +781,12 @@ function ScraperCard({
             const opts = config.options as CustomOptions
             return (
               <div className="space-y-1.5">
-                <SectionLabel>{t('scraperManifestUrl')}</SectionLabel>
+                <SectionLabel>{t('streamProviderManifestUrl')}</SectionLabel>
                 <Input
                   type="text"
                   value={opts.rawUrl}
                   onValueChange={(v) => updateOptions({ rawUrl: v.trim() })}
-                  placeholder={t('scraperManifestPlaceholder')}
+                  placeholder={t('streamProviderManifestPlaceholder')}
                   radius="lg"
                   classNames={heroInputClassNames}
                 />
@@ -831,6 +837,7 @@ function defaultOptions(preset: ScraperPresetId): ScraperConfig['options'] {
   switch (preset) {
     case 'torrentio':
       return {
+        streamProvider: 'realdebrid',
         debridProvider: 'realdebrid',
         qualityFilter: [],
         languages: [],
@@ -840,12 +847,14 @@ function defaultOptions(preset: ScraperPresetId): ScraperConfig['options'] {
       } satisfies TorrentioOptions
     case 'torrentsdb':
       return {
+        streamProvider: 'realdebrid',
         debridProvider: 'realdebrid',
         qualityFilter: [],
         languages: [],
       } satisfies TorrentsDbOptions
     case 'comet':
       return {
+        streamProvider: 'realdebrid',
         debridProvider: 'realdebrid',
         languages: [],
         qualityFilter: [],
@@ -856,6 +865,7 @@ function defaultOptions(preset: ScraperPresetId): ScraperConfig['options'] {
       } satisfies CometOptions
     case 'mediafusion':
       return {
+        streamProvider: 'realdebrid',
         debridProvider: 'realdebrid',
         languages: [],
         qualityFilter: [],
@@ -865,6 +875,7 @@ function defaultOptions(preset: ScraperPresetId): ScraperConfig['options'] {
     case 'orion':
       return {
         orionKey: '',
+        streamProvider: 'realdebrid',
         debridProvider: 'realdebrid',
       } satisfies OrionOptions
     case 'custom':
@@ -885,14 +896,14 @@ const ADDABLE_PRESETS: ScraperPresetId[] = [
 
 export function ScrapersSettingsSection() {
   const { t } = useLang()
-  const [configs, setConfigsState] = useState<ScraperConfig[]>(() => getScraperConfigs())
+  const [configs, setConfigsState] = useState<ScraperConfig[]>(() => getStreamProviderConfigs())
 
   const addedPresets = new Set(configs.map((c) => c.preset))
   const availableToAdd = ADDABLE_PRESETS.filter((preset) => !addedPresets.has(preset) || preset === 'custom')
 
   function saveConfigs(next: ScraperConfig[]) {
     setConfigsState(next)
-    setScraperConfigs(next)
+    setStreamProviderConfigs(next)
   }
 
   function handleConfigChange(updated: ScraperConfig) {
@@ -946,16 +957,16 @@ export function ScrapersSettingsSection() {
               className="rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs text-slate-500 transition hover:border-white/30 hover:text-slate-300"
             >
               {preset === 'torrentio'
-                ? t('scraperAddTorrentio')
+                ? t('streamProviderAddStandard')
                 : preset === 'torrentsdb'
-                  ? t('scraperAddTorrentsDb')
+                  ? t('streamProviderAddIndexed')
                   : preset === 'comet'
-                    ? t('scraperAddComet')
+                    ? t('streamProviderAddComet')
                     : preset === 'mediafusion'
-                      ? t('scraperAddMediaFusion')
+                      ? t('streamProviderAddMediaFusion')
                       : preset === 'orion'
                         ? '+ Orion'
-                        : t('scraperAddCustom')}
+                        : t('streamProviderAddCustom')}
             </button>
           ))}
         </div>

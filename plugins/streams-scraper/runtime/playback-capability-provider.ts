@@ -1,5 +1,8 @@
 import type { PlaybackCapabilityProvider } from '@/lib/plugin-sdk'
-import { checkEpisodeHasStream, checkMovieHasStream } from '@/lib/plugin-sdk'
+import {
+  checkStreamsScraperEpisodeHasStream,
+  checkStreamsScraperMovieHasStream,
+} from './stream-availability-provider'
 
 export const streamsScraperPlaybackCapabilityProvider: PlaybackCapabilityProvider = {
   id: 'streams-scraper-playback',
@@ -32,10 +35,11 @@ export const streamsScraperPlaybackCapabilityProvider: PlaybackCapabilityProvide
     }
 
     if (item.type === 'movie') {
-      const hasStream = await withSoftTimeout(checkMovieHasStream(item.imdbId))
+      const hasStream = await withSoftTimeout(checkStreamsScraperMovieHasStream(item.imdbId))
       const canPlay = hasStream !== false
       return {
         canPlay,
+        // Keep button visible while stream status is unresolved; hide only on explicit "no stream".
         showPlayButton: hasStream !== false,
         playVia: 'sidebar',
         reason: hasStream === false ? 'no_stream_yet' : undefined,
@@ -44,10 +48,11 @@ export const streamsScraperPlaybackCapabilityProvider: PlaybackCapabilityProvide
     }
 
     if (season != null && episode != null) {
-      const hasStream = await withSoftTimeout(checkEpisodeHasStream(item.imdbId, season, episode))
+      const hasStream = await withSoftTimeout(checkStreamsScraperEpisodeHasStream(item.imdbId, season, episode))
       const canPlay = hasStream !== false
       return {
         canPlay,
+        // Keep button visible while stream status is unresolved; hide only on explicit "no stream".
         showPlayButton: hasStream !== false,
         playVia: 'sidebar',
         reason: hasStream === false ? 'no_stream_yet' : undefined,

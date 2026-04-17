@@ -2,7 +2,7 @@
   "id": "com.lumio.streams-scraper",
   "slug": "streams-scraper",
   "name": "Streams Scraper",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Adds streaming sources through multiple scraper backends and plugin-managed playback.",
   "runtimeBundlePath": "dist/runtime.js",
   "official": false,
@@ -10,6 +10,9 @@
   "removable": true,
   "sdkCapabilities": [
     "settings-section",
-    "stream-provider"
+    "stream-provider",
+    "playback-capability",
+    "instant-play",
+    "media-stream-availability"
   ]
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.9
+
+- Moves the runtime to a self-contained plugin implementation instead of relying on Moviefinder's internal `lib/plugins/streams-scraper/*` imports.
+- Adds instant-play and stream-availability provider registrations in the external runtime.
+- Updates desktop Real-Debrid API fallback to SDK-safe desktop command execution for external bundling.
+
 ## 1.0.8
 
 - Publishes a freshly minified runtime bundle for lower plugin-cache footprint.
