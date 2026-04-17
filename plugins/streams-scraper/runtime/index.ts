@@ -6,7 +6,7 @@ import { ScrapersSettingsSection } from './scrapers-settings-section'
 export const StreamsScraperPlugin: LumioPlugin = {
   id: 'com.lumio.streams-scraper',
   name: { en: 'Streams Scraper', sv: 'Streams Scraper' },
-  version: '1.0.3',
+  version: '1.0.4',
   description: {
     en: 'Configure scraper-backed streaming sources through the plugin runtime.',
     sv: 'Konfigurera scraper-baserade streamkallor via pluginets runtime.',
