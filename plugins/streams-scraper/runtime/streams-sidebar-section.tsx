@@ -12,13 +12,13 @@ import {
   queueMagnetForPlayback,
   resolvePlaybackLink,
   selectPlaybackFiles,
-} from '@/lib/plugins/streams-scraper/playback/stream-provider-playback'
-import type { RdTorrentInfo, RdUnrestrictedLink } from '@/lib/plugins/streams-scraper/real-debrid/types'
+} from '@/lib/stream-provider-runtime/playback/stream-provider-playback'
+import type { RdTorrentInfo, RdUnrestrictedLink } from '@/lib/stream-provider-runtime/real-debrid/types'
 import type { StreamResult } from '@/app/api/streams/route'
 import type { TvSeason, TvEpisode } from '@/app/api/tv-info/route'
 import { getWatchedForSeries, markSeasonWatched, onWatchedEpisodesChanged, setWatched, toggleWatched } from '@/lib/watched-episodes'
 import { VideoPlayerModal } from '@/components/player/video-player-modal'
-import { applyStreamFilters, getStreamFilters, DEFAULT_FILTERS } from '@/lib/plugins/streams-scraper/stream-filters'
+import { applyStreamFilters, getStreamFilters, DEFAULT_FILTERS } from '@/lib/stream-provider-runtime/stream-filters'
 import { useLang } from '@/lib/i18n'
 import {
   cancelDesktopPlaybackSessions,
@@ -31,11 +31,11 @@ import {
 import {
   getStreamProviderConfigs,
   type ScraperConfig,
-} from '@/lib/plugins/streams-scraper/stream-provider-settings'
+} from '@/lib/stream-provider-runtime/stream-provider-settings'
 import {
   getScraperStreamProvider,
   getStreamProviderAccessKey,
-} from '@/lib/plugins/streams-scraper/stream-provider-storage'
+} from '@/lib/stream-provider-runtime/stream-provider-storage'
 import {
   buildMediaFusionStreamProviderUrl,
   buildStreamProviderCacheUrl,
@@ -43,7 +43,7 @@ import {
   getStreamProviderDisplayName,
   getStreamProviderTypeForApi,
   resolveStreamProviderAccessKey,
-} from '@/lib/plugins/streams-scraper/stream-provider-url-builder'
+} from '@/lib/stream-provider-runtime/stream-provider-url-builder'
 import { getAutoPlayNextEpisode, getNextEpPopupSeconds, getNextEpPreloadLeadSeconds } from '@/lib/autoplay-settings'
 import { getAutoPlayMaxStreamSizeGb, getDefaultAudioLanguage, normalizeLanguageCode } from '@/lib/playback-settings'
 import { checkEpisodeHasStream } from '@/lib/series-watchlist-feed'
@@ -59,7 +59,7 @@ import {
   pickBestUnrestrictedLink,
   qualityRank,
   VIDEO_EXTS,
-} from '@/lib/plugins/streams-scraper/stream-provider-stream-utils'
+} from '@/lib/stream-provider-runtime/stream-provider-stream-utils'
 
 const EPISODE_STREAM_STATUS_CONCURRENCY = 4
 const MIN_EPISODE_AUTOPLAY_BYTES = 120 * 1024 * 1024
@@ -613,7 +613,7 @@ export function StreamsSidebarSection({
           continue
         }
         if (info.status === 'downloaded') {
-      const results: import('@/lib/plugins/streams-scraper/real-debrid/types').RdUnrestrictedLink[] = []
+      const results: import('@/lib/stream-provider-runtime/real-debrid/types').RdUnrestrictedLink[] = []
           for (const link of info.links) {
             try { results.push(await resolvePlaybackLink(link)) } catch { /* skip */ }
           }

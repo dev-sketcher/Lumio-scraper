@@ -2,7 +2,7 @@ import type {
   RdAddMagnetResponse,
   RdTorrentInfo,
   RdUnrestrictedLink,
-} from '@/lib/plugins/streams-scraper/real-debrid/types'
+} from '@/lib/stream-provider-runtime/real-debrid/types'
 
 export interface PlaybackCacheCandidate {
   infoHash: string

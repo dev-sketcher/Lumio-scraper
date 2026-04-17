@@ -1,4 +1,4 @@
-import { getStreamProviderAccessKey } from '@/lib/plugins/streams-scraper/stream-provider-storage'
+import { getStreamProviderAccessKey } from '@/lib/stream-provider-runtime/stream-provider-storage'
 import type {
   PlaybackCacheCandidate,
   PlaybackCacheLookupResult,
@@ -9,9 +9,9 @@ import type {
   RdTorrentFile,
   RdTorrentInfo,
   RdUnrestrictedLink,
-} from '@/lib/plugins/streams-scraper/real-debrid/types'
+} from '@/lib/stream-provider-runtime/real-debrid/types'
 
-const EASYDEBRID_PROXY = '/api/plugins/streams-scraper/easydebrid'
+const EASYDEBRID_PROXY = '/api/stream-providers/easydebrid'
 
 type EasyDebridLookupFile = {
   size?: number

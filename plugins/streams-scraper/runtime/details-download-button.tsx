@@ -12,7 +12,7 @@ import {
   queueMagnetForPlayback,
   resolvePlaybackLink,
   selectPlaybackFiles,
-} from '@/lib/plugins/streams-scraper/playback/stream-provider-playback'
+} from '@/lib/stream-provider-runtime/playback/stream-provider-playback'
 
 interface RdStream {
   name: string

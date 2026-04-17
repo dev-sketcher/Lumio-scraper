@@ -1,4 +1,4 @@
-import { getStreamProviderAccessKey } from '@/lib/plugins/streams-scraper/stream-provider-storage'
+import { getStreamProviderAccessKey } from '@/lib/stream-provider-runtime/stream-provider-storage'
 import { mapWithConcurrency } from '@/lib/async-utils'
 import type {
   PlaybackCacheCandidate,
@@ -10,9 +10,9 @@ import type {
   RdTorrentInfo,
   RdTorrentFile,
   RdUnrestrictedLink,
-} from '@/lib/plugins/streams-scraper/real-debrid/types'
+} from '@/lib/stream-provider-runtime/real-debrid/types'
 
-const ALLDEBRID_PROXY = '/api/plugins/streams-scraper/alldebrid'
+const ALLDEBRID_PROXY = '/api/stream-providers/alldebrid'
 
 type AllDebridApiResponse<T> = {
   status: 'success' | 'error'

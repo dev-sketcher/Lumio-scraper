@@ -7,7 +7,7 @@ import type {
   OrionOptions,
   CustomOptions,
 } from './stream-provider-settings'
-import { getStreamProviderAccessKey } from '@/lib/plugins/streams-scraper/stream-provider-storage'
+import { getStreamProviderAccessKey } from '@/lib/stream-provider-runtime/stream-provider-storage'
 
 /**
  * Build the base scraper URL (no /stream/... suffix) ready to pass as

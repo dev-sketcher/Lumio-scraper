@@ -1,1 +1,1 @@
-export * from '@/lib/plugins/streams-scraper/real-debrid/types'
+export * from '@/lib/stream-provider-runtime/real-debrid/types'

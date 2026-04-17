@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.10
+
+- Aligns with hard cutover to neutral stream-provider API routes (no /api/plugins/streams-scraper aliases).
+- Syncs runtime with latest in-app stream-provider runtime implementation.
+
 ## 1.0.9
 
 - Moves the runtime to a self-contained plugin implementation instead of relying on Moviefinder's internal `lib/plugins/streams-scraper/*` imports.

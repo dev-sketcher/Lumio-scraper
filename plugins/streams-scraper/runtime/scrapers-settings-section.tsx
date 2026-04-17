@@ -14,12 +14,12 @@ import {
   type OrionOptions,
   type CustomOptions,
   type ScraperPresetId,
-} from '@/lib/plugins/streams-scraper/stream-provider-settings'
-import { MF_QUALITY_CATEGORIES } from '@/lib/plugins/streams-scraper/stream-provider-url-builder'
+} from '@/lib/stream-provider-runtime/stream-provider-settings'
+import { MF_QUALITY_CATEGORIES } from '@/lib/stream-provider-runtime/stream-provider-url-builder'
 import {
   getStreamProviderAccessKey,
   setStreamProviderAccessKey,
-} from '@/lib/plugins/streams-scraper/stream-provider-storage'
+} from '@/lib/stream-provider-runtime/stream-provider-storage'
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -171,7 +171,7 @@ async function fetchScraperManifest(preset: ScraperPresetId, customUrl?: string)
   } else {
     params.set('preset', preset)
   }
-  const res = await fetch(`/api/plugins/streams-scraper/manifest?${params.toString()}`)
+  const res = await fetch(`/api/stream-providers/manifest?${params.toString()}`)
   const data = await res.json() as { name?: string; version?: string; error?: string }
   if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`)
   return data

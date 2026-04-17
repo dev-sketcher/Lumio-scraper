@@ -1,5 +1,5 @@
 import type { StreamResult } from '@/app/api/streams/route'
-import type { RdTorrentInfo, RdUnrestrictedLink } from '@/lib/plugins/streams-scraper/real-debrid/types'
+import type { RdTorrentInfo, RdUnrestrictedLink } from '@/lib/stream-provider-runtime/real-debrid/types'
 
 export const VIDEO_EXTS = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i
 

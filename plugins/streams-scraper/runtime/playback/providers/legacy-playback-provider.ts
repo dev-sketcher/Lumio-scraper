@@ -6,7 +6,7 @@ import {
   rdGetTorrentInfo,
   rdSelectFiles,
   rdUnrestrictLink,
-} from '@/lib/plugins/streams-scraper/real-debrid/rd-client'
+} from '@/lib/stream-provider-runtime/real-debrid/rd-client'
 import type {
   PlaybackCacheCandidate,
   PlaybackCacheLookupResult,

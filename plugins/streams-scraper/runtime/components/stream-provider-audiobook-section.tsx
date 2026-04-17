@@ -8,10 +8,10 @@ import {
   rdGetTorrentInfo,
   rdSelectFiles,
   rdUnrestrictLink,
-} from '@/lib/plugins/streams-scraper/real-debrid/rd-client'
-import type { RdUnrestrictedLink } from '@/lib/plugins/streams-scraper/real-debrid/types'
+} from '@/lib/stream-provider-runtime/real-debrid/rd-client'
+import type { RdUnrestrictedLink } from '@/lib/stream-provider-runtime/real-debrid/types'
 import { AudioPlayerModal, loadProgress, type AudioTrack, type AudiobookProgress } from '@/components/player/audio-player-modal'
-import type { AudiobookResult } from '@/app/api/plugins/streams-scraper/audiobook-streams/route'
+import type { AudiobookResult } from '@/app/api/stream-providers/audiobook-streams/route'
 import { saveStreamProgress } from '@/lib/video-progress'
 import { useLang } from '@/lib/i18n'
 
@@ -83,7 +83,7 @@ export function RdAudiobookSection({ title, mediaId, posterUrl, year, imdbId }: 
     setResultsError(null)
     const key = getRdApiKey()
     try {
-      const res = await fetch(`/api/plugins/streams-scraper/audiobook-streams?title=${encodeURIComponent(title)}`, {
+      const res = await fetch(`/api/stream-providers/audiobook-streams?title=${encodeURIComponent(title)}`, {
         headers: key
           ? {
               'x-stream-provider-token': key,

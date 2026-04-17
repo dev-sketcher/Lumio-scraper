@@ -1,7 +1,7 @@
-import { getStreamProviderConfigs, type StreamProviderConfig } from '@/lib/plugins/streams-scraper/stream-provider-settings'
-import { buildStreamProviderCacheUrl, buildStreamProviderUrl, getStreamProviderTypeForApi } from '@/lib/plugins/streams-scraper/stream-provider-url-builder'
-import { buildTorrentioQualityFilter, getStreamFilters } from '@/lib/plugins/streams-scraper/stream-filters'
-import { buildPlaybackProviderConfigSegment } from '@/lib/plugins/streams-scraper/playback/stream-provider-playback'
+import { getStreamProviderConfigs, type StreamProviderConfig } from '@/lib/stream-provider-runtime/stream-provider-settings'
+import { buildStreamProviderCacheUrl, buildStreamProviderUrl, getStreamProviderTypeForApi } from '@/lib/stream-provider-runtime/stream-provider-url-builder'
+import { buildTorrentioQualityFilter, getStreamFilters } from '@/lib/stream-provider-runtime/stream-filters'
+import { buildPlaybackProviderConfigSegment } from '@/lib/stream-provider-runtime/playback/stream-provider-playback'
 
 export interface StreamProviderRequestContext {
   streamProviderUrl: string

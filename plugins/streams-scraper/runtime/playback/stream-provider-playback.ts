@@ -2,8 +2,8 @@ import type {
   RdAddMagnetResponse,
   RdTorrentInfo,
   RdUnrestrictedLink,
-} from '@/lib/plugins/streams-scraper/real-debrid/types'
-import { getActiveStreamProvider } from '@/lib/plugins/streams-scraper/stream-provider-storage'
+} from '@/lib/stream-provider-runtime/real-debrid/types'
+import { getActiveStreamProvider } from '@/lib/stream-provider-runtime/stream-provider-storage'
 import type {
   PlaybackCacheCandidate,
   PlaybackCacheLookupResult,

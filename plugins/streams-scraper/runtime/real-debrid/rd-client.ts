@@ -8,10 +8,10 @@ import {
   clearGlobalStreamProviderAccessKey,
   getGlobalStreamProviderAccessKey,
   setGlobalStreamProviderAccessKey,
-} from '@/lib/plugins/streams-scraper/stream-provider-settings'
-import { executePluginDesktopCommand, isPluginDesktopHost } from '@/lib/plugin-sdk'
+} from '@/lib/stream-provider-runtime/stream-provider-settings'
+import { isPluginDesktopHost } from '@/lib/plugin-sdk'
 
-const RD_PROXY = '/api/plugins/streams-scraper/realdebrid'
+const RD_PROXY = '/api/stream-providers/realdebrid'
 const RD_API_BASE_URL = 'https://api.real-debrid.com/rest/1.0'
 
 export function getRdApiKey(): string | null {
@@ -44,29 +44,19 @@ async function rdDesktopJson<T>(
 ): Promise<T> {
   const token = getRdApiKey()
   if (!token) throw new Error('No Real-Debrid API key configured')
-  const args = [
-    '-fsSL',
-    '--max-time',
-    '10',
-    '-X',
-    method,
-    '-H',
-    `Authorization: Bearer ${token}`,
-  ]
+  const { invoke } = await import('@tauri-apps/api/core')
+  const headers = [`Authorization: Bearer ${token}`]
   if (body && body.trim().length > 0) {
-    args.push('-H', 'Content-Type: application/x-www-form-urlencoded', '--data', body)
+    headers.push('Content-Type: application/x-www-form-urlencoded')
   }
-  args.push(`${RD_API_BASE_URL}${path}`)
-
-  const result = await executePluginDesktopCommand({
-    program: 'curl',
-    args,
+  return invoke<T>('desktop_external_api_request', {
+    baseUrl: RD_API_BASE_URL,
+    path,
+    method,
+    headers,
+    body: body ?? null,
+    timeoutMs: 5000,
   })
-  if (result.code !== 0) {
-    throw new Error(result.stderr.trim() || result.stdout.trim() || `curl failed (${result.code})`)
-  }
-  const payload = result.stdout.trim()
-  return (payload ? JSON.parse(payload) : {}) as T
 }
 
 function isTransientDesktopRdError(error: unknown): boolean {

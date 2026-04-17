@@ -1,8 +1,5 @@
-// lib/plugins/streams-scraper/index.ts
-// Streams-scraper plugin — wraps scraper-driven streaming behind the plugin SDK.
-// Provider-specific playback resolution is intentionally kept plugin-local.
-// This file (and anything it imports from lib/plugins/streams-scraper/* and lib/scraper-*)
-// can later be extracted without changing core plugin contracts.
+// In-repo stream-provider runtime implementation.
+// This namespace keeps generic stream-provider internals separated from external plugin runtimes.
 
 import type React from 'react'
 import type { LumioPlugin, StreamSidebarProps } from '@/lib/plugin-sdk'
@@ -16,7 +13,7 @@ import { StreamsSidebarSection } from './streams-sidebar-section'
 export const StreamsScraperPlugin: LumioPlugin = {
   id: 'com.lumio.streams-scraper',
   name: { en: 'Stream Scraper', sv: 'Stream Scraper' },
-  version: '1.0.9',
+  version: '1.0.10',
   description: {
     en: 'Adds streaming sources via multiple scrapers and plugin-managed playback.',
     sv: 'Lägger till strömningskällor via flera scrapers och pluginhanterad uppspelning.',
