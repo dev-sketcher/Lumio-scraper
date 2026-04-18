@@ -105,7 +105,9 @@ type DownloadState =
   | { type: 'done'; filename: string }
   | { type: 'error'; message: string }
 
-export function StreamsScraperDetailsDownloadButton({ item, className }: MediaDownloadActionProps) {
+export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly = false }: MediaDownloadActionProps) {
+  const forceMobileIconOnly = typeof className === 'string' && className.includes('!h-10') && className.includes('!w-10')
+  const effectiveIconOnly = iconOnly || forceMobileIconOnly
   const [state, setState] = useState<DownloadState>({ type: 'idle' })
   const esRef = useRef<EventSource | null>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -262,7 +264,7 @@ export function StreamsScraperDetailsDownloadButton({ item, className }: MediaDo
     }
   }
 
-  const btnBase = `flex h-9 items-center gap-1.5 rounded-full border border-white/10 px-3.5 text-xs text-slate-300 transition hover:border-white/30 hover:text-white ${className ?? ''}`
+  const btnBase = `flex h-9 items-center rounded-full border border-white/10 text-xs text-slate-300 transition hover:border-white/30 hover:text-white ${effectiveIconOnly ? 'w-9 justify-center px-0' : 'gap-1.5 px-3.5'} ${className ?? ''}`
 
   if (state.type === 'picking-stream') {
     const dropdown = (
@@ -300,8 +302,14 @@ export function StreamsScraperDetailsDownloadButton({ item, className }: MediaDo
     )
     return (
       <>
-        <button type="button" className={btnBase} onClick={() => setState({ type: 'idle' })}>
-          ↓ Stäng
+        <button
+          type="button"
+          className={btnBase}
+          onClick={() => setState({ type: 'idle' })}
+          title={effectiveIconOnly ? 'Stäng nedladdning' : undefined}
+          aria-label={effectiveIconOnly ? 'Stäng nedladdning' : undefined}
+        >
+          {effectiveIconOnly ? '✕' : '↓ Stäng'}
         </button>
         {typeof document !== 'undefined' && createPortal(dropdown, document.body)}
       </>
@@ -310,24 +318,49 @@ export function StreamsScraperDetailsDownloadButton({ item, className }: MediaDo
 
   if (state.type === 'downloading') {
     return (
-      <button type="button" className={btnBase} disabled>
+      <button
+        type="button"
+        className={btnBase}
+        disabled
+        title={effectiveIconOnly ? 'Laddar ner' : undefined}
+        aria-label={effectiveIconOnly ? 'Laddar ner' : undefined}
+      >
         <svg className="h-3 w-3 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M21 12a9 9 0 1 1-6.219-8.56" strokeLinecap="round"/>
         </svg>
-        {state.progress > 0 ? `${state.progress}%` : 'Förbereder...'}
+        {!effectiveIconOnly ? (state.progress > 0 ? `${state.progress}%` : 'Förbereder...') : null}
       </button>
     )
   }
 
   if (state.type === 'done') {
     return (
-      <button type="button" className={`${btnBase} border-green-400/30 text-green-400`} disabled>
-        ✓ Klar
+      <button
+        type="button"
+        className={`${btnBase} border-green-400/30 text-green-400`}
+        disabled
+        title={effectiveIconOnly ? 'Nedladdning klar' : undefined}
+        aria-label={effectiveIconOnly ? 'Nedladdning klar' : undefined}
+      >
+        {effectiveIconOnly ? '✓' : '✓ Klar'}
       </button>
     )
   }
 
   if (state.type === 'error') {
+    if (effectiveIconOnly) {
+      return (
+        <button
+          type="button"
+          className={`${btnBase} border-red-400/30 text-red-400`}
+          onClick={() => setState({ type: 'idle' })}
+          title={state.message}
+          aria-label="Nedladdning misslyckades, försök igen"
+        >
+          !
+        </button>
+      )
+    }
     return (
       <div className="flex items-center gap-2">
         <span className="max-w-[180px] truncate text-[10px] text-red-400">{state.message}</span>
@@ -345,13 +378,19 @@ export function StreamsScraperDetailsDownloadButton({ item, className }: MediaDo
       className={btnBase}
       onClick={() => void handleClick()}
       disabled={state.type === 'loading-streams' || state.type === 'picking-folder'}
+      title={effectiveIconOnly ? 'Ladda ner' : undefined}
+      aria-label={effectiveIconOnly ? 'Ladda ner' : undefined}
     >
       {state.type === 'loading-streams' || state.type === 'picking-folder' ? (
         <svg className="h-3 w-3 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M21 12a9 9 0 1 1-6.219-8.56" strokeLinecap="round"/>
         </svg>
-      ) : '↓'}
-      Ladda ner
+      ) : (
+        <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v10m0 0 4-4m-4 4-4-4M4 18h16" />
+        </svg>
+      )}
+      {!effectiveIconOnly ? 'Ladda ner' : null}
     </button>
   )
 }

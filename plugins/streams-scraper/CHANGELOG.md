@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.11
+
+- Fixes mobile/LAN details download button to render as true icon-only control (no lingering "Ladda ner" text).
+- Aligns mobile header action circles (download, close, menu) for consistent sizing and spacing.
+
 ## 1.0.10
 
 - Aligns with hard cutover to neutral stream-provider API routes (no /api/plugins/streams-scraper aliases).
