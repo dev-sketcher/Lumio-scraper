@@ -7,9 +7,15 @@
     {
       "id": "com.lumio.streams-scraper",
       "slug": "streams-scraper",
-      "name": "Streams Scraper",
-      "version": "1.0.11",
-      "description": "Adds streaming sources through multiple scraper backends and plugin-managed playback.",
+      "name": {
+        "en": "Streams Scraper",
+        "sv": "Stream-scraper"
+      },
+      "version": "1.0.12",
+      "description": {
+        "en": "Adds streaming sources through multiple scraper backends and plugin-managed playback.",
+        "sv": "Lägger till strömningskällor via flera scraper-backends och pluginhanterad uppspelning."
+      },
       "path": "plugins/streams-scraper",
       "runtimeBundlePath": "dist/runtime.js",
       "readmePath": "plugins/streams-scraper/README.md",
