@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.13
+
+- Wires IntroDB outro detection into the next-episode card so the popup appears at the outro mark and force-overrides the auto-play-next-episode setting (the setting now only gates the 5.2 s autoplay timer, not whether the card shows).
+- Adds `prepareNextEpisodeCardInfo` so the card can render with metadata even before stream resolution finishes.
+- Dismissing the next-episode card now cancels the pending autoplay timer.
+
 ## 1.0.11
 
 - Fixes mobile/LAN details download button to render as true icon-only control (no lingering "Ladda ner" text).
