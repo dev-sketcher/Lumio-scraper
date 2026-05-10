@@ -242,6 +242,13 @@ export function StreamsSidebarSection({
   const nextEpPreloadStarted = useRef(false)
   const nextEpCardShown = useRef(false)
   const nextEpArmedRef = useRef(false)
+  // Outro-driven autoplay timer + dismiss flag — separate from the time-remaining
+  // popup path so the IntroDB outro can offer the next episode even when the
+  // setting `auto play next episode` is OFF, and so dismissing the card cancels
+  // the pending autoplay.
+  const nextEpOutroAutoplayTimer = useRef<number | null>(null)
+  const nextEpDismissedRef = useRef(false)
+  const nextEpPlayRequestedAtRef = useRef(0)
   // True from handlePlayNextEpisode until the new episode's first play — suppresses handleTimeUpdate
   const nextEpTransitionRef = useRef(false)
   const nextEpAutoplayPendingRef = useRef(false)
@@ -252,6 +259,12 @@ export function StreamsSidebarSection({
   const [playerSkipHomeKitOpen, setPlayerSkipHomeKitOpen] = useState(false)
   const [playerAutoFullscreen, setPlayerAutoFullscreen] = useState(false)
   const [playerHideStartSplash, setPlayerHideStartSplash] = useState(false)
+  // Drives a brief opacity fade-out on the sidebar splash so the handoff
+  // into mpv playback feels smooth instead of an abrupt cut. Set to true
+  // 100 ms after `onFirstPlay` so audio kicks in just before the visual
+  // fade starts; the splash actually unmounts ~500 ms later via
+  // `setPlayerHideStartSplash(false)`.
+  const [playerSplashFading, setPlayerSplashFading] = useState(false)
   const [bodyMounted, setBodyMounted] = useState(false)
 
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -1344,7 +1357,12 @@ export function StreamsSidebarSection({
     // Manual start of an episode/movie should always begin a fresh session:
     // no carried-over next-episode preload/card/splash state.
     resetNextEpisodeState()
-    setPlayerHideStartSplash(false)
+    // Show the sidebar splash from the moment the user clicks PLAY so the
+    // flow is one continuous opaque overlay through stream resolution →
+    // modal mount → mpv first frame. Setting this `false` here used to
+    // produce a mid-load blink between intermediate `step` transitions.
+    setPlayerHideStartSplash(true)
+    setPlayerSplashFading(false)
     setPlayerSkipHomeKitClose(false)
     setPlayerSkipHomeKitOpen(false)
 
@@ -1720,6 +1738,7 @@ export function StreamsSidebarSection({
     setPlayerInitialTime(config.initialTime)
     setPlayerForceProxy(config.forceProxy ?? false)
     setPlayerHideStartSplash(true)
+    setPlayerSplashFading(false)
     setPlayerUrl(config.url)
     setStep({ type: 'idle' })
   }
@@ -1758,12 +1777,17 @@ export function StreamsSidebarSection({
   }, [mediaContextKey])
 
   function resetNextEpisodeState() {
+    if (nextEpOutroAutoplayTimer.current !== null) {
+      window.clearTimeout(nextEpOutroAutoplayTimer.current)
+      nextEpOutroAutoplayTimer.current = null
+    }
     nextEpUrlRef.current = null
     pendingCardInfo.current = null
     nextEpPreloadStarted.current = false
     nextEpCardShown.current = false
     nextEpArmedRef.current = false
     nextEpAutoplayPendingRef.current = false
+    nextEpDismissedRef.current = false
     sawEarlyPlaybackForEpisodeRef.current = false
     setNextEpCard(null)
     setNextEpUrlReady(false)
@@ -2031,9 +2055,128 @@ export function StreamsSidebarSection({
     }
   }
 
-  async function handlePlayNextEpisode() {
+  // Builds the next-episode card metadata WITHOUT the stream lookup. Used by
+  // the IntroDB outro path so the card can render even when streams haven't
+  // resolved yet (the "Play now" button stays disabled until preloadNextEpisode
+  // finishes setting nextEpUrlRef).
+  async function prepareNextEpisodeCardInfo(): Promise<{
+    season: number
+    episode: number
+    episodeTitle: string
+    stillUrl: string | null
+  } | null> {
+    if (!selectedSeason || !selectedEpisode) return null
+    let targetSeason = selectedSeason.season_number
+    let targetEpisode = selectedEpisode.episode_number + 1
+    let episodeTitle = ''
+    let stillPath: string | null = null
+    let episodeAirDate: string | null = null
+
+    const inSeasonNext = episodes?.find((e) => e.episode_number === targetEpisode)
+    if (inSeasonNext) {
+      episodeTitle = inSeasonNext.name
+      stillPath = inSeasonNext.still_path
+      episodeAirDate = inSeasonNext.air_date
+    } else {
+      const nextSeason = seasons?.find(
+        (s) => s.season_number === selectedSeason.season_number + 1,
+      )
+      if (!nextSeason || !numericTmdbId) return null
+      try {
+        const data = await fetchJsonWithTimeout<{
+          episodes?: import('@/app/api/tv-info/route').TvEpisode[]
+        }>(
+          `/api/tv-info?tmdbId=${numericTmdbId}&season=${nextSeason.season_number}`,
+          4500,
+        )
+        const firstEp = data.episodes?.[0]
+        if (!firstEp) return null
+        targetSeason = nextSeason.season_number
+        targetEpisode = firstEp.episode_number
+        episodeTitle = firstEp.name
+        stillPath = firstEp.still_path
+        episodeAirDate = firstEp.air_date
+      } catch {
+        return null
+      }
+    }
+
+    if (episodeAirDate) {
+      const airTime = new Date(episodeAirDate).getTime()
+      if (Number.isFinite(airTime) && airTime > Date.now()) return null
+    }
+
+    const stillUrl = stillPath
+      ? `https://image.tmdb.org/t/p/w300${stillPath}`
+      : null
+
+    return { season: targetSeason, episode: targetEpisode, episodeTitle, stillUrl }
+  }
+
+  // Triggered by VideoPlayerModal when the IntroDB outro segment start is
+  // crossed. Mirrors the time-remaining popup branch but is gated by the
+  // IntroDB segment rather than the user's configured seconds-from-end.
+  // IntroDB outro should always offer the next episode when one exists, even
+  // if `auto play next episode` is disabled — the setting only controls the
+  // 5.2 s autoplay timer below, not whether the card appears.
+  function handleOutroStart() {
+    if (mediaType !== 'tv' || !selectedEpisode || !selectedSeason) return
+    if (numericTmdbId && !watchedMarkedInSessionRef.current) {
+      const activeSeasonNumber = playerSeason ?? selectedSeason.season_number
+      const activeEpisodeNumber = playerEpisode ?? selectedEpisode.episode_number
+      setWatched(numericTmdbId, activeSeasonNumber, activeEpisodeNumber, true, { imdbId: effectiveImdbId })
+      setWatchedEps(getWatchedForSeries(numericTmdbId))
+      watchedMarkedInSessionRef.current = true
+    }
+    if (nextEpAutoplayPendingRef.current) return
+    if (nextEpCardShown.current) return
+
+    const tryShow = async () => {
+      if (nextEpCardShown.current || nextEpAutoplayPendingRef.current) return
+      if (!pendingCardInfo.current) {
+        pendingCardInfo.current = await prepareNextEpisodeCardInfo()
+      }
+      if (!pendingCardInfo.current) return
+      const cardInfo = pendingCardInfo.current
+      nextEpCardShown.current = true
+      nextEpDismissedRef.current = false
+      setNextEpCard(cardInfo)
+      if (getAutoPlayNextEpisode() && nextEpOutroAutoplayTimer.current === null) {
+        nextEpOutroAutoplayTimer.current = window.setTimeout(() => {
+          nextEpOutroAutoplayTimer.current = null
+          if (nextEpDismissedRef.current) return
+          void handlePlayNextEpisode(cardInfo)
+        }, 5200)
+      }
+    }
+
+    if (nextEpPreloadStarted.current) {
+      void tryShow()
+      return
+    }
+    // preloadNextEpisode populates pendingCardInfo (in this file's flow it
+    // happens AFTER stream lookup completes). We call tryShow before AND after
+    // the preload promise so the card shows ASAP — either via the synchronous
+    // metadata path (in-season ep available locally) or after preload resolves.
+    void preloadNextEpisode().then(() => { void tryShow() })
+    void tryShow()
+  }
+
+  async function handlePlayNextEpisode(cardOverride?: {
+    season: number
+    episode: number
+    episodeTitle: string
+    stillUrl: string | null
+  }) {
+    const now = Date.now()
+    if (now - nextEpPlayRequestedAtRef.current < 3000) return
+    nextEpPlayRequestedAtRef.current = now
+    if (nextEpOutroAutoplayTimer.current !== null) {
+      window.clearTimeout(nextEpOutroAutoplayTimer.current)
+      nextEpOutroAutoplayTimer.current = null
+    }
     const nextItem = nextEpUrlRef.current
-    const cardInfo = nextEpCard // capture before state clear
+    const cardInfo = cardOverride ?? nextEpCard // capture before state clear
     if (!cardInfo) return
     const targetSeason = seasons?.find((season) => season.season_number === cardInfo.season)
       ?? (selectedSeason?.season_number === cardInfo.season ? selectedSeason : null)
@@ -2095,6 +2238,7 @@ export function StreamsSidebarSection({
     // VideoPlayerModal's reset effect handles the internal state cleanup when url/episode changes.
     setPlayerSkipHomeKitOpen(true)
     setPlayerHideStartSplash(true)
+    setPlayerSplashFading(false)
     if (targetSeason) setSelectedSeason(targetSeason)
     setSelectedEpisode(targetEpisode)
     setPlayerSeason(cardInfo.season)
@@ -2134,7 +2278,13 @@ export function StreamsSidebarSection({
   return (
     <>
       {showStartupSplash && bodyMounted ? createPortal(
-        <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-slate-950">
+        <div
+          className="mpv-startup-splash fixed inset-0 z-[200] flex flex-col items-center justify-center bg-slate-950"
+          style={{
+            transition: 'opacity 500ms ease-out',
+            opacity: playerSplashFading ? 0 : 1,
+            pointerEvents: playerSplashFading ? 'none' : 'auto',
+          }}>
           {(backdropUrl ?? posterUrl) && (
             <>
               <div className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-20 transition-all duration-300"
@@ -2444,9 +2594,15 @@ export function StreamsSidebarSection({
             if (playerAutoFullscreen) setPlayerAutoFullscreen(false)
             onPlaybackStarted?.()
             if (playerHideStartSplash) {
+              // Brief settle so audio is audibly playing, then fade the
+              // splash over 500 ms before unmounting it. The CSS opacity
+              // transition (set on the splash root) handles the visual
+              // fade; we only flip the state.
+              window.setTimeout(() => setPlayerSplashFading(true), 100)
               window.setTimeout(() => {
                 setPlayerHideStartSplash(false)
-              }, 140)
+                setPlayerSplashFading(false)
+              }, 600)
             }
           }}
           hideStartSplash={playerHideStartSplash}
@@ -2463,6 +2619,7 @@ export function StreamsSidebarSection({
           initialTime={playerInitialTime}
           forceProxy={playerForceProxy}
           onTimeUpdate={handleTimeUpdate}
+          onOutroStart={handleOutroStart}
           skipHomeKitOnClose={playerSkipHomeKitClose}
           skipHomeKitOnOpen={playerSkipHomeKitOpen}
           autoFullscreen={playerAutoFullscreen}
@@ -2477,10 +2634,15 @@ export function StreamsSidebarSection({
                 urlReady={nextEpUrlReady}
                 allowManualPlayWhenNotReady
                 onDismiss={() => {
+                  nextEpDismissedRef.current = true
+                  if (nextEpOutroAutoplayTimer.current !== null) {
+                    window.clearTimeout(nextEpOutroAutoplayTimer.current)
+                    nextEpOutroAutoplayTimer.current = null
+                  }
                   setNextEpCard(null)
                   nextEpCardShown.current = true
                 }}
-                onPlayNow={handlePlayNextEpisode}
+                onPlayNow={() => void handlePlayNextEpisode()}
               />
             ) : undefined
           }
