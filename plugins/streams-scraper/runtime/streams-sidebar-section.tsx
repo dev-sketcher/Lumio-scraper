@@ -851,7 +851,7 @@ export function StreamsSidebarSection({
       })
   }
 
-  async function searchStreams(season?: string, episode?: string) {
+  async function searchStreams(season?: string, episode?: string, retryAttempt = 0) {
     if (!effectiveImdbId) return
     const requestId = ++searchRequestIdRef.current
     const controller = resetAbortRef(searchAbortRef)
@@ -1056,7 +1056,16 @@ export function StreamsSidebarSection({
       if (requestId !== searchRequestIdRef.current) return
 
       const allStreams = apiStreamsList.flat()
-      if (!published) {
+      // First attempt that returned zero streams: schedule a single retry
+      // before showing the noStreams/error message. Providers sometimes
+      // return empty mid-cache-refresh (Real-Debrid or scraper warm-up);
+      // a 1.5 s nudge usually picks up the populated result on attempt two.
+      const willRetry =
+        !published
+        && allStreams.length === 0
+        && streamProviderRequests.length > 0
+        && retryAttempt === 0
+      if (!published && !willRetry) {
         const merged = mergeStreams(allStreams)
         const prepared = sortByPriority(normalizeCached(merged))
         setStreams(prepared)
@@ -1068,9 +1077,19 @@ export function StreamsSidebarSection({
         requestId,
         streamProviderCount: streamProviderRequests.length,
         streamCount: allStreams.length,
+        retryAttempt,
       })
 
-      // Surface error when all providers returned zero results (likely DNS or network failure)
+      if (willRetry) {
+        setLoadingStreams(true)
+        window.setTimeout(() => {
+          if (requestId !== searchRequestIdRef.current) return
+          void searchStreams(season, episode, 1)
+        }, 1500)
+        return
+      }
+
+      // Surface error when all providers returned zero results (likely DNS or network failure).
       if (!published && allStreams.length === 0 && streamProviderRequests.length > 0) {
         const details = [...providerErrors].reverse().find((entry) => entry && entry.trim().length > 0) ?? null
         setStreamsError(details ?? t('noStreams'))
@@ -1190,6 +1209,18 @@ export function StreamsSidebarSection({
     const stillUrl = stillPath
       ? `https://image.tmdb.org/t/p/w300${stillPath}`
       : null
+
+    // Set card metadata up front so the time-remaining popup (and the
+    // IntroDB outro popup) can render even when stream lookup is slow,
+    // returns zero candidates, or fails outright. The "Play now" button
+    // stays disabled until nextEpUrlRef is populated below; if it never
+    // is, the user gets a manual fallback via allowManualPlayWhenNotReady.
+    pendingCardInfo.current = {
+      season: targetSeason,
+      episode: targetEpisode,
+      episodeTitle,
+      stillUrl,
+    }
 
     // Fetch RD streams for next episode in background
     const streamProviderRequests = await getStreamProviderRequests()
