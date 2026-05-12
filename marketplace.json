@@ -11,7 +11,7 @@
         "en": "Streams Scraper",
         "sv": "Stream-scraper"
       },
-      "version": "1.0.13",
+      "version": "1.0.15",
       "description": {
         "en": "Adds streaming sources through multiple scraper backends and plugin-managed playback.",
         "sv": "Lägger till strömningskällor via flera scraper-backends och pluginhanterad uppspelning."
