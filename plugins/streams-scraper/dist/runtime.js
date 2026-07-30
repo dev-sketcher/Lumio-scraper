@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164308,6 +164308,7 @@
       subtitleAutoSyncAnalyzing: "Analyzing...",
       subtitleAutoSyncApplied: "Applied offset",
       subtitleAutoSyncFailed: "Could not auto-sync subtitles",
+      subtitleAutoSyncDriftApplied: "drift corrected ({rate}s/min)",
       subtitleAutoSyncNoMatch: "Could not find a reliable subtitle match",
       subtitleAutoSyncNeedsGroq: "Add a Groq API key in Settings first",
       subtitleAutoSyncNeedsSubtitle: "Pick a subtitle track first",
@@ -164913,6 +164914,10 @@
       ptSourcesHint: "External sources you have added yourself are listed here.",
       ptNoSources: "No sources added yet. Add a GitHub repo above to get started.",
       ptInstalledBadge: "Installed",
+      ptUpdating: "Checking for the latest version\u2026",
+      ptUpdatedTo: "Updated to {version} \u2014 restart to apply.",
+      ptUpToDate: "Already on the latest version.",
+      ptUpdateFailed: "Update failed: {reason}",
       aiSearchTitle: "AI search",
       sssEpisodeInfo: "Show episode info",
       // Zapp player
@@ -165405,6 +165410,7 @@
       subtitleAutoSyncAnalyzing: "Analyserar...",
       subtitleAutoSyncApplied: "La p\xE5 offset",
       subtitleAutoSyncFailed: "Kunde inte auto-synca undertexterna",
+      subtitleAutoSyncDriftApplied: "drift korrigerad ({rate}s/min)",
       subtitleAutoSyncNoMatch: "Kunde inte hitta en tillr\xE4ckligt bra matchning",
       subtitleAutoSyncNeedsGroq: "L\xE4gg till en Groq API-nyckel i inst\xE4llningar f\xF6rst",
       subtitleAutoSyncNeedsSubtitle: "V\xE4lj ett undertextsp\xE5r f\xF6rst",
@@ -166010,6 +166016,10 @@
       ptSourcesHint: "H\xE4r listas de externa k\xE4llor du sj\xE4lv har lagt till.",
       ptNoSources: "Inga egna k\xE4llor tillagda \xE4n. L\xE4gg till ett GitHub-repo ovan f\xF6r att b\xF6rja.",
       ptInstalledBadge: "Installerad",
+      ptUpdating: "H\xE4mtar senaste versionen\u2026",
+      ptUpdatedTo: "Uppdaterad till {version} \u2014 starta om f\xF6r att aktivera.",
+      ptUpToDate: "Redan senaste versionen.",
+      ptUpdateFailed: "Uppdateringen misslyckades: {reason}",
       aiSearchTitle: "AI-s\xF6kning",
       sssEpisodeInfo: "Visa avsnittsinfo",
       // Zapp player
@@ -169840,7 +169850,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -174059,7 +174069,7 @@
     } catch {
     }
   }
-  function VideoPlayerModal({ url, filename, title, onClose, imdbId, tmdbId, mediaType, season, episode, mediaId, mediaTitle, mediaSource, posterUrl, backdropUrl, year, initialTime, onFirstPlay, hideStartSplash, forceProxy, onTimeUpdate, onOutroStart, onLoadFailed, skipHomeKitOnClose, skipHomeKitOnOpen, overlayContent, autoFullscreen, playbackTraceId }) {
+  function VideoPlayerModal({ url, filename, title, onClose, imdbId, tmdbId, mediaType, season, episode, mediaId, mediaTitle, mediaSource, posterUrl, backdropUrl, year, initialTime, onFirstPlay, hideStartSplash, forceProxy, onTimeUpdate, onOutroStart, onLoadFailed, skipHomeKitOnClose, skipHomeKitOnOpen, overlayContent, autoFullscreen, sourceInfoHash, playbackTraceId }) {
     const STILL_WATCHING_CLOSE_SECONDS = 20;
     const [useMpv, setUseMpv] = useState(false);
     useEffect(() => {
@@ -174313,9 +174323,11 @@
     const [resolvedImdbId, setResolvedImdbId] = useState(imdbId ?? null);
     const [cues, setCues] = useState([]);
     const [subDelay, setSubDelay] = useState(0);
+    const [subDrift, setSubDrift] = useState(null);
     const subtitleDelayMediaKey = buildSubtitleDelayMediaKey(mediaType, tmdbId, imdbId ?? null);
     useEffect(() => {
       if (!subtitleDelayMediaKey) return;
+      setSubDrift(null);
       const saved = getSavedSubtitleDelay(subtitleDelayMediaKey, season ?? null, episode ?? null);
       if (saved == null) return;
       setSubDelay(saved);
@@ -174639,7 +174651,8 @@
         subtitleDownloadAbortRef.current = null;
       };
     }, []);
-    const subtitleTime = (subtitleClockOverride ?? realTime) + subDelay;
+    const subtitleClockBase = subtitleClockOverride ?? realTime;
+    const subtitleTime = subtitleClockBase - subDelay + (subDrift ? subDrift.slope * (subtitleClockBase - subDrift.anchor) : 0);
     const activeCue = useMpv ? null : cues.find((c) => subtitleTime >= c.start && subtitleTime <= c.end) ?? null;
     const parsedEpisodeFromFilename = useMemo(() => filename ? parseEpisodeIdentifier(filename) : null, [filename]);
     const parsedEpisodeFromTitle = useMemo(() => parseEpisodeIdentifier(title), [title]);
@@ -174669,7 +174682,7 @@
     useEffect(() => {
       if (useMpv || !isPlaying || cues.length === 0) return;
       const id4 = setInterval(() => {
-        const effectiveTime = realTime + subDelay;
+        const effectiveTime = realTime - subDelay + (subDrift ? subDrift.slope * (realTime - subDrift.anchor) : 0);
         const activeCueNow = cues.find((c) => effectiveTime >= c.start && effectiveTime <= c.end);
         const nearestCue = cues.reduce((best, c) => {
           if (!best) return c;
@@ -174717,8 +174730,12 @@
         "Bold=1"
       ].join(",");
       const scale2 = Math.max(0.5, subSize / 100);
+      const driftSlope = subDrift?.slope ?? 0;
+      const speed = 1 / (1 + driftSlope);
+      const delayWithDrift = subDrift ? (subDelay + driftSlope * subDrift.anchor) * speed : subDelay;
       void mpvApplySubtitleStyle({
-        delay: subDelay,
+        delay: delayWithDrift,
+        speed,
         scale: scale2,
         pos: Math.max(0, Math.min(100, 100 - subVerticalPos)),
         fontSize: Math.max(18, Math.round(42 * scale2)),
@@ -174728,7 +174745,7 @@
         backColor: subBackgroundColor === "transparent" ? "#00000000" : toMpvNativeColor(subBackgroundColor, Math.max(35, subOpacity)),
         assStyle: style2
       });
-    }, [useMpv, subDelay, subTextColor, subOutlineColor, subBackgroundColor, subOpacity, subSize, subVerticalPos, containerSize.height, activeSubId, mpv.sid]);
+    }, [useMpv, subDelay, subDrift, subTextColor, subOutlineColor, subBackgroundColor, subOpacity, subSize, subVerticalPos, containerSize.height, activeSubId, mpv.sid]);
     useEffect(() => {
       if (!useMpv) return;
       const filter2 = nightMode === "off" ? null : nightMode === "mild" ? "lavfi=[acompressor=threshold=0.125:ratio=2.2:attack=20:release=250:makeup=1.5,alimiter=limit=0.92]" : "lavfi=[acompressor=threshold=0.08:ratio=3.5:attack=10:release=300:makeup=3,alimiter=limit=0.88]";
@@ -175706,6 +175723,7 @@
           currentTime: snapshot.realTime,
           duration: snapshot.totalDuration,
           url,
+          infoHash: sourceInfoHash ?? null,
           watchedAt: (/* @__PURE__ */ new Date()).toISOString(),
           season,
           episode
@@ -175716,7 +175734,7 @@
         clearInterval(interval);
         save();
       };
-    }, [backdropUrl, episode, imdbId, mediaId, mediaSource, mediaTitle, mediaType, posterUrl, season, title, url, wikiTmdbId, year]);
+    }, [backdropUrl, episode, imdbId, mediaId, mediaSource, mediaTitle, mediaType, posterUrl, season, sourceInfoHash, title, url, wikiTmdbId, year]);
     useEffect(() => {
       if (useMpv) {
         setPreparingProxySource(false);
@@ -176538,6 +176556,47 @@
       return acc;
     }, {});
     const runSubtitleAutoSync = useCallback(async (opts) => {
+      const whisperLangFromTrack = (code) => {
+        if (!code) return null;
+        const normalized = code.trim().toLowerCase();
+        if (normalized.length === 2) return normalized;
+        const map = {
+          eng: "en",
+          swe: "sv",
+          rus: "ru",
+          ger: "de",
+          deu: "de",
+          fre: "fr",
+          fra: "fr",
+          spa: "es",
+          ita: "it",
+          jpn: "ja",
+          kor: "ko",
+          chi: "zh",
+          zho: "zh",
+          nor: "no",
+          dan: "da",
+          fin: "fi",
+          por: "pt",
+          dut: "nl",
+          nld: "nl",
+          pol: "pl",
+          tur: "tr",
+          ara: "ar",
+          hin: "hi",
+          tha: "th",
+          vie: "vi",
+          ukr: "uk",
+          ces: "cs",
+          cze: "cs"
+        };
+        return map[normalized] ?? null;
+      };
+      const activeAudioAid = useMpv ? activeAudioTrack ?? audioTracks.find((track) => track.index != null)?.index ?? null : null;
+      const audioTrackIndex = typeof activeAudioAid === "number" && activeAudioAid > 0 ? activeAudioAid - 1 : null;
+      const audioLanguage = whisperLangFromTrack(
+        audioTracks.find((track) => track.index === activeAudioAid)?.language ?? null
+      );
       const minConfidence = typeof opts?.minConfidence === "number" ? opts.minConfidence : null;
       const groqApiKey = getGroqApiKey().trim();
       if (!groqApiKey) {
@@ -176548,47 +176607,75 @@
         setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNeedsSubtitle") });
         return;
       }
-      const syncTime = realTimeRef.current;
-      const cueWindow = cues.filter((cue) => cue.end >= Math.max(0, syncTime - 12) && cue.start <= syncTime + 20);
-      if (cueWindow.length < 2) {
-        setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNotEnoughSpeech") });
-        return;
-      }
-      setSubtitleAutoSyncState({ type: "analyzing" });
-      try {
+      const cueWindowAround = (center) => cues.filter((cue) => cue.end >= Math.max(0, center - 120) && cue.start <= center + 120);
+      const measure2 = async (center) => {
+        const window2 = cueWindowAround(center);
+        if (window2.length < 2) return null;
         const res = await fetch("/api/subtitles/auto-sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             apiKey: groqApiKey,
             url,
-            currentTime: syncTime,
-            cues: cueWindow
+            currentTime: center,
+            cues: window2,
+            audioTrackIndex,
+            language: audioLanguage
           })
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "subtitle_auto_sync_failed");
-        if (typeof data.suggestedDelay !== "number") {
+        if (typeof data.suggestedDelay !== "number") return null;
+        return { offset: data.suggestedDelay, confidence: data.confidence ?? 0 };
+      };
+      const syncTime = realTimeRef.current;
+      if (cueWindowAround(syncTime).length < 2) {
+        setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNotEnoughSpeech") });
+        return;
+      }
+      setSubtitleAutoSyncState({ type: "analyzing" });
+      try {
+        const first = await measure2(syncTime);
+        if (!first) {
           setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNoMatch") });
           return;
         }
-        if (minConfidence !== null && (data.confidence ?? 0) < minConfidence) {
+        if (minConfidence !== null && first.confidence < minConfidence) {
           setSubtitleAutoSyncState({ type: "idle" });
           return;
         }
         lastAutoSyncedDelayRef.current = subDelay;
-        setSubDelay(data.suggestedDelay);
-        setSubtitleAutoSyncState({
-          type: "done",
-          message: `${t("subtitleAutoSyncApplied")} ${data.suggestedDelay > 0 ? "+" : ""}${data.suggestedDelay.toFixed(1)}s`
-        });
+        const appliedDelay = Math.round(-first.offset * 10) / 10;
+        setSubDelay(appliedDelay);
+        setSubDrift(null);
+        let message = `${t("subtitleAutoSyncApplied")} ${appliedDelay > 0 ? "+" : ""}${appliedDelay.toFixed(1)}s`;
+        setSubtitleAutoSyncState({ type: "done", message });
+        const duration2 = totalDuration;
+        if (first.confidence >= 0.6 && duration2 > 900) {
+          const forward = syncTime + 300;
+          const secondPoint = forward <= duration2 - 90 ? forward : Math.max(60, syncTime - 300);
+          if (Math.abs(secondPoint - syncTime) >= 180 && cueWindowAround(secondPoint).length >= 2) {
+            const second = await measure2(secondPoint).catch(() => null);
+            if (second && second.confidence >= 0.6) {
+              const diff = second.offset - first.offset;
+              if (Math.abs(diff) >= 0.35) {
+                const slope = diff / (secondPoint - syncTime);
+                setSubDrift({ slope, anchor: syncTime });
+                const perMinute = slope * 60;
+                message += ` \xB7 ${t("subtitleAutoSyncDriftApplied").replace("{rate}", `${perMinute > 0 ? "+" : ""}${perMinute.toFixed(2)}`)}`;
+                setSubtitleAutoSyncState({ type: "done", message });
+              }
+            }
+          }
+        }
       } catch {
         setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncFailed") });
       }
-    }, [activeSubId, cues, subDelay, t, url]);
+    }, [activeAudioTrack, activeSubId, audioTracks, cues, subDelay, t, totalDuration, url, useMpv]);
     const undoSubtitleAutoSync = useCallback(() => {
       if (lastAutoSyncedDelayRef.current === null) return;
       setSubDelay(lastAutoSyncedDelayRef.current);
+      setSubDrift(null);
       lastAutoSyncedDelayRef.current = null;
       setSubtitleAutoSyncState({ type: "idle" });
     }, []);
@@ -176604,7 +176691,7 @@
       const cueWindow = cues.filter((cue) => cue.end >= realTime - 12 && cue.start <= realTime + 20);
       if (cueWindow.length < 2) return;
       autoSyncAttemptKeyRef.current = attemptKey;
-      void runSubtitleAutoSync({ minConfidence: 0.5 });
+      void runSubtitleAutoSync({ minConfidence: 0.65 });
     }, [activeSubId, cues, hasStarted, realTime, runSubtitleAutoSync, subDelay, subtitleAutoSyncState.type, url]);
     const content = /* @__PURE__ */ jsxs("div", { "data-lumio-player-open": "1", className: `fixed inset-0 z-[60] flex flex-col !mt-0 ${useMpv ? "" : "bg-black"}`, children: [
       !hasEverStarted && !hideStartSplash && /* @__PURE__ */ jsxs(
@@ -180841,7 +180928,7 @@
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
