@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-3DxjGo/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-3DxjGo/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-3DxjGo/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-3DxjGo/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -163736,6 +163736,241 @@
     }
   });
 
+  // lib/plugin-registry.ts
+  var plugin_registry_exports = {};
+  __export(plugin_registry_exports, {
+    getAuthCapabilityProviders: () => getAuthCapabilityProviders,
+    getBootstraps: () => getBootstraps,
+    getBrowsePages: () => getBrowsePages,
+    getEpisodeSidebarProviders: () => getEpisodeSidebarProviders,
+    getHeroes: () => getHeroes,
+    getHomeOverrides: () => getHomeOverrides,
+    getHomeRows: () => getHomeRows,
+    getHomeSources: () => getHomeSources,
+    getInstantPlayProviders: () => getInstantPlayProviders,
+    getMainMenuItems: () => getMainMenuItems,
+    getManagedAuthConsumers: () => getManagedAuthConsumers,
+    getMediaDetailsActions: () => getMediaDetailsActions,
+    getMediaDownloadActions: () => getMediaDownloadActions,
+    getMediaStreamAvailabilityProviders: () => getMediaStreamAvailabilityProviders,
+    getMediaStreamCatalogProviders: () => getMediaStreamCatalogProviders,
+    getPlaybackCapabilityProviders: () => getPlaybackCapabilityProviders,
+    getPluginRegistryRevision: () => getPluginRegistryRevision,
+    getSettingsSections: () => getSettingsSections,
+    getStreamProviders: () => getStreamProviders,
+    getSyncIdentityProviders: () => getSyncIdentityProviders,
+    getTopbarItems: () => getTopbarItems,
+    hasStreamProviders: () => hasStreamProviders,
+    registerPlugin: () => registerPlugin,
+    subscribePluginRegistry: () => subscribePluginRegistry
+  });
+  function notifyRegistryChanged() {
+    registryRevision += 1;
+    for (const listener of registryListeners) {
+      try {
+        listener();
+      } catch (error) {
+        console.warn("[plugin-registry] listener failed", error);
+      }
+    }
+  }
+  function makeContext(pluginId) {
+    return {
+      registerStreamProvider(provider) {
+        if (streamProviders.find((p) => p.id === provider.id)) return;
+        streamProviders.push(provider);
+      },
+      registerMediaStreamCatalogProvider(provider) {
+        if (mediaStreamCatalogProviders.find((entry) => entry.id === provider.id)) return;
+        mediaStreamCatalogProviders.push(provider);
+      },
+      registerMediaStreamAvailabilityProvider(provider) {
+        if (mediaStreamAvailabilityProviders.find((entry) => entry.id === provider.id)) return;
+        mediaStreamAvailabilityProviders.push(provider);
+      },
+      registerInstantPlayProvider(provider) {
+        if (instantPlayProviders.find((entry) => entry.id === provider.id)) return;
+        instantPlayProviders.push(provider);
+      },
+      registerEpisodeSidebarProvider(provider) {
+        if (episodeSidebarProviders.find((p) => p.id === provider.id)) return;
+        episodeSidebarProviders.push(provider);
+      },
+      registerPlaybackCapabilityProvider(provider) {
+        if (playbackCapabilityProviders.find((entry) => entry.id === provider.id)) return;
+        playbackCapabilityProviders.push(provider);
+      },
+      registerSyncIdentityProvider(provider) {
+        if (syncIdentityProviders.find((entry) => entry.id === provider.id)) return;
+        syncIdentityProviders.push(provider);
+      },
+      registerAuthCapabilityProvider(provider) {
+        if (authCapabilityProviders.find((entry) => entry.id === provider.id)) return;
+        authCapabilityProviders.push(provider);
+      },
+      registerSettingsSection(section) {
+        if (settingsSections.find((s) => s.id === section.id)) return;
+        settingsSections.push({
+          ...section,
+          pluginId
+        });
+      },
+      registerMediaDetailsAction(action) {
+        if (mediaDetailsActions.find((entry) => entry.id === action.id)) return;
+        mediaDetailsActions.push(action);
+      },
+      registerMediaDownloadAction(action) {
+        if (mediaDownloadActions.find((entry) => entry.id === action.id)) return;
+        mediaDownloadActions.push(action);
+      },
+      registerHomeRow(row) {
+        if (homeRows.find((r) => r.id === row.id)) return;
+        homeRows.push(row);
+      },
+      registerHomeSource(source) {
+        if (homeSources.find((entry) => entry.id === source.id)) return;
+        homeSources.push(source);
+      },
+      registerBootstrap(bootstrap) {
+        if (bootstraps.find((entry) => entry.id === bootstrap.id)) return;
+        bootstraps.push(bootstrap);
+      },
+      registerHero(hero) {
+        if (heroes.find((entry) => entry.id === hero.id)) return;
+        heroes.push(hero);
+      },
+      registerHomeOverride(homeOverride) {
+        if (homeOverrides.find((entry) => entry.id === homeOverride.id)) return;
+        homeOverrides.push({
+          ...homeOverride,
+          pluginId
+        });
+      },
+      registerBrowsePage(page) {
+        if (browsePages.find((entry) => entry.id === page.id)) return;
+        browsePages.push(page);
+      },
+      registerMainMenuItem(item) {
+        if (mainMenuItems.find((entry) => entry.id === item.id)) return;
+        mainMenuItems.push(item);
+      },
+      registerTopbarItem(item) {
+        if (topbarItems.find((entry) => entry.id === item.id)) return;
+        topbarItems.push(item);
+      },
+      registerManagedAuthConsumer(consumer) {
+        if (managedAuthConsumers.find((entry) => entry.id === consumer.id)) return;
+        managedAuthConsumers.push(consumer);
+      }
+    };
+  }
+  function registerPlugin(plugin2) {
+    if (registeredPluginIds.has(plugin2.id)) return;
+    registeredPluginIds.add(plugin2.id);
+    plugin2.register(makeContext(plugin2.id));
+    notifyRegistryChanged();
+  }
+  function getStreamProviders() {
+    return streamProviders;
+  }
+  function getMediaStreamCatalogProviders() {
+    return mediaStreamCatalogProviders;
+  }
+  function getMediaStreamAvailabilityProviders() {
+    return mediaStreamAvailabilityProviders;
+  }
+  function getInstantPlayProviders() {
+    return instantPlayProviders;
+  }
+  function getEpisodeSidebarProviders() {
+    return episodeSidebarProviders;
+  }
+  function getPlaybackCapabilityProviders() {
+    return playbackCapabilityProviders;
+  }
+  function getSyncIdentityProviders() {
+    return syncIdentityProviders;
+  }
+  function getAuthCapabilityProviders() {
+    return authCapabilityProviders;
+  }
+  function getSettingsSections() {
+    return settingsSections;
+  }
+  function getMediaDetailsActions() {
+    return mediaDetailsActions;
+  }
+  function getMediaDownloadActions() {
+    return mediaDownloadActions;
+  }
+  function getHomeRows() {
+    return homeRows;
+  }
+  function getHomeSources() {
+    return homeSources;
+  }
+  function getBootstraps() {
+    return bootstraps;
+  }
+  function getHeroes() {
+    return heroes;
+  }
+  function getHomeOverrides() {
+    return homeOverrides;
+  }
+  function getBrowsePages() {
+    return browsePages;
+  }
+  function getMainMenuItems() {
+    return mainMenuItems;
+  }
+  function getTopbarItems() {
+    return topbarItems;
+  }
+  function getManagedAuthConsumers() {
+    return managedAuthConsumers;
+  }
+  function hasStreamProviders() {
+    return streamProviders.length > 0;
+  }
+  function getPluginRegistryRevision() {
+    return registryRevision;
+  }
+  function subscribePluginRegistry(listener) {
+    registryListeners.add(listener);
+    return () => {
+      registryListeners.delete(listener);
+    };
+  }
+  var streamProviders, mediaStreamCatalogProviders, mediaStreamAvailabilityProviders, instantPlayProviders, episodeSidebarProviders, playbackCapabilityProviders, syncIdentityProviders, authCapabilityProviders, settingsSections, mediaDownloadActions, mediaDetailsActions, homeRows, homeSources, bootstraps, heroes, homeOverrides, browsePages, mainMenuItems, topbarItems, managedAuthConsumers, registeredPluginIds, registryRevision, registryListeners;
+  var init_plugin_registry = __esm({
+    "lib/plugin-registry.ts"() {
+      streamProviders = [];
+      mediaStreamCatalogProviders = [];
+      mediaStreamAvailabilityProviders = [];
+      instantPlayProviders = [];
+      episodeSidebarProviders = [];
+      playbackCapabilityProviders = [];
+      syncIdentityProviders = [];
+      authCapabilityProviders = [];
+      settingsSections = [];
+      mediaDownloadActions = [];
+      mediaDetailsActions = [];
+      homeRows = [];
+      homeSources = [];
+      bootstraps = [];
+      heroes = [];
+      homeOverrides = [];
+      browsePages = [];
+      mainMenuItems = [];
+      topbarItems = [];
+      managedAuthConsumers = [];
+      registeredPluginIds = /* @__PURE__ */ new Set();
+      registryRevision = 0;
+      registryListeners = /* @__PURE__ */ new Set();
+    }
+  });
+
   // node_modules/@tauri-apps/api/event.js
   async function _unlisten(event, eventId) {
     window.__TAURI_EVENT_PLUGIN_INTERNALS__.unregisterListener(event, eventId);
@@ -166111,6 +166346,40 @@
       limit: 0
     }
   };
+  var TORRENTSDB_AUTOADD_KEY = "scraper_torrentsdb_autoadded_v1";
+  function buildDefaultTorrentsDbConfig(streamProvider) {
+    const provider = normalizeStreamProvider(streamProvider);
+    return {
+      id: "torrentsdb",
+      preset: "torrentsdb",
+      enabled: true,
+      options: {
+        streamProvider: provider,
+        debridProvider: provider,
+        qualityFilter: [],
+        languages: []
+      }
+    };
+  }
+  function withAutoAddedTorrentsDb(configs) {
+    if (configs.some((config) => config.preset === "torrentsdb")) return configs;
+    try {
+      if (getScopedStorageItem(TORRENTSDB_AUTOADD_KEY) === "1") return configs;
+    } catch {
+      return configs;
+    }
+    const primary = configs.find((config) => config.enabled) ?? configs[0];
+    const provider = normalizeStreamProvider(
+      primary?.options?.streamProvider ?? primary?.options?.debridProvider
+    );
+    const next2 = [...configs, buildDefaultTorrentsDbConfig(provider)];
+    try {
+      setScopedStorageItem(TORRENTSDB_AUTOADD_KEY, "1");
+      setScraperConfigs(next2);
+    } catch {
+    }
+    return next2;
+  }
   function getActiveStreamProviderId() {
     if (typeof window === "undefined") return "realdebrid";
     const configs = getScraperConfigs();
@@ -166202,9 +166471,11 @@
     migrateScraperSettingsIfNeeded();
     try {
       const raw = getScopedStorageItem(CONFIGS_KEY) ?? localStorage.getItem(CONFIGS_KEY);
-      if (!raw) return [DEFAULT_TORRENTIO_CONFIG];
+      if (!raw) {
+        return [DEFAULT_TORRENTIO_CONFIG, buildDefaultTorrentsDbConfig("realdebrid")];
+      }
       const parsed = JSON.parse(raw);
-      return parsed.map(normalizeScraperConfig);
+      return withAutoAddedTorrentsDb(parsed.map(normalizeScraperConfig));
     } catch {
       return [DEFAULT_TORRENTIO_CONFIG];
     }
@@ -169286,11 +169557,8 @@
     return getActivePlaybackProvider().resolveLink(link);
   }
 
-  // lib/plugin-registry.ts
-  var mediaStreamAvailabilityProviders = [];
-  function getMediaStreamAvailabilityProviders() {
-    return mediaStreamAvailabilityProviders;
-  }
+  // lib/series-watchlist-feed.ts
+  init_plugin_registry();
 
   // lib/plugin-state.ts
   var STORAGE_KEY = "lumio:plugin-state";
@@ -169559,6 +169827,7 @@
   }
 
   // lib/release-watchlist-feed.ts
+  init_plugin_registry();
   var STREAM_CACHE_TTL_MS2 = 30 * 60 * 1e3;
 
   // components/results/results-loading-indicator.tsx
@@ -169571,7 +169840,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-3DxjGo/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -171877,8 +172146,20 @@
     EffectState2["Inactive"] = "inactive";
   })(EffectState || (EffectState = {}));
 
+  // lib/playback-availability.ts
+  init_plugin_registry();
+
   // lib/video-progress.ts
   var EVENT2 = "lumio-stream-progress-changed";
+  if (typeof window !== "undefined") {
+    void Promise.resolve().then(() => (init_plugin_registry(), plugin_registry_exports)).then(({ subscribePluginRegistry: subscribePluginRegistry2 }) => {
+      subscribePluginRegistry2(() => {
+        window.dispatchEvent(new CustomEvent(EVENT2));
+        window.dispatchEvent(new CustomEvent(HISTORY_EVENT));
+      });
+    }).catch(() => {
+    });
+  }
   var KEY2 = "stream_progress_list";
   var MAX = 20;
   var HISTORY_KEY = "stream_history_list";
@@ -180560,7 +180841,7 @@
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-3DxjGo/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-rEWWKI/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
