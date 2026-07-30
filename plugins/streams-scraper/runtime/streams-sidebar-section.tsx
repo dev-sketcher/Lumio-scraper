@@ -2283,15 +2283,12 @@ export function StreamsSidebarSection({
   // ---- render ----
 
   if (!hasPlaybackAccess) {
-    const missingProvidersText =
-      missingProviderLabels.length > 1
-        ? missingProviderLabels.join(' / ')
-        : missingProviderLabels[0] ?? primaryProviderLabel
     return (
       <section>
-        <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{missingProvidersText}</p>
+        <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Debrid-tjänst saknas</p>
         <p className="mt-3 text-sm text-slate-400">
-          Konfigurera din {missingProvidersText} API-nyckel i Inställningar.
+          Koppla en debrid-tjänst (Real-Debrid, TorBox, AllDebrid m.fl.) under
+          Inställningar → Källor för att kunna hämta streams.
         </p>
       </section>
     )
