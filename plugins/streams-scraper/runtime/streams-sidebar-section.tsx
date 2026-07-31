@@ -253,6 +253,9 @@ export function StreamsSidebarSection({
   const nextEpTransitionRef = useRef(false)
   const nextEpAutoplayPendingRef = useRef(false)
   const sawEarlyPlaybackForEpisodeRef = useRef(false)
+  // Set the moment the player reports real playback (onFirstPlay). Autoplay uses
+  // this to verify a candidate actually plays and, if not, move to the next.
+  const firstPlaySeenRef = useRef(false)
   const watchedMarkedInSessionRef = useRef(false)
   // HomeKit skip flags for episode transitions
   const [playerSkipHomeKitClose, setPlayerSkipHomeKitClose] = useState(false)
@@ -539,28 +542,13 @@ export function StreamsSidebarSection({
     })
   }
 
-  async function probeStreamUrl(inputUrl: string): Promise<boolean> {
-    const controller = new AbortController()
-    const timer = window.setTimeout(() => controller.abort(), 6_000)
-    try {
-      const response = await fetch(`/api/probe-streams?url=${encodeURIComponent(inputUrl)}`, { signal: controller.signal })
-      return response.ok
-    } catch {
-      return false
-    } finally {
-      window.clearTimeout(timer)
-    }
-  }
-
   async function resolveAutoplayCandidate(stream: StreamResult): Promise<{ url: string; filename?: string; forceProxy: boolean } | null> {
     if (stream.directUrl) {
-      // Verify the direct URL is actually alive before committing to it.
-      // Without this, autoplay opened a player on a dead first mediafusion/
-      // torbox URL, stalled ~4s, tore down, and never tried the next (working)
-      // candidate — the exact stream the user plays fine by clicking it
-      // manually. Probing lets the candidate loop skip to one that plays.
-      const alive = await probeStreamUrl(stream.directUrl)
-      if (!alive) return null
+      // Return the direct URL as-is. Whether it actually plays is verified in
+      // the player via onFirstPlay (the autoplay loop moves to the next
+      // candidate if playback doesn't start) — a reachability probe was
+      // unreliable for mediafusion redirect URLs and both passed dead ones
+      // and rejected playable ones.
       const urlFilename = stream.directUrl.split('/').pop()?.split('?')[0]
       return {
         url: stream.directUrl,
@@ -1551,27 +1539,33 @@ export function StreamsSidebarSection({
     return false
   }
 
+  async function waitForFirstPlay(attemptId: number, timeoutMs: number): Promise<boolean> {
+    const iterations = Math.max(1, Math.round(timeoutMs / 400))
+    for (let i = 0; i < iterations; i += 1) {
+      if (attemptId !== playAttemptRef.current) return false
+      if (firstPlaySeenRef.current) return true
+      await sleep(400)
+    }
+    return firstPlaySeenRef.current
+  }
+
   async function tryPlayRequestAutoplay(streamList: StreamResult[], attemptId: number) {
     const candidates = buildAutoplayCandidates(streamList, {
       maxSizeGb: getAutoPlayMaxStreamSizeGb(),
       preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage()),
     })
+    // Fall back to the raw sidebar list if filtering removed everything, so a
+    // play button never gives up while streams exist.
+    const pool = candidates.length > 0 ? candidates : streamList.slice(0, 5)
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.25',
+      pluginVersion: '1.0.26',
       streamCount: streamList.length,
-      candidateCount: candidates.length,
-      withDirectUrl: candidates.filter((c) => Boolean(c.directUrl)).length,
-      withInfoHash: candidates.filter((c) => Boolean(c.infoHash)).length,
+      candidateCount: pool.length,
+      withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
+      withInfoHash: pool.filter((c) => Boolean(c.infoHash)).length,
     })
-    if (candidates.length === 0) {
+    if (pool.length === 0) {
       if (attemptId !== playAttemptRef.current) return false
-      // No autoplay-eligible candidate after filtering (size/quality), but the
-      // sidebar list may still hold playable streams — play the first rather
-      // than giving up, so a play button never fails when a stream exists.
-      if (streamList.length > 0) {
-        await handlePlayStream(streamList[0])
-        return true
-      }
       nextEpAutoplayPendingRef.current = false
       setPlayerSkipHomeKitOpen(false)
       onAutoPlayFallback?.()
@@ -1580,56 +1574,65 @@ export function StreamsSidebarSection({
 
     setStep({ type: 'processing', message: mediaType === 'tv' ? t('startingEpisode') : t('startingMovie') })
 
-    for (const candidate of candidates) {
+    // Try each candidate in the player and advance to the next if playback
+    // does not actually start (onFirstPlay). This mirrors a user manually
+    // clicking streams until one plays: some mediafusion/debrid URLs are
+    // reachable but never play, so committing to the first was the bug.
+    // Switching to the next candidate's URL swaps the player source WITHOUT a
+    // close (a close would exit the detail view to home), and the "starting…"
+    // splash stays up across the swaps.
+    for (const candidate of pool) {
+      if (attemptId !== playAttemptRef.current) return false
+      let resolved: { url: string; filename?: string; forceProxy: boolean } | null = null
       try {
-        if (attemptId !== playAttemptRef.current) return false
-        const resolved = await resolveAutoplayCandidate(candidate)
-        if (attemptId !== playAttemptRef.current) return false
-        sendTelemetry('playback.autoplay', resolved ? 'ok' : 'info', resolved ? 'candidate resolved -> play' : 'candidate unresolved', {
-          directUrl: Boolean(candidate.directUrl),
-          infoHash: Boolean(candidate.infoHash),
-          resolvedUrl: resolved ? String(resolved.url).slice(0, 60) : null,
-        })
-        if (resolved) {
-          beginPlayerSession({
-            url: resolved.url,
-            filename: resolved.filename,
-            season: selectedSeason?.season_number,
-            episode: selectedEpisode?.episode_number,
-            initialTime: playRequestInitialTime ?? undefined,
-            forceProxy: resolved.forceProxy,
-          })
-          return true
-        }
+        resolved = await resolveAutoplayCandidate(candidate)
       } catch (err) {
         sendTelemetry('playback.autoplay', 'error', 'candidate threw', {
           message: err instanceof Error ? err.message.slice(0, 100) : 'error',
         })
-        // Try the next candidate.
       }
+      if (attemptId !== playAttemptRef.current) return false
+      if (!resolved) {
+        sendTelemetry('playback.autoplay', 'info', 'candidate unresolved -> next', {
+          directUrl: Boolean(candidate.directUrl),
+          infoHash: Boolean(candidate.infoHash),
+        })
+        continue
+      }
+
+      firstPlaySeenRef.current = false
+      setPlayerHideStartSplash(true)
+      beginPlayerSession({
+        url: resolved.url,
+        filename: resolved.filename,
+        season: selectedSeason?.season_number,
+        episode: selectedEpisode?.episode_number,
+        initialTime: playRequestInitialTime ?? undefined,
+        forceProxy: resolved.forceProxy,
+      }, attemptId)
+
+      const started = await waitForFirstPlay(attemptId, 12_000)
+      sendTelemetry('playback.autoplay', started ? 'ok' : 'info', started ? 'candidate playing' : 'candidate did not start -> next', {
+        directUrl: Boolean(candidate.directUrl),
+        infoHash: Boolean(candidate.infoHash),
+        resolvedUrl: String(resolved.url).slice(0, 60),
+      })
+      if (started) return true
+      if (attemptId !== playAttemptRef.current) return false
+      // Not playing — loop to the next candidate (beginPlayerSession below
+      // swaps the source without closing).
     }
 
     if (attemptId !== playAttemptRef.current) return false
-    sendTelemetry('playback.autoplay', 'info', 'no instant candidate -> delegate to manual flow', {
-      candidateCount: candidates.length,
+    sendTelemetry('playback.autoplay', 'info', 'no candidate started playing', {
+      candidateCount: pool.length,
       streamCount: streamList.length,
     })
-    // No candidate was INSTANTLY playable (e.g. cached on the scraper but not
-    // yet on the user's debrid → status 'downloading', which resolveAutoplay-
-    // Candidate skips). Rather than giving up (which dropped the user back with
-    // no playback), delegate to the full add-and-wait flow the manual sidebar
-    // PLAY uses. handlePlayStream picks the best cached candidate and waits for
-    // the debrid to make it playable, so "Spela" plays a stream whenever one
-    // exists — independent of which scraper (torrentio/mediafusion/…) is down.
-    const bestForHandoff = candidates[0] ?? streamList[0]
-    if (bestForHandoff) {
-      await handlePlayStream(bestForHandoff)
-      return true
-    }
     nextEpAutoplayPendingRef.current = false
     setPlayerSkipHomeKitOpen(false)
-    onAutoPlayFallback?.()
+    setPlayerUrl(null)
     setStep({ type: 'idle' })
+    onAutoPlayFallback?.()
     return false
   }
 
@@ -2699,6 +2702,8 @@ export function StreamsSidebarSection({
           title={playerTitle}
           onClose={handlePlayerClose}
           onFirstPlay={() => {
+            // Real playback started — let autoplay's watchdog know this source works.
+            firstPlaySeenRef.current = true
             // End suppress window only when actual playback starts.
             nextEpTransitionRef.current = false
             if (playerSkipHomeKitOpen) setPlayerSkipHomeKitOpen(false)
