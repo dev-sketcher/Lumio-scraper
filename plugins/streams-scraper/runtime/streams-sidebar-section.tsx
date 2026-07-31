@@ -566,8 +566,17 @@ export function StreamsSidebarSection({
             episodeNumber: selectedEpisode?.episode_number ?? null,
             maxSizeGb: getAutoPlayMaxStreamSizeGb(),
           })
-          if (fileIds.length === 0) return null
-          await selectPlaybackFiles(info.id, fileIds.join(','))
+          if (fileIds.length > 0) {
+            await selectPlaybackFiles(info.id, fileIds.join(','))
+          } else {
+            // Match the manual sidebar PLAY flow (pollTorrent): when no filename
+            // matches the episode, fall back to the torrent's video file instead
+            // of giving up. This is exactly why "Spela" used to fail on streams
+            // that the sidebar plays fine — autoplay skipped them here.
+            const videoFiles = info.files.filter((f) => VIDEO_EXTS.test(f.path))
+            if (videoFiles.length === 0) return null
+            await selectPlaybackFiles(info.id, String(videoFiles[0].id))
+          }
         } else {
           // Movie: only auto-play if there's exactly one meaningful video file
           const singleId = getSingleAutoplayFileId(info)

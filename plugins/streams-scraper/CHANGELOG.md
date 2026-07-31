@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.23
+
+- Autoplay ("Spela"/hero/detail/continue) now selects the playable file exactly like the manual sidebar PLAY: when no filename matches the episode it falls back to the torrent's video file instead of skipping the source. This is why "Spela" failed on the very streams the sidebar plays fine. Play now uses the sidebar's stream list and plays regardless of whether torrentio (or any single scraper) is down.
+
 ## 1.0.22
 
 - Autoplay now waits for a source that is still caching on the debrid (status 'downloading') instead of giving up on it, so "Spela" plays sources that are seconds from ready rather than bouncing back. Combined with 1.0.21's delegation, a play button plays whenever any sidebar stream is (or becomes) playable.
