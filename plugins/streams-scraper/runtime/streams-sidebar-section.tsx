@@ -1536,6 +1536,13 @@ export function StreamsSidebarSection({
       maxSizeGb: getAutoPlayMaxStreamSizeGb(),
       preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage()),
     })
+    sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
+      pluginVersion: '1.0.24',
+      streamCount: streamList.length,
+      candidateCount: candidates.length,
+      withDirectUrl: candidates.filter((c) => Boolean(c.directUrl)).length,
+      withInfoHash: candidates.filter((c) => Boolean(c.infoHash)).length,
+    })
     if (candidates.length === 0) {
       if (attemptId !== playAttemptRef.current) return false
       // No autoplay-eligible candidate after filtering (size/quality), but the
@@ -1558,6 +1565,11 @@ export function StreamsSidebarSection({
         if (attemptId !== playAttemptRef.current) return false
         const resolved = await resolveAutoplayCandidate(candidate)
         if (attemptId !== playAttemptRef.current) return false
+        sendTelemetry('playback.autoplay', resolved ? 'ok' : 'info', resolved ? 'candidate resolved -> play' : 'candidate unresolved', {
+          directUrl: Boolean(candidate.directUrl),
+          infoHash: Boolean(candidate.infoHash),
+          resolvedUrl: resolved ? String(resolved.url).slice(0, 60) : null,
+        })
         if (resolved) {
           beginPlayerSession({
             url: resolved.url,
@@ -1569,12 +1581,19 @@ export function StreamsSidebarSection({
           })
           return true
         }
-      } catch {
+      } catch (err) {
+        sendTelemetry('playback.autoplay', 'error', 'candidate threw', {
+          message: err instanceof Error ? err.message.slice(0, 100) : 'error',
+        })
         // Try the next candidate.
       }
     }
 
     if (attemptId !== playAttemptRef.current) return false
+    sendTelemetry('playback.autoplay', 'info', 'no instant candidate -> delegate to manual flow', {
+      candidateCount: candidates.length,
+      streamCount: streamList.length,
+    })
     // No candidate was INSTANTLY playable (e.g. cached on the scraper but not
     // yet on the user's debrid → status 'downloading', which resolveAutoplay-
     // Candidate skips). Rather than giving up (which dropped the user back with
