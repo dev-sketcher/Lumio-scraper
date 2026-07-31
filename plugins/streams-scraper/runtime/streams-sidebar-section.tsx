@@ -1525,6 +1525,13 @@ export function StreamsSidebarSection({
     })
     if (candidates.length === 0) {
       if (attemptId !== playAttemptRef.current) return false
+      // No autoplay-eligible candidate after filtering (size/quality), but the
+      // sidebar list may still hold playable streams — play the first rather
+      // than giving up, so a play button never fails when a stream exists.
+      if (streamList.length > 0) {
+        await handlePlayStream(streamList[0])
+        return true
+      }
       nextEpAutoplayPendingRef.current = false
       setPlayerSkipHomeKitOpen(false)
       onAutoPlayFallback?.()
@@ -1555,6 +1562,18 @@ export function StreamsSidebarSection({
     }
 
     if (attemptId !== playAttemptRef.current) return false
+    // No candidate was INSTANTLY playable (e.g. cached on the scraper but not
+    // yet on the user's debrid → status 'downloading', which resolveAutoplay-
+    // Candidate skips). Rather than giving up (which dropped the user back with
+    // no playback), delegate to the full add-and-wait flow the manual sidebar
+    // PLAY uses. handlePlayStream picks the best cached candidate and waits for
+    // the debrid to make it playable, so "Spela" plays a stream whenever one
+    // exists — independent of which scraper (torrentio/mediafusion/…) is down.
+    const bestForHandoff = candidates[0] ?? streamList[0]
+    if (bestForHandoff) {
+      await handlePlayStream(bestForHandoff)
+      return true
+    }
     nextEpAutoplayPendingRef.current = false
     setPlayerSkipHomeKitOpen(false)
     onAutoPlayFallback?.()
