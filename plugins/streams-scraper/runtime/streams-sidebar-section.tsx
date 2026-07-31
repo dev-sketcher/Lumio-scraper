@@ -1753,6 +1753,18 @@ export function StreamsSidebarSection({
     forceProxy?: boolean
   }, attemptId?: number) {
     if (!isPlayAttemptActive(attemptId)) return
+    // Never open a player session without a resolved source. Opening an empty
+    // session flashed a dead player that immediately tore down and dropped the
+    // user out of the detail view (to the home page on the desktop handoff).
+    // Fall back to the sidebar stream list instead so a source can be picked.
+    if (!config.url) {
+      sendTelemetry('playback.open', 'error', 'no playable source resolved', { mediaType, title })
+      setPlayerHideStartSplash(false)
+      setPlayerSplashFading(false)
+      setStep({ type: 'idle' })
+      onAutoPlayFallback?.()
+      return
+    }
     nextEpTransitionRef.current = false
     nextEpAutoplayPendingRef.current = false
     sawEarlyPlaybackForEpisodeRef.current = false
