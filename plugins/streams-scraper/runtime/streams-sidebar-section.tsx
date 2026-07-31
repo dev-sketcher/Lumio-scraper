@@ -539,8 +539,28 @@ export function StreamsSidebarSection({
     })
   }
 
+  async function probeStreamUrl(inputUrl: string): Promise<boolean> {
+    const controller = new AbortController()
+    const timer = window.setTimeout(() => controller.abort(), 6_000)
+    try {
+      const response = await fetch(`/api/probe-streams?url=${encodeURIComponent(inputUrl)}`, { signal: controller.signal })
+      return response.ok
+    } catch {
+      return false
+    } finally {
+      window.clearTimeout(timer)
+    }
+  }
+
   async function resolveAutoplayCandidate(stream: StreamResult): Promise<{ url: string; filename?: string; forceProxy: boolean } | null> {
     if (stream.directUrl) {
+      // Verify the direct URL is actually alive before committing to it.
+      // Without this, autoplay opened a player on a dead first mediafusion/
+      // torbox URL, stalled ~4s, tore down, and never tried the next (working)
+      // candidate — the exact stream the user plays fine by clicking it
+      // manually. Probing lets the candidate loop skip to one that plays.
+      const alive = await probeStreamUrl(stream.directUrl)
+      if (!alive) return null
       const urlFilename = stream.directUrl.split('/').pop()?.split('?')[0]
       return {
         url: stream.directUrl,
@@ -1537,7 +1557,7 @@ export function StreamsSidebarSection({
       preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage()),
     })
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.24',
+      pluginVersion: '1.0.25',
       streamCount: streamList.length,
       candidateCount: candidates.length,
       withDirectUrl: candidates.filter((c) => Boolean(c.directUrl)).length,

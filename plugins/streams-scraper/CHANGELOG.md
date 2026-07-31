@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.25
+
+- Autoplay now verifies a direct stream URL is actually alive (probe) before committing to it. Previously "Spela" opened a player on the first (often dead) mediafusion/torbox URL, stalled, and never tried the next working stream — so it bounced back with no playback even though a later stream in the list plays fine. It now skips dead URLs and plays the first that works, matching a manual click on a working stream.
+
 ## 1.0.24
 
 - Diagnostics: autoplay now logs candidate counts, whether each candidate has a direct URL vs infoHash, the resolve outcome, and the running plugin version — so a failed "Spela" pinpoints exactly where it breaks.
