@@ -554,7 +554,7 @@ export function StreamsSidebarSection({
     const magnet = `magnet:?xt=urn:btih:${stream.infoHash}`
     const added = await queueMagnetForPlayback(magnet)
 
-    for (let attempt = 0; attempt < 8; attempt += 1) {
+    for (let attempt = 0; attempt < 16; attempt += 1) {
       if (attempt > 0) await sleep(1500)
       const info = await getPlaybackSourceInfo(added.id)
 
@@ -590,7 +590,11 @@ export function StreamsSidebarSection({
         }
       }
 
-      if (info.status === 'downloading') return null
+      // Still caching on the debrid — wait it out (like the manual PLAY flow)
+      // instead of giving up. Only a hard error/dead torrent skips to the next
+      // candidate. This is why autoplay used to "fail" on sources that were
+      // seconds away from being playable.
+      if (info.status === 'downloading') continue
       if (['error', 'magnet_error', 'dead', 'virus'].includes(info.status)) return null
     }
 
