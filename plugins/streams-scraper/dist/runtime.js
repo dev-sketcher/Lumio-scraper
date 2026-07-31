@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QdJbTU/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QdJbTU/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QdJbTU/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QdJbTU/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164045,6 +164045,42 @@
 
   // lib/i18n.tsx
   init_react_shim();
+
+  // lib/profile-storage.ts
+  var PROFILES_KEY = "app_profiles";
+  var ACTIVE_PROFILE_KEY = "app_active_profile";
+  var PROFILE_PREFIX = "profile:";
+  function readProfiles() {
+    if (typeof window === "undefined") return [];
+    try {
+      return JSON.parse(localStorage.getItem(PROFILES_KEY) ?? "[]");
+    } catch {
+      return [];
+    }
+  }
+  function getActiveProfileId() {
+    if (typeof window === "undefined") return null;
+    const value = localStorage.getItem(ACTIVE_PROFILE_KEY);
+    return value && readProfiles().some((profile) => profile.id === value) ? value : null;
+  }
+  function getProfileStorageKey(baseKey, profileId = getActiveProfileId()) {
+    return profileId ? `${PROFILE_PREFIX}${profileId}:${baseKey}` : baseKey;
+  }
+  function getScopedStorageItem(baseKey) {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem(getProfileStorageKey(baseKey));
+  }
+  function setScopedStorageItem(baseKey, value) {
+    try {
+      localStorage.setItem(getProfileStorageKey(baseKey), value);
+    } catch {
+    }
+  }
+  function removeScopedStorageItem(baseKey) {
+    localStorage.removeItem(getProfileStorageKey(baseKey));
+  }
+
+  // lib/i18n.tsx
   init_jsx_runtime_shim();
   var strings = {
     en: {
@@ -166260,40 +166296,6 @@
   });
   function useLang() {
     return useContext(LangContext);
-  }
-
-  // lib/profile-storage.ts
-  var PROFILES_KEY = "app_profiles";
-  var ACTIVE_PROFILE_KEY = "app_active_profile";
-  var PROFILE_PREFIX = "profile:";
-  function readProfiles() {
-    if (typeof window === "undefined") return [];
-    try {
-      return JSON.parse(localStorage.getItem(PROFILES_KEY) ?? "[]");
-    } catch {
-      return [];
-    }
-  }
-  function getActiveProfileId() {
-    if (typeof window === "undefined") return null;
-    const value = localStorage.getItem(ACTIVE_PROFILE_KEY);
-    return value && readProfiles().some((profile) => profile.id === value) ? value : null;
-  }
-  function getProfileStorageKey(baseKey, profileId = getActiveProfileId()) {
-    return profileId ? `${PROFILE_PREFIX}${profileId}:${baseKey}` : baseKey;
-  }
-  function getScopedStorageItem(baseKey) {
-    if (typeof window === "undefined") return null;
-    return localStorage.getItem(getProfileStorageKey(baseKey));
-  }
-  function setScopedStorageItem(baseKey, value) {
-    try {
-      localStorage.setItem(getProfileStorageKey(baseKey), value);
-    } catch {
-    }
-  }
-  function removeScopedStorageItem(baseKey) {
-    localStorage.removeItem(getProfileStorageKey(baseKey));
   }
 
   // lib/stream-provider-runtime/stream-provider-settings.ts
@@ -169850,7 +169852,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QdJbTU/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -180928,7 +180930,7 @@
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-gXTOTF/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QdJbTU/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

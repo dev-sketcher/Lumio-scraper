@@ -213,7 +213,18 @@ export function getPreferredTorrentFileIds(
     const match = videoFiles.find((file) =>
       matchesEpisodeIdentifier(file.path, options.seasonNumber as number, options.episodeNumber as number),
     )
-    return match ? [match.id] : []
+    if (match) return [match.id]
+    // No filename matched the SxxExx pattern. If this torrent is a single-episode
+    // release whose filename just lacks a standard tag, use its one video file
+    // instead of failing (which would bounce the user back with no playback).
+    // For multi-file torrents (season packs) we must NOT guess a file, or we'd
+    // silently play the wrong episode — return none so the caller falls back.
+    const plausible = videoFiles.filter(
+      (file) => !looksLikeSampleOrExtra(file.path) && (file.bytes ?? 0) >= 200 * 1024 * 1024,
+    )
+    if (plausible.length === 1) return [plausible[0].id]
+    if (videoFiles.length === 1) return [videoFiles[0].id]
+    return []
   }
   const maxBytes = options.maxSizeGb && options.maxSizeGb > 0
     ? options.maxSizeGb * 1024 ** 3
