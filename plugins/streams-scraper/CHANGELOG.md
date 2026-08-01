@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.31
+
+- Plugin UI now follows the app's language picker (rebuilt against the host's fixed i18n module — plugin bundles used to be stuck on the English default because the host's language context never reached their bundled copy).
+
 ## 1.0.30
 
 - TorrentsDB retired as a scraper. Its playback URLs are rate-limited server-side (HTTP 429 "Too many requests") even for streams it labels as cached, so every play attempt through it failed. The preset is no longer offered in settings, and already-configured TorrentsDB scrapers are dropped automatically on load — no user action needed.

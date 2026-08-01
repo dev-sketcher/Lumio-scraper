@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QwWCC6/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QwWCC6/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QwWCC6/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QwWCC6/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164049,6 +164049,7 @@
   // lib/profile-storage.ts
   var PROFILES_KEY = "app_profiles";
   var ACTIVE_PROFILE_KEY = "app_active_profile";
+  var PROFILE_EVENT = "lumio-profile-changed";
   var PROFILE_PREFIX = "profile:";
   function readProfiles() {
     if (typeof window === "undefined") return [];
@@ -164057,6 +164058,10 @@
     } catch {
       return [];
     }
+  }
+  function onProfileChanged(listener) {
+    window.addEventListener(PROFILE_EVENT, listener);
+    return () => window.removeEventListener(PROFILE_EVENT, listener);
   }
   function getActiveProfileId() {
     if (typeof window === "undefined") return null;
@@ -165086,6 +165091,9 @@
       hpWideLayoutEyebrow: "Wide layout",
       hpSliderCardsTitle: "Slider cards",
       hpSliderCardsHint: "How many cards a slider shows at most, globally.",
+      hpSliderCardsRowLabel: "Slider cards",
+      hpSliderCardsGlobalOption: "Global ({count})",
+      tgColumnsLabel: "Columns",
       hpAlwaysShown: "Always shown",
       hpTopMenuEyebrow: "Top menu",
       hpTopButtonsTitle: "Top buttons",
@@ -166188,6 +166196,9 @@
       hpWideLayoutEyebrow: "Bred layout",
       hpSliderCardsTitle: "Sliderkort",
       hpSliderCardsHint: "Hur m\xE5nga kort en slider max visar globalt.",
+      hpSliderCardsRowLabel: "Sliderkort",
+      hpSliderCardsGlobalOption: "Global ({count})",
+      tgColumnsLabel: "Kolumner",
       hpAlwaysShown: "Visas alltid",
       hpTopMenuEyebrow: "\xD6vre meny",
       hpTopButtonsTitle: "Topp-knappar",
@@ -166288,14 +166299,54 @@
       meStremioUnreachable: "Kunde inte n\xE5 Stremio-addonen."
     }
   };
-  var LangContext = createContext2({
+  var detachedLangContextValue = {
     lang: "en",
     setLang: () => {
     },
     t: (key) => strings.en[key]
-  });
+  };
+  var LangContext = createContext2(detachedLangContextValue);
+  var LANG_CHANGED_EVENT = "lumio-app-lang-changed";
+  var STORAGE_KEY = "app_lang";
+  var DEFAULT_LANG = "en";
+  function readStoredLang() {
+    if (typeof window === "undefined") return DEFAULT_LANG;
+    try {
+      const scoped = getScopedStorageItem(STORAGE_KEY);
+      const legacy = localStorage.getItem(STORAGE_KEY);
+      const value = scoped ?? legacy;
+      if (value === "sv" || value === "en") return value;
+    } catch {
+    }
+    return DEFAULT_LANG;
+  }
   function useLang() {
-    return useContext(LangContext);
+    const ctx = useContext(LangContext);
+    const detached = ctx === detachedLangContextValue;
+    const [detachedLang, setDetachedLang] = useState(DEFAULT_LANG);
+    useEffect(() => {
+      if (!detached || typeof window === "undefined") return;
+      const sync2 = () => setDetachedLang(readStoredLang());
+      sync2();
+      window.addEventListener(LANG_CHANGED_EVENT, sync2);
+      const offProfile = onProfileChanged(sync2);
+      return () => {
+        window.removeEventListener(LANG_CHANGED_EVENT, sync2);
+        offProfile();
+      };
+    }, [detached]);
+    if (!detached) return ctx;
+    return {
+      lang: detachedLang,
+      setLang: (l) => {
+        setScopedStorageItem(STORAGE_KEY, l);
+        setDetachedLang(l);
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent(LANG_CHANGED_EVENT));
+        }
+      },
+      t: (key) => strings[detachedLang][key] ?? strings.en[key]
+    };
   }
 
   // lib/stream-provider-runtime/stream-provider-settings.ts
@@ -169572,7 +169623,7 @@
   init_plugin_registry();
 
   // lib/plugin-state.ts
-  var STORAGE_KEY = "lumio:plugin-state";
+  var STORAGE_KEY2 = "lumio:plugin-state";
   function normalizeState(state, fallback) {
     return {
       ...fallback,
@@ -169587,7 +169638,7 @@
   function readAll() {
     if (typeof window === "undefined") return {};
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
+      const raw = localStorage.getItem(STORAGE_KEY2);
       return raw ? JSON.parse(raw) : {};
     } catch {
       return {};
@@ -169851,7 +169902,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QwWCC6/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -173727,12 +173778,12 @@
   }
 
   // lib/subtitle-delay-store.ts
-  var STORAGE_KEY2 = "lumio_subtitle_delays_v1";
+  var STORAGE_KEY3 = "lumio_subtitle_delays_v1";
   var MAX_ENTRIES = 400;
   function readStore() {
     if (typeof window === "undefined") return {};
     try {
-      const raw = window.localStorage.getItem(STORAGE_KEY2);
+      const raw = window.localStorage.getItem(STORAGE_KEY3);
       if (!raw) return {};
       const parsed = JSON.parse(raw);
       return parsed && typeof parsed === "object" ? parsed : {};
@@ -173749,7 +173800,7 @@
           delete store[key];
         });
       }
-      window.localStorage.setItem(STORAGE_KEY2, JSON.stringify(store));
+      window.localStorage.setItem(STORAGE_KEY3, JSON.stringify(store));
     } catch {
     }
   }
@@ -179829,7 +179880,7 @@
       const oversized = playable.filter((s) => !withinCap.includes(s));
       const pool = [...withinCap, ...oversized].slice(0, 5);
       sendTelemetry("playback.autoplay", "info", "autoplay resolve start", {
-        pluginVersion: "1.0.30",
+        pluginVersion: "1.0.31",
         streamCount: streamList.length,
         candidateCount: pool.length,
         withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -181022,7 +181073,7 @@
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QwWCC6/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
