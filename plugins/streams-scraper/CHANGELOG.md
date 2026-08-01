@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.33
+
+- Resume reuses the stream that actually played. The source is remembered per title/episode (explicit sidebar picks too) and tried first on the next play, so "Fortsätt" starts on the same source and skips re-racing the ranked list — with the normal candidate order still available as fallback if that source has since disappeared.
+
 ## 1.0.32
 
 - Reports the settled stream count to the host (`onStreamsResult`) so the app can hide Play/Download on titles where the search found nothing, instead of offering a click that must fail.

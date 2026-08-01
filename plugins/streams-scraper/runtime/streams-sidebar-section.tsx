@@ -18,6 +18,7 @@ import type { StreamResult } from '@/app/api/streams/route'
 import type { TvSeason, TvEpisode } from '@/app/api/tv-info/route'
 import { getWatchedForSeries, markSeasonWatched, onWatchedEpisodesChanged, setWatched, toggleWatched } from '@/lib/watched-episodes'
 import { VideoPlayerModal } from '@/components/player/video-player-modal'
+import { getScopedStorageItem, setScopedStorageItem } from '@/lib/profile-storage'
 import { applyStreamFilters, getStreamFilters, DEFAULT_FILTERS } from '@/lib/stream-provider-runtime/stream-filters'
 import { useLang } from '@/lib/i18n'
 import {
@@ -61,6 +62,61 @@ import {
   qualityRank,
   VIDEO_EXTS,
 } from '@/lib/stream-provider-runtime/stream-provider-stream-utils'
+
+// Remembered "this stream actually played" per title/episode. Resuming used
+// to re-run the ranking from scratch, which both took longer and regularly
+// landed on a different source than the one the user was already watching.
+const LAST_PLAYED_KEY = 'streams_last_played_v1'
+const LAST_PLAYED_MAX_ENTRIES = 120
+
+interface LastPlayedStream {
+  infoHash?: string
+  directUrl?: string
+  name?: string
+  title?: string
+  savedAt: number
+}
+
+function readLastPlayedMap(): Record<string, LastPlayedStream> {
+  if (typeof window === 'undefined') return {}
+  try {
+    const raw = getScopedStorageItem(LAST_PLAYED_KEY)
+    if (!raw) return {}
+    const parsed = JSON.parse(raw) as Record<string, LastPlayedStream>
+    return parsed && typeof parsed === 'object' ? parsed : {}
+  } catch {
+    return {}
+  }
+}
+
+function getLastPlayedStream(key: string): LastPlayedStream | null {
+  return readLastPlayedMap()[key] ?? null
+}
+
+function saveLastPlayedStream(key: string, stream: StreamResult): void {
+  if (typeof window === 'undefined') return
+  const map = readLastPlayedMap()
+  map[key] = {
+    infoHash: stream.infoHash || undefined,
+    directUrl: stream.directUrl || undefined,
+    name: stream.name,
+    title: stream.title,
+    savedAt: Date.now(),
+  }
+  const entries = Object.entries(map)
+  if (entries.length > LAST_PLAYED_MAX_ENTRIES) {
+    entries.sort((a, b) => (b[1].savedAt ?? 0) - (a[1].savedAt ?? 0))
+    entries.length = LAST_PLAYED_MAX_ENTRIES
+  }
+  setScopedStorageItem(LAST_PLAYED_KEY, JSON.stringify(Object.fromEntries(entries)))
+}
+
+function matchesLastPlayed(stream: StreamResult, saved: LastPlayedStream | null): boolean {
+  if (!saved) return false
+  if (saved.infoHash && stream.infoHash) return saved.infoHash === stream.infoHash
+  if (saved.directUrl && stream.directUrl) return saved.directUrl === stream.directUrl
+  return false
+}
 
 const EPISODE_STREAM_STATUS_CONCURRENCY = 4
 const MIN_EPISODE_AUTOPLAY_BYTES = 120 * 1024 * 1024
@@ -362,6 +418,8 @@ export function StreamsSidebarSection({
 
   const effectiveImdbId = resolvedImdbId ?? imdbId ?? null
   const mediaContextKey = `${mediaType}:${tmdbId ?? 'none'}:${title}`
+  // Includes the episode so a series remembers per-episode, not per-show.
+  const playbackTargetKey = `${mediaContextKey}:${selectedSeason?.season_number ?? 'x'}:${selectedEpisode?.episode_number ?? 'x'}`
 
   useEffect(() => {
     didApplyInitialSeason.current = false
@@ -1453,6 +1511,8 @@ export function StreamsSidebarSection({
     // while this player session runs re-triggers autoplay the moment the
     // user closes the player (ghost "Startar avsnitt…" splash).
     setPendingPlayRequestToken(null)
+    // An explicit pick is the strongest signal of what to resume with.
+    saveLastPlayedStream(playbackTargetKey, stream)
     resetNextEpisodeState()
     // Show the sidebar splash from the moment the user clicks PLAY so the
     // flow is one continuous opaque overlay through stream resolution →
@@ -1615,9 +1675,20 @@ export function StreamsSidebarSection({
         })
       : playable
     const oversized = playable.filter((s) => !withinCap.includes(s))
-    const pool = [...withinCap, ...oversized].slice(0, 5)
+    // The stream that actually played last time for this exact target goes
+    // first: resuming then reuses the known-good source (faster, and the same
+    // one the user was watching) while the ranked list stays as fallback if
+    // it has since disappeared.
+    const remembered = getLastPlayedStream(playbackTargetKey)
+    const ordered = [...withinCap, ...oversized]
+    const rememberedIndex = ordered.findIndex((stream) => matchesLastPlayed(stream, remembered))
+    if (rememberedIndex > 0) {
+      const [hit] = ordered.splice(rememberedIndex, 1)
+      ordered.unshift(hit)
+    }
+    const pool = ordered.slice(0, 5)
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.32',
+      pluginVersion: '1.0.33',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -1689,7 +1760,12 @@ export function StreamsSidebarSection({
           loadFailed: autoplayLoadFailedRef.current,
           resolvedUrl: String(resolved.url).slice(0, 60),
         })
-        if (started) return true
+        if (started) {
+          // Remember the source that actually played so resuming this exact
+          // target reuses it instead of re-racing the whole ranked list.
+          saveLastPlayedStream(playbackTargetKey, candidate)
+          return true
+        }
         if (attemptId !== playAttemptRef.current) return false
         // Not playing — loop to the next candidate (beginPlayerSession above
         // swaps the source without closing).

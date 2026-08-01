@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -169908,7 +169908,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -175691,9 +175691,21 @@
               5e3,
               "subtitle_mpv_sub_add_timeout"
             );
-            void getMpvSid().catch(() => null);
             setActiveSubId(sub.id);
             await refreshMpvSubtitleTracks();
+            try {
+              const sid = await getMpvSid();
+              if (!sid || sid <= 0) {
+                const tracks = await getMpvSubtitleTracks().catch(() => []);
+                const external = Array.isArray(tracks) ? tracks.filter((track) => track.external) : [];
+                const target = external[external.length - 1];
+                if (target?.sid) {
+                  await setMpvSubtitleTrack(target.sid);
+                  await refreshMpvSubtitleTracks();
+                }
+              }
+            } catch {
+            }
             try {
               const subtitleVtt2 = await withTimeout(
                 fetchTextWithRetry("/api/subtitles/download", {
@@ -176524,6 +176536,7 @@
       if (subtitleOptions.length === 0) return;
       if (subtitlePreferenceRef.current.mode === "off") return;
       if (autoSubtitleSuppressedRef.current) return;
+      if (useMpv && !mpv.fileLoaded) return;
       const preferredLanguages = [defaultSubtitleLang, fallbackSubtitleLang, selectedLang].map((lang2) => normalizeLanguageCode(lang2)).filter((lang2, index3, values) => Boolean(lang2) && values.indexOf(lang2) === index3);
       if (preferredLanguages.length === 0) return;
       const preferredLanguage = subtitlePreferenceRef.current.mode === "language" ? normalizeLanguageCode(subtitlePreferenceRef.current.language) : null;
@@ -176535,7 +176548,16 @@
       }
       const embeddedFallback = subtitles.length === 0 ? embeddedSubtitleOptions[0] : null;
       if (embeddedFallback && embeddedFallback.id !== activeSubId) void selectSubtitle(embeddedFallback);
-    }, [subtitleOptions, selectedLang, fallbackSubtitleLang, subtitles.length, embeddedSubtitleOptions]);
+    }, [subtitleOptions, selectedLang, fallbackSubtitleLang, subtitles.length, embeddedSubtitleOptions, useMpv, mpv.fileLoaded]);
+    const lastSubReapplyTokenRef = useRef(0);
+    useEffect(() => {
+      if (!useMpv || !mpv.fileLoaded) return;
+      if (mpv.fileLoadedToken === lastSubReapplyTokenRef.current) return;
+      lastSubReapplyTokenRef.current = mpv.fileLoadedToken;
+      if (!activeSubId || activeSubId.startsWith("embedded:")) return;
+      const current2 = subtitleOptions.find((subtitle) => subtitle.id === activeSubId);
+      if (current2) void selectSubtitle(current2);
+    }, [useMpv, mpv.fileLoaded, mpv.fileLoadedToken, activeSubId, subtitleOptions]);
     const seekToAbsolute = useCallback((targetTime) => {
       setSubtitleClockOverride(Math.max(0, targetTime));
       if (useMpv) {
@@ -178650,6 +178672,45 @@
 
   // ../Lumio-scraper/plugins/streams-scraper/runtime/streams-sidebar-section.tsx
   init_jsx_runtime_shim();
+  var LAST_PLAYED_KEY = "streams_last_played_v1";
+  var LAST_PLAYED_MAX_ENTRIES = 120;
+  function readLastPlayedMap() {
+    if (typeof window === "undefined") return {};
+    try {
+      const raw = getScopedStorageItem(LAST_PLAYED_KEY);
+      if (!raw) return {};
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+  function getLastPlayedStream(key) {
+    return readLastPlayedMap()[key] ?? null;
+  }
+  function saveLastPlayedStream(key, stream) {
+    if (typeof window === "undefined") return;
+    const map = readLastPlayedMap();
+    map[key] = {
+      infoHash: stream.infoHash || void 0,
+      directUrl: stream.directUrl || void 0,
+      name: stream.name,
+      title: stream.title,
+      savedAt: Date.now()
+    };
+    const entries = Object.entries(map);
+    if (entries.length > LAST_PLAYED_MAX_ENTRIES) {
+      entries.sort((a, b) => (b[1].savedAt ?? 0) - (a[1].savedAt ?? 0));
+      entries.length = LAST_PLAYED_MAX_ENTRIES;
+    }
+    setScopedStorageItem(LAST_PLAYED_KEY, JSON.stringify(Object.fromEntries(entries)));
+  }
+  function matchesLastPlayed(stream, saved) {
+    if (!saved) return false;
+    if (saved.infoHash && stream.infoHash) return saved.infoHash === stream.infoHash;
+    if (saved.directUrl && stream.directUrl) return saved.directUrl === stream.directUrl;
+    return false;
+  }
   var EPISODE_STREAM_STATUS_CONCURRENCY = 4;
   var MIN_EPISODE_AUTOPLAY_BYTES = 120 * 1024 * 1024;
   var consumedPlayRequestTokens = /* @__PURE__ */ new Set();
@@ -178832,6 +178893,7 @@
     }, [mediaType, numericTmdbId, resolvedImdbId]);
     const effectiveImdbId = resolvedImdbId ?? imdbId ?? null;
     const mediaContextKey = `${mediaType}:${tmdbId ?? "none"}:${title}`;
+    const playbackTargetKey = `${mediaContextKey}:${selectedSeason?.season_number ?? "x"}:${selectedEpisode?.episode_number ?? "x"}`;
     useEffect(() => {
       didApplyInitialSeason.current = false;
       didApplyInitialEpisode.current = false;
@@ -179707,6 +179769,7 @@
         hasInfoHash: Boolean(stream.infoHash)
       });
       setPendingPlayRequestToken(null);
+      saveLastPlayedStream(playbackTargetKey, stream);
       resetNextEpisodeState();
       setPlayerHideStartSplash(true);
       setPlayerSplashFading(false);
@@ -179830,9 +179893,16 @@
         return sizeBytes == null || sizeBytes <= maxSizeBytes;
       }) : playable;
       const oversized = playable.filter((s) => !withinCap.includes(s));
-      const pool = [...withinCap, ...oversized].slice(0, 5);
+      const remembered = getLastPlayedStream(playbackTargetKey);
+      const ordered = [...withinCap, ...oversized];
+      const rememberedIndex = ordered.findIndex((stream) => matchesLastPlayed(stream, remembered));
+      if (rememberedIndex > 0) {
+        const [hit] = ordered.splice(rememberedIndex, 1);
+        ordered.unshift(hit);
+      }
+      const pool = ordered.slice(0, 5);
       sendTelemetry("playback.autoplay", "info", "autoplay resolve start", {
-        pluginVersion: "1.0.32",
+        pluginVersion: "1.0.33",
         streamCount: streamList.length,
         candidateCount: pool.length,
         withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -179885,7 +179955,10 @@
             loadFailed: autoplayLoadFailedRef.current,
             resolvedUrl: String(resolved.url).slice(0, 60)
           });
-          if (started) return true;
+          if (started) {
+            saveLastPlayedStream(playbackTargetKey, candidate);
+            return true;
+          }
           if (attemptId !== playAttemptRef.current) return false;
         }
       } finally {
@@ -181025,7 +181098,7 @@
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
