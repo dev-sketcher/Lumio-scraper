@@ -164,6 +164,9 @@ interface RdStreamingSectionProps {
   onAutoPlayFallback?: () => void
   onAutoPlayPlayerClose?: () => void
   onPlaybackStarted?: () => void
+  /** Reports how many streams the search settled on (0 = none found) so the
+   * host can hide play/download affordances that could never succeed. */
+  onStreamsResult?: (count: number) => void
   posterUrl?: string | null
   backdropUrl?: string | null
   year?: number | null
@@ -186,6 +189,7 @@ export function StreamsSidebarSection({
   onAutoPlayFallback,
   onAutoPlayPlayerClose,
   onPlaybackStarted,
+  onStreamsResult,
   posterUrl,
   backdropUrl,
   year,
@@ -214,6 +218,14 @@ export function StreamsSidebarSection({
   const [streams, setStreams] = useState<StreamResult[] | null>(null)
   const [loadingStreams, setLoadingStreams] = useState(false)
   const [streamsError, setStreamsError] = useState<string | null>(null)
+
+  // Tell the host how many streams the settled search found (0 = none) so it
+  // can hide play/download affordances that could never succeed.
+  useEffect(() => {
+    if (loadingStreams || streams === null) return
+    onStreamsResult?.(streams.length)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingStreams, streams])
 
   // Manual fallback
   const [manualInput, setManualInput] = useState('')
@@ -1605,7 +1617,7 @@ export function StreamsSidebarSection({
     const oversized = playable.filter((s) => !withinCap.includes(s))
     const pool = [...withinCap, ...oversized].slice(0, 5)
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.31',
+      pluginVersion: '1.0.32',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.32
+
+- Reports the settled stream count to the host (`onStreamsResult`) so the app can hide Play/Download on titles where the search found nothing, instead of offering a click that must fail.
+
 ## 1.0.31
 
 - Plugin UI now follows the app's language picker (rebuilt against the host's fixed i18n module — plugin bundles used to be stuck on the English default because the host's language context never reached their bundled copy).

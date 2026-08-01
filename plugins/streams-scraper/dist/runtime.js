@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -165093,7 +165093,10 @@
       hpSliderCardsHint: "How many cards a slider shows at most, globally.",
       hpSliderCardsRowLabel: "Slider cards",
       hpSliderCardsGlobalOption: "Global ({count})",
+      ipDescOpenSubtitles: "Deeper subtitle search via your own OpenSubtitles API key (free at opensubtitles.com \u2192 API consumers). Without a key, only the community catalog is searched.",
+      tgSectionEyebrow: "Trailers page",
       tgColumnsLabel: "Columns",
+      tgColumnsHint: "How many columns the trailer grid shows.",
       hpAlwaysShown: "Always shown",
       hpTopMenuEyebrow: "Top menu",
       hpTopButtonsTitle: "Top buttons",
@@ -166198,7 +166201,10 @@
       hpSliderCardsHint: "Hur m\xE5nga kort en slider max visar globalt.",
       hpSliderCardsRowLabel: "Sliderkort",
       hpSliderCardsGlobalOption: "Global ({count})",
+      ipDescOpenSubtitles: "Djupare undertexts\xF6kning via egen OpenSubtitles API-nyckel (gratis p\xE5 opensubtitles.com \u2192 API consumers). Utan nyckel s\xF6ks bara community-katalogen.",
+      tgSectionEyebrow: "Trailersidan",
       tgColumnsLabel: "Kolumner",
+      tgColumnsHint: "Hur m\xE5nga kolumner trailer-griden visar.",
       hpAlwaysShown: "Visas alltid",
       hpTopMenuEyebrow: "\xD6vre meny",
       hpTopButtonsTitle: "Topp-knappar",
@@ -169902,7 +169908,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -172334,13 +172340,6 @@
     if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT2));
   }
 
-  // lib/groq-settings.ts
-  var KEY3 = "groq_api_key";
-  function getGroqApiKey() {
-    if (typeof window === "undefined") return "";
-    return getScopedStorageItem(KEY3) ?? "";
-  }
-
   // lib/utils/fetch-client.ts
   var FETCH_TIMEOUT_ERROR = "FETCH_TIMEOUT";
   function classifyFetchError(error) {
@@ -172911,8 +172910,14 @@
     await Promise.allSettled(tasks);
   }
 
+  // lib/opensubtitles-settings.ts
+  var KEY_OS_API_KEY = "opensubtitles_api_key";
+  function getOpenSubtitlesApiKey() {
+    if (typeof window === "undefined") return "";
+    return getScopedStorageItem(KEY_OS_API_KEY) ?? "";
+  }
+
   // lib/opensubtitles/os-client.ts
-  var STREMIO_OS_BASE = "https://opensubtitles-v3.strem.io";
   var NON_EMPTY_CACHE_TTL_MS = 2e4;
   var EMPTY_CACHE_TTL_MS = 3e3;
   var FETCH_TIMEOUT_MS = 4800;
@@ -172976,15 +172981,23 @@
     const { imdbId, type, season, episode } = params;
     const videoId = type === "episode" && season != null && episode != null ? `${imdbId}:${season}:${episode}` : imdbId;
     const stremioType = type === "episode" ? "series" : "movie";
-    const url = `${STREMIO_OS_BASE}/subtitles/${stremioType}/${videoId}.json`;
-    const cacheKey = `${stremioType}:${videoId}`;
+    const osApiKey = getOpenSubtitlesApiKey().trim();
+    const searchParams = new URLSearchParams({ imdb_id: imdbId, type });
+    if (type === "episode" && season != null && episode != null) {
+      searchParams.set("season", String(season));
+      searchParams.set("episode", String(episode));
+    }
+    if (osApiKey) searchParams.set("os_api_key", osApiKey);
+    const url = `/api/subtitles?${searchParams.toString()}`;
+    const cacheKey = `${stremioType}:${videoId}:${osApiKey ? "rest" : "addon"}`;
     const cached = resultCache.get(cacheKey);
     if (cached && cached.expiresAt > Date.now()) return cached.subtitles;
     const running = inflight4.get(cacheKey);
     if (running) return running;
     const parseSubtitles = (payload) => {
       const subtitles = payload?.subtitles;
-      return Array.isArray(subtitles) ? subtitles : [];
+      if (!Array.isArray(subtitles)) return [];
+      return subtitles.map((s) => ({ id: s.id, url: s.url, lang: s.lang ?? s.lang3 ?? "" }));
     };
     const fetchOnce = async () => {
       let lastError = null;
@@ -176579,7 +176592,7 @@
     }
     const progress2 = totalDuration > 0 ? realTime / totalDuration * 100 : 0;
     const hasSubtitles = subtitleOptions.length > 0;
-    const canAutoSyncNow = Boolean(activeSubId) && cues.length >= 2;
+    const canAutoSyncNow = Boolean(activeSubId) && (cues.length >= 2 || Boolean(activeSubId?.startsWith("embedded:")));
     const activeIntro = introSegment ? realTime >= introSegment.startMs / 1e3 && realTime < introSegment.endMs / 1e3 ? introSegment : null : null;
     const shouldShowSkipIntroButton = Boolean(hasStarted && !autoSkipIntro && activeIntro && introDataReady);
     const controlsReady = useMpv ? hasEverStarted || hasStarted || mpv.firstFrameRendered || mpvRevealPlaybackReady : hasEverStarted;
@@ -176608,120 +176621,57 @@
       return acc;
     }, {});
     const runSubtitleAutoSync = useCallback(async (opts) => {
-      const whisperLangFromTrack = (code) => {
-        if (!code) return null;
-        const normalized = code.trim().toLowerCase();
-        if (normalized.length === 2) return normalized;
-        const map = {
-          eng: "en",
-          swe: "sv",
-          rus: "ru",
-          ger: "de",
-          deu: "de",
-          fre: "fr",
-          fra: "fr",
-          spa: "es",
-          ita: "it",
-          jpn: "ja",
-          kor: "ko",
-          chi: "zh",
-          zho: "zh",
-          nor: "no",
-          dan: "da",
-          fin: "fi",
-          por: "pt",
-          dut: "nl",
-          nld: "nl",
-          pol: "pl",
-          tur: "tr",
-          ara: "ar",
-          hin: "hi",
-          tha: "th",
-          vie: "vi",
-          ukr: "uk",
-          ces: "cs",
-          cze: "cs"
-        };
-        return map[normalized] ?? null;
-      };
+      const silent = opts?.silent === true;
       const activeAudioAid = useMpv ? activeAudioTrack ?? audioTracks.find((track) => track.index != null)?.index ?? null : null;
       const audioTrackIndex = typeof activeAudioAid === "number" && activeAudioAid > 0 ? activeAudioAid - 1 : null;
-      const audioLanguage = whisperLangFromTrack(
-        audioTracks.find((track) => track.index === activeAudioAid)?.language ?? null
-      );
       const minConfidence = typeof opts?.minConfidence === "number" ? opts.minConfidence : null;
-      const groqApiKey = getGroqApiKey().trim();
-      if (!groqApiKey) {
-        setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNeedsGroq") });
+      const embeddedSid = activeSubId?.startsWith("embedded:") ? Number.parseInt(activeSubId.slice("embedded:".length), 10) : null;
+      const subtitleTrackIndex = embeddedSid !== null && Number.isFinite(embeddedSid) && embeddedSid > 0 ? embeddedSid - 1 : null;
+      if (!activeSubId || subtitleTrackIndex === null && cues.length < 2) {
+        if (!silent) setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNeedsSubtitle") });
         return;
       }
-      if (!activeSubId || cues.length < 2) {
-        setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNeedsSubtitle") });
-        return;
-      }
-      const cueWindowAround = (center) => cues.filter((cue) => cue.end >= Math.max(0, center - 120) && cue.start <= center + 120);
-      const measure2 = async (center) => {
-        const window2 = cueWindowAround(center);
-        if (window2.length < 2) return null;
+      const syncTime = realTimeRef.current;
+      if (!silent) setSubtitleAutoSyncState({ type: "analyzing" });
+      try {
         const res = await fetch("/api/subtitles/auto-sync", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            apiKey: groqApiKey,
             url,
-            currentTime: center,
-            cues: window2,
-            audioTrackIndex,
-            language: audioLanguage
+            currentTime: syncTime,
+            duration: totalDuration > 0 ? totalDuration : void 0,
+            cues: subtitleTrackIndex === null ? cues.map((cue) => ({ start: cue.start, end: cue.end, text: cue.text })) : [],
+            subtitleTrackIndex,
+            audioTrackIndex
           })
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "subtitle_auto_sync_failed");
-        if (typeof data.suggestedDelay !== "number") return null;
-        return { offset: data.suggestedDelay, confidence: data.confidence ?? 0 };
-      };
-      const syncTime = realTimeRef.current;
-      if (cueWindowAround(syncTime).length < 2) {
-        setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNotEnoughSpeech") });
-        return;
-      }
-      setSubtitleAutoSyncState({ type: "analyzing" });
-      try {
-        const first = await measure2(syncTime);
-        if (!first) {
-          setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNoMatch") });
+        if (typeof data.suggestedDelay !== "number") {
+          if (!silent) setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNoMatch") });
           return;
         }
-        if (minConfidence !== null && first.confidence < minConfidence) {
+        const confidence = data.confidence ?? 0;
+        if (minConfidence !== null && confidence < minConfidence) {
           setSubtitleAutoSyncState({ type: "idle" });
           return;
         }
         lastAutoSyncedDelayRef.current = subDelay;
-        const appliedDelay = Math.round(-first.offset * 10) / 10;
+        const appliedDelay = Math.round(-data.suggestedDelay * 10) / 10;
         setSubDelay(appliedDelay);
-        setSubDrift(null);
         let message = `${t("subtitleAutoSyncApplied")} ${appliedDelay > 0 ? "+" : ""}${appliedDelay.toFixed(1)}s`;
-        setSubtitleAutoSyncState({ type: "done", message });
-        const duration2 = totalDuration;
-        if (first.confidence >= 0.6 && duration2 > 900) {
-          const forward = syncTime + 300;
-          const secondPoint = forward <= duration2 - 90 ? forward : Math.max(60, syncTime - 300);
-          if (Math.abs(secondPoint - syncTime) >= 180 && cueWindowAround(secondPoint).length >= 2) {
-            const second = await measure2(secondPoint).catch(() => null);
-            if (second && second.confidence >= 0.6) {
-              const diff = second.offset - first.offset;
-              if (Math.abs(diff) >= 0.35) {
-                const slope = diff / (secondPoint - syncTime);
-                setSubDrift({ slope, anchor: syncTime });
-                const perMinute = slope * 60;
-                message += ` \xB7 ${t("subtitleAutoSyncDriftApplied").replace("{rate}", `${perMinute > 0 ? "+" : ""}${perMinute.toFixed(2)}`)}`;
-                setSubtitleAutoSyncState({ type: "done", message });
-              }
-            }
-          }
+        const slope = typeof data.driftSlope === "number" && data.driftSlope !== 0 ? data.driftSlope : null;
+        if (slope !== null) {
+          setSubDrift({ slope, anchor: data.anchor ?? syncTime });
+          const perMinute = slope * 60;
+          message += ` \xB7 ${t("subtitleAutoSyncDriftApplied").replace("{rate}", `${perMinute > 0 ? "+" : ""}${perMinute.toFixed(2)}`)}`;
+        } else {
+          setSubDrift(null);
         }
+        setSubtitleAutoSyncState({ type: "done", message });
       } catch {
-        setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncFailed") });
+        if (!silent) setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncFailed") });
       }
     }, [activeAudioTrack, activeSubId, audioTracks, cues, subDelay, t, totalDuration, url, useMpv]);
     const undoSubtitleAutoSync = useCallback(() => {
@@ -176739,11 +176689,8 @@
       if (cues.length < 2 || realTime < 30) return;
       const attemptKey = `${url}::${activeSubId}`;
       if (autoSyncAttemptKeyRef.current === attemptKey) return;
-      if (!getGroqApiKey().trim()) return;
-      const cueWindow = cues.filter((cue) => cue.end >= realTime - 12 && cue.start <= realTime + 20);
-      if (cueWindow.length < 2) return;
       autoSyncAttemptKeyRef.current = attemptKey;
-      void runSubtitleAutoSync({ minConfidence: 0.65 });
+      void runSubtitleAutoSync({ minConfidence: 0.65, silent: true });
     }, [activeSubId, cues, hasStarted, realTime, runSubtitleAutoSync, subDelay, subtitleAutoSyncState.type, url]);
     const content = /* @__PURE__ */ jsxs("div", { "data-lumio-player-open": "1", className: `fixed inset-0 z-[60] flex flex-col !mt-0 ${useMpv ? "" : "bg-black"}`, children: [
       !hasEverStarted && !hideStartSplash && /* @__PURE__ */ jsxs(
@@ -178767,6 +178714,7 @@
     onAutoPlayFallback,
     onAutoPlayPlayerClose,
     onPlaybackStarted,
+    onStreamsResult,
     posterUrl,
     backdropUrl,
     year
@@ -178791,6 +178739,10 @@
     const [streams, setStreams] = useState(null);
     const [loadingStreams, setLoadingStreams] = useState(false);
     const [streamsError, setStreamsError] = useState(null);
+    useEffect(() => {
+      if (loadingStreams || streams === null) return;
+      onStreamsResult?.(streams.length);
+    }, [loadingStreams, streams]);
     const [manualInput, setManualInput] = useState("");
     const [showManual, setShowManual] = useState(false);
     const [step, setStep] = useState({ type: "idle" });
@@ -179880,7 +179832,7 @@
       const oversized = playable.filter((s) => !withinCap.includes(s));
       const pool = [...withinCap, ...oversized].slice(0, 5);
       sendTelemetry("playback.autoplay", "info", "autoplay resolve start", {
-        pluginVersion: "1.0.31",
+        pluginVersion: "1.0.32",
         streamCount: streamList.length,
         candidateCount: pool.length,
         withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -181073,7 +181025,7 @@
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-9N1Nl0/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MScGf6/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
