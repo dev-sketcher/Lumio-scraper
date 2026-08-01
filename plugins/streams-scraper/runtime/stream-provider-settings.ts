@@ -370,7 +370,11 @@ export function getScraperConfigs(): ScraperConfig[] {
     const raw = getScopedStorageItem(CONFIGS_KEY) ?? localStorage.getItem(CONFIGS_KEY)
     if (!raw) return [DEFAULT_TORRENTIO_CONFIG]
     const parsed = JSON.parse(raw) as ScraperConfig[]
-    return parsed.map(normalizeScraperConfig)
+    // torrentsdb is retired: its playback URLs 429 even for "cached" streams,
+    // so already-stored configs are dropped on read (users need no action).
+    const active = parsed.filter((config) => config.preset !== 'torrentsdb')
+    if (active.length === 0) return [DEFAULT_TORRENTIO_CONFIG]
+    return active.map(normalizeScraperConfig)
   } catch {
     return [DEFAULT_TORRENTIO_CONFIG]
   }

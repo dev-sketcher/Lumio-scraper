@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.30
+
+- TorrentsDB retired as a scraper. Its playback URLs are rate-limited server-side (HTTP 429 "Too many requests") even for streams it labels as cached, so every play attempt through it failed. The preset is no longer offered in settings, and already-configured TorrentsDB scrapers are dropped automatically on load — no user action needed.
+
 ## 1.0.29
 
 - Per-candidate start window raised 12 s → 20 s. Torrentio `/resolve` URLs routinely need 10-15 s before first byte and play fine manually — the 12 s window abandoned the working first stream moments before it started, then burned 12 s on the next slow candidate (~30 s to playback). Real failures (e.g. torrentsdb's HTTP 429 rate-limited playback URLs, whose CACHED badge is label-only) still advance in under a second via the player's load-failed signal; only silently hanging sources pay the full window.

@@ -1605,7 +1605,7 @@ export function StreamsSidebarSection({
     const oversized = playable.filter((s) => !withinCap.includes(s))
     const pool = [...withinCap, ...oversized].slice(0, 5)
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.29',
+      pluginVersion: '1.0.30',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,

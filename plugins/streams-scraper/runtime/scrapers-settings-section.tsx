@@ -885,9 +885,11 @@ function defaultOptions(preset: ScraperPresetId): ScraperConfig['options'] {
 
 // ── Main component ─────────────────────────────────────────────────────────
 
+// torrentsdb removed: its playback URLs are rate-limited server-side
+// (HTTP 429) even for streams it labels as cached, so every play attempt
+// through it fails. Stored torrentsdb configs are filtered out at load.
 const ADDABLE_PRESETS: ScraperPresetId[] = [
   'torrentio',
-  'torrentsdb',
   'comet',
   'mediafusion',
   'orion',
