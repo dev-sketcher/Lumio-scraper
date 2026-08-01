@@ -1605,7 +1605,7 @@ export function StreamsSidebarSection({
     const oversized = playable.filter((s) => !withinCap.includes(s))
     const pool = [...withinCap, ...oversized].slice(0, 5)
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.28',
+      pluginVersion: '1.0.29',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -1665,7 +1665,12 @@ export function StreamsSidebarSection({
           forceProxy: resolved.forceProxy,
         }, attemptId)
 
-        const started = await waitForFirstPlay(attemptId, 12_000)
+        // 20 s, not 12: torrentio /resolve URLs routinely need 10-15 s TTFB
+        // and PLAY manually on them works — the 12 s window abandoned the
+        // working first stream moments before it started and burned 12 s per
+        // slow candidate (~30 s total). Real failures still advance in <1 s
+        // via the onLoadFailed signal; only silent hangs pay the full window.
+        const started = await waitForFirstPlay(attemptId, 20_000)
         sendTelemetry('playback.autoplay', started ? 'ok' : 'info', started ? 'candidate playing' : 'candidate did not start -> next', {
           directUrl: Boolean(candidate.directUrl),
           infoHash: Boolean(candidate.infoHash),

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.29
+
+- Per-candidate start window raised 12 s → 20 s. Torrentio `/resolve` URLs routinely need 10-15 s before first byte and play fine manually — the 12 s window abandoned the working first stream moments before it started, then burned 12 s on the next slow candidate (~30 s to playback). Real failures (e.g. torrentsdb's HTTP 429 rate-limited playback URLs, whose CACHED badge is label-only) still advance in under a second via the player's load-failed signal; only silently hanging sources pay the full window.
+
 ## 1.0.28
 
 - Autoplay candidates now follow the sidebar's own display order, top-down, up to 5 streams — pressing play behaves like clicking the visible list until one plays. Previously the candidate builder resolved to the HOST app's copy (build-time `@/lib` aliasing), which reordered by cached-flag/language and capped at 3; on real lookups that picked three dud url-only sources and skipped the very stream a manual click on the first row plays. The max-size setting is now a preference (within-cap streams first) instead of a veto.
