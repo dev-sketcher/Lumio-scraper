@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-UZCeZ4/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-2ZSwoh/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-UZCeZ4/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-2ZSwoh/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-UZCeZ4/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-2ZSwoh/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-UZCeZ4/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-2ZSwoh/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -169852,7 +169852,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-UZCeZ4/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-2ZSwoh/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -178655,6 +178655,7 @@
   init_jsx_runtime_shim();
   var EPISODE_STREAM_STATUS_CONCURRENCY = 4;
   var MIN_EPISODE_AUTOPLAY_BYTES = 120 * 1024 * 1024;
+  var consumedPlayRequestTokens = /* @__PURE__ */ new Set();
   var STREAM_PROVIDER_LABELS = {
     alldebrid: "AllDebrid",
     realdebrid: "Real-Debrid",
@@ -178786,6 +178787,16 @@
     const episodeAbortRef = useRef(null);
     const searchAbortRef = useRef(null);
     const lastHandledPlayRequestRef = useRef(null);
+    const playRequestGuardKey = (token) => `${tmdbId ?? imdbId ?? "none"}:${token}`;
+    const isPlayRequestConsumed = (token) => {
+      if (token == null) return false;
+      return lastHandledPlayRequestRef.current === token || consumedPlayRequestTokens.has(playRequestGuardKey(token));
+    };
+    const markPlayRequestConsumed = (token) => {
+      lastHandledPlayRequestRef.current = token;
+      if (consumedPlayRequestTokens.size > 500) consumedPlayRequestTokens.clear();
+      consumedPlayRequestTokens.add(playRequestGuardKey(token));
+    };
     const playAttemptRef = useRef(0);
     const [pendingPlayRequestToken, setPendingPlayRequestToken] = useState(null);
     useEffect(() => {
@@ -179693,6 +179704,7 @@
         hasDirectUrl: Boolean(stream.directUrl),
         hasInfoHash: Boolean(stream.infoHash)
       });
+      setPendingPlayRequestToken(null);
       resetNextEpisodeState();
       setPlayerHideStartSplash(true);
       setPlayerSplashFading(false);
@@ -179808,13 +179820,17 @@
       return firstPlaySeenRef.current;
     }
     async function tryPlayRequestAutoplay(streamList, attemptId) {
-      const candidates = buildAutoplayCandidates(streamList, {
-        maxSizeGb: getAutoPlayMaxStreamSizeGb(),
-        preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage())
-      });
-      const pool = candidates.length > 0 ? candidates : streamList.slice(0, 5);
+      const playable = streamList.filter((s) => Boolean(s.directUrl) || Boolean(s.infoHash));
+      const maxSizeGb = getAutoPlayMaxStreamSizeGb();
+      const maxSizeBytes = maxSizeGb ? maxSizeGb * 1024 ** 3 : null;
+      const withinCap = maxSizeBytes ? playable.filter((s) => {
+        const sizeBytes = getStreamSizeBytes(s);
+        return sizeBytes == null || sizeBytes <= maxSizeBytes;
+      }) : playable;
+      const oversized = playable.filter((s) => !withinCap.includes(s));
+      const pool = [...withinCap, ...oversized].slice(0, 5);
       sendTelemetry("playback.autoplay", "info", "autoplay resolve start", {
-        pluginVersion: "1.0.27",
+        pluginVersion: "1.0.28",
         streamCount: streamList.length,
         candidateCount: pool.length,
         withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -179824,6 +179840,7 @@
         if (attemptId !== playAttemptRef.current) return false;
         nextEpAutoplayPendingRef.current = false;
         setPlayerSkipHomeKitOpen(false);
+        setPlayerHideStartSplash(false);
         onAutoPlayFallback?.();
         return false;
       }
@@ -179881,6 +179898,7 @@
       setPlayerSkipHomeKitOpen(false);
       setPlayerUrl(null);
       setStep({ type: "idle" });
+      setPlayerHideStartSplash(false);
       onAutoPlayFallback?.();
       return false;
     }
@@ -180166,6 +180184,7 @@
       setNextEpUrlReady(false);
     }
     function handlePlayerClose() {
+      setPendingPlayRequestToken(null);
       cancelPlayAttempt();
       resetNextEpisodeState();
       watchedMarkedInSessionRef.current = false;
@@ -180253,21 +180272,21 @@
       else onAutoPlayFallback?.();
     }, [autoPlayInitialEpisode, loadingStreams, mediaType, playerUrl, streams]);
     useEffect(() => {
-      if (!playRequestToken || lastHandledPlayRequestRef.current === playRequestToken) return;
+      if (!playRequestToken || isPlayRequestConsumed(playRequestToken)) return;
       if (mediaType !== "tv") return;
       if (!playRequestSeasonNumber || !playRequestEpisodeNumber) return;
       if (!seasons) return;
       if (selectedSeason?.season_number === playRequestSeasonNumber) return;
       const targetSeason = seasons.find((s) => s.season_number === playRequestSeasonNumber);
       if (!targetSeason) {
-        lastHandledPlayRequestRef.current = playRequestToken;
+        markPlayRequestConsumed(playRequestToken);
         onAutoPlayFallback?.();
         return;
       }
       void loadEpisodes(targetSeason);
     }, [loadEpisodes, mediaType, onAutoPlayFallback, playRequestEpisodeNumber, playRequestSeasonNumber, playRequestToken, seasons, selectedSeason]);
     useEffect(() => {
-      if (!playRequestToken || lastHandledPlayRequestRef.current === playRequestToken) return;
+      if (!playRequestToken || isPlayRequestConsumed(playRequestToken)) return;
       if (mediaType !== "tv") return;
       if (!playRequestSeasonNumber || !playRequestEpisodeNumber) return;
       if (!selectedSeason || selectedSeason.season_number !== playRequestSeasonNumber) return;
@@ -180276,16 +180295,16 @@
       if (!episodes) return;
       const targetEpisode = episodes.find((e) => e.episode_number === playRequestEpisodeNumber);
       if (!targetEpisode) {
-        lastHandledPlayRequestRef.current = playRequestToken;
+        markPlayRequestConsumed(playRequestToken);
         onAutoPlayFallback?.();
         return;
       }
       void selectEpisode(targetEpisode);
     }, [episodes, loadingEpisodes, mediaType, onAutoPlayFallback, playRequestEpisodeNumber, playRequestSeasonNumber, playRequestToken, selectEpisode, selectedEpisode, selectedSeason]);
     useEffect(() => {
-      if (!playRequestToken || lastHandledPlayRequestRef.current === playRequestToken) return;
+      if (!playRequestToken || isPlayRequestConsumed(playRequestToken)) return;
       if (mediaType === "movie") {
-        lastHandledPlayRequestRef.current = playRequestToken;
+        markPlayRequestConsumed(playRequestToken);
         setPendingPlayRequestToken(playRequestToken);
         return;
       }
@@ -180293,7 +180312,7 @@
       if (!selectedSeason || !selectedEpisode) return;
       if (selectedSeason.season_number !== playRequestSeasonNumber) return;
       if (selectedEpisode.episode_number !== playRequestEpisodeNumber) return;
-      lastHandledPlayRequestRef.current = playRequestToken;
+      markPlayRequestConsumed(playRequestToken);
       setPendingPlayRequestToken(playRequestToken);
     }, [mediaType, playRequestEpisodeNumber, playRequestSeasonNumber, playRequestToken, selectedEpisode, selectedSeason]);
     useEffect(() => {
@@ -180304,6 +180323,10 @@
         const attemptId = playAttemptRef.current + 1;
         playAttemptRef.current = attemptId;
         setPendingPlayRequestToken(null);
+        sendTelemetry("playback.autoplay", "info", "pending play request consumed", {
+          token,
+          nextEpPending: nextEpAutoplayPendingRef.current
+        });
         void tryPlayRequestAutoplay(streams, attemptId).catch(() => {
           if (pendingPlayRequestToken === token) setPendingPlayRequestToken(null);
         });
@@ -181000,7 +181023,7 @@
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-UZCeZ4/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-2ZSwoh/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

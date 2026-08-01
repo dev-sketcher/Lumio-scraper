@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.28
+
+- Autoplay candidates now follow the sidebar's own display order, top-down, up to 5 streams — pressing play behaves like clicking the visible list until one plays. Previously the candidate builder resolved to the HOST app's copy (build-time `@/lib` aliasing), which reordered by cached-flag/language and capped at 3; on real lookups that picked three dud url-only sources and skipped the very stream a manual click on the first row plays. The max-size setting is now a preference (within-cap streams first) instead of a veto.
+- The "Startar avsnitt/film…" splash is dismissed when every candidate fails (it used to stay up forever once the close-path stopped running in 1.0.27) — the stream sidebar opens instead.
+- Play-request tokens are now consumed across remounts (module-level guard) and cleared on manual stream clicks and player close, so a finished/failed play request can no longer replay itself and throw up a ghost loading screen after the user moved on.
+- Telemetry: `autoplay resolve start` now logs the consuming token; new `pending play request consumed` event.
+
 ## 1.0.27
 
 - Fixed the actual reason play buttons bounced to home/detail even though 1.0.26's retry loop was in place: the player's dead-stream escape hatch (mpv end-file error before first frame, typically its ~10 s network timeout on a dead mediafusion URL) closed the whole playback session mid-loop, cancelling the attempt before candidates 2+ were tried. The player now reports the failure to the autoplay loop (which keeps the modal open, swaps in the next stream immediately instead of waiting out the 12 s window) and only closes when no loop is driving it.

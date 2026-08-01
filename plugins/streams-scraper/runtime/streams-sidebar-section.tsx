@@ -54,6 +54,7 @@ import {
   cachedFromStreamLabel,
   filterVisibleStreams,
   getPreferredTorrentFileIds,
+  getStreamSizeBytes,
   looksLikeSampleOrExtra,
   matchesEpisodeIdentifier,
   pickBestUnrestrictedLink,
@@ -63,6 +64,13 @@ import {
 
 const EPISODE_STREAM_STATUS_CONCURRENCY = 4
 const MIN_EPISODE_AUTOPLAY_BYTES = 120 * 1024 * 1024
+
+// Play-request tokens already consumed, keyed by media identity. Module-level
+// on purpose: the host remounts this section (its key includes the autoplay
+// target) while it keeps passing the SAME playRequestToken, and a plain ref
+// guard dies with the unmount — the remounted instance then re-ran the whole
+// play request (ghost "Startar avsnitt…" replays after the user had moved on).
+const consumedPlayRequestTokens = new Set<string>()
 
 type ScraperRequest = {
   config: ScraperConfig
@@ -293,6 +301,17 @@ export function StreamsSidebarSection({
   const episodeAbortRef = useRef<AbortController | null>(null)
   const searchAbortRef = useRef<AbortController | null>(null)
   const lastHandledPlayRequestRef = useRef<number | null>(null)
+  // Remount-proof variant of the guard above (see consumedPlayRequestTokens).
+  const playRequestGuardKey = (token: number) => `${tmdbId ?? imdbId ?? 'none'}:${token}`
+  const isPlayRequestConsumed = (token: number | undefined | null): boolean => {
+    if (token == null) return false
+    return lastHandledPlayRequestRef.current === token || consumedPlayRequestTokens.has(playRequestGuardKey(token))
+  }
+  const markPlayRequestConsumed = (token: number) => {
+    lastHandledPlayRequestRef.current = token
+    if (consumedPlayRequestTokens.size > 500) consumedPlayRequestTokens.clear()
+    consumedPlayRequestTokens.add(playRequestGuardKey(token))
+  }
   const playAttemptRef = useRef(0)
   const [pendingPlayRequestToken, setPendingPlayRequestToken] = useState<number | null>(null)
 
@@ -1417,7 +1436,11 @@ export function StreamsSidebarSection({
       hasInfoHash: Boolean(stream.infoHash),
     })
     // Manual start of an episode/movie should always begin a fresh session:
-    // no carried-over next-episode preload/card/splash state.
+    // no carried-over next-episode preload/card/splash state. It also
+    // supersedes any queued play-button request — otherwise a token parked
+    // while this player session runs re-triggers autoplay the moment the
+    // user closes the player (ghost "Startar avsnitt…" splash).
+    setPendingPlayRequestToken(null)
     resetNextEpisodeState()
     // Show the sidebar splash from the moment the user clicks PLAY so the
     // flow is one continuous opaque overlay through stream resolution →
@@ -1562,15 +1585,27 @@ export function StreamsSidebarSection({
   }
 
   async function tryPlayRequestAutoplay(streamList: StreamResult[], attemptId: number) {
-    const candidates = buildAutoplayCandidates(streamList, {
-      maxSizeGb: getAutoPlayMaxStreamSizeGb(),
-      preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage()),
-    })
-    // Fall back to the raw sidebar list if filtering removed everything, so a
-    // play button never gives up while streams exist.
-    const pool = candidates.length > 0 ? candidates : streamList.slice(0, 5)
+    // Build the pool in the sidebar's own display order — a play button should
+    // behave like the user clicking streams top-down until one plays. The
+    // shared buildAutoplayCandidates (resolved against the HOST's copy at
+    // build time, not this plugin's) reorders by cached-flag/language and caps
+    // at 3; on real lookups that picked three dud url-only sources and skipped
+    // the very stream a manual click on the first row plays. The user's
+    // max-size setting stays a preference, not a veto: within-cap streams
+    // keep their order up front, oversized ones remain eligible last.
+    const playable = streamList.filter((s) => Boolean(s.directUrl) || Boolean(s.infoHash))
+    const maxSizeGb = getAutoPlayMaxStreamSizeGb()
+    const maxSizeBytes = maxSizeGb ? maxSizeGb * 1024 ** 3 : null
+    const withinCap = maxSizeBytes
+      ? playable.filter((s) => {
+          const sizeBytes = getStreamSizeBytes(s)
+          return sizeBytes == null || sizeBytes <= maxSizeBytes
+        })
+      : playable
+    const oversized = playable.filter((s) => !withinCap.includes(s))
+    const pool = [...withinCap, ...oversized].slice(0, 5)
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.27',
+      pluginVersion: '1.0.28',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -1580,6 +1615,7 @@ export function StreamsSidebarSection({
       if (attemptId !== playAttemptRef.current) return false
       nextEpAutoplayPendingRef.current = false
       setPlayerSkipHomeKitOpen(false)
+      setPlayerHideStartSplash(false)
       onAutoPlayFallback?.()
       return false
     }
@@ -1654,6 +1690,10 @@ export function StreamsSidebarSection({
     setPlayerSkipHomeKitOpen(false)
     setPlayerUrl(null)
     setStep({ type: 'idle' })
+    // The loop raised the splash before each candidate; without this the
+    // full-screen "Startar avsnitt…" overlay stays up forever after the pool
+    // is exhausted (the close path that used to clear it no longer runs).
+    setPlayerHideStartSplash(false)
     onAutoPlayFallback?.()
     return false
   }
@@ -1933,7 +1973,10 @@ export function StreamsSidebarSection({
   }
 
   function handlePlayerClose() {
-    // User-initiated close should cancel autoplay continuation for this session.
+    // User-initiated close should cancel autoplay continuation for this
+    // session — including any play-button request still parked while this
+    // player session was running.
+    setPendingPlayRequestToken(null)
     cancelPlayAttempt()
     resetNextEpisodeState()
     watchedMarkedInSessionRef.current = false
@@ -2066,14 +2109,14 @@ export function StreamsSidebarSection({
 
   // Effect A: navigate to target season when a play-request token fires
   useEffect(() => {
-    if (!playRequestToken || lastHandledPlayRequestRef.current === playRequestToken) return
+    if (!playRequestToken || isPlayRequestConsumed(playRequestToken)) return
     if (mediaType !== 'tv') return
     if (!playRequestSeasonNumber || !playRequestEpisodeNumber) return
     if (!seasons) return
     if (selectedSeason?.season_number === playRequestSeasonNumber) return
     const targetSeason = seasons.find((s) => s.season_number === playRequestSeasonNumber)
     if (!targetSeason) {
-      lastHandledPlayRequestRef.current = playRequestToken
+      markPlayRequestConsumed(playRequestToken)
       onAutoPlayFallback?.()
       return
     }
@@ -2082,7 +2125,7 @@ export function StreamsSidebarSection({
 
   // Effect B: navigate to target episode once the correct season + episodes are loaded
   useEffect(() => {
-    if (!playRequestToken || lastHandledPlayRequestRef.current === playRequestToken) return
+    if (!playRequestToken || isPlayRequestConsumed(playRequestToken)) return
     if (mediaType !== 'tv') return
     if (!playRequestSeasonNumber || !playRequestEpisodeNumber) return
     if (!selectedSeason || selectedSeason.season_number !== playRequestSeasonNumber) return
@@ -2091,7 +2134,7 @@ export function StreamsSidebarSection({
     if (!episodes) return
     const targetEpisode = episodes.find((e) => e.episode_number === playRequestEpisodeNumber)
     if (!targetEpisode) {
-      lastHandledPlayRequestRef.current = playRequestToken
+      markPlayRequestConsumed(playRequestToken)
       onAutoPlayFallback?.()
       return
     }
@@ -2099,9 +2142,9 @@ export function StreamsSidebarSection({
   }, [episodes, loadingEpisodes, mediaType, onAutoPlayFallback, playRequestEpisodeNumber, playRequestSeasonNumber, playRequestToken, selectEpisode, selectedEpisode, selectedSeason])
 
   useEffect(() => {
-    if (!playRequestToken || lastHandledPlayRequestRef.current === playRequestToken) return
+    if (!playRequestToken || isPlayRequestConsumed(playRequestToken)) return
     if (mediaType === 'movie') {
-      lastHandledPlayRequestRef.current = playRequestToken
+      markPlayRequestConsumed(playRequestToken)
       setPendingPlayRequestToken(playRequestToken)
       return
     }
@@ -2111,7 +2154,7 @@ export function StreamsSidebarSection({
     if (selectedSeason.season_number !== playRequestSeasonNumber) return
     if (selectedEpisode.episode_number !== playRequestEpisodeNumber) return
 
-    lastHandledPlayRequestRef.current = playRequestToken
+    markPlayRequestConsumed(playRequestToken)
     setPendingPlayRequestToken(playRequestToken)
   }, [mediaType, playRequestEpisodeNumber, playRequestSeasonNumber, playRequestToken, selectedEpisode, selectedSeason])
 
@@ -2124,6 +2167,10 @@ export function StreamsSidebarSection({
       const attemptId = playAttemptRef.current + 1
       playAttemptRef.current = attemptId
       setPendingPlayRequestToken(null)
+      sendTelemetry('playback.autoplay', 'info', 'pending play request consumed', {
+        token,
+        nextEpPending: nextEpAutoplayPendingRef.current,
+      })
       void tryPlayRequestAutoplay(streams, attemptId).catch(() => {
         if (pendingPlayRequestToken === token) setPendingPlayRequestToken(null)
       })
