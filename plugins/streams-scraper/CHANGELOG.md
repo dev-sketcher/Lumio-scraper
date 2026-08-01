@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.27
+
+- Fixed the actual reason play buttons bounced to home/detail even though 1.0.26's retry loop was in place: the player's dead-stream escape hatch (mpv end-file error before first frame, typically its ~10 s network timeout on a dead mediafusion URL) closed the whole playback session mid-loop, cancelling the attempt before candidates 2+ were tried. The player now reports the failure to the autoplay loop (which keeps the modal open, swaps in the next stream immediately instead of waiting out the 12 s window) and only closes when no loop is driving it.
+- Autoplay now tries up to 5 streams top-down (was 3), matching manually clicking through the sidebar until one plays.
+
 ## 1.0.26
 
 - Play buttons (Spela/hero/detail/continue) now play like a manual sidebar click that works: they try each stream in the player and, if playback does not actually start (verified via the player's first-frame event), automatically advance to the next stream — instead of committing to the first (often dead) source. Dead/unplayable sources are skipped without exiting to the home/detail view. Replaces the unreliable URL probe.

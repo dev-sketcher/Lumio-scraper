@@ -197,7 +197,10 @@ export function buildAutoplayCandidates(
     }
   }
 
-  return candidates.slice(0, 3)
+  // Autoplay walks these top-down until one actually plays; 5 gives a dead
+  // first source (common on mediafusion) enough fallbacks without letting a
+  // fully-broken scraper hold the splash for minutes.
+  return candidates.slice(0, 5)
 }
 
 export function getPreferredTorrentFileIds(

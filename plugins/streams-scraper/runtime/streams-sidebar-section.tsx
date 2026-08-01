@@ -256,6 +256,16 @@ export function StreamsSidebarSection({
   // Set the moment the player reports real playback (onFirstPlay). Autoplay uses
   // this to verify a candidate actually plays and, if not, move to the next.
   const firstPlaySeenRef = useRef(false)
+  // True while tryPlayRequestAutoplay's candidate loop is driving the player.
+  // During this window the player modal's dead-stream escape hatch must NOT
+  // close the session — the loop swaps in the next candidate instead. A close
+  // here cancels the play attempt and tears down the whole details playback
+  // session (the "press play → splash fades → dumped on home" bug).
+  const autoplayLoopActiveRef = useRef(false)
+  // Set by the player's onLoadFailed while the loop is active: mpv rejected
+  // the current candidate before first frame (network-timeout, 4xx/5xx,
+  // demuxer failure), so stop waiting out the 12 s window and advance now.
+  const autoplayLoadFailedRef = useRef(false)
   const watchedMarkedInSessionRef = useRef(false)
   // HomeKit skip flags for episode transitions
   const [playerSkipHomeKitClose, setPlayerSkipHomeKitClose] = useState(false)
@@ -1544,6 +1554,8 @@ export function StreamsSidebarSection({
     for (let i = 0; i < iterations; i += 1) {
       if (attemptId !== playAttemptRef.current) return false
       if (firstPlaySeenRef.current) return true
+      // mpv already rejected this source — no point waiting out the window.
+      if (autoplayLoadFailedRef.current) return false
       await sleep(400)
     }
     return firstPlaySeenRef.current
@@ -1558,7 +1570,7 @@ export function StreamsSidebarSection({
     // play button never gives up while streams exist.
     const pool = candidates.length > 0 ? candidates : streamList.slice(0, 5)
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.26',
+      pluginVersion: '1.0.27',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -1580,47 +1592,57 @@ export function StreamsSidebarSection({
     // reachable but never play, so committing to the first was the bug.
     // Switching to the next candidate's URL swaps the player source WITHOUT a
     // close (a close would exit the detail view to home), and the "starting…"
-    // splash stays up across the swaps.
-    for (const candidate of pool) {
-      if (attemptId !== playAttemptRef.current) return false
-      let resolved: { url: string; filename?: string; forceProxy: boolean } | null = null
-      try {
-        resolved = await resolveAutoplayCandidate(candidate)
-      } catch (err) {
-        sendTelemetry('playback.autoplay', 'error', 'candidate threw', {
-          message: err instanceof Error ? err.message.slice(0, 100) : 'error',
-        })
-      }
-      if (attemptId !== playAttemptRef.current) return false
-      if (!resolved) {
-        sendTelemetry('playback.autoplay', 'info', 'candidate unresolved -> next', {
+    // splash stays up across the swaps. While the loop is active the modal's
+    // onLoadFailed keeps the modal open on mpv errors (see the prop below) —
+    // otherwise mpv's ~10 s network timeout on a dead first candidate closes
+    // the session before candidates 2..n ever get tried.
+    autoplayLoopActiveRef.current = true
+    try {
+      for (const candidate of pool) {
+        if (attemptId !== playAttemptRef.current) return false
+        let resolved: { url: string; filename?: string; forceProxy: boolean } | null = null
+        try {
+          resolved = await resolveAutoplayCandidate(candidate)
+        } catch (err) {
+          sendTelemetry('playback.autoplay', 'error', 'candidate threw', {
+            message: err instanceof Error ? err.message.slice(0, 100) : 'error',
+          })
+        }
+        if (attemptId !== playAttemptRef.current) return false
+        if (!resolved) {
+          sendTelemetry('playback.autoplay', 'info', 'candidate unresolved -> next', {
+            directUrl: Boolean(candidate.directUrl),
+            infoHash: Boolean(candidate.infoHash),
+          })
+          continue
+        }
+
+        firstPlaySeenRef.current = false
+        autoplayLoadFailedRef.current = false
+        setPlayerHideStartSplash(true)
+        beginPlayerSession({
+          url: resolved.url,
+          filename: resolved.filename,
+          season: selectedSeason?.season_number,
+          episode: selectedEpisode?.episode_number,
+          initialTime: playRequestInitialTime ?? undefined,
+          forceProxy: resolved.forceProxy,
+        }, attemptId)
+
+        const started = await waitForFirstPlay(attemptId, 12_000)
+        sendTelemetry('playback.autoplay', started ? 'ok' : 'info', started ? 'candidate playing' : 'candidate did not start -> next', {
           directUrl: Boolean(candidate.directUrl),
           infoHash: Boolean(candidate.infoHash),
+          loadFailed: autoplayLoadFailedRef.current,
+          resolvedUrl: String(resolved.url).slice(0, 60),
         })
-        continue
+        if (started) return true
+        if (attemptId !== playAttemptRef.current) return false
+        // Not playing — loop to the next candidate (beginPlayerSession above
+        // swaps the source without closing).
       }
-
-      firstPlaySeenRef.current = false
-      setPlayerHideStartSplash(true)
-      beginPlayerSession({
-        url: resolved.url,
-        filename: resolved.filename,
-        season: selectedSeason?.season_number,
-        episode: selectedEpisode?.episode_number,
-        initialTime: playRequestInitialTime ?? undefined,
-        forceProxy: resolved.forceProxy,
-      }, attemptId)
-
-      const started = await waitForFirstPlay(attemptId, 12_000)
-      sendTelemetry('playback.autoplay', started ? 'ok' : 'info', started ? 'candidate playing' : 'candidate did not start -> next', {
-        directUrl: Boolean(candidate.directUrl),
-        infoHash: Boolean(candidate.infoHash),
-        resolvedUrl: String(resolved.url).slice(0, 60),
-      })
-      if (started) return true
-      if (attemptId !== playAttemptRef.current) return false
-      // Not playing — loop to the next candidate (beginPlayerSession below
-      // swaps the source without closing).
+    } finally {
+      autoplayLoopActiveRef.current = false
     }
 
     if (attemptId !== playAttemptRef.current) return false
@@ -2701,6 +2723,17 @@ export function StreamsSidebarSection({
           filename={playerFilename}
           title={playerTitle}
           onClose={handlePlayerClose}
+          onLoadFailed={() => {
+            // mpv rejected the source before first frame. While the autoplay
+            // candidate loop runs, keep the modal open and flag the failure —
+            // the loop swaps in the next candidate immediately. Returning
+            // false here (or not handling this at all, as before 1.0.27) made
+            // the modal close itself, which cancelled the play attempt and
+            // closed the whole details playback session ~10 s in.
+            if (!autoplayLoopActiveRef.current) return false
+            autoplayLoadFailedRef.current = true
+            return true
+          }}
           onFirstPlay={() => {
             // Real playback started — let autoplay's watchdog know this source works.
             firstPlaySeenRef.current = true
