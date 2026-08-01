@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -169908,7 +169908,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -178705,11 +178705,23 @@
     }
     setScopedStorageItem(LAST_PLAYED_KEY, JSON.stringify(Object.fromEntries(entries)));
   }
+  function streamIdentity(stream) {
+    const hashFromField = stream.infoHash?.trim().toLowerCase() || null;
+    const hashFromUrl = stream.directUrl?.match(/\b([a-f0-9]{40})\b/i)?.[1]?.toLowerCase() ?? null;
+    const release = `${stream.name ?? ""} ${stream.title ?? ""}`.toLowerCase().replace(/\s+/g, " ").trim() || null;
+    return {
+      hash: hashFromField || hashFromUrl,
+      url: stream.directUrl?.trim() || null,
+      release
+    };
+  }
   function matchesLastPlayed(stream, saved) {
     if (!saved) return false;
-    if (saved.infoHash && stream.infoHash) return saved.infoHash === stream.infoHash;
-    if (saved.directUrl && stream.directUrl) return saved.directUrl === stream.directUrl;
-    return false;
+    const a = streamIdentity(stream);
+    const b = streamIdentity(saved);
+    if (a.hash && b.hash) return a.hash === b.hash;
+    if (a.url && b.url && a.url === b.url) return true;
+    return Boolean(a.release && b.release && a.release === b.release);
   }
   var EPISODE_STREAM_STATUS_CONCURRENCY = 4;
   var MIN_EPISODE_AUTOPLAY_BYTES = 120 * 1024 * 1024;
@@ -179900,9 +179912,15 @@
         const [hit] = ordered.splice(rememberedIndex, 1);
         ordered.unshift(hit);
       }
+      sendTelemetry("playback.autoplay", "info", "remembered stream lookup", {
+        hasSaved: Boolean(remembered),
+        savedRelease: remembered ? `${remembered.name ?? ""} ${remembered.title ?? ""}`.trim().slice(0, 60) : null,
+        foundAtIndex: rememberedIndex,
+        targetKey: playbackTargetKey.slice(0, 80)
+      });
       const pool = ordered.slice(0, 5);
       sendTelemetry("playback.autoplay", "info", "autoplay resolve start", {
-        pluginVersion: "1.0.33",
+        pluginVersion: "1.0.34",
         streamCount: streamList.length,
         candidateCount: pool.length,
         withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -181098,7 +181116,7 @@
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-WQcTmu/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

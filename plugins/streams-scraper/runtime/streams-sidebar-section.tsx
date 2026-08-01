@@ -111,11 +111,35 @@ function saveLastPlayedStream(key: string, stream: StreamResult): void {
   setScopedStorageItem(LAST_PLAYED_KEY, JSON.stringify(Object.fromEntries(entries)))
 }
 
+/// Stable identity for a stream across separate searches. Scrapers hand back
+/// url-only results (no infoHash field) whose URLs still embed the torrent
+/// hash, so pull that out; fall back to the release name, which survives token
+/// or host changes in the URL.
+function streamIdentity(stream: { infoHash?: string | null; directUrl?: string | null; name?: string; title?: string }): {
+  hash: string | null
+  url: string | null
+  release: string | null
+} {
+  const hashFromField = stream.infoHash?.trim().toLowerCase() || null
+  const hashFromUrl = stream.directUrl?.match(/\b([a-f0-9]{40})\b/i)?.[1]?.toLowerCase() ?? null
+  const release = `${stream.name ?? ''} ${stream.title ?? ''}`
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim() || null
+  return {
+    hash: hashFromField || hashFromUrl,
+    url: stream.directUrl?.trim() || null,
+    release,
+  }
+}
+
 function matchesLastPlayed(stream: StreamResult, saved: LastPlayedStream | null): boolean {
   if (!saved) return false
-  if (saved.infoHash && stream.infoHash) return saved.infoHash === stream.infoHash
-  if (saved.directUrl && stream.directUrl) return saved.directUrl === stream.directUrl
-  return false
+  const a = streamIdentity(stream)
+  const b = streamIdentity(saved)
+  if (a.hash && b.hash) return a.hash === b.hash
+  if (a.url && b.url && a.url === b.url) return true
+  return Boolean(a.release && b.release && a.release === b.release)
 }
 
 const EPISODE_STREAM_STATUS_CONCURRENCY = 4
@@ -1686,9 +1710,15 @@ export function StreamsSidebarSection({
       const [hit] = ordered.splice(rememberedIndex, 1)
       ordered.unshift(hit)
     }
+    sendTelemetry('playback.autoplay', 'info', 'remembered stream lookup', {
+      hasSaved: Boolean(remembered),
+      savedRelease: remembered ? `${remembered.name ?? ''} ${remembered.title ?? ''}`.trim().slice(0, 60) : null,
+      foundAtIndex: rememberedIndex,
+      targetKey: playbackTargetKey.slice(0, 80),
+    })
     const pool = ordered.slice(0, 5)
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.33',
+      pluginVersion: '1.0.34',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,

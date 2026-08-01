@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.34
+
+- Remembered-stream matching survives re-searches: scrapers return url-only results (no infoHash field), so the torrent hash is now pulled out of the URL, with the release name as a final fallback. Previously an exact URL match was required, which a regenerated token or host would break — silently dropping back to the ranked list.
+- New `remembered stream lookup` telemetry states whether a saved stream existed and where it landed in the candidate list, so a resume picking the "wrong" source is diagnosable instead of guesswork.
+
 ## 1.0.33
 
 - Resume reuses the stream that actually played. The source is remembered per title/episode (explicit sidebar picks too) and tried first on the next play, so "Fortsätt" starts on the same source and skips re-racing the ranked list — with the normal candidate order still available as fallback if that source has since disappeared.
