@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.37
+
+- AirPlay preparation is near-instant: the transcode session now answers as
+  soon as ffmpeg is running and the receiver waits in the stream itself, so
+  slow network seeks no longer stall (or fail) the cast menu for minutes.
+- The AirPlay row shows a tappable "failed — retry" state instead of
+  sticking on "Preparing stream…" forever when preparation fails.
+
 ## 1.0.36
 
 - Faster AirPlay preparation: only externally loaded subtitles are burned in

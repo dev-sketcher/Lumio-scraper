@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-6WfJhn/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-6WfJhn/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-6WfJhn/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-6WfJhn/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164365,6 +164365,7 @@
       castScanning: "Looking for devices\u2026",
       castNoDevices: "No Chromecast or DLNA devices found.",
       castPreparing: "Preparing stream\u2026",
+      castPrepareFailed: "Failed \u2014 tap to retry",
       castRescan: "Search again",
       castScanFailed: "Could not search for devices.",
       castFailed: "The device would not accept playback.",
@@ -165504,6 +165505,7 @@
       castScanning: "S\xF6ker efter enheter\u2026",
       castNoDevices: "Inga Chromecast- eller DLNA-enheter hittades.",
       castPreparing: "F\xF6rbereder str\xF6m\u2026",
+      castPrepareFailed: "Misslyckades \u2014 klicka f\xF6r nytt f\xF6rs\xF6k",
       castRescan: "S\xF6k igen",
       castScanFailed: "Kunde inte s\xF6ka efter enheter.",
       castFailed: "Enheten accepterade inte uppspelningen.",
@@ -169970,7 +169972,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-6WfJhn/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -174492,6 +174494,7 @@ ${cue.text}
     const [castTarget, setCastTarget] = useState(null);
     const [castError, setCastError] = useState(null);
     const [airplaySession, setAirplaySession] = useState(null);
+    const [airplayPrepare, setAirplayPrepare] = useState("idle");
     const [airplayActive, setAirplayActive] = useState(false);
     const airplayVideoRef = useRef(null);
     const airplayWasExternalRef = useRef(false);
@@ -175234,6 +175237,7 @@ ${cue.text}
         }
         void avplayerTeardown();
         setAirplaySession(null);
+        setAirplayPrepare("idle");
         setAirplayActive(false);
         airplayWasExternalRef.current = false;
       };
@@ -176871,6 +176875,20 @@ ${cue.text}
         setCastError(t("castFailed"));
       }
     }, [mediaTitle, t, title, url, useMpv]);
+    const prepareAirplaySession = useCallback(async () => {
+      setAirplayPrepare("preparing");
+      try {
+        const subContent = activeSubId && cues.length > 0 ? cuesToSrt(cues) : void 0;
+        airplayLog(`prepare start, sub=${subContent ? "external" : "none"}`);
+        const stream = await avplayerPrepare(url, realTimeRef.current, { subContent });
+        airplayLog(`prepare done, offset=${stream.offset}`);
+        setAirplaySession({ offset: stream.offset, streamUrl: stream.streamUrl });
+        setAirplayPrepare("ready");
+      } catch (e) {
+        airplayLog(`prepare failed: ${String(e)}`);
+        setAirplayPrepare("failed");
+      }
+    }, [activeSubId, cues, url]);
     const stopAirplayVideo = useCallback(() => {
       const v = airplayVideoRef.current;
       if (!v) return;
@@ -176904,6 +176922,7 @@ ${cue.text}
           stopAirplayVideo();
           void avplayerTeardown();
           setAirplaySession(null);
+          setAirplayPrepare("idle");
           void mpvCommand(["seek", resumeAt, "absolute"]);
           void setMpvPause(false);
         }
@@ -176918,6 +176937,7 @@ ${cue.text}
           stopAirplayVideo();
           void avplayerTeardown();
           setAirplaySession(null);
+          setAirplayPrepare("idle");
         }
       }, 1e4);
       return () => window.clearTimeout(timer);
@@ -177070,6 +177090,7 @@ ${cue.text}
                     stopAirplayVideo();
                     void avplayerTeardown();
                     setAirplaySession(null);
+                    setAirplayPrepare("idle");
                     void mpvCommand(["seek", resumeAt, "absolute"]);
                     void setMpvPause(false);
                   },
@@ -177383,10 +177404,14 @@ ${cue.text}
                 "button",
                 {
                   type: "button",
-                  disabled: !airplaySession,
+                  disabled: airplayPrepare === "preparing",
                   onClick: () => {
+                    if (!airplaySession) {
+                      void prepareAirplaySession();
+                      return;
+                    }
                     const v = airplayVideoRef.current;
-                    if (!v || !airplaySession) return;
+                    if (!v) return;
                     if (!v.getAttribute("src")) v.setAttribute("src", airplaySession.streamUrl);
                     v.muted = true;
                     void v.play().catch(() => {
@@ -177399,7 +177424,7 @@ ${cue.text}
                   className: "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-white/10 disabled:cursor-default disabled:opacity-50",
                   children: [
                     /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-200", children: "AirPlay" }),
-                    /* @__PURE__ */ jsx("span", { className: "shrink-0 text-[10px] uppercase tracking-[0.16em] text-slate-500", children: airplaySession ? "AirPlay" : t("castPreparing") })
+                    /* @__PURE__ */ jsx("span", { className: `shrink-0 text-[10px] uppercase tracking-[0.16em] ${airplayPrepare === "failed" ? "text-rose-300" : "text-slate-500"}`, children: airplayPrepare === "failed" ? t("castPrepareFailed") : airplaySession ? "AirPlay" : t("castPreparing") })
                   ]
                 }
               ),
@@ -177630,20 +177655,7 @@ ${cue.text}
                           const opening = !showCastMenu;
                           setShowCastMenu(opening);
                           if (opening && castDevices.length === 0) void scanCastDevices();
-                          if (opening && useMpv && !airplaySession) {
-                            void (async () => {
-                              try {
-                                const subContent = activeSubId && cues.length > 0 ? cuesToSrt(cues) : void 0;
-                                airplayLog(`prepare start, sub=${subContent ? "external" : "none"}`);
-                                const stream = await avplayerPrepare(url, realTimeRef.current, { subContent });
-                                airplayLog(`prepare done, offset=${stream.offset}`);
-                                setAirplaySession({ offset: stream.offset, streamUrl: stream.streamUrl });
-                              } catch (e) {
-                                airplayLog(`prepare failed: ${String(e)}`);
-                                setCastError(t("castFailed"));
-                              }
-                            })();
-                          }
+                          if (opening && useMpv && !airplaySession) void prepareAirplaySession();
                         },
                         title: t("castTitle"),
                         className: `shrink-0 rounded px-1 py-0.5 transition ${castTarget ? "text-aurora-300" : "text-slate-300 hover:text-white"}`,
@@ -181561,7 +181573,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-6WfJhn/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
