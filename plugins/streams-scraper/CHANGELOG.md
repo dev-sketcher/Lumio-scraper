@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.43
+
+- Fixes the receiver stalling right after the preroll splice: transcoded
+  segments carried absolute source timestamps, so the TV waited forever for
+  media that claimed to sit ~20 minutes away (and showed that as the clip
+  duration). Timestamps are now rebased to zero at the muxer.
+- Flaky transcode starts (the CDN refusing the extra connection next to the
+  local player) retry automatically with backoff instead of surfacing as an
+  instant "failed" row, and ffmpeg errors are captured for diagnostics.
+
 ## 1.0.42
 
 - AirPlay handover finally holds: picking a receiver used to drop the route
