@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.35
+
+- The embedded player now carries the app's casting support: the cast menu
+  (Chromecast/DLNA device list plus the new AirPlay flow) is available when
+  playing through the plugin, instead of the pre-casting player this runtime
+  was last built against.
+- AirPlay rides WebKit's video target picker with an H.264 ≤1080p hardware
+  transcode for MKV/HEVC sources, burned-in active subtitles, and automatic
+  mpv handover/handback. Requires app 0.2.21+ for the preparation endpoint —
+  on older apps the AirPlay row shows a cast error and the rest of the menu
+  works as before.
+
 ## 1.0.34
 
 - Remembered-stream matching survives re-searches: scrapers return url-only results (no infoHash field), so the torrent hash is now pulled out of the URL, with the release name as a final fallback. Previously an exact URL match was required, which a regenerated token or host would break — silently dropping back to the ranked list.

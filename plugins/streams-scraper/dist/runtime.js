@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164348,6 +164348,36 @@
       subtitleAutoSync: "Auto-sync",
       subtitleAutoSyncAnalyzing: "Analyzing...",
       subtitleAutoSyncApplied: "Applied offset",
+      subtitleAlignedToReference: "Synced against a subtitle matching your file",
+      subtitleHashMatch: "Matches your file",
+      subtitleAlignedToAudio: "Synced against the full audio track",
+      subtitleAnchorApplied: "Synced from your tap",
+      subtitleAnchorDrift: "drift corrected too",
+      subtitleManualSync: "Sync by ear",
+      subtitleManualSyncTapPrompt: "Press when you hear a line you recognise",
+      subtitleManualSyncTapButton: "I hear it now",
+      subtitleManualSyncPickPrompt: "Which line did you just hear?",
+      subtitleManualSyncSecondHint: "Repeat this later in the film to also correct drift.",
+      subtitleManualSyncNoCues: "No subtitle lines near this point.",
+      subtitleManualSyncApplying: "Applying your sync\u2026",
+      subtitleManualSyncRefining: "Fine-tuning against the audio\u2026",
+      castTitle: "Play on another device",
+      castScanning: "Looking for devices\u2026",
+      castNoDevices: "No devices found on your network.",
+      castRescan: "Search again",
+      castScanFailed: "Could not search for devices.",
+      castFailed: "The device would not accept playback.",
+      castPlayingOn: "Playing on",
+      castStop: "Stop casting",
+      castPause: "Pause",
+      castResume: "Resume",
+      castPairTitle: "Pair with Apple TV",
+      castPairPrompt: "Enter the code shown on your TV",
+      castPairConfirm: "Pair",
+      castPairing: "Pairing\u2026",
+      castPairFailed: "Pairing failed. Try again.",
+      cancel2: "Cancel",
+      subtitleAutoSyncNoReference: "Not certain enough from audio alone. Add an OpenSubtitles API key in Settings to sync against a subtitle matching your file.",
       subtitleAutoSyncFailed: "Could not auto-sync subtitles",
       subtitleAutoSyncDriftApplied: "drift corrected ({rate}s/min)",
       subtitleAutoSyncNoMatch: "Could not find a reliable subtitle match",
@@ -165456,6 +165486,36 @@
       subtitleAutoSync: "Auto-sync",
       subtitleAutoSyncAnalyzing: "Analyserar...",
       subtitleAutoSyncApplied: "La p\xE5 offset",
+      subtitleAlignedToReference: "Synkad mot en undertext som matchar din fil",
+      subtitleHashMatch: "Matchar din fil",
+      subtitleAlignedToAudio: "Synkad mot hela ljudsp\xE5ret",
+      subtitleAnchorApplied: "Synkad fr\xE5n din markering",
+      subtitleAnchorDrift: "drift korrigerad ocks\xE5",
+      subtitleManualSync: "Synka p\xE5 geh\xF6r",
+      subtitleManualSyncTapPrompt: "Tryck n\xE4r du h\xF6r en replik du k\xE4nner igen",
+      subtitleManualSyncTapButton: "Jag h\xF6r den nu",
+      subtitleManualSyncPickPrompt: "Vilken rad h\xF6rde du nyss?",
+      subtitleManualSyncSecondHint: "G\xF6r om det senare i filmen f\xF6r att \xE4ven r\xE4tta driften.",
+      subtitleManualSyncNoCues: "Inga undertextrader n\xE4ra den h\xE4r punkten.",
+      subtitleManualSyncApplying: "Till\xE4mpar din synkning\u2026",
+      subtitleManualSyncRefining: "Finjusterar mot ljudet\u2026",
+      castTitle: "Spela p\xE5 annan enhet",
+      castScanning: "S\xF6ker efter enheter\u2026",
+      castNoDevices: "Inga enheter hittades i n\xE4tverket.",
+      castRescan: "S\xF6k igen",
+      castScanFailed: "Kunde inte s\xF6ka efter enheter.",
+      castFailed: "Enheten accepterade inte uppspelningen.",
+      castPlayingOn: "Spelar p\xE5",
+      castStop: "Sluta casta",
+      castPause: "Pausa",
+      castResume: "Forts\xE4tt",
+      castPairTitle: "Parkoppla med Apple TV",
+      castPairPrompt: "Ange koden som visas p\xE5 din TV",
+      castPairConfirm: "Parkoppla",
+      castPairing: "Parkopplar\u2026",
+      castPairFailed: "Parkopplingen misslyckades. F\xF6rs\xF6k igen.",
+      cancel2: "Avbryt",
+      subtitleAutoSyncNoReference: "Inte s\xE4ker nog utifr\xE5n bara ljudet. L\xE4gg in en OpenSubtitles API-nyckel i Inst\xE4llningar f\xF6r att synka mot en undertext som matchar din fil.",
       subtitleAutoSyncFailed: "Kunde inte auto-synca undertexterna",
       subtitleAutoSyncDriftApplied: "drift korrigerad ({rate}s/min)",
       subtitleAutoSyncNoMatch: "Kunde inte hitta en tillr\xE4ckligt bra matchning",
@@ -169908,7 +169968,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -172978,7 +173038,7 @@
     ind: "id"
   };
   async function searchSubtitles(params) {
-    const { imdbId, type, season, episode } = params;
+    const { imdbId, type, season, episode, mediaUrl } = params;
     const videoId = type === "episode" && season != null && episode != null ? `${imdbId}:${season}:${episode}` : imdbId;
     const stremioType = type === "episode" ? "series" : "movie";
     const osApiKey = getOpenSubtitlesApiKey().trim();
@@ -172988,8 +173048,9 @@
       searchParams.set("episode", String(episode));
     }
     if (osApiKey) searchParams.set("os_api_key", osApiKey);
+    if (osApiKey && mediaUrl) searchParams.set("media_url", mediaUrl);
     const url = `/api/subtitles?${searchParams.toString()}`;
-    const cacheKey = `${stremioType}:${videoId}:${osApiKey ? "rest" : "addon"}`;
+    const cacheKey = `${stremioType}:${videoId}:${osApiKey ? "rest" : "addon"}:${mediaUrl ? "hash" : "nohash"}`;
     const cached = resultCache.get(cacheKey);
     if (cached && cached.expiresAt > Date.now()) return cached.subtitles;
     const running = inflight4.get(cacheKey);
@@ -172997,7 +173058,13 @@
     const parseSubtitles = (payload) => {
       const subtitles = payload?.subtitles;
       if (!Array.isArray(subtitles)) return [];
-      return subtitles.map((s) => ({ id: s.id, url: s.url, lang: s.lang ?? s.lang3 ?? "" }));
+      return subtitles.map((s) => ({
+        id: s.id,
+        url: s.url,
+        lang: s.lang ?? s.lang3 ?? "",
+        hashMatch: s.hashMatch === true,
+        release: s.release
+      }));
     };
     const fetchOnce = async () => {
       let lastError = null;
@@ -173032,7 +173099,9 @@
         language: LANG3_TO_22[s.lang] ?? s.lang,
         lang3: s.lang,
         url: s.url,
-        id: s.id
+        id: s.id,
+        hashMatch: s.hashMatch === true,
+        release: s.release
       }));
       pruneCache();
       resultCache.set(cacheKey, {
@@ -173845,12 +173914,42 @@
     writeStore(store);
   }
 
+  // lib/tauri-avplayer.ts
+  init_core();
+  async function avplayerPrepare(url, start2, sub) {
+    if (!isTauriEnv) return { streamUrl: url, offset: 0 };
+    return invoke("avplayer_prepare", {
+      url,
+      start: start2 ?? null,
+      subContent: sub?.subContent ?? null,
+      subIndex: sub?.subIndex ?? null
+    });
+  }
+  async function avplayerTeardown() {
+    if (!isTauriEnv) return;
+    await invoke("avplayer_teardown");
+  }
+
   // components/player/video-player-modal.tsx
   init_jsx_runtime_shim();
   var EMBEDDED_SUBTITLES_ENABLED = true;
   var PLAYER_UI_TICK_MS = 250;
   var PLAYER_PARENT_TIMEUPDATE_TICK_MS = 1e3;
   var PROXY_RESTART_MIN_GAP_MS = 3e4;
+  function cuesToSrt(cues) {
+    const stamp = (sec) => {
+      const ms = Math.max(0, Math.round(sec * 1e3));
+      const h = String(Math.floor(ms / 36e5)).padStart(2, "0");
+      const m2 = String(Math.floor(ms % 36e5 / 6e4)).padStart(2, "0");
+      const s = String(Math.floor(ms % 6e4 / 1e3)).padStart(2, "0");
+      const rest = String(ms % 1e3).padStart(3, "0");
+      return `${h}:${m2}:${s},${rest}`;
+    };
+    return cues.map((cue, i) => `${i + 1}
+${stamp(cue.start)} --> ${stamp(cue.end)}
+${cue.text}
+`).join("\n");
+  }
   var INTRODB_CACHE = /* @__PURE__ */ new Map();
   function buildIntroDbCacheKey(mediaType, tmdbId, imdbId, season, episode) {
     return [
@@ -174380,6 +174479,15 @@
     const [subtitleDebugInfo, setSubtitleDebugInfo] = useState(null);
     const [subtitleClientDebugInfo, setSubtitleClientDebugInfo] = useState(null);
     const [showSubMenu, setShowSubMenu] = useState(false);
+    const [showCastMenu, setShowCastMenu] = useState(false);
+    const [castDevices, setCastDevices] = useState([]);
+    const [castScanning, setCastScanning] = useState(false);
+    const [castTarget, setCastTarget] = useState(null);
+    const [castError, setCastError] = useState(null);
+    const [airplaySession, setAirplaySession] = useState(null);
+    const [airplayActive, setAirplayActive] = useState(false);
+    const airplayVideoRef = useRef(null);
+    const airplayWasExternalRef = useRef(false);
     const [activeSubId, setActiveSubId] = useState(null);
     const [selectedLang, setSelectedLang] = useState(() => getDefaultSubtitleLanguage() || null);
     const [defaultSubtitleLang] = useState(() => getDefaultSubtitleLanguage());
@@ -174452,6 +174560,10 @@
     const manualSubtitleOverrideRef = useRef(false);
     const subtitlePreferenceRef = useRef({ mode: "default" });
     const lastAutoSyncedDelayRef = useRef(null);
+    const [manualSyncOpen, setManualSyncOpen] = useState(false);
+    const [manualSyncTapTime, setManualSyncTapTime] = useState(null);
+    const [manualSyncBusy, setManualSyncBusy] = useState(false);
+    const [manualSyncFirstAnchor, setManualSyncFirstAnchor] = useState(null);
     const stallLastProgressSecondsRef = useRef(0);
     const stallLastProgressAtRef = useRef(Date.now());
     const stallRecoveriesRef = useRef(0);
@@ -175107,6 +175219,16 @@
       return () => {
         cancelled = true;
         void closeMpvPlayer();
+        const v = airplayVideoRef.current;
+        if (v) {
+          v.pause();
+          v.removeAttribute("src");
+          v.load();
+        }
+        void avplayerTeardown();
+        setAirplaySession(null);
+        setAirplayActive(false);
+        airplayWasExternalRef.current = false;
       };
     }, [useMpv, url]);
     useEffect(() => {
@@ -176305,7 +176427,10 @@
             imdbId: resolvedImdbId,
             type: inferredMediaType === "tv" ? "episode" : "movie",
             season: effectiveSeason ?? void 0,
-            episode: effectiveEpisode ?? void 0
+            episode: effectiveEpisode ?? void 0,
+            // Enables exact-file matching: subtitles authored for this very
+            // release come back already in sync, so nothing needs correcting.
+            mediaUrl: url
           });
           if (cancelled || subtitleListRequestIdRef.current !== requestId) return;
           setSubtitleDebugInfo({
@@ -176614,7 +176739,6 @@
     }
     const progress2 = totalDuration > 0 ? realTime / totalDuration * 100 : 0;
     const hasSubtitles = subtitleOptions.length > 0;
-    const canAutoSyncNow = Boolean(activeSubId) && (cues.length >= 2 || Boolean(activeSubId?.startsWith("embedded:")));
     const activeIntro = introSegment ? realTime >= introSegment.startMs / 1e3 && realTime < introSegment.endMs / 1e3 ? introSegment : null : null;
     const shouldShowSkipIntroButton = Boolean(hasStarted && !autoSkipIntro && activeIntro && introDataReady);
     const controlsReady = useMpv ? hasEverStarted || hasStarted || mpv.firstFrameRendered || mpvRevealPlaybackReady : hasEverStarted;
@@ -176642,60 +176766,153 @@
       (acc[_a = s.language] ?? (acc[_a] = [])).push(s);
       return acc;
     }, {});
-    const runSubtitleAutoSync = useCallback(async (opts) => {
-      const silent = opts?.silent === true;
-      const activeAudioAid = useMpv ? activeAudioTrack ?? audioTracks.find((track) => track.index != null)?.index ?? null : null;
-      const audioTrackIndex = typeof activeAudioAid === "number" && activeAudioAid > 0 ? activeAudioAid - 1 : null;
-      const minConfidence = typeof opts?.minConfidence === "number" ? opts.minConfidence : null;
-      const embeddedSid = activeSubId?.startsWith("embedded:") ? Number.parseInt(activeSubId.slice("embedded:".length), 10) : null;
-      const subtitleTrackIndex = embeddedSid !== null && Number.isFinite(embeddedSid) && embeddedSid > 0 ? embeddedSid - 1 : null;
-      if (!activeSubId || subtitleTrackIndex === null && cues.length < 2) {
-        if (!silent) setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNeedsSubtitle") });
-        return;
-      }
-      const syncTime = realTimeRef.current;
-      if (!silent) setSubtitleAutoSyncState({ type: "analyzing" });
+    const applyManualAnchor = useCallback(async (cue) => {
+      const tapTime = manualSyncTapTime;
+      if (tapTime == null) return;
+      setManualSyncBusy(true);
       try {
-        const res = await fetch("/api/subtitles/auto-sync", {
+        const coarseDelay = Math.round((tapTime - cue.start) * 100) / 100;
+        let finalDelay = coarseDelay;
+        const activeAudioAid = useMpv ? activeAudioTrack ?? audioTracks.find((track) => track.index != null)?.index ?? null : null;
+        const audioTrackIndex = typeof activeAudioAid === "number" && activeAudioAid > 0 ? activeAudioAid - 1 : null;
+        const refined = await fetch("/api/subtitles/refine-offset", {
+          signal: AbortSignal.timeout(9e4),
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             url,
-            currentTime: syncTime,
-            duration: totalDuration > 0 ? totalDuration : void 0,
-            cues: subtitleTrackIndex === null ? cues.map((cue) => ({ start: cue.start, end: cue.end, text: cue.text })) : [],
-            subtitleTrackIndex,
-            audioTrackIndex
+            anchorTime: tapTime,
+            coarseDelay,
+            audioTrackIndex,
+            cues: cues.map((entry) => ({ start: entry.start, end: entry.end, text: entry.text }))
           })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "subtitle_auto_sync_failed");
-        if (typeof data.suggestedDelay !== "number") {
-          if (!silent) setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncNoMatch") });
-          return;
-        }
-        const confidence = data.confidence ?? 0;
-        if (minConfidence !== null && confidence < minConfidence) {
-          setSubtitleAutoSyncState({ type: "idle" });
-          return;
+        }).catch(() => null);
+        if (refined?.ok) {
+          const data = await refined.json();
+          if (typeof data.refinedDelay === "number" && (data.score ?? 0) > 0.15) {
+            finalDelay = data.refinedDelay;
+          }
         }
         lastAutoSyncedDelayRef.current = subDelay;
-        const appliedDelay = Math.round(-data.suggestedDelay * 10) / 10;
-        setSubDelay(appliedDelay);
-        let message = `${t("subtitleAutoSyncApplied")} ${appliedDelay > 0 ? "+" : ""}${appliedDelay.toFixed(1)}s`;
-        const slope = typeof data.driftSlope === "number" && data.driftSlope !== 0 ? data.driftSlope : null;
-        if (slope !== null) {
-          setSubDrift({ slope, anchor: data.anchor ?? syncTime });
-          const perMinute = slope * 60;
-          message += ` \xB7 ${t("subtitleAutoSyncDriftApplied").replace("{rate}", `${perMinute > 0 ? "+" : ""}${perMinute.toFixed(2)}`)}`;
+        if (manualSyncFirstAnchor && Math.abs(tapTime - manualSyncFirstAnchor.time) >= 180) {
+          const s1 = manualSyncFirstAnchor.cueStart;
+          const t1 = manualSyncFirstAnchor.time;
+          const slope = (cue.start - s1) / (tapTime - t1) - 1;
+          setSubDelay(Math.round((t1 - s1) * 10) / 10);
+          setSubDrift(Math.abs(slope) > 5e-4 ? { slope, anchor: t1 } : null);
+          setSubtitleAutoSyncState({
+            type: "done",
+            message: `${t("subtitleAnchorApplied")} ${t1 - s1 > 0 ? "+" : ""}${(t1 - s1).toFixed(1)}s \xB7 ${t("subtitleAnchorDrift")}`
+          });
+          setManualSyncFirstAnchor(null);
         } else {
+          setSubDelay(finalDelay);
           setSubDrift(null);
+          setManualSyncFirstAnchor({ time: tapTime, cueStart: cue.start });
+          setSubtitleAutoSyncState({
+            type: "done",
+            message: `${t("subtitleAnchorApplied")} ${finalDelay > 0 ? "+" : ""}${finalDelay.toFixed(1)}s`
+          });
         }
-        setSubtitleAutoSyncState({ type: "done", message });
-      } catch {
-        if (!silent) setSubtitleAutoSyncState({ type: "error", message: t("subtitleAutoSyncFailed") });
+        setManualSyncOpen(false);
+        setManualSyncTapTime(null);
+      } finally {
+        setManualSyncBusy(false);
       }
-    }, [activeAudioTrack, activeSubId, audioTracks, cues, subDelay, t, totalDuration, url, useMpv]);
+    }, [activeAudioTrack, audioTracks, cues, manualSyncFirstAnchor, manualSyncTapTime, subDelay, t, url, useMpv]);
+    const scanCastDevices = useCallback(async () => {
+      setCastScanning(true);
+      setCastError(null);
+      try {
+        const res = await fetch("/api/cast/devices", { signal: AbortSignal.timeout(15e3) });
+        const data = await res.json();
+        setCastDevices(Array.isArray(data.devices) ? data.devices : []);
+      } catch {
+        setCastError(t("castScanFailed"));
+      } finally {
+        setCastScanning(false);
+      }
+    }, [t]);
+    const sendToCast = useCallback(async (device, action) => {
+      setCastError(null);
+      try {
+        const res = await fetch("/api/cast/control", {
+          signal: AbortSignal.timeout(3e4),
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            kind: device.kind,
+            address: device.address,
+            controlUrl: device.controlUrl ?? null,
+            url,
+            title: mediaTitle ?? title,
+            action,
+            position: action === "play" ? realTimeRef.current : void 0
+          })
+        });
+        if (!res.ok) {
+          const payload = await res.json().catch(() => ({}));
+          setCastError(payload.error ?? t("castFailed"));
+          return;
+        }
+        if (action === "play") {
+          setCastTarget(device);
+          if (useMpv) void setMpvPause(true);
+        }
+        if (action === "stop") setCastTarget(null);
+      } catch {
+        setCastError(t("castFailed"));
+      }
+    }, [mediaTitle, t, title, url, useMpv]);
+    const stopAirplayVideo = useCallback(() => {
+      const v = airplayVideoRef.current;
+      if (!v) return;
+      v.pause();
+      v.removeAttribute("src");
+      v.load();
+    }, []);
+    useEffect(() => {
+      const v = airplayVideoRef.current;
+      if (!v || !airplaySession || !useMpv) return;
+      const offset = airplaySession.offset;
+      const handler = () => {
+        const wireless = v.webkitCurrentPlaybackTargetIsWireless === true;
+        if (wireless && !airplayWasExternalRef.current) {
+          airplayWasExternalRef.current = true;
+          setAirplayActive(true);
+          void setMpvPause(true);
+          try {
+            v.currentTime = Math.max(0, realTimeRef.current - offset);
+          } catch {
+          }
+          v.muted = false;
+          void v.play().catch(() => {
+          });
+        } else if (!wireless && airplayWasExternalRef.current) {
+          airplayWasExternalRef.current = false;
+          setAirplayActive(false);
+          const resumeAt = offset + v.currentTime;
+          stopAirplayVideo();
+          void avplayerTeardown();
+          setAirplaySession(null);
+          void mpvCommand(["seek", resumeAt, "absolute"]);
+          void setMpvPause(false);
+        }
+      };
+      v.addEventListener("webkitcurrentplaybacktargetiswirelesschanged", handler);
+      return () => v.removeEventListener("webkitcurrentplaybacktargetiswirelesschanged", handler);
+    }, [airplaySession, useMpv]);
+    useEffect(() => {
+      if (!airplaySession || airplayWasExternalRef.current || showCastMenu) return;
+      const timer = window.setTimeout(() => {
+        if (!airplayWasExternalRef.current) {
+          stopAirplayVideo();
+          void avplayerTeardown();
+          setAirplaySession(null);
+        }
+      }, 1e4);
+      return () => window.clearTimeout(timer);
+    }, [showCastMenu, airplaySession]);
     const undoSubtitleAutoSync = useCallback(() => {
       if (lastAutoSyncedDelayRef.current === null) return;
       setSubDelay(lastAutoSyncedDelayRef.current);
@@ -176703,17 +176920,6 @@
       lastAutoSyncedDelayRef.current = null;
       setSubtitleAutoSyncState({ type: "idle" });
     }, []);
-    const autoSyncAttemptKeyRef = useRef(null);
-    useEffect(() => {
-      if (!hasStarted || !activeSubId || activeSubId.startsWith("embedded:")) return;
-      if (subDelay !== 0 || lastAutoSyncedDelayRef.current !== null) return;
-      if (subtitleAutoSyncState.type !== "idle") return;
-      if (cues.length < 2 || realTime < 30) return;
-      const attemptKey = `${url}::${activeSubId}`;
-      if (autoSyncAttemptKeyRef.current === attemptKey) return;
-      autoSyncAttemptKeyRef.current = attemptKey;
-      void runSubtitleAutoSync({ minConfidence: 0.65, silent: true });
-    }, [activeSubId, cues, hasStarted, realTime, runSubtitleAutoSync, subDelay, subtitleAutoSyncState.type, url]);
     const content = /* @__PURE__ */ jsxs("div", { "data-lumio-player-open": "1", className: `fixed inset-0 z-[60] flex flex-col !mt-0 ${useMpv ? "" : "bg-black"}`, children: [
       !hasEverStarted && !hideStartSplash && /* @__PURE__ */ jsxs(
         "div",
@@ -176825,6 +177031,43 @@
           style: { cursor: useMpv ? "default" : controlsVisible ? "default" : "none" },
           onMouseMove: onMouseActivity,
           children: [
+            useMpv && /* Hidden WebKit video that owns the AirPlay hand-off — see the
+               AirPlay row in the cast menu. */
+            /* eslint-disable-next-line jsx-a11y/media-has-caption */
+            /* @__PURE__ */ jsx(
+              "video",
+              {
+                ref: airplayVideoRef,
+                playsInline: true,
+                style: { position: "absolute", bottom: 0, left: 0, width: 2, height: 2, opacity: 0, pointerEvents: "none" },
+                ...{ "x-webkit-airplay": "allow" }
+              }
+            ),
+            airplayActive && /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-black/80", children: [
+              /* @__PURE__ */ jsxs("span", { className: "text-lg text-white", children: [
+                t("castPlayingOn"),
+                " AirPlay"
+              ] }),
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "button",
+                  className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
+                  onClick: () => {
+                    const v = airplayVideoRef.current;
+                    const resumeAt = (airplaySession?.offset ?? 0) + (v?.currentTime ?? 0);
+                    setAirplayActive(false);
+                    airplayWasExternalRef.current = false;
+                    stopAirplayVideo();
+                    void avplayerTeardown();
+                    setAirplaySession(null);
+                    void mpvCommand(["seek", resumeAt, "absolute"]);
+                    void setMpvPause(false);
+                  },
+                  children: t("castStop")
+                }
+              )
+            ] }),
             useMpv ? (
               // Transparent area — mpv NSView renders behind the WKWebView here
               /* @__PURE__ */ jsx("div", { style: { width: "100%", height: "100%", background: "transparent" } })
@@ -176971,6 +177214,78 @@
                 children: "Tryck f\xF6r att starta"
               }
             ) }),
+            manualSyncOpen && /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: "absolute inset-0 z-[70] flex items-end justify-center bg-slate-950/70 p-6 backdrop-blur-sm",
+                onClick: () => {
+                  setManualSyncOpen(false);
+                  setManualSyncTapTime(null);
+                },
+                children: /* @__PURE__ */ jsx(
+                  "div",
+                  {
+                    className: "mb-24 w-full max-w-xl rounded-2xl border border-white/10 bg-slate-900/95 p-5 shadow-2xl",
+                    onClick: (event) => event.stopPropagation(),
+                    children: manualSyncTapTime === null ? /* @__PURE__ */ jsxs(Fragment2, { children: [
+                      /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-200", children: t("subtitleManualSyncTapPrompt") }),
+                      /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          autoFocus: true,
+                          onClick: () => setManualSyncTapTime(realTimeRef.current),
+                          className: "mt-4 w-full rounded-xl bg-aurora-500/80 px-4 py-3 text-sm font-semibold text-white transition hover:bg-aurora-400/80",
+                          children: t("subtitleManualSyncTapButton")
+                        }
+                      ),
+                      /* @__PURE__ */ jsx("p", { className: "mt-3 text-[11px] text-slate-500", children: t("subtitleManualSyncSecondHint") })
+                    ] }) : /* @__PURE__ */ jsxs(Fragment2, { children: [
+                      /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-200", children: manualSyncBusy ? t("subtitleManualSyncApplying") : t("subtitleManualSyncPickPrompt") }),
+                      manualSyncBusy && /* @__PURE__ */ jsxs("div", { className: "mt-3 flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-3", children: [
+                        /* @__PURE__ */ jsx("span", { className: "h-4 w-4 animate-spin rounded-full border-2 border-white/25 border-t-white/80" }),
+                        /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-300", children: t("subtitleManualSyncRefining") })
+                      ] }),
+                      /* @__PURE__ */ jsx("div", { className: `mt-3 max-h-64 space-y-1 overflow-y-auto ${manualSyncBusy ? "pointer-events-none opacity-40" : ""}`, children: (() => {
+                        const near = cues.filter((cue) => Math.abs(cue.start - manualSyncTapTime) <= 120).sort((a, b) => Math.abs(a.start - manualSyncTapTime) - Math.abs(b.start - manualSyncTapTime)).slice(0, 40).sort((a, b) => a.start - b.start);
+                        if (near.length === 0) {
+                          return /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("subtitleManualSyncNoCues") });
+                        }
+                        return near.map((cue) => /* @__PURE__ */ jsxs(
+                          "button",
+                          {
+                            type: "button",
+                            disabled: manualSyncBusy,
+                            onClick: () => {
+                              void applyManualAnchor(cue);
+                            },
+                            className: "flex w-full items-baseline gap-3 rounded-lg px-3 py-2 text-left text-sm text-slate-200 transition hover:bg-white/10 disabled:opacity-50",
+                            children: [
+                              /* @__PURE__ */ jsxs("span", { className: "shrink-0 font-mono text-[11px] text-slate-500", children: [
+                                Math.floor(cue.start / 60),
+                                ":",
+                                String(Math.floor(cue.start % 60)).padStart(2, "0")
+                              ] }),
+                              /* @__PURE__ */ jsx("span", { className: "line-clamp-2", children: cue.text.replace(/\n/g, " ") })
+                            ]
+                          },
+                          `${cue.start}-${cue.text.slice(0, 12)}`
+                        ));
+                      })() }),
+                      /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          onClick: () => setManualSyncTapTime(null),
+                          className: "mt-3 text-xs text-slate-400 underline-offset-2 hover:text-white hover:underline",
+                          children: t("cancel2")
+                        }
+                      )
+                    ] })
+                  }
+                )
+              }
+            ),
             activeCue && /* @__PURE__ */ jsx(
               "div",
               {
@@ -176995,6 +177310,91 @@
                 )
               }
             ),
+            showCastMenu && /* @__PURE__ */ jsxs("div", { className: "absolute bottom-20 right-4 z-[60] w-72 rounded-2xl border border-white/10 bg-slate-900/95 p-4 shadow-2xl backdrop-blur", children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
+                /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.2em] text-slate-400", children: t("castTitle") }),
+                /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => void scanCastDevices(),
+                    disabled: castScanning,
+                    className: "text-[11px] text-slate-400 underline-offset-2 hover:text-white hover:underline disabled:opacity-50",
+                    children: castScanning ? t("castScanning") : t("castRescan")
+                  }
+                )
+              ] }),
+              castTarget && /* @__PURE__ */ jsxs("div", { className: "mt-3 rounded-xl border border-aurora-400/30 bg-aurora-400/10 p-3", children: [
+                /* @__PURE__ */ jsx("p", { className: "text-[11px] uppercase tracking-[0.18em] text-aurora-200", children: t("castPlayingOn") }),
+                /* @__PURE__ */ jsx("p", { className: "mt-1 truncate text-sm text-white", children: castTarget.name }),
+                /* @__PURE__ */ jsxs("div", { className: "mt-2 flex gap-2", children: [
+                  /* @__PURE__ */ jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => void sendToCast(castTarget, "pause"),
+                      className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
+                      children: t("castPause")
+                    }
+                  ),
+                  /* @__PURE__ */ jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => void sendToCast(castTarget, "resume"),
+                      className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
+                      children: t("castResume")
+                    }
+                  ),
+                  /* @__PURE__ */ jsx(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => void sendToCast(castTarget, "stop"),
+                      className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
+                      children: t("castStop")
+                    }
+                  )
+                ] })
+              ] }),
+              /* @__PURE__ */ jsx("div", { className: "mt-3 max-h-56 space-y-1 overflow-y-auto", children: castScanning && castDevices.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("castScanning") }) : castDevices.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("castNoDevices") }) : castDevices.filter((device) => device.kind !== "airplay").map((device) => /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => void sendToCast(device, "play"),
+                  className: "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-white/10",
+                  children: [
+                    /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-200", children: device.name }),
+                    /* @__PURE__ */ jsx("span", { className: "shrink-0 text-[10px] uppercase tracking-[0.16em] text-slate-500", children: device.kind === "chromecast" ? "Cast" : "DLNA" })
+                  ]
+                },
+                device.id
+              )) }),
+              useMpv && /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  type: "button",
+                  disabled: !airplaySession,
+                  onClick: () => {
+                    const v = airplayVideoRef.current;
+                    if (!v || !airplaySession) return;
+                    if (!v.getAttribute("src")) v.setAttribute("src", airplaySession.streamUrl);
+                    v.muted = true;
+                    void v.play().catch(() => {
+                    });
+                    const show = v.webkitShowPlaybackTargetPicker;
+                    if (typeof show === "function") show.call(v);
+                    else setCastError(t("castFailed"));
+                  },
+                  className: "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-white/10 disabled:cursor-default disabled:opacity-50",
+                  children: [
+                    /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-200", children: "AirPlay" }),
+                    /* @__PURE__ */ jsx("span", { className: "shrink-0 text-[10px] uppercase tracking-[0.16em] text-slate-500", children: airplaySession ? "AirPlay" : t("castScanning") })
+                  ]
+                }
+              ),
+              castError && /* @__PURE__ */ jsx("p", { className: "mt-3 text-[11px] leading-5 text-rose-300", children: castError })
+            ] }),
             showSubMenu && // The CC panel is three columns wide — anchoring it at the trigger
             // and growing leftward clipped it against the window's left edge.
             // Pin it to the window's right edge instead; only `bottom` follows
@@ -177078,11 +177478,13 @@
                         {
                           type: "button",
                           onClick: () => {
-                            void runSubtitleAutoSync();
+                            setShowSubMenu(false);
+                            setManualSyncTapTime(null);
+                            setManualSyncOpen(true);
                           },
-                          disabled: subtitleAutoSyncState.type === "analyzing",
-                          className: `w-full rounded-lg border px-3 py-2 text-left text-xs font-semibold uppercase tracking-[0.18em] transition ${subtitleAutoSyncState.type === "analyzing" ? "cursor-wait border-white/15 bg-white/5 text-slate-300" : canAutoSyncNow ? "border-aurora-400/40 bg-aurora-400/10 text-aurora-200 hover:bg-aurora-400/15" : "border-white/10 bg-white/5 text-slate-500 hover:border-white/20"}`,
-                          children: subtitleAutoSyncState.type === "analyzing" ? t("subtitleAutoSyncAnalyzing") : t("subtitleAutoSync")
+                          disabled: cues.length < 2,
+                          className: `mt-2 w-full rounded-lg border px-3 py-2 text-left text-xs font-semibold uppercase tracking-[0.18em] transition ${cues.length >= 2 ? "border-white/15 bg-white/5 text-slate-200 hover:border-white/25 hover:bg-white/10" : "border-white/10 bg-white/5 text-slate-500"}`,
+                          children: t("subtitleManualSync")
                         }
                       ),
                       subtitleAutoSyncState.type !== "idle" && subtitleAutoSyncState.type !== "analyzing" && /* @__PURE__ */ jsxs("div", { className: "mt-2 text-[11px] leading-5 text-slate-400", children: [
@@ -177208,6 +177610,43 @@
                         title: t("subtitlesLabel"),
                         className: `ml-auto shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${activeSubId ? "bg-aurora-400 text-black" : hasSubtitles || loadingSub || subtitleLoadError || resolvedImdbId ? "text-slate-300 hover:text-white" : "text-slate-500"}`,
                         children: "CC"
+                      }
+                    ),
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => {
+                          const opening = !showCastMenu;
+                          setShowCastMenu(opening);
+                          if (opening && castDevices.length === 0) void scanCastDevices();
+                          if (opening && useMpv && !airplaySession) {
+                            void (async () => {
+                              try {
+                                let subContent;
+                                let subIndex;
+                                if (activeSubId && cues.length > 0) {
+                                  subContent = cuesToSrt(cues);
+                                } else {
+                                  const sid = await getMpvSid().catch(() => null);
+                                  if (sid && sid > 0) subIndex = sid - 1;
+                                }
+                                const stream = await avplayerPrepare(url, realTimeRef.current, { subContent, subIndex });
+                                setAirplaySession({ offset: stream.offset, streamUrl: stream.streamUrl });
+                              } catch {
+                                setCastError(t("castFailed"));
+                              }
+                            })();
+                          }
+                        },
+                        title: t("castTitle"),
+                        className: `shrink-0 rounded px-1 py-0.5 transition ${castTarget ? "text-aurora-300" : "text-slate-300 hover:text-white"}`,
+                        children: /* @__PURE__ */ jsxs("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
+                          /* @__PURE__ */ jsx("path", { d: "M2 16.1a5 5 0 0 1 5.9 5.9" }),
+                          /* @__PURE__ */ jsx("path", { d: "M2 12.05a9 9 0 0 1 9.95 9.95" }),
+                          /* @__PURE__ */ jsx("path", { d: "M2 8.05a13 13 0 0 1 13.95 13.95" }),
+                          /* @__PURE__ */ jsx("path", { d: "M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5" })
+                        ] })
                       }
                     ),
                     audioTracks.length > 0 && /* @__PURE__ */ jsx(
@@ -181116,7 +181555,7 @@
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-KMaq32/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
