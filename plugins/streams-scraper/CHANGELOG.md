@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.36
+
+- Faster AirPlay preparation: only externally loaded subtitles are burned in
+  (embedded MKV tracks made ffmpeg rescan the whole remote file and blew the
+  init timeout before falling back anyway — pick a subtitle in the CC menu
+  and it follows the cast).
+- Clearer cast menu copy: the AirPlay row says "Preparing stream…" instead of
+  a device-search message, and the empty state only refers to Chromecast/DLNA.
+- Handover breadcrumb logging for diagnosing route/pause issues.
+
 ## 1.0.35
 
 - The embedded player now carries the app's casting support: the cast menu

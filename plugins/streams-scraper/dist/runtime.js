@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164363,7 +164363,8 @@
       subtitleManualSyncRefining: "Fine-tuning against the audio\u2026",
       castTitle: "Play on another device",
       castScanning: "Looking for devices\u2026",
-      castNoDevices: "No devices found on your network.",
+      castNoDevices: "No Chromecast or DLNA devices found.",
+      castPreparing: "Preparing stream\u2026",
       castRescan: "Search again",
       castScanFailed: "Could not search for devices.",
       castFailed: "The device would not accept playback.",
@@ -165501,7 +165502,8 @@
       subtitleManualSyncRefining: "Finjusterar mot ljudet\u2026",
       castTitle: "Spela p\xE5 annan enhet",
       castScanning: "S\xF6ker efter enheter\u2026",
-      castNoDevices: "Inga enheter hittades i n\xE4tverket.",
+      castNoDevices: "Inga Chromecast- eller DLNA-enheter hittades.",
+      castPreparing: "F\xF6rbereder str\xF6m\u2026",
       castRescan: "S\xF6k igen",
       castScanFailed: "Kunde inte s\xF6ka efter enheter.",
       castFailed: "Enheten accepterade inte uppspelningen.",
@@ -169968,7 +169970,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -173929,6 +173931,11 @@
     if (!isTauriEnv) return;
     await invoke("avplayer_teardown");
   }
+  function airplayLog(msg) {
+    if (!isTauriEnv) return;
+    void invoke("lumio_debug_log", { msg: `airplay: ${msg}` }).catch(() => {
+    });
+  }
 
   // components/player/video-player-modal.tsx
   init_jsx_runtime_shim();
@@ -176875,8 +176882,10 @@ ${cue.text}
       const v = airplayVideoRef.current;
       if (!v || !airplaySession || !useMpv) return;
       const offset = airplaySession.offset;
+      airplayLog("wireless listener attached");
       const handler = () => {
         const wireless = v.webkitCurrentPlaybackTargetIsWireless === true;
+        airplayLog(`wireless changed -> ${wireless}`);
         if (wireless && !airplayWasExternalRef.current) {
           airplayWasExternalRef.current = true;
           setAirplayActive(true);
@@ -177320,7 +177329,7 @@ ${cue.text}
                     onClick: () => void scanCastDevices(),
                     disabled: castScanning,
                     className: "text-[11px] text-slate-400 underline-offset-2 hover:text-white hover:underline disabled:opacity-50",
-                    children: castScanning ? t("castScanning") : t("castRescan")
+                    children: t("castRescan")
                   }
                 )
               ] }),
@@ -177383,13 +177392,14 @@ ${cue.text}
                     void v.play().catch(() => {
                     });
                     const show = v.webkitShowPlaybackTargetPicker;
+                    airplayLog(`row click, picker=${typeof show}`);
                     if (typeof show === "function") show.call(v);
                     else setCastError(t("castFailed"));
                   },
                   className: "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-white/10 disabled:cursor-default disabled:opacity-50",
                   children: [
                     /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-200", children: "AirPlay" }),
-                    /* @__PURE__ */ jsx("span", { className: "shrink-0 text-[10px] uppercase tracking-[0.16em] text-slate-500", children: airplaySession ? "AirPlay" : t("castScanning") })
+                    /* @__PURE__ */ jsx("span", { className: "shrink-0 text-[10px] uppercase tracking-[0.16em] text-slate-500", children: airplaySession ? "AirPlay" : t("castPreparing") })
                   ]
                 }
               ),
@@ -177623,17 +177633,13 @@ ${cue.text}
                           if (opening && useMpv && !airplaySession) {
                             void (async () => {
                               try {
-                                let subContent;
-                                let subIndex;
-                                if (activeSubId && cues.length > 0) {
-                                  subContent = cuesToSrt(cues);
-                                } else {
-                                  const sid = await getMpvSid().catch(() => null);
-                                  if (sid && sid > 0) subIndex = sid - 1;
-                                }
-                                const stream = await avplayerPrepare(url, realTimeRef.current, { subContent, subIndex });
+                                const subContent = activeSubId && cues.length > 0 ? cuesToSrt(cues) : void 0;
+                                airplayLog(`prepare start, sub=${subContent ? "external" : "none"}`);
+                                const stream = await avplayerPrepare(url, realTimeRef.current, { subContent });
+                                airplayLog(`prepare done, offset=${stream.offset}`);
                                 setAirplaySession({ offset: stream.offset, streamUrl: stream.streamUrl });
-                              } catch {
+                              } catch (e) {
+                                airplayLog(`prepare failed: ${String(e)}`);
                                 setCastError(t("castFailed"));
                               }
                             })();
@@ -181555,7 +181561,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-CZ6IbX/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DCjAOS/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
