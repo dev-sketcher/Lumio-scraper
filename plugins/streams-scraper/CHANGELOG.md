@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.44
+
+- The black preroll is now parameter-matched to the movie transcode (1080p
+  H.264 main profile, 48 kHz stereo AAC) and the transcode pins a 4 s
+  keyframe cadence — older AirPlay receivers (Apple TV HD) stall when the
+  splice asks them to reconfigure resolution/audio mid-stream.
+
 ## 1.0.43
 
 - Fixes the receiver stalling right after the preroll splice: transcoded
