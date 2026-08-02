@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.42
+
+- AirPlay handover finally holds: picking a receiver used to drop the route
+  the instant the app swapped the placeholder for the real stream (WebKit
+  resets the playback target on source changes). The session playlist now
+  starts as instantly-playable black preroll and the transcode is spliced in
+  server-side — one source for the element's whole life, so the picked route
+  survives and the movie starts on the TV.
+
 ## 1.0.41
 
 - Fixes 1.0.40's pick-first flow (the placeholder URL never reached the

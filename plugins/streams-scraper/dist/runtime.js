@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-L61t59/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dmr1a0/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-L61t59/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dmr1a0/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-L61t59/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dmr1a0/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-L61t59/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dmr1a0/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -169972,7 +169972,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-L61t59/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dmr1a0/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -173921,7 +173921,7 @@
   // lib/tauri-avplayer.ts
   init_core();
   async function avplayerPrepare(url, start2, sub) {
-    if (!isTauriEnv) return { streamUrl: url, offset: 0, placeholderUrl: "" };
+    if (!isTauriEnv) return { streamUrl: url, offset: 0 };
     return invoke("avplayer_prepare", {
       url,
       start: start2 ?? null,
@@ -174500,7 +174500,7 @@ ${cue.text}
     const [airplayActive, setAirplayActive] = useState(false);
     const airplayVideoRef = useRef(null);
     const airplayWasExternalRef = useRef(false);
-    const airplayPhaseRef = useRef("placeholder");
+    const airplaySpliceRef = useRef(null);
     const [activeSubId, setActiveSubId] = useState(null);
     const [selectedLang, setSelectedLang] = useState(() => getDefaultSubtitleLanguage() || null);
     const [defaultSubtitleLang] = useState(() => getDefaultSubtitleLanguage());
@@ -176885,7 +176885,7 @@ ${cue.text}
         airplayLog(`prepare start, sub=${subContent ? "external" : "none"}`);
         const stream = await avplayerPrepare(url, realTimeRef.current, { subContent });
         airplayLog(`prepare done, offset=${stream.offset}`);
-        setAirplaySession({ offset: stream.offset, streamUrl: stream.streamUrl, placeholderUrl: stream.placeholderUrl });
+        setAirplaySession({ offset: stream.offset, streamUrl: stream.streamUrl });
         setAirplayPrepare("ready");
       } catch (e) {
         airplayLog(`prepare failed: ${String(e)}`);
@@ -176896,22 +176896,49 @@ ${cue.text}
       const v = airplayVideoRef.current;
       if (!v) return;
       v.pause();
-      v.loop = false;
       v.removeAttribute("src");
       v.load();
-      airplayPhaseRef.current = "placeholder";
+      airplaySpliceRef.current = null;
     }, []);
     useEffect(() => {
       const v = airplayVideoRef.current;
       if (!v || !airplaySession || !useMpv) return;
       const offset = airplaySession.offset;
-      airplayPhaseRef.current = "placeholder";
-      v.loop = true;
+      airplaySpliceRef.current = null;
       v.muted = true;
-      v.setAttribute("src", airplaySession.placeholderUrl);
+      v.setAttribute("src", airplaySession.streamUrl);
       v.load();
       void v.play().catch(() => {
       });
+      const playlistPath = (() => {
+        try {
+          return new URL(airplaySession.streamUrl).pathname;
+        } catch {
+          return null;
+        }
+      })();
+      let spliceTimer = null;
+      const pollSplice = async () => {
+        if (airplaySpliceRef.current !== null || !playlistPath) return;
+        try {
+          const res = await fetch(playlistPath, { cache: "no-store" });
+          const text = await res.text();
+          const discontinuity = text.indexOf("#EXT-X-DISCONTINUITY");
+          if (discontinuity >= 0) {
+            let seconds = 0;
+            for (const line of text.slice(0, discontinuity).split("\n")) {
+              const m2 = /^#EXTINF:([\d.]+)/.exec(line);
+              if (m2) seconds += Number(m2[1]);
+            }
+            airplaySpliceRef.current = seconds;
+            airplayLog(`splice found at ${seconds}s of preroll`);
+            if (spliceTimer !== null) window.clearInterval(spliceTimer);
+            spliceTimer = null;
+          }
+        } catch {
+        }
+      };
+      spliceTimer = window.setInterval(() => void pollSplice(), 2e3);
       const availabilityHandler = (event) => {
         const availability = event.availability;
         airplayLog(`target availability -> ${availability}`);
@@ -176919,41 +176946,27 @@ ${cue.text}
       };
       v.addEventListener("webkitplaybacktargetavailabilitychanged", availabilityHandler);
       const metadataHandler = () => {
-        airplayLog(`media ready (readyState=${v.readyState}, phase=${airplayPhaseRef.current})`);
-        if (airplayPhaseRef.current === "real") {
-          try {
-            v.currentTime = Math.max(0, realTimeRef.current - offset);
-          } catch {
-          }
-          v.muted = false;
-          void v.play().catch(() => {
-          });
-        } else {
-          setAirplayMediaReady(true);
-        }
+        airplayLog(`media ready (readyState=${v.readyState})`);
+        setAirplayMediaReady(true);
       };
       v.addEventListener("loadedmetadata", metadataHandler);
       if (v.readyState >= 1) setAirplayMediaReady(true);
       airplayLog("wireless listener attached");
       const handler = () => {
         const wireless = v.webkitCurrentPlaybackTargetIsWireless === true;
-        airplayLog(`wireless changed -> ${wireless} (phase=${airplayPhaseRef.current})`);
+        airplayLog(`wireless changed -> ${wireless}`);
         if (wireless && !airplayWasExternalRef.current) {
           airplayWasExternalRef.current = true;
           setAirplayActive(true);
           void setMpvPause(true);
-          if (airplayPhaseRef.current === "placeholder") {
-            airplayPhaseRef.current = "real";
-            v.loop = false;
-            v.setAttribute("src", airplaySession.streamUrl);
-            v.load();
-            void v.play().catch(() => {
-            });
-          }
+          v.muted = false;
+          void v.play().catch(() => {
+          });
         } else if (!wireless && airplayWasExternalRef.current) {
           airplayWasExternalRef.current = false;
           setAirplayActive(false);
-          const resumeAt = airplayPhaseRef.current === "real" && v.currentTime > 0 ? offset + v.currentTime : realTimeRef.current;
+          const splice = airplaySpliceRef.current;
+          const resumeAt = splice !== null && v.currentTime > splice ? offset + (v.currentTime - splice) : realTimeRef.current;
           stopAirplayVideo();
           void avplayerTeardown();
           setAirplaySession(null);
@@ -176964,6 +176977,7 @@ ${cue.text}
       };
       v.addEventListener("webkitcurrentplaybacktargetiswirelesschanged", handler);
       return () => {
+        if (spliceTimer !== null) window.clearInterval(spliceTimer);
         v.removeEventListener("webkitcurrentplaybacktargetiswirelesschanged", handler);
         v.removeEventListener("webkitplaybacktargetavailabilitychanged", availabilityHandler);
         v.removeEventListener("loadedmetadata", metadataHandler);
@@ -177125,7 +177139,8 @@ ${cue.text}
                   className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
                   onClick: () => {
                     const v = airplayVideoRef.current;
-                    const resumeAt = airplayPhaseRef.current === "real" && v && v.currentTime > 0 ? (airplaySession?.offset ?? 0) + v.currentTime : realTimeRef.current;
+                    const splice = airplaySpliceRef.current;
+                    const resumeAt = v && splice !== null && v.currentTime > splice ? (airplaySession?.offset ?? 0) + (v.currentTime - splice) : realTimeRef.current;
                     setAirplayActive(false);
                     airplayWasExternalRef.current = false;
                     stopAirplayVideo();
@@ -181612,7 +181627,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-L61t59/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dmr1a0/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
