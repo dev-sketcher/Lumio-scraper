@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.38
+
+- The AirPlay row now unlocks when WebKit reports a wireless target is
+  actually available (its picker silently ignores clicks before the stream
+  is routable) — fixes the ready-looking row that did nothing when clicked
+  right after opening the menu.
+
 ## 1.0.37
 
 - AirPlay preparation is near-instant: the transcode session now answers as
