@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.40
+
+- Pick-first AirPlay: the device picker opens the moment the cast menu is
+  ready (a tiny instant clip is routed first), and the real stream loads on
+  the receiver after you pick it — no more waiting in the menu while a slow
+  source spins up. Matches how other casting apps behave.
+
 ## 1.0.39
 
 - The AirPlay row additionally waits for the stream's metadata before
