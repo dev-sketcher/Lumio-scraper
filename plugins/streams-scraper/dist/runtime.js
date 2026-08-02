@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-g5hMqS/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-nlIrDE/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-g5hMqS/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-nlIrDE/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-g5hMqS/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-nlIrDE/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-g5hMqS/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-nlIrDE/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -169972,7 +169972,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-g5hMqS/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-nlIrDE/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -173921,7 +173921,7 @@
   // lib/tauri-avplayer.ts
   init_core();
   async function avplayerPrepare(url, start2, sub) {
-    if (!isTauriEnv) return { streamUrl: url, offset: 0 };
+    if (!isTauriEnv) return { streamUrl: url, offset: 0, placeholderUrl: "" };
     return invoke("avplayer_prepare", {
       url,
       start: start2 ?? null,
@@ -174496,9 +174496,11 @@ ${cue.text}
     const [airplaySession, setAirplaySession] = useState(null);
     const [airplayPrepare, setAirplayPrepare] = useState("idle");
     const [airplayTargetReady, setAirplayTargetReady] = useState(false);
+    const [airplayMediaReady, setAirplayMediaReady] = useState(false);
     const [airplayActive, setAirplayActive] = useState(false);
     const airplayVideoRef = useRef(null);
     const airplayWasExternalRef = useRef(false);
+    const airplayPhaseRef = useRef("placeholder");
     const [activeSubId, setActiveSubId] = useState(null);
     const [selectedLang, setSelectedLang] = useState(() => getDefaultSubtitleLanguage() || null);
     const [defaultSubtitleLang] = useState(() => getDefaultSubtitleLanguage());
@@ -176894,34 +176896,31 @@ ${cue.text}
       const v = airplayVideoRef.current;
       if (!v) return;
       v.pause();
+      v.loop = false;
       v.removeAttribute("src");
       v.load();
+      airplayPhaseRef.current = "placeholder";
     }, []);
     useEffect(() => {
       const v = airplayVideoRef.current;
       if (!v || !airplaySession || !useMpv) return;
       const offset = airplaySession.offset;
-      if (!v.getAttribute("src")) {
-        v.setAttribute("src", airplaySession.streamUrl);
-        v.muted = true;
-        v.load();
-        void v.play().catch(() => {
-        });
-      }
+      airplayPhaseRef.current = "placeholder";
+      v.loop = true;
+      v.muted = true;
+      v.setAttribute("src", airplaySession.placeholderUrl);
+      v.load();
+      void v.play().catch(() => {
+      });
       const availabilityHandler = (event) => {
         const availability = event.availability;
         airplayLog(`target availability -> ${availability}`);
         setAirplayTargetReady(availability === "available");
       };
       v.addEventListener("webkitplaybacktargetavailabilitychanged", availabilityHandler);
-      airplayLog("wireless listener attached");
-      const handler = () => {
-        const wireless = v.webkitCurrentPlaybackTargetIsWireless === true;
-        airplayLog(`wireless changed -> ${wireless}`);
-        if (wireless && !airplayWasExternalRef.current) {
-          airplayWasExternalRef.current = true;
-          setAirplayActive(true);
-          void setMpvPause(true);
+      const metadataHandler = () => {
+        airplayLog(`media ready (readyState=${v.readyState}, phase=${airplayPhaseRef.current})`);
+        if (airplayPhaseRef.current === "real") {
           try {
             v.currentTime = Math.max(0, realTimeRef.current - offset);
           } catch {
@@ -176929,10 +176928,32 @@ ${cue.text}
           v.muted = false;
           void v.play().catch(() => {
           });
+        } else {
+          setAirplayMediaReady(true);
+        }
+      };
+      v.addEventListener("loadedmetadata", metadataHandler);
+      if (v.readyState >= 1) setAirplayMediaReady(true);
+      airplayLog("wireless listener attached");
+      const handler = () => {
+        const wireless = v.webkitCurrentPlaybackTargetIsWireless === true;
+        airplayLog(`wireless changed -> ${wireless} (phase=${airplayPhaseRef.current})`);
+        if (wireless && !airplayWasExternalRef.current) {
+          airplayWasExternalRef.current = true;
+          setAirplayActive(true);
+          void setMpvPause(true);
+          if (airplayPhaseRef.current === "placeholder") {
+            airplayPhaseRef.current = "real";
+            v.loop = false;
+            v.setAttribute("src", airplaySession.streamUrl);
+            v.load();
+            void v.play().catch(() => {
+            });
+          }
         } else if (!wireless && airplayWasExternalRef.current) {
           airplayWasExternalRef.current = false;
           setAirplayActive(false);
-          const resumeAt = offset + v.currentTime;
+          const resumeAt = airplayPhaseRef.current === "real" && v.currentTime > 0 ? offset + v.currentTime : realTimeRef.current;
           stopAirplayVideo();
           void avplayerTeardown();
           setAirplaySession(null);
@@ -176945,7 +176966,9 @@ ${cue.text}
       return () => {
         v.removeEventListener("webkitcurrentplaybacktargetiswirelesschanged", handler);
         v.removeEventListener("webkitplaybacktargetavailabilitychanged", availabilityHandler);
+        v.removeEventListener("loadedmetadata", metadataHandler);
         setAirplayTargetReady(false);
+        setAirplayMediaReady(false);
       };
     }, [airplaySession, useMpv]);
     useEffect(() => {
@@ -177102,7 +177125,7 @@ ${cue.text}
                   className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
                   onClick: () => {
                     const v = airplayVideoRef.current;
-                    const resumeAt = (airplaySession?.offset ?? 0) + (v?.currentTime ?? 0);
+                    const resumeAt = airplayPhaseRef.current === "real" && v && v.currentTime > 0 ? (airplaySession?.offset ?? 0) + v.currentTime : realTimeRef.current;
                     setAirplayActive(false);
                     airplayWasExternalRef.current = false;
                     stopAirplayVideo();
@@ -177422,7 +177445,7 @@ ${cue.text}
                 "button",
                 {
                   type: "button",
-                  disabled: airplayPrepare === "preparing" || airplaySession !== null && !airplayTargetReady,
+                  disabled: airplayPrepare === "preparing" || airplaySession !== null && !(airplayTargetReady && airplayMediaReady),
                   onClick: () => {
                     if (!airplaySession) {
                       void prepareAirplaySession();
@@ -177433,14 +177456,14 @@ ${cue.text}
                     void v.play().catch(() => {
                     });
                     const show = v.webkitShowPlaybackTargetPicker;
-                    airplayLog(`row click, picker=${typeof show}`);
+                    airplayLog(`row click, picker=${typeof show}, readyState=${v.readyState}`);
                     if (typeof show === "function") show.call(v);
                     else setCastError(t("castFailed"));
                   },
                   className: "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-white/10 disabled:cursor-default disabled:opacity-50",
                   children: [
                     /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-200", children: "AirPlay" }),
-                    /* @__PURE__ */ jsx("span", { className: `shrink-0 text-[10px] uppercase tracking-[0.16em] ${airplayPrepare === "failed" ? "text-rose-300" : "text-slate-500"}`, children: airplayPrepare === "failed" ? t("castPrepareFailed") : airplaySession && airplayTargetReady ? "AirPlay" : t("castPreparing") })
+                    /* @__PURE__ */ jsx("span", { className: `shrink-0 text-[10px] uppercase tracking-[0.16em] ${airplayPrepare === "failed" ? "text-rose-300" : "text-slate-500"}`, children: airplayPrepare === "failed" ? t("castPrepareFailed") : airplaySession && airplayTargetReady && airplayMediaReady ? "AirPlay" : t("castPreparing") })
                   ]
                 }
               ),
@@ -181589,7 +181612,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-g5hMqS/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-nlIrDE/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.39
+
+- The AirPlay row additionally waits for the stream's metadata before
+  unlocking — WebKit's device picker silently ignores clicks while the media
+  element has nothing loaded, which made a ready-looking row do nothing on
+  slow-starting transcodes.
+
 ## 1.0.38
 
 - The AirPlay row now unlocks when WebKit reports a wireless target is
