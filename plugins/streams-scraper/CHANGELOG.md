@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.41
+
+- Fixes 1.0.40's pick-first flow (the placeholder URL never reached the
+  session state, so the instant picker could route a dead source).
+
 ## 1.0.40
 
 - Pick-first AirPlay: the device picker opens the moment the cast menu is
