@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.48
+
+- Cast preparation now verifies the server is reachable on the LAN before
+  handing out a stream (a boot that bound loopback-only used to leave the
+  cast stuck on "preparing" forever) and surfaces media element errors
+  in diagnostics.
+- Faster cast startup: 1-second opener segments make the stream ready
+  seconds sooner.
+
 ## 1.0.47
 
 - The AirPlay row now unlocks when the stream is actually buffered
