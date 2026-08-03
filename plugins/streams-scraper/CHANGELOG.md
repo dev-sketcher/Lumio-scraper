@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.47
+
+- The AirPlay row now unlocks when the stream is actually buffered
+  (canplay), not merely described — WebKit silently refuses to hand
+  unbuffered media to the receiver, which left the TV idle on a picked
+  route.
+
 ## 1.0.46
 
 - Casting rebuilt on the proven direct-playlist flow: the preroll/splice
