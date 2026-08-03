@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.49
+
+- Cast preparation resolves the source redirect chain itself (with retries
+  on 5xx) and hands ffmpeg — and direct-play receivers — the final CDN URL,
+  so a flaky resolver can no longer kill the start.
+- The stream is handed over with an ~8 second buffer cushion so the
+  receiver never joins on a bare first segment.
+- The AirPlay availability listener re-attaches once (WebKit occasionally
+  reports not-available on first attach despite receivers being present).
+
 ## 1.0.48
 
 - Cast preparation now verifies the server is reachable on the LAN before
