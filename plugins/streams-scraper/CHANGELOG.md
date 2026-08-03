@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.46
+
+- Casting rebuilt on the proven direct-playlist flow: the preroll/splice
+  experiment is removed entirely (Apple's HLS spec requires discontinuities
+  to be synchronized across renditions, and old receivers reject format
+  changes at them — the source of every large-file stall). Every transcode
+  is letterboxed to a constant 1920x1080 canvas, subtitles ride as an
+  instantly-served static WebVTT rendition, and the receiver shows its own
+  loading UI while the stream spins up.
+
 ## 1.0.45
 
 - Subtitles on AirPlay finally work — delivered as a native HLS WebVTT
