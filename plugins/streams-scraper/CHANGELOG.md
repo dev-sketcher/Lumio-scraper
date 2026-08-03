@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.45
+
+- Subtitles on AirPlay finally work — delivered as a native HLS WebVTT
+  rendition the receiver renders itself (auto-shown, toggleable in the TV
+  player). Burn-in is gone: no reachable ffmpeg build ships the subtitles
+  filter, which was silently killing every subtitled transcode (and, on big
+  files, the whole cast).
+- The preroll shows a "Laddar strömmen …" title card instead of plain
+  black while the transcode spins up.
+- Dead transcodes now end the session immediately (the receiver errors out
+  instead of looping the loading card forever) — fixes large files never
+  starting.
+
 ## 1.0.44
 
 - The black preroll is now parameter-matched to the movie transcode (1080p
