@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-USGkkE/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ttcdcj/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-USGkkE/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ttcdcj/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-USGkkE/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ttcdcj/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-USGkkE/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ttcdcj/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164742,8 +164742,6 @@
       rememberAspectRatioDesc: "Uses your chosen aspect ratio as the default for new movies and episodes.",
       autoSkipIntro: "Auto-skip intro",
       autoSkipIntroDesc: "When enabled, intros are skipped automatically. When disabled, a Skip intro button is shown if IntroDB has a match.",
-      autoplayStreamOnPlay: "Auto-play on Play button",
-      autoplayStreamOnPlayDesc: "Play tries up to 3 streams automatically. Known mismatches on audio language and oversized files are skipped when possible.",
       hideWatchedMoviesHome: "Hide watched movies on Home",
       hideWatchedMoviesHomeDesc: "Exclude movies marked as watched from Home grids and sliders.",
       stillWatching: "Still watching?",
@@ -165882,8 +165880,6 @@
       rememberAspectRatioDesc: "Anv\xE4nder ditt valda bildformat som standard f\xF6r nya filmer och avsnitt.",
       autoSkipIntro: "Auto-skippa intro",
       autoSkipIntroDesc: "Om det \xE4r p\xE5slaget hoppas intro \xF6ver automatiskt. Om det \xE4r av visas en Skippa intro-knapp n\xE4r IntroDB har en tr\xE4ff.",
-      autoplayStreamOnPlay: "Auto-spela fr\xE5n Play-knappen",
-      autoplayStreamOnPlayDesc: "F\xF6r vanliga kort testar Play upp till 3 streams automatiskt. K\xE4nda fel spr\xE5ksp\xE5r och f\xF6r stora filer hoppas \xF6ver n\xE4r det g\xE5r.",
       hideWatchedMoviesHome: "D\xF6lj sedda filmer p\xE5 startsidan",
       hideWatchedMoviesHomeDesc: "Exkludera filmer som markerats som sedda fr\xE5n startsidans gridar och sliders.",
       stillWatching: "Tittar du fortfarande?",
@@ -169972,7 +169968,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-USGkkE/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ttcdcj/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -174936,11 +174932,16 @@ ${cue.text}
       });
     }, [useMpv, subDelay, subDrift, subTextColor, subOutlineColor, subBackgroundColor, subOpacity, subSize, subVerticalPos, containerSize.height, activeSubId, mpv.sid]);
     useEffect(() => {
-      if (!useMpv) return;
+      if (!useMpv || !mpv.fileLoaded) return;
       const filter2 = nightMode === "off" ? null : nightMode === "mild" ? "lavfi=[acompressor=threshold=0.125:ratio=2.2:attack=20:release=250:makeup=1.5,alimiter=limit=0.92]" : "lavfi=[acompressor=threshold=0.08:ratio=3.5:attack=10:release=300:makeup=3,alimiter=limit=0.88]";
-      void mpvCommand(["af", "clr", ""]);
-      if (filter2) void mpvCommand(["af", "add", filter2]);
-    }, [useMpv, nightMode]);
+      void (async () => {
+        await mpvCommand(["af", "clr", ""]);
+        if (filter2) {
+          await mpvCommand(["af", "add", filter2]);
+          airplayLog(`nightmode: af applied (${nightMode})`);
+        }
+      })();
+    }, [useMpv, nightMode, mpv.fileLoaded, mpv.fileLoadedToken]);
     const onTimeUpdateRef = useRef(onTimeUpdate);
     onTimeUpdateRef.current = onTimeUpdate;
     useEffect(() => {
@@ -181610,7 +181611,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-USGkkE/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ttcdcj/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

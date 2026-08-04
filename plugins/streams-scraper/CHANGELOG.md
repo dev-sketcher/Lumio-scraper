@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.50
+
+- Night mode / DRC now applies reliably: the audio filter is set when the
+  file loads instead of at player mount, where a not-yet-initialized mpv
+  silently dropped it.
+
 ## 1.0.49
 
 - Cast preparation resolves the source redirect chain itself (with retries
