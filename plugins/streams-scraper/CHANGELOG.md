@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.53
+
+- Night mode toggle in the player menu works: setNightMode never announced
+  its change, so the toggle wrote the value without applying it. Menu labels
+  shortened.
+
 ## 1.0.52
 
 - Night mode / DRC can be toggled from the player's ⋯ menu (Off → Mild →
