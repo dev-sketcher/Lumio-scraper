@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.55
+
+- Night mode: disable the limiter's auto-level, which renormalized the
+  capped signal back to 0 dB and made every mode louder than off. Measured
+  now: dialog untouched, peaks -4 dB (mild) / -8 dB (strong).
+
 ## 1.0.54
 
 - Night mode curves reworked: peaks are tamed with no makeup gain, so
