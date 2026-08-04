@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.54
+
+- Night mode curves reworked: peaks are tamed with no makeup gain, so
+  Strong is the quietest setting and dialog stays at its normal level.
+
 ## 1.0.53
 
 - Night mode toggle in the player menu works: setNightMode never announced
