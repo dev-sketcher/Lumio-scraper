@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.51
+
+- Night mode logs mpv's live audio-filter chain after applying, so a dropped
+  filter is visible in the debug log instead of silent.
+
 ## 1.0.50
 
 - Night mode / DRC now applies reliably: the audio filter is set when the
