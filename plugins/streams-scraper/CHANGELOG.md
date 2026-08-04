@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.52
+
+- Night mode / DRC can be toggled from the player's ⋯ menu (Off → Mild →
+  Strong) and applies immediately, mid-playback.
+
 ## 1.0.51
 
 - Night mode logs mpv's live audio-filter chain after applying, so a dropped

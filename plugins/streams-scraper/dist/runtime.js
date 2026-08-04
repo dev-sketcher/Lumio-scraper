@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0DDf2U/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MQfPU8/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0DDf2U/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MQfPU8/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0DDf2U/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MQfPU8/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0DDf2U/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MQfPU8/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -168268,6 +168268,9 @@
     const stored = getStoredString(KEY_NIGHT_MODE, DEFAULT_NIGHT_MODE);
     return NIGHT_MODE_OPTIONS.includes(stored) ? stored : DEFAULT_NIGHT_MODE;
   }
+  function setNightMode(value) {
+    setScopedStorageItem(KEY_NIGHT_MODE, value);
+  }
 
   // lib/async-utils.ts
   async function mapWithConcurrency(items, concurrency, mapper) {
@@ -169968,7 +169971,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0DDf2U/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MQfPU8/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -174535,7 +174538,8 @@ ${cue.text}
     const [subOutlineColor, setSubOutlineColor] = useState(() => getSubtitleOutlineColor());
     const [audioOutputMode] = useState(() => getAudioOutputMode());
     const effectiveProxyAudioMode = forceLanIosProxy ? "compatible" : audioOutputMode;
-    const [nightMode] = useState(() => getNightMode());
+    const [nightMode, setNightModeLive] = useState(() => getNightMode());
+    useEffect(() => onPlaybackSettingsChanged(() => setNightModeLive(getNightMode())), []);
     const [autoSkipIntro] = useState(() => getAutoSkipIntro());
     const [rememberAspectRatio] = useState(() => getRememberAspectRatio());
     const [aspectRatioMode, setAspectRatioMode] = useState(() => getRememberAspectRatio() ? getDefaultAspectRatio() : "auto");
@@ -177816,6 +177820,25 @@ ${cue.text}
                         className: "z-50 w-64 rounded-[1.6rem] border border-white/10 bg-[#121022]/95 p-2.5 shadow-2xl backdrop-blur-md",
                         onClick: (e) => e.stopPropagation(),
                         children: [
+                          useMpv && /* @__PURE__ */ jsxs(
+                            "button",
+                            {
+                              type: "button",
+                              onClick: () => {
+                                const next2 = nightMode === "off" ? "mild" : nightMode === "mild" ? "strong" : "off";
+                                setNightMode(next2);
+                              },
+                              className: "flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-left text-slate-100 transition hover:bg-white/5",
+                              children: [
+                                /* @__PURE__ */ jsx("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z", strokeLinecap: "round", strokeLinejoin: "round" }) }),
+                                /* @__PURE__ */ jsxs("span", { className: "text-[15px] leading-tight", children: [
+                                  t("nightMode"),
+                                  ": ",
+                                  t(nightMode === "off" ? "nightModeOff" : nightMode === "mild" ? "nightModeMild" : "nightModeStrong")
+                                ] })
+                              ]
+                            }
+                          ),
                           /* @__PURE__ */ jsxs(
                             "button",
                             {
@@ -181619,7 +181642,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0DDf2U/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MQfPU8/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
