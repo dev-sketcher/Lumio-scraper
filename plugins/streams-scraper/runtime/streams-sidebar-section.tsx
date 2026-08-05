@@ -807,7 +807,7 @@ export function StreamsSidebarSection({
     try {
       const data = await fetchJsonWithTimeout<{ seasons?: TvSeason[]; error?: string }>(
         `/api/tv-info?tmdbId=${numericTmdbId}`,
-        4500,
+        15000,
         undefined,
         controller.signal,
       )
@@ -874,7 +874,7 @@ export function StreamsSidebarSection({
     try {
       const data = await fetchJsonWithTimeout<{ episodes?: TvEpisode[]; error?: string }>(
         `/api/tv-info?tmdbId=${numericTmdbId}&season=${season.season_number}`,
-        4500,
+        15000,
         undefined,
         controller.signal,
       )
@@ -1331,7 +1331,7 @@ export function StreamsSidebarSection({
           episodes?: import('@/app/api/tv-info/route').TvEpisode[]
         }>(
           `/api/tv-info?tmdbId=${numericTmdbId}&season=${nextSeason.season_number}`,
-          4500,
+          15000,
         )
         const firstEp = data.episodes?.[0]
         if (!firstEp) return
@@ -2396,7 +2396,7 @@ export function StreamsSidebarSection({
           episodes?: import('@/app/api/tv-info/route').TvEpisode[]
         }>(
           `/api/tv-info?tmdbId=${numericTmdbId}&season=${nextSeason.season_number}`,
-          4500,
+          15000,
         )
         const firstEp = data.episodes?.[0]
         if (!firstEp) return null

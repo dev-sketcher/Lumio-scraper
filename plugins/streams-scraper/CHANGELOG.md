@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.58
+
+- Season/episode fetches get a 15s budget (was 4.5s) — cold TMDB round-trips
+  on device networks made series show "Could not load seasons".
+
+
 ## 1.0.57
 
 - Scraper settings dropdowns open above the settings overlay (they rendered
