@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.64
+
+- Season loads aborted by the sidebar's own remount retry automatically -
+  slow device networks lost that race and showed 'Could not load seasons'.
+
+
 ## 1.0.63
 
 - Season load failures log their real cause to the debug log.

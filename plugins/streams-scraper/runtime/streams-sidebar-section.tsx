@@ -284,6 +284,7 @@ export function StreamsSidebarSection({
   // TV navigation
   const [seasons, setSeasons] = useState<TvSeason[] | null>(null)
   const [loadingSeasons, setLoadingSeasons] = useState(false)
+  const seasonAbortRetryRef = useRef(0)
   const [seasonsError, setSeasonsError] = useState<string | null>(null)
   const [selectedSeason, setSelectedSeason] = useState<TvSeason | null>(null)
   const [episodes, setEpisodes] = useState<TvEpisode[] | null>(null)
@@ -813,6 +814,7 @@ export function StreamsSidebarSection({
       )
       if (requestId !== seasonRequestIdRef.current) return
       if (data.error) throw new Error(data.error)
+      seasonAbortRetryRef.current = 0
       setSeasons(data.seasons ?? [])
       sendTelemetry('streams.load_seasons', 'ok', 'seasons loaded', {
         tmdbId: numericTmdbId,
@@ -824,6 +826,13 @@ export function StreamsSidebarSection({
       const detail = err instanceof Error ? `${err.name}: ${err.message}` : String(err)
       void fetch(`/api/debug-log?msg=${encodeURIComponent(`loadSeasons misslyckades: ${detail} (requestId=${requestId})`)}`).catch(() => {})
       if (isAbortLikeError(err)) {
+        // Aborted by the sidebar's own remount/target sync — slower device
+        // networks lose this race, so retry instead of surfacing an error.
+        if (seasonAbortRetryRef.current < 2) {
+          seasonAbortRetryRef.current += 1
+          window.setTimeout(() => { void loadSeasons() }, 400)
+          return
+        }
         setSeasonsError('Could not load seasons')
         setSeasons([])
         return
