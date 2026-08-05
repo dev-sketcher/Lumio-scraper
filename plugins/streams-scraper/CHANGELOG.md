@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.61
+
+- Series load on Android: the desktop API bridge threw when its command is
+  absent (Android registers none) instead of falling back to plain HTTP -
+  every season/episode fetch failed with 'Could not load seasons'.
+
+
 ## 1.0.60
 
 - Settings dropdown panels get an opaque background (arbitrary Tailwind
