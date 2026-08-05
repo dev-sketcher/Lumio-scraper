@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.67
+
+- Android: streams that start to a black screen get an automatic forward
+  nudge (the manual seek that unstuck them) after ~5s without progress.
+
+
 ## 1.0.66
 
 - The window-fullscreen toggle is hidden on Android (the shell is already

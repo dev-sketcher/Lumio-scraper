@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Mvpncj/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Mvpncj/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Mvpncj/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Mvpncj/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -170043,7 +170043,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Mvpncj/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -174663,6 +174663,7 @@ ${cue.text}
     const [manualSyncFirstAnchor, setManualSyncFirstAnchor] = useState(null);
     const stallLastProgressSecondsRef = useRef(0);
     const stallLastProgressAtRef = useRef(Date.now());
+    const androidStartNudgesRef = useRef(0);
     const stallRecoveriesRef = useRef(0);
     const wikiResolveAbortRef = useRef(null);
     const wikiResolveRequestIdRef = useRef(0);
@@ -176130,6 +176131,7 @@ ${cue.text}
       stallLastProgressSecondsRef.current = initialTime ?? 0;
       stallLastProgressAtRef.current = Date.now();
       stallRecoveriesRef.current = 0;
+      androidStartNudgesRef.current = 0;
       autoSkippedIntroRef.current = false;
       watchedMarkedRef.current = false;
       playbackStartedAtRef.current = initialTime ?? 0;
@@ -176678,6 +176680,13 @@ ${cue.text}
           stallLastProgressSecondsRef.current = currentReal;
           stallLastProgressAtRef.current = Date.now();
           stallRecoveriesRef.current = 0;
+          return;
+        }
+        if (isTauriEnv && !isDesktopTauriEnv && !video.paused && isPlaying && video.currentTime < 1 && Date.now() - stallLastProgressAtRef.current > 5e3 && androidStartNudgesRef.current < 2) {
+          androidStartNudgesRef.current += 1;
+          void fetch(`/api/debug-log?msg=${encodeURIComponent(`android start-nudge #${androidStartNudgesRef.current} t=${video.currentTime.toFixed(2)}`)}`).catch(() => {
+          });
+          video.currentTime = video.currentTime + 0.6;
           return;
         }
         if (video.paused || !isPlaying) return;
@@ -181746,7 +181755,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Mvpncj/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
