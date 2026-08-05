@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.56
+
+- Closing a direct-play session returns to a scrollable home screen: the
+  details panel no longer parks hidden while holding the body scroll lock.
+- Scroll-lock counter is shared through the DOM across host and plugin
+  bundles.
+- External player choice: macOS opens the configured app, Android fires a
+  video intent (system app chooser, e.g. 4XVR).
+- TorrentsDB removed as a default scraper; auto-added entries are cleaned up.
+
 ## 1.0.55
 
 - Night mode: disable the limiter's auto-level, which renormalized the

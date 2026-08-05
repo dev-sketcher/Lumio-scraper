@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ExsiOf/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ExsiOf/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ExsiOf/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ExsiOf/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164281,6 +164281,10 @@
       copyStreamLink: "Copy stream link",
       downloadThisVideo: "Download this video",
       openInVlc: "Play in VLC",
+      openInExternalPrefix: "Play in",
+      openInExternalPlayer: "Open in external player",
+      externalPlayerApp: "External player",
+      externalPlayerAppDesc: 'App used by "Play in \u2026" (macOS app name, e.g. VLC or IINA). Android shows the system app chooser.',
       preparingDownload: "Preparing download...",
       downloadComplete: "Download complete",
       downloadFailed: "Download failed",
@@ -165422,6 +165426,10 @@
       copyStreamLink: "Kopiera streaml\xE4nk",
       downloadThisVideo: "Ladda ner videon",
       openInVlc: "Spela i VLC",
+      openInExternalPrefix: "Spela i",
+      openInExternalPlayer: "\xD6ppna i extern spelare",
+      externalPlayerApp: "Extern spelare",
+      externalPlayerAppDesc: 'App som "Spela i \u2026" anv\xE4nder (macOS-appnamn, t.ex. VLC eller IINA). Android visar systemets appv\xE4ljare.',
       preparingDownload: "F\xF6rbereder nedladdning...",
       downloadComplete: "Nedladdning klar",
       downloadFailed: "Nedladdning misslyckades",
@@ -166482,34 +166490,15 @@
     }
   };
   var TORRENTSDB_AUTOADD_KEY = "scraper_torrentsdb_autoadded_v1";
-  function buildDefaultTorrentsDbConfig(streamProvider) {
-    const provider = normalizeStreamProvider(streamProvider);
-    return {
-      id: "torrentsdb",
-      preset: "torrentsdb",
-      enabled: true,
-      options: {
-        streamProvider: provider,
-        debridProvider: provider,
-        qualityFilter: [],
-        languages: []
-      }
-    };
-  }
-  function withAutoAddedTorrentsDb(configs) {
-    if (configs.some((config) => config.preset === "torrentsdb")) return configs;
+  function dropAutoAddedTorrentsDb(configs) {
     try {
-      if (getScopedStorageItem(TORRENTSDB_AUTOADD_KEY) === "1") return configs;
+      if (getScopedStorageItem(TORRENTSDB_AUTOADD_KEY) !== "1") return configs;
     } catch {
       return configs;
     }
-    const primary = configs.find((config) => config.enabled) ?? configs[0];
-    const provider = normalizeStreamProvider(
-      primary?.options?.streamProvider ?? primary?.options?.debridProvider
-    );
-    const next2 = [...configs, buildDefaultTorrentsDbConfig(provider)];
+    const next2 = configs.filter((config) => config.preset !== "torrentsdb");
+    if (next2.length === configs.length) return configs;
     try {
-      setScopedStorageItem(TORRENTSDB_AUTOADD_KEY, "1");
       setScraperConfigs(next2);
     } catch {
     }
@@ -166607,10 +166596,10 @@
     try {
       const raw = getScopedStorageItem(CONFIGS_KEY) ?? localStorage.getItem(CONFIGS_KEY);
       if (!raw) {
-        return [DEFAULT_TORRENTIO_CONFIG, buildDefaultTorrentsDbConfig("realdebrid")];
+        return [DEFAULT_TORRENTIO_CONFIG];
       }
       const parsed = JSON.parse(raw);
-      return withAutoAddedTorrentsDb(parsed.map(normalizeScraperConfig));
+      return dropAutoAddedTorrentsDb(parsed.map(normalizeScraperConfig));
     } catch {
       return [DEFAULT_TORRENTIO_CONFIG];
     }
@@ -168269,6 +168258,12 @@
     const raw = Number.parseFloat(getScopedStorageItem(KEY_AUTO_PLAY_MAX_STREAM_SIZE_GB) ?? "");
     if (!Number.isFinite(raw) || raw <= 0) return null;
     return raw;
+  }
+  var KEY_EXTERNAL_PLAYER_APP = "playback_externalPlayerApp";
+  function getExternalPlayerApp() {
+    if (typeof window === "undefined") return "VLC";
+    const stored = (getScopedStorageItem(KEY_EXTERNAL_PLAYER_APP) ?? "").trim();
+    return stored || "VLC";
   }
   function getNightMode() {
     const stored = getStoredString(KEY_NIGHT_MODE, DEFAULT_NIGHT_MODE);
@@ -169978,7 +169973,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ExsiOf/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -170057,6 +170052,7 @@
     return isLocalAppHost(host) && port === "3011";
   }
   var isTauriEnv = detectTauriEnv();
+  var isDesktopTauriEnv = isTauriEnv && !(typeof navigator !== "undefined" && /android/i.test(navigator.userAgent));
   async function openMpvPlayer(args) {
     const url = await resolvePlayableStreamUrl(args.url).catch(() => args.url);
     return invoke("mpv_open", { args: { ...args, url } });
@@ -170256,14 +170252,19 @@
   }
 
   // lib/utils/scroll-lock.ts
-  var lockCount = 0;
+  function currentLockCount() {
+    const raw = Number(document.body.dataset.lumioScrollLocks ?? "0");
+    return Number.isFinite(raw) && raw > 0 ? raw : 0;
+  }
   function lockBodyScroll() {
-    if (lockCount === 0) document.body.style.overflow = "hidden";
-    lockCount++;
+    const count = currentLockCount();
+    document.body.dataset.lumioScrollLocks = String(count + 1);
+    if (count === 0) document.body.style.overflow = "hidden";
   }
   function unlockBodyScroll() {
-    lockCount = Math.max(0, lockCount - 1);
-    if (lockCount === 0) document.body.style.overflow = "";
+    const count = Math.max(0, currentLockCount() - 1);
+    document.body.dataset.lumioScrollLocks = String(count);
+    if (count === 0) document.body.style.overflow = "";
   }
 
   // lib/autoplay-settings.ts
@@ -174259,7 +174260,7 @@ ${cue.text}
     const STILL_WATCHING_CLOSE_SECONDS = 20;
     const [useMpv, setUseMpv] = useState(false);
     useEffect(() => {
-      setUseMpv(isTauriEnv);
+      setUseMpv(isDesktopTauriEnv);
     }, []);
     const inLanClientSession = isLanClientSession();
     const forceLanIosProxy = !useMpv && inLanClientSession && isIosWebKitBrowser();
@@ -175501,7 +175502,7 @@ ${cue.text}
     }, [url]);
     const handleOpenExternal = useCallback(async () => {
       try {
-        if (isTauriEnv) {
+        if (isDesktopTauriEnv) {
           if (useMpv) {
             void setMpvPause(true);
           } else if (videoRef.current && !videoRef.current.paused) {
@@ -175509,7 +175510,7 @@ ${cue.text}
           }
           setPlaying(false);
           setControlsPaused(true);
-          await invoke("open_in_vlc", { url });
+          await invoke("open_in_vlc", { url, app: getExternalPlayerApp() });
         } else {
           if (videoRef.current && !videoRef.current.paused) {
             videoRef.current.pause();
@@ -175519,12 +175520,12 @@ ${cue.text}
           const response = await fetch("/api/open-in-vlc", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ url })
+            body: JSON.stringify({ url, app: getExternalPlayerApp() })
           });
-          if (!response.ok) throw new Error("Kunde inte \xF6ppna VLC");
+          if (!response.ok) throw new Error("Kunde inte \xF6ppna extern spelare");
         }
       } catch (error) {
-        console.error("[player] open in vlc failed", error);
+        console.error("[player] open external failed", error);
       } finally {
         setShowMoreMenu(false);
       }
@@ -177902,7 +177903,7 @@ ${cue.text}
                                   /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }),
                                   /* @__PURE__ */ jsx("path", { d: "M4 5h3v14H4z", opacity: ".55" })
                                 ] }),
-                                /* @__PURE__ */ jsx("span", { className: "text-[15px] leading-tight", children: t("openInVlc") })
+                                /* @__PURE__ */ jsx("span", { className: "text-[15px] leading-tight", children: isDesktopTauriEnv ? `${t("openInExternalPrefix")} ${getExternalPlayerApp()}` : t("openInExternalPlayer") })
                               ]
                             }
                           ),
@@ -181649,7 +181650,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ExsiOf/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
