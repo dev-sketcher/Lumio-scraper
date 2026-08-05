@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.57
+
+- Scraper settings dropdowns open above the settings overlay (they rendered
+  behind it and looked dead).
+- Quality/language/source/sort catalogs are fetched live from torrentio's
+  configure page (24h server cache, static fallback) so the choices always
+  match what torrentio actually accepts. The old hardcoded quality list
+  contained tokens torrentio never supported ('ts', 'brisk') — exclusions
+  now take effect for real. Re-pick source filters if you had any saved.
+
 ## 1.0.56
 
 - Closing a direct-play session returns to a scrollable home screen: the

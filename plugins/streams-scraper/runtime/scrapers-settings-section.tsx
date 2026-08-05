@@ -24,7 +24,66 @@ import {
 // ── Constants ──────────────────────────────────────────────────────────────
 
 // Torrentio exclusion quality filter values
-const TORRENTIO_QUALITY_OPTIONS = ['cam', 'scr', 'ts', 'unknown', 'brisk']
+// Fallback catalogs; /api/scraper-options serves the live lists scraped from
+// torrentio's configure page. Values must be torrentio's exact tokens or the
+// URL config segment silently no-ops.
+const TORRENTIO_QUALITY_OPTIONS: OptionItem[] = [
+  { id: 'brremux', label: 'BluRay REMUX' },
+  { id: 'hdrall', label: 'HDR/HDR10+/Dolby Vision' },
+  { id: 'dolbyvision', label: 'Dolby Vision' },
+  { id: 'dolbyvisionwithhdr', label: 'Dolby Vision + HDR' },
+  { id: 'threed', label: '3D' },
+  { id: '4k', label: '4K' },
+  { id: '1080p', label: '1080p' },
+  { id: '720p', label: '720p' },
+  { id: '480p', label: '480p' },
+  { id: 'other', label: 'Other (DVDRip/HDRip/BDRip…)' },
+  { id: 'scr', label: 'Screener' },
+  { id: 'cam', label: 'Cam' },
+  { id: 'unknown', label: 'Unknown' },
+]
+
+interface OptionItem { id: string; label: string }
+
+interface ScraperOptionCatalogs {
+  qualities: OptionItem[]
+  languages: OptionItem[]
+  providers: OptionItem[]
+  sort: OptionItem[]
+}
+
+function toOptionItems(raw: unknown): OptionItem[] {
+  if (!Array.isArray(raw)) return []
+  return raw
+    .map((entry) => {
+      const value = String((entry as { value?: unknown }).value ?? '').trim()
+      const label = String((entry as { label?: unknown }).label ?? '').trim() || value
+      return { id: value, label }
+    })
+    .filter((item) => item.id.length > 0)
+}
+
+let cachedCatalogs: ScraperOptionCatalogs | null = null
+
+async function fetchScraperOptionCatalogs(): Promise<ScraperOptionCatalogs | null> {
+  if (cachedCatalogs) return cachedCatalogs
+  try {
+    const res = await fetch('/api/scraper-options')
+    if (!res.ok) return null
+    const data = (await res.json()) as Record<string, unknown>
+    const catalogs: ScraperOptionCatalogs = {
+      qualities: toOptionItems(data.qualities),
+      languages: toOptionItems(data.languages),
+      providers: toOptionItems(data.providers),
+      sort: toOptionItems(data.sort),
+    }
+    if (catalogs.qualities.length === 0) return null
+    cachedCatalogs = catalogs
+    return catalogs
+  } catch {
+    return null
+  }
+}
 const COMET_QUALITY_OPTIONS = ['240p', '360p', '480p', '576p', '720p', '1080p', '1440p', '2160p', 'unknown']
 
 // Torrentio languages: full lowercase names as used in the URL
@@ -205,6 +264,8 @@ function MultiSelectDropdown({
       onSelectionChange={(keys) => onChange(Array.from(keys) as string[])}
       placeholder={placeholder}
       radius="lg"
+      // The settings overlay sits at z-[200]; the portal must clear it.
+      popoverProps={{ classNames: { content: 'z-[400]' } }}
       classNames={{
         trigger: 'border border-white/10 bg-white/[0.03] hover:border-white/20 min-h-11',
         value: 'text-sm text-white',
@@ -344,6 +405,14 @@ function ScraperCard({
   isLast: boolean
 }) {
   const { t } = useLang()
+  const [catalogs, setCatalogs] = useState<ScraperOptionCatalogs | null>(cachedCatalogs)
+  useEffect(() => {
+    let cancelled = false
+    void fetchScraperOptionCatalogs().then((result) => {
+      if (!cancelled && result) setCatalogs(result)
+    })
+    return () => { cancelled = true }
+  }, [])
   const [manifest, setManifest] = useState<ManifestStatus>({ state: 'idle' })
   const [expanded, setExpanded] = useState(false)
   const [saveState, setSaveState] = useState<ScraperSaveState>('idle')
@@ -524,7 +593,7 @@ function ScraperCard({
                     value={opts.qualityFilter}
                     onChange={(v) => updateOptions({ qualityFilter: v })}
                     placeholder={t('streamProviderSelectQualities')}
-                    options={TORRENTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q.toUpperCase() }))}
+                    options={catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS}
                   />
                 </div>
 
@@ -534,7 +603,7 @@ function ScraperCard({
                     value={opts.languages}
                     onChange={(v) => updateOptions({ languages: v })}
                     placeholder={t('streamProviderSelectLanguages')}
-                    options={TORRENTIO_LANGUAGE_OPTIONS}
+                    options={catalogs?.languages ?? TORRENTIO_LANGUAGE_OPTIONS}
                   />
                 </div>
 
@@ -544,7 +613,7 @@ function ScraperCard({
                     value={opts.providers}
                     onChange={(v) => updateOptions({ providers: v })}
                     placeholder={t('streamProviderSelectSources')}
-                    options={TORRENTIO_PROVIDERS.map((p) => ({ id: p, label: p }))}
+                    options={catalogs?.providers ?? TORRENTIO_PROVIDERS.map((p) => ({ id: p, label: p }))}
                   />
                 </div>
 
@@ -558,12 +627,13 @@ function ScraperCard({
                         if (v) updateOptions({ sort: v })
                       }}
                       radius="lg"
+                      popoverProps={{ classNames: { content: 'z-[400]' } }}
                       classNames={{
                         trigger: 'border border-white/10 bg-white/[0.03] hover:border-white/20 h-10',
                         value: 'text-sm text-white',
                       }}
                     >
-                      {TORRENTIO_SORT_OPTIONS.map(({ id, label }) => (
+                      {(catalogs?.sort ?? TORRENTIO_SORT_OPTIONS).map(({ id, label }) => (
                         <SelectItem key={id}>{label}</SelectItem>
                       ))}
                     </Select>
@@ -598,7 +668,7 @@ function ScraperCard({
                     value={opts.qualityFilter}
                     onChange={(v) => updateOptions({ qualityFilter: v })}
                     placeholder={t('streamProviderSelectQualities')}
-                    options={TORRENTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q.toUpperCase() }))}
+                    options={catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS}
                   />
                 </div>
 

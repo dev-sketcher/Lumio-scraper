@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Onzzoa/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Onzzoa/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Onzzoa/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Onzzoa/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -166984,7 +166984,49 @@
 
   // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
   init_jsx_runtime_shim();
-  var TORRENTIO_QUALITY_OPTIONS = ["cam", "scr", "ts", "unknown", "brisk"];
+  var TORRENTIO_QUALITY_OPTIONS = [
+    { id: "brremux", label: "BluRay REMUX" },
+    { id: "hdrall", label: "HDR/HDR10+/Dolby Vision" },
+    { id: "dolbyvision", label: "Dolby Vision" },
+    { id: "dolbyvisionwithhdr", label: "Dolby Vision + HDR" },
+    { id: "threed", label: "3D" },
+    { id: "4k", label: "4K" },
+    { id: "1080p", label: "1080p" },
+    { id: "720p", label: "720p" },
+    { id: "480p", label: "480p" },
+    { id: "other", label: "Other (DVDRip/HDRip/BDRip\u2026)" },
+    { id: "scr", label: "Screener" },
+    { id: "cam", label: "Cam" },
+    { id: "unknown", label: "Unknown" }
+  ];
+  function toOptionItems(raw) {
+    if (!Array.isArray(raw)) return [];
+    return raw.map((entry) => {
+      const value = String(entry.value ?? "").trim();
+      const label = String(entry.label ?? "").trim() || value;
+      return { id: value, label };
+    }).filter((item) => item.id.length > 0);
+  }
+  var cachedCatalogs = null;
+  async function fetchScraperOptionCatalogs() {
+    if (cachedCatalogs) return cachedCatalogs;
+    try {
+      const res = await fetch("/api/scraper-options");
+      if (!res.ok) return null;
+      const data = await res.json();
+      const catalogs = {
+        qualities: toOptionItems(data.qualities),
+        languages: toOptionItems(data.languages),
+        providers: toOptionItems(data.providers),
+        sort: toOptionItems(data.sort)
+      };
+      if (catalogs.qualities.length === 0) return null;
+      cachedCatalogs = catalogs;
+      return catalogs;
+    } catch {
+      return null;
+    }
+  }
   var COMET_QUALITY_OPTIONS = ["240p", "360p", "480p", "576p", "720p", "1080p", "1440p", "2160p", "unknown"];
   var TORRENTIO_LANGUAGE_OPTIONS = [
     { id: "swedish", label: "Svenska" },
@@ -167152,6 +167194,7 @@
         onSelectionChange: (keys2) => onChange(Array.from(keys2)),
         placeholder,
         radius: "lg",
+        popoverProps: { classNames: { content: "z-[400]" } },
         classNames: {
           trigger: "border border-white/10 bg-white/[0.03] hover:border-white/20 min-h-11",
           value: "text-sm text-white",
@@ -167254,6 +167297,16 @@
     isLast
   }) {
     const { t } = useLang();
+    const [catalogs, setCatalogs] = useState(cachedCatalogs);
+    useEffect(() => {
+      let cancelled = false;
+      void fetchScraperOptionCatalogs().then((result) => {
+        if (!cancelled && result) setCatalogs(result);
+      });
+      return () => {
+        cancelled = true;
+      };
+    }, []);
     const [manifest, setManifest] = useState({ state: "idle" });
     const [expanded, setExpanded] = useState(false);
     const [saveState, setSaveState] = useState("idle");
@@ -167418,7 +167471,7 @@
                   value: opts.qualityFilter,
                   onChange: (v) => updateOptions({ qualityFilter: v }),
                   placeholder: t("streamProviderSelectQualities"),
-                  options: TORRENTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q.toUpperCase() }))
+                  options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
                 }
               )
             ] }),
@@ -167430,7 +167483,7 @@
                   value: opts.languages,
                   onChange: (v) => updateOptions({ languages: v }),
                   placeholder: t("streamProviderSelectLanguages"),
-                  options: TORRENTIO_LANGUAGE_OPTIONS
+                  options: catalogs?.languages ?? TORRENTIO_LANGUAGE_OPTIONS
                 }
               )
             ] }),
@@ -167442,7 +167495,7 @@
                   value: opts.providers,
                   onChange: (v) => updateOptions({ providers: v }),
                   placeholder: t("streamProviderSelectSources"),
-                  options: TORRENTIO_PROVIDERS.map((p) => ({ id: p, label: p }))
+                  options: catalogs?.providers ?? TORRENTIO_PROVIDERS.map((p) => ({ id: p, label: p }))
                 }
               )
             ] }),
@@ -167458,11 +167511,12 @@
                       if (v) updateOptions({ sort: v });
                     },
                     radius: "lg",
+                    popoverProps: { classNames: { content: "z-[400]" } },
                     classNames: {
                       trigger: "border border-white/10 bg-white/[0.03] hover:border-white/20 h-10",
                       value: "text-sm text-white"
                     },
-                    children: TORRENTIO_SORT_OPTIONS.map(({ id: id4, label }) => /* @__PURE__ */ jsx(import_react56.SelectItem, { children: label }, id4))
+                    children: (catalogs?.sort ?? TORRENTIO_SORT_OPTIONS).map(({ id: id4, label }) => /* @__PURE__ */ jsx(import_react56.SelectItem, { children: label }, id4))
                   }
                 )
               ] }),
@@ -167500,7 +167554,7 @@
                   value: opts.qualityFilter,
                   onChange: (v) => updateOptions({ qualityFilter: v }),
                   placeholder: t("streamProviderSelectQualities"),
-                  options: TORRENTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q.toUpperCase() }))
+                  options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
                 }
               )
             ] }),
@@ -169973,7 +170027,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Onzzoa/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -181650,7 +181704,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-EkBGY8/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Onzzoa/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
