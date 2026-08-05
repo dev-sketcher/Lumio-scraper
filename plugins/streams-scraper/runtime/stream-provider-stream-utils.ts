@@ -197,6 +197,19 @@ export function buildAutoplayCandidates(
     }
   }
 
+  // The Android webview decodes H.264 and 8-bit HEVC but not 10-bit HEVC,
+  // and the bundled ffmpeg cannot transcode video — rank codecs the device
+  // can actually play first. Stable sort keeps quality order within tiers.
+  if (typeof navigator !== 'undefined' && /android/i.test(navigator.userAgent)) {
+    const codecTier = (stream: StreamResult): number => {
+      const text = `${stream.name ?? ''} ${stream.title ?? ''}`
+      if (/10.?bit|main.?10/i.test(text)) return 2
+      if (/x264|h\.?264|avc/i.test(text)) return 0
+      return 1
+    }
+    candidates = [...candidates].sort((a, b) => codecTier(a) - codecTier(b))
+  }
+
   // Autoplay walks these top-down until one actually plays; 5 gives a dead
   // first source (common on mediafusion) enough fallbacks without letting a
   // fully-broken scraper hold the splash for minutes.

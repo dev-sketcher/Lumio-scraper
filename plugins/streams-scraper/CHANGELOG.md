@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.62
+
+- Android autoplay prefers codecs the webview can decode: h264 first,
+  8-bit HEVC next, 10-bit HEVC last (it starts and then dies to black).
+
+
 ## 1.0.61
 
 - Series load on Android: the desktop API bridge threw when its command is
