@@ -666,6 +666,17 @@ export function StreamsSidebarSection({
     })
   }
 
+
+  // Comet-style playback URLs are opaque tokens, so the URL tail carries no
+  // codec markers and the proxy decision (DDP/EAC3 -> transcode audio)
+  // misfires. Prefer a real-looking media filename; fall back to the stream
+  // title's first line, which carries the release filename.
+  function filenameForPlayback(urlFilename: string | undefined, title: string | null | undefined): string | undefined {
+    if (urlFilename && /\.(mkv|mp4|avi|m2ts|ts|webm|mov)$/i.test(urlFilename)) return urlFilename
+    const firstLine = (title ?? '').split('\n')[0]?.trim()
+    return firstLine || urlFilename
+  }
+
   async function resolveAutoplayCandidate(stream: StreamResult): Promise<{ url: string; filename?: string; forceProxy: boolean } | null> {
     if (stream.directUrl) {
       // Return the direct URL as-is. Whether it actually plays is verified in
@@ -676,7 +687,7 @@ export function StreamsSidebarSection({
       const urlFilename = stream.directUrl.split('/').pop()?.split('?')[0]
       return {
         url: stream.directUrl,
-        filename: urlFilename,
+        filename: filenameForPlayback(urlFilename, stream.title),
         forceProxy: false,
       }
     }
@@ -1447,7 +1458,7 @@ export function StreamsSidebarSection({
             const urlFilename = candidate.directUrl.split('/').pop()?.split('?')[0]
             nextEpUrlRef.current = {
               url: candidate.directUrl,
-              filename: urlFilename,
+              filename: filenameForPlayback(urlFilename, candidate.title),
               forceProxy: false,
             }
             setNextEpUrlReady(true)
@@ -1603,7 +1614,7 @@ export function StreamsSidebarSection({
 
     // Pre-configured scrapers (Comet/MediaFusion) may return a direct play URL
     if (selectedStream.directUrl) {
-      const urlFilename = selectedStream.directUrl.split('/').pop()?.split('?')[0]
+      const urlFilename = filenameForPlayback(selectedStream.directUrl.split('/').pop()?.split('?')[0], selectedStream.title)
       beginPlayerSession({
         url: selectedStream.directUrl,
         filename: urlFilename,

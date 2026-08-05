@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-yM3kdQ/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-SOeFjt/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-yM3kdQ/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-SOeFjt/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-yM3kdQ/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-SOeFjt/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-yM3kdQ/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-SOeFjt/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -170043,7 +170043,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-yM3kdQ/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-SOeFjt/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -179686,12 +179686,17 @@ ${cue.text}
         maxSizeGb: getAutoPlayMaxStreamSizeGb()
       });
     }
+    function filenameForPlayback(urlFilename, title2) {
+      if (urlFilename && /\.(mkv|mp4|avi|m2ts|ts|webm|mov)$/i.test(urlFilename)) return urlFilename;
+      const firstLine = (title2 ?? "").split("\n")[0]?.trim();
+      return firstLine || urlFilename;
+    }
     async function resolveAutoplayCandidate(stream) {
       if (stream.directUrl) {
         const urlFilename = stream.directUrl.split("/").pop()?.split("?")[0];
         return {
           url: stream.directUrl,
-          filename: urlFilename,
+          filename: filenameForPlayback(urlFilename, stream.title),
           forceProxy: false
         };
       }
@@ -180328,7 +180333,7 @@ ${cue.text}
               const urlFilename = candidate.directUrl.split("/").pop()?.split("?")[0];
               nextEpUrlRef.current = {
                 url: candidate.directUrl,
-                filename: urlFilename,
+                filename: filenameForPlayback(urlFilename, candidate.title),
                 forceProxy: false
               };
               setNextEpUrlReady(true);
@@ -180442,7 +180447,7 @@ ${cue.text}
         }
       }
       if (selectedStream.directUrl) {
-        const urlFilename = selectedStream.directUrl.split("/").pop()?.split("?")[0];
+        const urlFilename = filenameForPlayback(selectedStream.directUrl.split("/").pop()?.split("?")[0], selectedStream.title);
         beginPlayerSession({
           url: selectedStream.directUrl,
           filename: urlFilename,
@@ -181741,7 +181746,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-yM3kdQ/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-SOeFjt/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

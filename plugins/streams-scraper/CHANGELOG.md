@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.65
+
+- Silent audio on Comet streams: opaque playback URLs carry no codec
+  markers, so the audio-transcode proxy never engaged for DDP/EAC3 tracks.
+  The release filename from the stream title now drives that decision.
+
+
 ## 1.0.64
 
 - Season loads aborted by the sidebar's own remount retry automatically -
