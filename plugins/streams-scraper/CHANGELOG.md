@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.66
+
+- The window-fullscreen toggle is hidden on Android (the shell is already
+  edge-to-edge; the native window API it calls is desktop-only).
+
+
 ## 1.0.65
 
 - Silent audio on Comet streams: opaque playback URLs carry no codec
