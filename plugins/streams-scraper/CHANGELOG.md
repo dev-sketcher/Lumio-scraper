@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.59
+
+- Scraper settings dropdowns replaced with plugin-native controls: the
+  bundled HeroUI Select popover never opens across the plugin/host provider
+  boundary. Multi-selects are hand-rolled panels, sort is a native select.
+
+
 ## 1.0.58
 
 - Season/episode fetches get a 15s budget (was 4.5s) — cold TMDB round-trips

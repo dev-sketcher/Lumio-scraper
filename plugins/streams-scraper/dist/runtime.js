@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dXCmaY/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dXCmaY/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dXCmaY/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dXCmaY/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -139833,7 +139833,7 @@
         return null;
       }
       var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var Select2 = (0, import_system2.forwardRef)(function Select22(props, ref) {
+      var Select = (0, import_system2.forwardRef)(function Select2(props, ref) {
         var _a;
         const {
           Component: Component2,
@@ -139950,7 +139950,7 @@
           disableAnimation ? popoverContent : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_framer_motion2.AnimatePresence, { children: popoverContent })
         ] });
       });
-      var select_default = Select2;
+      var select_default = Select;
     }
   });
 
@@ -167186,40 +167186,57 @@
     placeholder,
     options
   }) {
-    return /* @__PURE__ */ jsx(
-      import_react56.Select,
-      {
-        selectionMode: "multiple",
-        selectedKeys: new Set(value),
-        onSelectionChange: (keys2) => onChange(Array.from(keys2)),
-        placeholder,
-        radius: "lg",
-        popoverProps: { classNames: { content: "z-[400]" } },
-        classNames: {
-          trigger: "border border-white/10 bg-white/[0.03] hover:border-white/20 min-h-11",
-          value: "text-sm text-white",
-          listbox: "text-sm"
-        },
-        children: options.map(({ id: id4, label }) => {
-          const checked = value.includes(id4);
-          return /* @__PURE__ */ jsx(
-            import_react56.SelectItem,
-            {
-              startContent: /* @__PURE__ */ jsx(
+    const [open, setOpen] = useState(false);
+    const rootRef = useRef(null);
+    useEffect(() => {
+      if (!open) return;
+      function onDocPointer(event) {
+        if (rootRef.current && !rootRef.current.contains(event.target)) {
+          setOpen(false);
+        }
+      }
+      document.addEventListener("mousedown", onDocPointer);
+      return () => document.removeEventListener("mousedown", onDocPointer);
+    }, [open]);
+    const selectedLabels = options.filter((option) => value.includes(option.id)).map((option) => option.label);
+    const summary = selectedLabels.length > 0 ? selectedLabels.join(", ") : placeholder;
+    return /* @__PURE__ */ jsxs("div", { ref: rootRef, className: "relative", children: [
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => setOpen((current2) => !current2),
+          className: "flex h-12 w-full items-center justify-between rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-left text-sm text-white outline-none transition hover:border-white/20",
+          children: [
+            /* @__PURE__ */ jsx("span", { className: `truncate ${selectedLabels.length === 0 ? "text-slate-500" : ""}`, children: summary }),
+            /* @__PURE__ */ jsx("span", { className: `ml-2 flex-none text-slate-500 transition-transform ${open ? "rotate-180" : ""}`, children: "\u25BE" })
+          ]
+        }
+      ),
+      open ? /* @__PURE__ */ jsx("div", { className: "absolute left-0 right-0 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-[1.1rem] border border-white/10 bg-[#10162a] p-1.5 shadow-2xl", children: options.map(({ id: id4, label }) => {
+        const checked = value.includes(id4);
+        return /* @__PURE__ */ jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: () => onChange(checked ? value.filter((v) => v !== id4) : [...value, id4]),
+            className: "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-slate-100 transition hover:bg-white/5",
+            children: [
+              /* @__PURE__ */ jsx(
                 "span",
                 {
                   "aria-hidden": "true",
-                  className: `flex h-4 w-4 items-center justify-center rounded-[3px] border text-[10px] ${checked ? "border-aurora-400/80 bg-aurora-500/20 text-aurora-200" : "border-white/15 bg-white/[0.02] text-transparent"}`,
+                  className: `flex h-4 w-4 flex-none items-center justify-center rounded-[3px] border text-[10px] ${checked ? "border-aurora-400/80 bg-aurora-500/20 text-aurora-200" : "border-white/15 bg-white/[0.02] text-transparent"}`,
                   children: "\u2713"
                 }
               ),
-              children: label
-            },
-            id4
-          );
-        })
-      }
-    );
+              /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: label })
+            ]
+          },
+          id4
+        );
+      }) }) : null
+    ] });
   }
   function DebridSelect({
     value,
@@ -167503,20 +167520,12 @@
               /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
                 /* @__PURE__ */ jsx(FieldHeader, { label: "Sort" }),
                 /* @__PURE__ */ jsx(
-                  import_react56.Select,
+                  "select",
                   {
-                    selectedKeys: [opts.sort],
-                    onSelectionChange: (keys2) => {
-                      const v = Array.from(keys2)[0];
-                      if (v) updateOptions({ sort: v });
-                    },
-                    radius: "lg",
-                    popoverProps: { classNames: { content: "z-[400]" } },
-                    classNames: {
-                      trigger: "border border-white/10 bg-white/[0.03] hover:border-white/20 h-10",
-                      value: "text-sm text-white"
-                    },
-                    children: (catalogs?.sort ?? TORRENTIO_SORT_OPTIONS).map(({ id: id4, label }) => /* @__PURE__ */ jsx(import_react56.SelectItem, { children: label }, id4))
+                    value: opts.sort,
+                    onChange: (event) => updateOptions({ sort: event.target.value }),
+                    className: "h-12 w-full rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition hover:border-white/20 focus:border-white/20",
+                    children: (catalogs?.sort ?? TORRENTIO_SORT_OPTIONS).map(({ id: id4, label }) => /* @__PURE__ */ jsx("option", { value: id4, className: "bg-slate-900 text-white", children: label }, id4))
                   }
                 )
               ] }),
@@ -170027,7 +170036,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dXCmaY/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -181704,7 +181713,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-dXCmaY/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

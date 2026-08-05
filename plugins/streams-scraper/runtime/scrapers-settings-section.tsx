@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Input, Select, SelectItem, Switch } from '@heroui/react'
+import { Input, Switch } from '@heroui/react'
 import { useLang } from '@/lib/i18n'
 import {
   getStreamProviderConfigs,
@@ -257,44 +257,66 @@ function MultiSelectDropdown({
   placeholder: string
   options: { id: string; label: string }[]
 }) {
+  // Hand-rolled dropdown: HeroUI's Select popover never opens here — the
+  // plugin bundles its own @heroui copy, whose overlay context doesn't share
+  // the host provider. No portal, no z-index games, just an absolute panel.
+  const [open, setOpen] = useState(false)
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    function onDocPointer(event: MouseEvent) {
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onDocPointer)
+    return () => document.removeEventListener('mousedown', onDocPointer)
+  }, [open])
+
+  const selectedLabels = options
+    .filter((option) => value.includes(option.id))
+    .map((option) => option.label)
+  const summary = selectedLabels.length > 0 ? selectedLabels.join(', ') : placeholder
+
   return (
-    <Select
-      selectionMode="multiple"
-      selectedKeys={new Set(value)}
-      onSelectionChange={(keys) => onChange(Array.from(keys) as string[])}
-      placeholder={placeholder}
-      radius="lg"
-      // The settings overlay sits at z-[200]; the portal must clear it.
-      popoverProps={{ classNames: { content: 'z-[400]' } }}
-      classNames={{
-        trigger: 'border border-white/10 bg-white/[0.03] hover:border-white/20 min-h-11',
-        value: 'text-sm text-white',
-        listbox: 'text-sm',
-      }}
-    >
-      {options.map(({ id, label }) => {
-        const checked = value.includes(id)
-        return (
-          <SelectItem
-            key={id}
-            startContent={(
-              <span
-                aria-hidden="true"
-                className={`flex h-4 w-4 items-center justify-center rounded-[3px] border text-[10px] ${
-                  checked
-                    ? 'border-aurora-400/80 bg-aurora-500/20 text-aurora-200'
-                    : 'border-white/15 bg-white/[0.02] text-transparent'
-                }`}
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        className="flex h-12 w-full items-center justify-between rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-left text-sm text-white outline-none transition hover:border-white/20"
+      >
+        <span className={`truncate ${selectedLabels.length === 0 ? 'text-slate-500' : ''}`}>{summary}</span>
+        <span className={`ml-2 flex-none text-slate-500 transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
+      </button>
+      {open ? (
+        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-[1.1rem] border border-white/10 bg-[#10162a] p-1.5 shadow-2xl">
+          {options.map(({ id, label }) => {
+            const checked = value.includes(id)
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => onChange(checked ? value.filter((v) => v !== id) : [...value, id])}
+                className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-slate-100 transition hover:bg-white/5"
               >
-                ✓
-              </span>
-            )}
-          >
-            {label}
-          </SelectItem>
-        )
-      })}
-    </Select>
+                <span
+                  aria-hidden="true"
+                  className={`flex h-4 w-4 flex-none items-center justify-center rounded-[3px] border text-[10px] ${
+                    checked
+                      ? 'border-aurora-400/80 bg-aurora-500/20 text-aurora-200'
+                      : 'border-white/15 bg-white/[0.02] text-transparent'
+                  }`}
+                >
+                  ✓
+                </span>
+                <span className="min-w-0 flex-1 truncate">{label}</span>
+              </button>
+            )
+          })}
+        </div>
+      ) : null}
+    </div>
   )
 }
 
@@ -620,23 +642,17 @@ function ScraperCard({
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
                     <FieldHeader label="Sort" />
-                    <Select
-                      selectedKeys={[opts.sort]}
-                      onSelectionChange={(keys) => {
-                        const v = Array.from(keys)[0] as string
-                        if (v) updateOptions({ sort: v })
-                      }}
-                      radius="lg"
-                      popoverProps={{ classNames: { content: 'z-[400]' } }}
-                      classNames={{
-                        trigger: 'border border-white/10 bg-white/[0.03] hover:border-white/20 h-10',
-                        value: 'text-sm text-white',
-                      }}
+                    <select
+                      value={opts.sort}
+                      onChange={(event) => updateOptions({ sort: event.target.value })}
+                      className="h-12 w-full rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition hover:border-white/20 focus:border-white/20"
                     >
                       {(catalogs?.sort ?? TORRENTIO_SORT_OPTIONS).map(({ id, label }) => (
-                        <SelectItem key={id}>{label}</SelectItem>
+                        <option key={id} value={id} className="bg-slate-900 text-white">
+                          {label}
+                        </option>
                       ))}
-                    </Select>
+                    </select>
                   </div>
                   <div className="space-y-1.5">
                     <FieldHeader label="Max results (0 = no limit)" />
