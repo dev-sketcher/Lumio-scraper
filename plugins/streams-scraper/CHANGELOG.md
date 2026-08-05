@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.63
+
+- Season load failures log their real cause to the debug log.
+
+
 ## 1.0.62
 
 - Android autoplay prefers codecs the webview can decode: h264 first,

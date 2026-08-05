@@ -821,6 +821,8 @@ export function StreamsSidebarSection({
       })
     } catch (err) {
       if (requestId !== seasonRequestIdRef.current) return
+      const detail = err instanceof Error ? `${err.name}: ${err.message}` : String(err)
+      void fetch(`/api/debug-log?msg=${encodeURIComponent(`loadSeasons misslyckades: ${detail} (requestId=${requestId})`)}`).catch(() => {})
       if (isAbortLikeError(err)) {
         setSeasonsError('Could not load seasons')
         setSeasons([])
