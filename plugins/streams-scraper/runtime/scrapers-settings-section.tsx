@@ -290,7 +290,8 @@ function MultiSelectDropdown({
         <span className={`ml-2 flex-none text-slate-500 transition-transform ${open ? 'rotate-180' : ''}`}>▾</span>
       </button>
       {open ? (
-        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-[1.1rem] border border-white/10 bg-[#10162a] p-1.5 shadow-2xl">
+        <div className="absolute left-0 right-0 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-[1.1rem] border border-white/10 p-1.5 shadow-2xl"
+          style={{ backgroundColor: '#10162a' }}>
           {options.map(({ id, label }) => {
             const checked = value.includes(id)
             return (

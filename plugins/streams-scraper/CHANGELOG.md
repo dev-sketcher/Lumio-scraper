@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.60
+
+- Settings dropdown panels get an opaque background (arbitrary Tailwind
+  color values are not present in the host CSS at runtime — inline style).
+
+
 ## 1.0.59
 
 - Scraper settings dropdowns replaced with plugin-native controls: the

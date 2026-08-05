@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-pb0p4G/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-pb0p4G/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-pb0p4G/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-pb0p4G/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -167213,29 +167213,36 @@
           ]
         }
       ),
-      open ? /* @__PURE__ */ jsx("div", { className: "absolute left-0 right-0 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-[1.1rem] border border-white/10 bg-[#10162a] p-1.5 shadow-2xl", children: options.map(({ id: id4, label }) => {
-        const checked = value.includes(id4);
-        return /* @__PURE__ */ jsxs(
-          "button",
-          {
-            type: "button",
-            onClick: () => onChange(checked ? value.filter((v) => v !== id4) : [...value, id4]),
-            className: "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-slate-100 transition hover:bg-white/5",
-            children: [
-              /* @__PURE__ */ jsx(
-                "span",
-                {
-                  "aria-hidden": "true",
-                  className: `flex h-4 w-4 flex-none items-center justify-center rounded-[3px] border text-[10px] ${checked ? "border-aurora-400/80 bg-aurora-500/20 text-aurora-200" : "border-white/15 bg-white/[0.02] text-transparent"}`,
-                  children: "\u2713"
-                }
-              ),
-              /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: label })
-            ]
-          },
-          id4
-        );
-      }) }) : null
+      open ? /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: "absolute left-0 right-0 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-[1.1rem] border border-white/10 p-1.5 shadow-2xl",
+          style: { backgroundColor: "#10162a" },
+          children: options.map(({ id: id4, label }) => {
+            const checked = value.includes(id4);
+            return /* @__PURE__ */ jsxs(
+              "button",
+              {
+                type: "button",
+                onClick: () => onChange(checked ? value.filter((v) => v !== id4) : [...value, id4]),
+                className: "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-slate-100 transition hover:bg-white/5",
+                children: [
+                  /* @__PURE__ */ jsx(
+                    "span",
+                    {
+                      "aria-hidden": "true",
+                      className: `flex h-4 w-4 flex-none items-center justify-center rounded-[3px] border text-[10px] ${checked ? "border-aurora-400/80 bg-aurora-500/20 text-aurora-200" : "border-white/15 bg-white/[0.02] text-transparent"}`,
+                      children: "\u2713"
+                    }
+                  ),
+                  /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: label })
+                ]
+              },
+              id4
+            );
+          })
+        }
+      ) : null
     ] });
   }
   function DebridSelect({
@@ -170036,7 +170043,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-pb0p4G/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -181713,7 +181720,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-oGyoZO/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-pb0p4G/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
