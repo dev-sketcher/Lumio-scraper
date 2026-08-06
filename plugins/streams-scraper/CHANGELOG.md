@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.69
+
+- The download button on the details page follows the app language. It
+  carried its own copy of the component, so it kept rendering Swedish
+  labels and error text no matter which language was selected.
+
 ## 1.0.68
 
 - Cancel on the next-episode card disarms everything: the parallel outro
