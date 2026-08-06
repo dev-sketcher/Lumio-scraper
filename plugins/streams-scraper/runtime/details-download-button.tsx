@@ -5,7 +5,8 @@ import { createPortal } from 'react-dom'
 import type { StreamResult } from '@/app/api/streams/route'
 import type { DownloadJob } from '@/lib/download-manager'
 import type { MediaDownloadActionProps } from '@/lib/plugin-sdk'
-import { getPrimaryStreamProviderRequestContext, isPluginDesktopHost } from '@/lib/plugin-sdk'
+import type { StringKey } from '@/lib/i18n'
+import { getPrimaryStreamProviderRequestContext, isPluginDesktopHost, useLang } from '@/lib/plugin-sdk'
 import {
   getPlaybackAccessKey,
   getPlaybackSourceInfo,
@@ -52,13 +53,16 @@ function triggerBrowserDownload(url: string, filename?: string | null) {
   anchor.remove()
 }
 
-async function resolveDownloadFromStream(stream: StreamResult): Promise<{ url: string; filename: string }> {
+async function resolveDownloadFromStream(
+  stream: StreamResult,
+  t: (key: StringKey) => string,
+): Promise<{ url: string; filename: string }> {
   if (stream.directUrl) {
     const filename = stream.directUrl.split('/').pop()?.split('?')[0] ?? 'download'
     return { url: stream.directUrl, filename }
   }
 
-  if (!stream.infoHash) throw new Error('Ingen spelbar stream hittades')
+  if (!stream.infoHash) throw new Error(t('noPlayableStream'))
 
   const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${stream.infoHash}`)
   for (let attempt = 0; attempt < 60; attempt += 1) {
@@ -84,12 +88,12 @@ async function resolveDownloadFromStream(stream: StreamResult): Promise<{ url: s
       const playable = resolved.filter((entry): entry is NonNullable<typeof entry> => Boolean(entry))
       const videoEntries = playable.filter((entry) => VIDEO_EXTS.test(entry.filename))
       const best = [...(videoEntries.length > 0 ? videoEntries : playable)].sort((a, b) => b.filesize - a.filesize)[0]
-      if (!best) throw new Error('Kunde inte lösa nedladdningslänk')
+      if (!best) throw new Error(t('resolveLinkFailed'))
       return { url: best.download, filename: best.filename }
     }
 
     if (['error', 'magnet_error', 'dead', 'virus'].includes(info.status)) {
-      throw new Error(`Torrenten misslyckades: ${info.status}`)
+      throw new Error(t('torrentFailed').replace('{status}', String(info.status)))
     }
   }
 
@@ -108,6 +112,7 @@ type DownloadState =
 export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly = false }: MediaDownloadActionProps) {
   const forceMobileIconOnly = typeof className === 'string' && className.includes('!h-10') && className.includes('!w-10')
   const effectiveIconOnly = iconOnly || forceMobileIconOnly
+  const { t } = useLang()
   const [state, setState] = useState<DownloadState>({ type: 'idle' })
   const esRef = useRef<EventSource | null>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -134,7 +139,7 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
       const targetImdbId = imdbId as string
       const requestContext = getPrimaryStreamProviderRequestContext()
       const accessKey = getPlaybackAccessKey() ?? ''
-      if (!accessKey) throw new Error('Debrid-nyckel saknas')
+      if (!accessKey) throw new Error(t('debridKeyMissing'))
       const tType = mediaType === 'tv' ? 'series' : 'movie'
 
       const browserStreamUrl = requestContext.browserStreamUrl({
@@ -157,9 +162,9 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
         cacheFetch,
       ])
 
-      if (!res.ok) throw new Error('Kunde inte hämta streams')
+      if (!res.ok) throw new Error(t('fetchStreamsFailed'))
       const data = (await res.json()) as { streams: StreamResult[] }
-      if (data.streams.length === 0) throw new Error('Inga streams hittades')
+      if (data.streams.length === 0) throw new Error(t('noStreamsFound'))
 
       const cachedTitles = new Set<string>()
       const cachedHashes = new Set<string>()
@@ -190,12 +195,12 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
     if (!isPluginDesktopHost()) {
       setState({ type: 'loading-streams' })
       try {
-        const resolved = await resolveDownloadFromStream(stream)
+        const resolved = await resolveDownloadFromStream(stream, t)
         triggerBrowserDownload(resolved.url, resolved.filename)
         setState({ type: 'done', filename: resolved.filename })
         timerRef.current = setTimeout(() => setState({ type: 'idle' }), 3000)
       } catch (err) {
-        setState({ type: 'error', message: err instanceof Error ? err.message : 'Kunde inte starta nedladdning' })
+        setState({ type: 'error', message: err instanceof Error ? err.message : t('startDownloadFailed') })
       }
       return
     }
@@ -203,7 +208,7 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
     setState({ type: 'picking-folder', stream })
     try {
       const res = await fetch('/api/pick-folder', { method: 'POST' })
-      if (!res.ok) throw new Error('Mappval misslyckades')
+      if (!res.ok) throw new Error(t('folderPickFailed'))
       const data = (await res.json()) as { path: string | null }
       if (!data.path) { setState({ type: 'idle' }); return }
       await startDownload(stream, data.path)
@@ -216,9 +221,9 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
     esRef.current?.close()
     let resolved
     try {
-      resolved = await resolveDownloadFromStream(stream)
+      resolved = await resolveDownloadFromStream(stream, t)
     } catch (error) {
-      setState({ type: 'error', message: error instanceof Error ? error.message : 'Kunde inte förbereda nedladdning' })
+      setState({ type: 'error', message: error instanceof Error ? error.message : t('prepareDownloadFailed') })
       return
     }
 
@@ -233,10 +238,10 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
         filename: resolved.filename,
       }),
     })
-    if (!res.ok) { setState({ type: 'error', message: 'Kunde inte starta nedladdning' }); return }
+    if (!res.ok) { setState({ type: 'error', message: t('startDownloadFailed') }); return }
     const { jobId } = (await res.json()) as { jobId: string }
 
-    setState({ type: 'downloading', jobId, progress: 0, filename: 'Hämtar...' })
+    setState({ type: 'downloading', jobId, progress: 0, filename: t('fetchingShort') })
 
     const es = new EventSource(`/api/download/progress?jobId=${jobId}`)
     esRef.current = es
@@ -249,18 +254,18 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
           timerRef.current = setTimeout(() => setState({ type: 'idle' }), 3000)
         } else if (job.status === 'error') {
           es.close()
-          setState({ type: 'error', message: job.error ?? 'Nedladdningen misslyckades' })
+          setState({ type: 'error', message: job.error ?? t('downloadFailed') })
         } else {
           setState({ type: 'downloading', jobId, progress: job.progress, filename: job.filename })
         }
       } catch {
         es.close()
-        setState({ type: 'error', message: 'Oväntat svar från servern' })
+        setState({ type: 'error', message: t('unexpectedServerResponse') })
       }
     }
     es.onerror = () => {
       es.close()
-      setState({ type: 'error', message: 'Tappade kontakt med nedladdningsjobbet' })
+      setState({ type: 'error', message: t('downloadJobLost') })
     }
   }
 
@@ -272,7 +277,7 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
         className="fixed w-80 rounded-2xl border border-white/10 bg-[#0d1220] p-2 shadow-2xl"
         style={{ top: posRef.current.top, right: posRef.current.right, zIndex: 9999 }}
       >
-        <p className="mb-2 px-2 text-[10px] uppercase tracking-[0.2em] text-slate-500">Välj stream att ladda ner</p>
+        <p className="mb-2 px-2 text-[10px] uppercase tracking-[0.2em] text-slate-500">{t('pickStreamToDownload')}</p>
         <div className="max-h-72 overflow-y-auto space-y-1">
           {state.streams.map((s, i) => (
             <button
@@ -306,10 +311,10 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
           type="button"
           className={btnBase}
           onClick={() => setState({ type: 'idle' })}
-          title={effectiveIconOnly ? 'Stäng nedladdning' : undefined}
-          aria-label={effectiveIconOnly ? 'Stäng nedladdning' : undefined}
+          title={effectiveIconOnly ? t('closeDownload') : undefined}
+          aria-label={effectiveIconOnly ? t('closeDownload') : undefined}
         >
-          {effectiveIconOnly ? '✕' : '↓ Stäng'}
+          {effectiveIconOnly ? '✕' : `↓ ${t('close')}`}
         </button>
         {typeof document !== 'undefined' && createPortal(dropdown, document.body)}
       </>
@@ -322,13 +327,13 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
         type="button"
         className={btnBase}
         disabled
-        title={effectiveIconOnly ? 'Laddar ner' : undefined}
-        aria-label={effectiveIconOnly ? 'Laddar ner' : undefined}
+        title={effectiveIconOnly ? t('downloading') : undefined}
+        aria-label={effectiveIconOnly ? t('downloading') : undefined}
       >
         <svg className="h-3 w-3 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M21 12a9 9 0 1 1-6.219-8.56" strokeLinecap="round"/>
         </svg>
-        {!effectiveIconOnly ? (state.progress > 0 ? `${state.progress}%` : 'Förbereder...') : null}
+        {!effectiveIconOnly ? (state.progress > 0 ? `${state.progress}%` : t('preparing')) : null}
       </button>
     )
   }
@@ -339,10 +344,10 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
         type="button"
         className={`${btnBase} border-green-400/30 text-green-400`}
         disabled
-        title={effectiveIconOnly ? 'Nedladdning klar' : undefined}
-        aria-label={effectiveIconOnly ? 'Nedladdning klar' : undefined}
+        title={effectiveIconOnly ? t('downloadComplete') : undefined}
+        aria-label={effectiveIconOnly ? t('downloadComplete') : undefined}
       >
-        {effectiveIconOnly ? '✓' : '✓ Klar'}
+        {effectiveIconOnly ? '✓' : `✓ ${t('done')}`}
       </button>
     )
   }
@@ -355,7 +360,7 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
           className={`${btnBase} border-red-400/30 text-red-400`}
           onClick={() => setState({ type: 'idle' })}
           title={state.message}
-          aria-label="Nedladdning misslyckades, försök igen"
+          aria-label={t('downloadFailedRetry')}
         >
           !
         </button>
@@ -365,7 +370,7 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
       <div className="flex items-center gap-2">
         <span className="max-w-[180px] truncate text-[10px] text-red-400">{state.message}</span>
         <button type="button" className={`${btnBase} border-red-400/30 text-red-400`} onClick={() => setState({ type: 'idle' })}>
-          ✗ Försök igen
+          {`✗ ${t('tryAgain')}`}
         </button>
       </div>
     )
@@ -378,8 +383,8 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
       className={btnBase}
       onClick={() => void handleClick()}
       disabled={state.type === 'loading-streams' || state.type === 'picking-folder'}
-      title={effectiveIconOnly ? 'Ladda ner' : undefined}
-      aria-label={effectiveIconOnly ? 'Ladda ner' : undefined}
+      title={effectiveIconOnly ? t('download') : undefined}
+      aria-label={effectiveIconOnly ? t('download') : undefined}
     >
       {state.type === 'loading-streams' || state.type === 'picking-folder' ? (
         <svg className="h-3 w-3 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -390,7 +395,7 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v10m0 0 4-4m-4 4-4-4M4 18h16" />
         </svg>
       )}
-      {!effectiveIconOnly ? 'Ladda ner' : null}
+      {!effectiveIconOnly ? t('download') : null}
     </button>
   )
 }
