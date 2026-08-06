@@ -381,16 +381,6 @@ export function getScraperConfigs(): ScraperConfig[] {
 }
 
 export function setScraperConfigs(configs: ScraperConfig[]): void {
-  // TEMPORARY DIAGNOSTIC: name the caller that shrinks the list.
-  try {
-    const who = new Error().stack?.split('\n').slice(1, 6).join(' | ') ?? '?'
-    void fetch('/api/debug-log', {
-      method: 'POST',
-      body: `scrapercfg write [${configs.map((c) => c.preset).join(',')}] <- ${who}`,
-    })
-  } catch {
-    // diagnostics must never block the write
-  }
   setScopedStorageItem(CONFIGS_KEY, JSON.stringify(configs))
 }
 
