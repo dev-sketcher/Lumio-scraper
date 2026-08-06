@@ -986,27 +986,36 @@ const ADDABLE_PRESETS: ScraperPresetId[] = [
 export function ScrapersSettingsSection() {
   const { t } = useLang()
   const [configs, setConfigsState] = useState<ScraperConfig[]>(() => getStreamProviderConfigs())
+  // Cards fire onChange from async work (catalog and manifest fetches settle
+  // seconds after mount), by which point a handler closed over `configs`
+  // holds a list from before the user added a scraper — writing it back drops
+  // the new entry. Every mutation goes through this ref so it always derives
+  // from the current list.
+  const configsRef = useRef(configs)
+  configsRef.current = configs
 
   const addedPresets = new Set(configs.map((c) => c.preset))
   const availableToAdd = ADDABLE_PRESETS.filter((preset) => !addedPresets.has(preset) || preset === 'custom')
 
   function saveConfigs(next: ScraperConfig[]) {
+    configsRef.current = next
     setConfigsState(next)
     setStreamProviderConfigs(next)
   }
 
   function handleConfigChange(updated: ScraperConfig) {
-    saveConfigs(configs.map((c) => (c.id === updated.id ? updated : c)))
+    saveConfigs(configsRef.current.map((c) => (c.id === updated.id ? updated : c)))
   }
 
   function handleRemove(id: string) {
-    saveConfigs(configs.filter((c) => c.id !== id))
+    saveConfigs(configsRef.current.filter((c) => c.id !== id))
   }
 
   function handleMoveByOffset(id: string, offset: number) {
-    const idx = configs.findIndex((c) => c.id === id)
+    const current = configsRef.current
+    const idx = current.findIndex((c) => c.id === id)
     if (idx < 0) return
-    const next = [...configs]
+    const next = [...current]
     const target = idx + offset
     if (target < 0 || target >= next.length) return
     ;[next[idx], next[target]] = [next[target], next[idx]]
@@ -1016,7 +1025,7 @@ export function ScrapersSettingsSection() {
   function handleAddPreset(preset: ScraperPresetId) {
     const id = preset === 'custom' ? `custom-${Date.now()}` : preset
     const newConfig: ScraperConfig = { id, preset, enabled: true, options: defaultOptions(preset) }
-    saveConfigs([...configs, newConfig])
+    saveConfigs([...configsRef.current, newConfig])
   }
 
   return (

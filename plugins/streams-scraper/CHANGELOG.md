@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.70
+
+- Adding a scraper sticks. The settings list rebuilt itself from a snapshot
+  taken before the addition whenever a card reported a change from its own
+  async loading, which lands seconds later and quietly wrote the shorter
+  list back over the new one.
+
 ## 1.0.69
 
 - The download button on the details page follows the app language. It

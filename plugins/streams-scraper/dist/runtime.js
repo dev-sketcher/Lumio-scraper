@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0Ou6Fy/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-S2XkGZ/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0Ou6Fy/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-S2XkGZ/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0Ou6Fy/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-S2XkGZ/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0Ou6Fy/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-S2XkGZ/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -165405,7 +165405,10 @@
       pluginYoutubeLoginTimedOut: "YouTube login timed out before Lumio received the session.",
       pluginYoutubeMissingClientId: "Add a Google OAuth client ID first.",
       pluginYoutubeMissingPlaylistId: "Playlist ID is missing.",
-      pluginYoutubeMissingChannelId: "Channel ID is missing."
+      pluginYoutubeMissingChannelId: "Channel ID is missing.",
+      ptNeedsNewerApp: "A newer app version is required for this update.",
+      ptScanSummary: "{updated} updated, {uptodate} already current, {failed} failed.",
+      ptScanNoUpdates: "All plugins are on the latest version."
     },
     sv: {
       // Nav
@@ -166724,7 +166727,10 @@
       pluginYoutubeLoginTimedOut: "YouTube-inloggningen tog f\xF6r l\xE5ng tid \u2013 Lumio fick aldrig n\xE5gon session.",
       pluginYoutubeMissingClientId: "L\xE4gg till ett Google OAuth-klient-ID f\xF6rst.",
       pluginYoutubeMissingPlaylistId: "Spellistans ID saknas.",
-      pluginYoutubeMissingChannelId: "Kanalens ID saknas."
+      pluginYoutubeMissingChannelId: "Kanalens ID saknas.",
+      ptNeedsNewerApp: "Uppdateringen kr\xE4ver en nyare version av appen.",
+      ptScanSummary: "{updated} uppdaterade, {uptodate} redan aktuella, {failed} misslyckades.",
+      ptScanNoUpdates: "Alla plugins \xE4r p\xE5 senaste versionen."
     }
   };
   var detachedLangContextValue = {
@@ -168226,22 +168232,26 @@
   function ScrapersSettingsSection() {
     const { t } = useLang();
     const [configs, setConfigsState] = useState(() => getStreamProviderConfigs());
+    const configsRef = useRef(configs);
+    configsRef.current = configs;
     const addedPresets = new Set(configs.map((c) => c.preset));
     const availableToAdd = ADDABLE_PRESETS.filter((preset) => !addedPresets.has(preset) || preset === "custom");
     function saveConfigs(next2) {
+      configsRef.current = next2;
       setConfigsState(next2);
       setStreamProviderConfigs(next2);
     }
     function handleConfigChange(updated) {
-      saveConfigs(configs.map((c) => c.id === updated.id ? updated : c));
+      saveConfigs(configsRef.current.map((c) => c.id === updated.id ? updated : c));
     }
     function handleRemove(id4) {
-      saveConfigs(configs.filter((c) => c.id !== id4));
+      saveConfigs(configsRef.current.filter((c) => c.id !== id4));
     }
     function handleMoveByOffset(id4, offset) {
-      const idx = configs.findIndex((c) => c.id === id4);
+      const current2 = configsRef.current;
+      const idx = current2.findIndex((c) => c.id === id4);
       if (idx < 0) return;
-      const next2 = [...configs];
+      const next2 = [...current2];
       const target = idx + offset;
       if (target < 0 || target >= next2.length) return;
       [next2[idx], next2[target]] = [next2[target], next2[idx]];
@@ -168250,7 +168260,7 @@
     function handleAddPreset(preset) {
       const id4 = preset === "custom" ? `custom-${Date.now()}` : preset;
       const newConfig = { id: id4, preset, enabled: true, options: defaultOptions(preset) };
-      saveConfigs([...configs, newConfig]);
+      saveConfigs([...configsRef.current, newConfig]);
     }
     return /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
       configs.map((config, idx) => /* @__PURE__ */ jsx(
@@ -170391,7 +170401,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0Ou6Fy/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-S2XkGZ/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -174360,7 +174370,9 @@
       url,
       start: start2 ?? null,
       subContent: sub?.subContent ?? null,
-      subIndex: sub?.subIndex ?? null
+      subIndex: sub?.subIndex ?? null,
+      audioTrack: sub?.audioTrack ?? null,
+      audioLang: sub?.audioLang ?? null
     });
   }
   async function avplayerTeardown() {
@@ -177337,8 +177349,20 @@ ${cue.text}
       setAirplayPrepare("preparing");
       try {
         const subContent = activeSubId && cues.length > 0 ? cuesToSrt(cues) : void 0;
-        airplayLog(`prepare start, sub=${subContent ? "external" : "none"}`);
-        const stream = await avplayerPrepare(url, realTimeRef.current, { subContent });
+        const preferredAudioLang = preferredAudioLangRef.current || getDefaultAudioLanguage() || null;
+        const resolvedAudio = audioTracks.find((track) => track.index === activeAudioTrack) ?? audioTracks.find((track) => audioTrackMatchesLanguage(track, preferredAudioLang)) ?? audioTracks[0] ?? null;
+        const audioOrdinal = resolvedAudio ? audioTracks.findIndex((track) => track.index === resolvedAudio.index) : -1;
+        const audioTrack = audioOrdinal >= 0 ? `a:${audioOrdinal}` : null;
+        airplayLog(
+          `prepare start, sub=${subContent ? "external" : "none"}, audio=${audioTrack ?? "default"} lang=${resolvedAudio?.language ?? "?"} pref=${preferredAudioLang ?? "none"} (aid=${activeAudioTrack ?? "none"}, tracks=${audioTracks.length}), pos=${realTimeRef.current.toFixed(1)}`
+        );
+        const stream = await avplayerPrepare(url, realTimeRef.current, {
+          subContent,
+          audioTrack,
+          // Read straight from settings, so the host can still resolve the
+          // track when mpv has not reported its list yet.
+          audioLang: preferredAudioLang
+        });
         airplayLog(`prepare done, offset=${stream.offset}`);
         setAirplaySession({ offset: stream.offset, streamUrl: stream.streamUrl });
         setAirplayPrepare("ready");
@@ -177346,7 +177370,7 @@ ${cue.text}
         airplayLog(`prepare failed: ${String(e)}`);
         setAirplayPrepare("failed");
       }
-    }, [activeSubId, cues, url]);
+    }, [activeSubId, activeAudioTrack, audioTracks, cues, url]);
     const stopAirplayVideo = useCallback(() => {
       const v = airplayVideoRef.current;
       if (!v) return;
@@ -177397,6 +177421,12 @@ ${cue.text}
         if (wireless && !airplayWasExternalRef.current) {
           airplayWasExternalRef.current = true;
           setAirplayActive(true);
+          const target = Math.max(0, realTimeRef.current - offset);
+          airplayLog(`engage: mpv=${realTimeRef.current.toFixed(1)} offset=${offset.toFixed(1)} seek=${target.toFixed(1)} was=${v.currentTime.toFixed(1)}`);
+          try {
+            v.currentTime = target;
+          } catch {
+          }
           void setMpvPause(true);
           v.muted = false;
           void v.play().catch(() => {
@@ -177405,6 +177435,7 @@ ${cue.text}
           airplayWasExternalRef.current = false;
           setAirplayActive(false);
           const resumeAt = v.currentTime > 0 ? offset + v.currentTime : realTimeRef.current;
+          airplayLog(`disengage: element=${v.currentTime.toFixed(1)} offset=${offset.toFixed(1)} resumeAt=${resumeAt.toFixed(1)}`);
           stopAirplayVideo();
           void avplayerTeardown();
           setAirplaySession(null);
@@ -182114,7 +182145,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0Ou6Fy/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-S2XkGZ/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
