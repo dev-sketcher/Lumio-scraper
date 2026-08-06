@@ -349,6 +349,7 @@ export function StreamsSidebarSection({
   // the pending autoplay.
   const nextEpOutroAutoplayTimer = useRef<number | null>(null)
   const nextEpDismissedRef = useRef(false)
+  const nextEpPreloadEpochRef = useRef(0)
   const nextEpPlayRequestedAtRef = useRef(0)
   // True from handlePlayNextEpisode until the new episode's first play — suppresses handleTimeUpdate
   const nextEpTransitionRef = useRef(false)
@@ -1325,6 +1326,8 @@ export function StreamsSidebarSection({
   // ---- next-episode preload ----
 
   async function preloadNextEpisode() {
+    const epoch = nextEpPreloadEpochRef.current
+    const epochStale = () => nextEpPreloadEpochRef.current !== epoch
     if (nextEpPreloadStarted.current) return
     nextEpPreloadStarted.current = true
 
@@ -1456,6 +1459,7 @@ export function StreamsSidebarSection({
         for (const candidate of candidates) {
           if (candidate.directUrl) {
             const urlFilename = candidate.directUrl.split('/').pop()?.split('?')[0]
+            if (epochStale()) return
             nextEpUrlRef.current = {
               url: candidate.directUrl,
               filename: filenameForPlayback(urlFilename, candidate.title),
@@ -1470,6 +1474,7 @@ export function StreamsSidebarSection({
             const added = await queueMagnetForPlayback(magnet)
             const nextLink = await pollTorrentBackground(added.id, targetSeason, targetEpisode)
             if (nextLink) {
+              if (epochStale()) return
               nextEpUrlRef.current = {
                 url: nextLink.url,
                 filename: nextLink.filename,
@@ -1506,6 +1511,7 @@ export function StreamsSidebarSection({
         // Handle direct URL scrapers (Comet/MediaFusion)
         if (candidate.directUrl) {
           const urlFilename = candidate.directUrl.split('/').pop()?.split('?')[0]
+          if (epochStale()) return
           nextEpUrlRef.current = {
             url: candidate.directUrl,
             filename: urlFilename,
@@ -1521,6 +1527,7 @@ export function StreamsSidebarSection({
           const added = await queueMagnetForPlayback(magnet)
           const nextLink = await pollTorrentBackground(added.id, targetSeason, targetEpisode)
           if (nextLink) {
+            if (epochStale()) return
             nextEpUrlRef.current = {
               url: nextLink.url,
               filename: nextLink.filename,
@@ -2101,6 +2108,7 @@ export function StreamsSidebarSection({
   }, [mediaContextKey])
 
   function resetNextEpisodeState() {
+    nextEpPreloadEpochRef.current += 1
     if (nextEpOutroAutoplayTimer.current !== null) {
       window.clearTimeout(nextEpOutroAutoplayTimer.current)
       nextEpOutroAutoplayTimer.current = null
@@ -2136,6 +2144,7 @@ export function StreamsSidebarSection({
 
   function resetStep() {
     cancelPlayAttempt()
+    resetNextEpisodeState()
     stopPolling()
     setStep({ type: 'idle' })
     setPlayerHideStartSplash(false)
@@ -2472,13 +2481,6 @@ export function StreamsSidebarSection({
       nextEpCardShown.current = true
       nextEpDismissedRef.current = false
       setNextEpCard(cardInfo)
-      if (getAutoPlayNextEpisode() && nextEpOutroAutoplayTimer.current === null) {
-        nextEpOutroAutoplayTimer.current = window.setTimeout(() => {
-          nextEpOutroAutoplayTimer.current = null
-          if (nextEpDismissedRef.current) return
-          void handlePlayNextEpisode(cardInfo)
-        }, 5200)
-      }
     }
 
     if (nextEpPreloadStarted.current) {
@@ -2499,6 +2501,7 @@ export function StreamsSidebarSection({
     episodeTitle: string
     stillUrl: string | null
   }) {
+    if (nextEpDismissedRef.current) return
     const now = Date.now()
     if (now - nextEpPlayRequestedAtRef.current < 3000) return
     nextEpPlayRequestedAtRef.current = now
@@ -2973,14 +2976,15 @@ export function StreamsSidebarSection({
                 episodeTitle={nextEpCard.episodeTitle}
                 stillUrl={nextEpCard.stillUrl}
                 urlReady={nextEpUrlReady}
+                autoPlaySeconds={getAutoPlayNextEpisode() ? 5 : null}
                 allowManualPlayWhenNotReady
                 onDismiss={() => {
+                  // Cancel means cancel: every armed trigger dies here, and
+                  // the dismissed flag survives the reset so late pollers
+                  // can't re-fire playback.
+                  cancelPlayAttempt()
+                  resetNextEpisodeState()
                   nextEpDismissedRef.current = true
-                  if (nextEpOutroAutoplayTimer.current !== null) {
-                    window.clearTimeout(nextEpOutroAutoplayTimer.current)
-                    nextEpOutroAutoplayTimer.current = null
-                  }
-                  setNextEpCard(null)
                   nextEpCardShown.current = true
                 }}
                 onPlayNow={() => void handlePlayNextEpisode()}

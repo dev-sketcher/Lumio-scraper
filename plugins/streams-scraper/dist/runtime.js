@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-61xpqo/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-61xpqo/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-61xpqo/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-61xpqo/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164284,6 +164284,20 @@
       openInExternalPrefix: "Play in",
       openInExternalPlayer: "Open in external player",
       externalPlayerApp: "External player",
+      externalPlayerPick: "Choose\u2026",
+      licensesTitle: "Licenses",
+      appUpdateTitle: "App update",
+      appUpdateDesc: "Check if a newer Lumio version is available.",
+      appUpdateCheck: "Check for update",
+      appUpdateCheckFailed: "Could not fetch update information",
+      appUpdateAvailable: "Update available:",
+      appUpdateCurrent: "current",
+      appUpdateUpToDate: "You are on the latest version",
+      appUpdateInstall: "Download & install",
+      appUpdateDmgOpened: "The installer was downloaded and opened \u2014 drag Lumio to Applications.",
+      appUpdateBrowserStarted: "The download started in the browser \u2014 open the APK to install.",
+      licensesDesc: "Open-source components and services Lumio is built on.",
+      licensesIntro: "Lumio bundles the following open-source software. GPL-licensed components include a pointer to their source code.",
       externalPlayerAppDesc: 'App used by "Play in \u2026" (macOS app name, e.g. VLC or IINA). Android shows the system app chooser.',
       preparingDownload: "Preparing download...",
       downloadComplete: "Download complete",
@@ -164781,6 +164795,14 @@
       nightModeMenuLabel: "Night mode",
       nightModeMenuMild: "Mild",
       nightModeMenuStrong: "Strong",
+      onboardingIntegrationsEyebrow: "Integrations",
+      onboardingIntegrationsTitle: "Make Lumio even better",
+      onboardingIntegrationsDesc: "Optional connections that enhance the experience \u2014 nothing here is required. Everything is configured later under Settings \u2192 Integrations.",
+      onboardingIntTrakt: "Sync watched history and watchlists. Sign in with a code from the settings.",
+      onboardingIntSpotify: "Soundtrack playback on detail pages. Create a free app for client ID/secret.",
+      onboardingIntGroq: "AI search. Create a free API key.",
+      onboardingIntOpenSubtitles: "Subtitles work out of the box \u2014 an account only helps with rate limits.",
+      onboardingIntegrationsHint: "Tap a card to open its site. Add your keys under Settings \u2192 Integrations whenever you like.",
       defaultSubtitleLanguage: "Default subtitles language",
       defaultSubtitleLanguageDesc: "Selected automatically when subtitles are available.",
       fallbackSubtitleLanguage: "Fallback subtitles language",
@@ -165429,6 +165451,20 @@
       openInExternalPrefix: "Spela i",
       openInExternalPlayer: "\xD6ppna i extern spelare",
       externalPlayerApp: "Extern spelare",
+      externalPlayerPick: "V\xE4lj\u2026",
+      licensesTitle: "Licenser",
+      appUpdateTitle: "Appuppdatering",
+      appUpdateDesc: "Kolla om en nyare Lumio-version finns.",
+      appUpdateCheck: "S\xF6k uppdatering",
+      appUpdateCheckFailed: "Kunde inte h\xE4mta uppdateringsinformation",
+      appUpdateAvailable: "Uppdatering finns:",
+      appUpdateCurrent: "nuvarande",
+      appUpdateUpToDate: "Du har senaste versionen",
+      appUpdateInstall: "H\xE4mta & installera",
+      appUpdateDmgOpened: "Installeraren laddades ner och \xF6ppnades \u2014 dra Lumio till Program.",
+      appUpdateBrowserStarted: "Nedladdningen startade i webbl\xE4saren \u2014 \xF6ppna APK:n f\xF6r att installera.",
+      licensesDesc: "\xD6ppen k\xE4llkod och tj\xE4nster som Lumio bygger p\xE5.",
+      licensesIntro: "Lumio buntar f\xF6ljande programvara med \xF6ppen k\xE4llkod. GPL-licensierade komponenter har h\xE4nvisning till k\xE4llkoden.",
       externalPlayerAppDesc: 'App som "Spela i \u2026" anv\xE4nder (macOS-appnamn, t.ex. VLC eller IINA). Android visar systemets appv\xE4ljare.',
       preparingDownload: "F\xF6rbereder nedladdning...",
       downloadComplete: "Nedladdning klar",
@@ -165926,6 +165962,14 @@
       nightModeMenuLabel: "Nattl\xE4ge",
       nightModeMenuMild: "Mild",
       nightModeMenuStrong: "Stark",
+      onboardingIntegrationsEyebrow: "Integrationer",
+      onboardingIntegrationsTitle: "G\xF6r Lumio \xE4nnu b\xE4ttre",
+      onboardingIntegrationsDesc: "Valfria kopplingar som f\xF6rb\xE4ttrar upplevelsen \u2014 inget h\xE4r \xE4r n\xF6dv\xE4ndigt. Allt st\xE4lls in senare under Inst\xE4llningar \u2192 Integrationer.",
+      onboardingIntTrakt: "Synka sedda titlar och bevakningslistor. Logga in med en kod fr\xE5n inst\xE4llningarna.",
+      onboardingIntSpotify: "Soundtrack-uppspelning p\xE5 detaljsidor. Skapa en gratis app f\xF6r client ID/secret.",
+      onboardingIntGroq: "AI-s\xF6kning. Skapa en gratis API-nyckel.",
+      onboardingIntOpenSubtitles: "Undertexter fungerar direkt \u2014 ett konto hj\xE4lper bara mot kvotgr\xE4nser.",
+      onboardingIntegrationsHint: "Tryck p\xE5 ett kort f\xF6r att \xF6ppna dess sida. L\xE4gg in nycklarna under Inst\xE4llningar \u2192 Integrationer n\xE4r du vill.",
       defaultSubtitleLanguage: "Standard spr\xE5k f\xF6r textning",
       defaultSubtitleLanguageDesc: "V\xE4ljs automatiskt n\xE4r undertexter finns tillg\xE4ngliga.",
       fallbackSubtitleLanguage: "Sekund\xE4rt spr\xE5k f\xF6r textning",
@@ -170043,7 +170087,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-61xpqo/auth-capabilities-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -170125,7 +170169,9 @@
   var isDesktopTauriEnv = isTauriEnv && !(typeof navigator !== "undefined" && /android/i.test(navigator.userAgent));
   async function openMpvPlayer(args) {
     const url = await resolvePlayableStreamUrl(args.url).catch(() => args.url);
-    return invoke("mpv_open", { args: { ...args, url } });
+    if (args.shouldAbort?.()) return;
+    const { shouldAbort: _ignored, ...rest } = args;
+    return invoke("mpv_open", { args: { ...rest, url } });
   }
   async function closeMpvPlayer() {
     return invoke("mpv_close");
@@ -174140,6 +174186,7 @@ ${cue.text}
   var NEEDS_PROXY = /\.(mkv|avi|flv|wmv|ts|m2ts|mpg|mpeg|divx|ogv|rmvb)(\?|$)/i;
   var NEEDS_PROXY_AUDIO = /\b(DV|DoVi|Dolby[._-]Vision|DDP|EAC3|Atmos|TrueHD)\b/i;
   function needsProxyForSource(url, filename, forceProxy) {
+    if (isTauriEnv && !isDesktopTauriEnv) return true;
     const nameToCheck = filename ?? url;
     return Boolean(forceProxy || NEEDS_PROXY.test(nameToCheck) || NEEDS_PROXY_AUDIO.test(nameToCheck));
   }
@@ -175310,19 +175357,24 @@ ${cue.text}
       mpv.resetPlaybackRestarted();
       mpv.resetFirstFrameRendered();
       mpv.resetLoadFailed();
+      let openPromise;
       void closeMpvPlayer().catch(() => {
       }).then(() => {
         if (cancelled) return;
         syncPlayerBounds();
-        return openMpvPlayer({
+        openPromise = openMpvPlayer({
           url,
           start: initialTime ?? 0,
-          audioLang: getDefaultAudioLanguage() || void 0
+          audioLang: getDefaultAudioLanguage() || void 0,
+          shouldAbort: () => cancelled
         });
+        return openPromise;
       });
       return () => {
         cancelled = true;
-        void closeMpvPlayer();
+        const pending = openPromise;
+        void (pending ? pending.catch(() => {
+        }).then(() => closeMpvPlayer()) : closeMpvPlayer());
         const v = airplayVideoRef.current;
         if (v) {
           v.pause();
@@ -179458,6 +179510,7 @@ ${cue.text}
     const nextEpArmedRef = useRef(false);
     const nextEpOutroAutoplayTimer = useRef(null);
     const nextEpDismissedRef = useRef(false);
+    const nextEpPreloadEpochRef = useRef(0);
     const nextEpPlayRequestedAtRef = useRef(0);
     const nextEpTransitionRef = useRef(false);
     const nextEpAutoplayPendingRef = useRef(false);
@@ -180239,6 +180292,8 @@ ${cue.text}
       }
     }
     async function preloadNextEpisode() {
+      const epoch = nextEpPreloadEpochRef.current;
+      const epochStale = () => nextEpPreloadEpochRef.current !== epoch;
       if (nextEpPreloadStarted.current) return;
       nextEpPreloadStarted.current = true;
       if (!selectedSeason || !selectedEpisode || !effectiveImdbId) return;
@@ -180340,6 +180395,7 @@ ${cue.text}
           for (const candidate of candidates2) {
             if (candidate.directUrl) {
               const urlFilename = candidate.directUrl.split("/").pop()?.split("?")[0];
+              if (epochStale()) return;
               nextEpUrlRef.current = {
                 url: candidate.directUrl,
                 filename: filenameForPlayback(urlFilename, candidate.title),
@@ -180353,6 +180409,7 @@ ${cue.text}
               const added = await queueMagnetForPlayback(magnet);
               const nextLink = await pollTorrentBackground(added.id, targetSeason, targetEpisode);
               if (nextLink) {
+                if (epochStale()) return;
                 nextEpUrlRef.current = {
                   url: nextLink.url,
                   filename: nextLink.filename,
@@ -180382,6 +180439,7 @@ ${cue.text}
         for (const candidate of candidates) {
           if (candidate.directUrl) {
             const urlFilename = candidate.directUrl.split("/").pop()?.split("?")[0];
+            if (epochStale()) return;
             nextEpUrlRef.current = {
               url: candidate.directUrl,
               filename: urlFilename,
@@ -180395,6 +180453,7 @@ ${cue.text}
             const added = await queueMagnetForPlayback(magnet);
             const nextLink = await pollTorrentBackground(added.id, targetSeason, targetEpisode);
             if (nextLink) {
+              if (epochStale()) return;
               nextEpUrlRef.current = {
                 url: nextLink.url,
                 filename: nextLink.filename,
@@ -180900,6 +180959,7 @@ ${cue.text}
       resetNextEpisodeState();
     }, [mediaContextKey]);
     function resetNextEpisodeState() {
+      nextEpPreloadEpochRef.current += 1;
       if (nextEpOutroAutoplayTimer.current !== null) {
         window.clearTimeout(nextEpOutroAutoplayTimer.current);
         nextEpOutroAutoplayTimer.current = null;
@@ -180930,6 +180990,7 @@ ${cue.text}
     }
     function resetStep() {
       cancelPlayAttempt();
+      resetNextEpisodeState();
       stopPolling();
       setStep({ type: "idle" });
       setPlayerHideStartSplash(false);
@@ -181175,13 +181236,6 @@ ${cue.text}
         nextEpCardShown.current = true;
         nextEpDismissedRef.current = false;
         setNextEpCard(cardInfo);
-        if (getAutoPlayNextEpisode() && nextEpOutroAutoplayTimer.current === null) {
-          nextEpOutroAutoplayTimer.current = window.setTimeout(() => {
-            nextEpOutroAutoplayTimer.current = null;
-            if (nextEpDismissedRef.current) return;
-            void handlePlayNextEpisode(cardInfo);
-          }, 5200);
-        }
       };
       if (nextEpPreloadStarted.current) {
         void tryShow();
@@ -181193,6 +181247,7 @@ ${cue.text}
       void tryShow();
     }
     async function handlePlayNextEpisode(cardOverride) {
+      if (nextEpDismissedRef.current) return;
       const now3 = Date.now();
       if (now3 - nextEpPlayRequestedAtRef.current < 3e3) return;
       nextEpPlayRequestedAtRef.current = now3;
@@ -181588,14 +181643,12 @@ ${cue.text}
               episodeTitle: nextEpCard.episodeTitle,
               stillUrl: nextEpCard.stillUrl,
               urlReady: nextEpUrlReady,
+              autoPlaySeconds: getAutoPlayNextEpisode() ? 5 : null,
               allowManualPlayWhenNotReady: true,
               onDismiss: () => {
+                cancelPlayAttempt();
+                resetNextEpisodeState();
                 nextEpDismissedRef.current = true;
-                if (nextEpOutroAutoplayTimer.current !== null) {
-                  window.clearTimeout(nextEpOutroAutoplayTimer.current);
-                  nextEpOutroAutoplayTimer.current = null;
-                }
-                setNextEpCard(null);
                 nextEpCardShown.current = true;
               },
               onPlayNow: () => void handlePlayNextEpisode()
@@ -181755,7 +181808,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-hZqUc3/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-61xpqo/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

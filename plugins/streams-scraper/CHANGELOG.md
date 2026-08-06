@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.68
+
+- Cancel on the next-episode card disarms everything: the parallel outro
+  timer is gone (the card owns the countdown, and only when auto-play next
+  is enabled), dismissed state blocks late pollers, and the splash cancel
+  resets next-episode state. Fixes the episode that kept starting - even
+  invisibly from the home screen - after pressing cancel.
+
+
 ## 1.0.67
 
 - Android: streams that start to a black screen get an automatic forward
