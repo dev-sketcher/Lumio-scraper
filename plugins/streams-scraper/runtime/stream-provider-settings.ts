@@ -1,4 +1,5 @@
 import {
+  getActiveProfileId,
   getScopedStorageItem,
   removeScopedStorageItem,
   setScopedStorageItem,
@@ -369,13 +370,15 @@ export function clearGlobalDebridApiKey(provider: string): void {
 export function getScraperConfigs(): ScraperConfig[] {
   if (typeof window === 'undefined') return [DEFAULT_TORRENTIO_CONFIG]
   try {
-    // Profile-scoped first, then unscoped for data written before any
-    // profile existed. Reading is all this does: a migration used to copy
-    // the unscoped list into the scoped key whenever the latter was
-    // missing, re-deciding that on every read — so any context whose
-    // storage lacked the key copied a stale list over the profile's own.
-    // Cloning at profile creation covers the real migration.
-    const raw = getScopedStorageItem(CONFIGS_KEY) ?? localStorage.getItem(CONFIGS_KEY)
+    // The unscoped key holds data from before any profile existed, so it is
+    // only a fallback while no profile is active. Reading it under a profile
+    // resurrects that older list — which is what made a removed scraper
+    // reappear: the removal was stored on the profile, then a read fell
+    // through to the pre-profile copy and showed it again. Profile creation
+    // clones storage into the new namespace, so there is nothing to inherit
+    // here once one is active.
+    const scoped = getScopedStorageItem(CONFIGS_KEY)
+    const raw = scoped ?? (getActiveProfileId() ? null : localStorage.getItem(CONFIGS_KEY))
     if (!raw) return [DEFAULT_TORRENTIO_CONFIG]
     const parsed = JSON.parse(raw) as ScraperConfig[]
     // torrentsdb is retired: its playback URLs 429 even for "cached" streams,
