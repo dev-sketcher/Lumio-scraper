@@ -1,5 +1,4 @@
 import {
-  getProfileStorageKey,
   getScopedStorageItem,
   removeScopedStorageItem,
   setScopedStorageItem,
@@ -369,9 +368,13 @@ export function clearGlobalDebridApiKey(provider: string): void {
 
 export function getScraperConfigs(): ScraperConfig[] {
   if (typeof window === 'undefined') return [DEFAULT_TORRENTIO_CONFIG]
-  migrateScraperSettingsIfNeeded()
   try {
-    // Try profile-scoped key first, then fall back to unscoped (pre-profile data)
+    // Profile-scoped first, then unscoped for data written before any
+    // profile existed. Reading is all this does: a migration used to copy
+    // the unscoped list into the scoped key whenever the latter was
+    // missing, re-deciding that on every read — so any context whose
+    // storage lacked the key copied a stale list over the profile's own.
+    // Cloning at profile creation covers the real migration.
     const raw = getScopedStorageItem(CONFIGS_KEY) ?? localStorage.getItem(CONFIGS_KEY)
     if (!raw) return [DEFAULT_TORRENTIO_CONFIG]
     const parsed = JSON.parse(raw) as ScraperConfig[]
@@ -386,32 +389,7 @@ export function getScraperConfigs(): ScraperConfig[] {
 }
 
 export function setScraperConfigs(configs: ScraperConfig[]): void {
-  // TEMPORARY DIAGNOSTIC: name the caller and the namespace being written.
-  try {
-    const who = new Error().stack?.split('\n').slice(1, 7).join(' | ') ?? '?'
-    void fetch('/api/debug-log', {
-      method: 'POST',
-      body: `scrapercfg key=${getProfileStorageKey(CONFIGS_KEY)} `
-        + `list=[${configs.map((c) => c.preset).join(',')}] <- ${who}`,
-    })
-  } catch {
-    // diagnostics must never block the write
-  }
   setScopedStorageItem(CONFIGS_KEY, JSON.stringify(configs))
-}
-
-// ── Migration from old single-scraper format ──────────────────────────────
-
-function migrateScraperSettingsIfNeeded(): void {
-  if (getScopedStorageItem(CONFIGS_KEY)) return
-  const unscopedConfigs = localStorage.getItem(CONFIGS_KEY)
-  if (unscopedConfigs) {
-    setScopedStorageItem(CONFIGS_KEY, unscopedConfigs)
-    return
-  }
-  // Old format used stream_scraper_url / stream_scraper_type.
-  // Migrate to Torrentio with defaults; don't attempt to parse the old URL.
-  setScopedStorageItem(CONFIGS_KEY, JSON.stringify([DEFAULT_TORRENTIO_CONFIG]))
 }
 
 function normalizeScraperConfig(config: ScraperConfig): ScraperConfig {
