@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.80
+
+- Diagnostic build: logs what writes the scraper list. Removed once fixed.
+
 ## 1.0.79
 
 - Profile-scoped storage now goes through the host SDK instead of a copy
