@@ -1,4 +1,9 @@
-import { getScopedStorageItem, removeScopedStorageItem, setScopedStorageItem } from '@/lib/profile-storage'
+import {
+  getProfileStorageKey,
+  getScopedStorageItem,
+  removeScopedStorageItem,
+  setScopedStorageItem,
+} from '@/lib/profile-storage'
 
 const KEY_URL = 'stream_scraper_url'
 const KEY_TYPE = 'stream_scraper_type'
@@ -381,6 +386,17 @@ export function getScraperConfigs(): ScraperConfig[] {
 }
 
 export function setScraperConfigs(configs: ScraperConfig[]): void {
+  // TEMPORARY DIAGNOSTIC: name the caller and the namespace being written.
+  try {
+    const who = new Error().stack?.split('\n').slice(1, 7).join(' | ') ?? '?'
+    void fetch('/api/debug-log', {
+      method: 'POST',
+      body: `scrapercfg key=${getProfileStorageKey(CONFIGS_KEY)} `
+        + `list=[${configs.map((c) => c.preset).join(',')}] <- ${who}`,
+    })
+  } catch {
+    // diagnostics must never block the write
+  }
   setScopedStorageItem(CONFIGS_KEY, JSON.stringify(configs))
 }
 
