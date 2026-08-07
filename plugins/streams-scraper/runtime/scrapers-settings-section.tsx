@@ -494,7 +494,12 @@ function ScraperCard({
       const key = getStreamProviderAccessKey(debridProvider)
       setStreamProviderAccessKey(debridProvider, key)
       }
-      setStreamProviderConfigs(getStreamProviderConfigs())
+      // Deliberately no config write here. This used to round-trip the list
+      // through storage — read it, write it straight back — which destroyed
+      // it whenever the read degraded to the default list instead of the
+      // stored one: the default was then saved over the user's scrapers.
+      // Edits already reach storage through onChange, so the card only has
+      // its provider key left to persist.
       setSavedSnapshot(getScraperSnapshot(config))
       setSaveState('saved')
       saveTimerRef.current = setTimeout(() => {

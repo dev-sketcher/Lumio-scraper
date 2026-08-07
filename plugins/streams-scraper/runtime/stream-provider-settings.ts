@@ -379,6 +379,9 @@ export function getScraperConfigs(): ScraperConfig[] {
     // here once one is active.
     const scoped = getScopedStorageItem(CONFIGS_KEY)
     const raw = scoped ?? (getActiveProfileId() ? null : localStorage.getItem(CONFIGS_KEY))
+    // Callers must treat a missing list as "nothing stored yet", never as a
+    // value worth writing back: the default below is a starting point, and
+    // echoing it into storage is what wiped configured scrapers.
     if (!raw) return [DEFAULT_TORRENTIO_CONFIG]
     const parsed = JSON.parse(raw) as ScraperConfig[]
     // torrentsdb is retired: its playback URLs 429 even for "cached" streams,
@@ -392,16 +395,6 @@ export function getScraperConfigs(): ScraperConfig[] {
 }
 
 export function setScraperConfigs(configs: ScraperConfig[]): void {
-  // TEMPORARY DIAGNOSTIC: name the caller writing the list.
-  try {
-    const who = new Error().stack?.split('\n').slice(1, 7).join(' | ') ?? '?'
-    void fetch('/api/debug-log', {
-      method: 'POST',
-      body: `scrapercfg list=[${configs.map((c) => c.preset).join(',')}] <- ${who}`,
-    })
-  } catch {
-    // diagnostics must never block the write
-  }
   setScopedStorageItem(CONFIGS_KEY, JSON.stringify(configs))
 }
 
