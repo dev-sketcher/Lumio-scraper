@@ -3,7 +3,7 @@ import {
   getScopedStorageItem,
   removeScopedStorageItem,
   setScopedStorageItem,
-} from '@/lib/profile-storage'
+} from '@/lib/plugin-sdk'
 
 const KEY_URL = 'stream_scraper_url'
 const KEY_TYPE = 'stream_scraper_type'

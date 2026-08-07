@@ -18,14 +18,15 @@ import type { StreamResult } from '@/app/api/streams/route'
 import type { TvSeason, TvEpisode } from '@/app/api/tv-info/route'
 import { getWatchedForSeries, markSeasonWatched, onWatchedEpisodesChanged, setWatched, toggleWatched } from '@/lib/watched-episodes'
 import { VideoPlayerModal } from '@/components/player/video-player-modal'
-import { getScopedStorageItem, setScopedStorageItem } from '@/lib/profile-storage'
 import { applyStreamFilters, getStreamFilters, DEFAULT_FILTERS } from '@/lib/stream-provider-runtime/stream-filters'
 import { useLang } from '@/lib/i18n'
 import {
   cancelDesktopPlaybackSessions,
   emitDesktopPlaybackTelemetry,
   fetchDesktopApiJson,
+  getScopedStorageItem,
   isPluginDesktopHost,
+  setScopedStorageItem,
   lookupPluginStreams,
   lookupPluginStreamsBatchRanked,
 } from '@/lib/plugin-sdk'

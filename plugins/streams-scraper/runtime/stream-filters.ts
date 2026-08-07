@@ -1,4 +1,4 @@
-import { getScopedStorageItem, setScopedStorageItem } from '@/lib/profile-storage'
+import { getScopedStorageItem, setScopedStorageItem } from '@/lib/plugin-sdk'
 
 const FILTER_KEY = 'stream_provider_filters'
 const LEGACY_FILTER_KEY = 'rd_stream_filters'
