@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.81
+
+- Removes the 1.0.80 diagnostic. The cause was outside this plugin: the app's
+  localStorage had filled to its per-origin cap, so creating a new key failed
+  while rewriting an existing one still worked. Every profile-scoped setting
+  is a new key the first time it is saved, and the failure was swallowed —
+  the value reached the native mirror, so saving looked like it worked and
+  the next read fell back to the default list. Fixed in the app.
+
 ## 1.0.80
 
 - Diagnostic build: logs what writes the scraper list. Removed once fixed.
