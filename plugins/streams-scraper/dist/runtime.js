@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QBb8I2/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QBb8I2/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QBb8I2/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QBb8I2/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164076,7 +164076,7 @@
   // lib/i18n.tsx
   init_react_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QBb8I2/profile-storage-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/profile-storage-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
   var getActiveProfileId = () => sdk.getActiveProfileId();
   var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
@@ -169984,6 +169984,29 @@
     });
   }
 
+  // lib/media-stream/availability-throttle.ts
+  var MIN_INTERVAL_MS = 1500;
+  var nextSlotAt = 0;
+  async function awaitAvailabilitySlot() {
+    const now3 = Date.now();
+    const at = Math.max(now3, nextSlotAt);
+    nextSlotAt = at + MIN_INTERVAL_MS;
+    if (at > now3) {
+      await new Promise((resolve) => setTimeout(resolve, at - now3));
+    }
+  }
+  var RATE_LIMIT_COOLDOWN_MS = 10 * 60 * 1e3;
+  var rateLimitedUntil = 0;
+  function markAvailabilityRateLimited() {
+    rateLimitedUntil = Date.now() + RATE_LIMIT_COOLDOWN_MS;
+  }
+  function availabilityRateLimited() {
+    return Date.now() < rateLimitedUntil;
+  }
+  function isRateLimitNotice(text) {
+    return Boolean(text && /rate.?limit/i.test(text));
+  }
+
   // lib/stream-provider-runtime/stream-provider-url-builder.ts
   function buildScraperUrl(config) {
     switch (config.preset) {
@@ -170232,6 +170255,24 @@
       }
     };
   }
+  function getAvailabilityFallbackContext() {
+    const qualityFilter = buildTorrentioQualityFilter(getStreamFilters());
+    return {
+      streamProviderUrl: DEFAULT_STREAM_PROVIDER_URL,
+      streamProviderType: "torrentio",
+      qualityFilter,
+      streamHeaders: {
+        "x-stream-provider-url": DEFAULT_STREAM_PROVIDER_URL,
+        "x-stream-provider-type": "torrentio",
+        "x-quality-filter": qualityFilter
+      },
+      browserStreamUrl: () => null
+    };
+  }
+  function buildAvailabilityFallbackDirectUrl(imdbId, type, season, episode) {
+    const streamPath = type === "series" && season && episode ? `stream/series/${imdbId}:${season}:${episode}.json` : `stream/movie/${imdbId}.json`;
+    return `${DEFAULT_STREAM_PROVIDER_URL}/${streamPath}`;
+  }
   function buildDirectStreamProviderUrl(imdbId, type, season, episode) {
     const primary = getPrimaryStreamProviderConfig();
     if (!primary) return null;
@@ -170287,15 +170328,17 @@
     }
   }
   async function fetchEpisodeStreamResults(imdbId, season, episode) {
-    const requestContext = getPrimaryStreamProviderRequestContext();
+    const limited = availabilityRateLimited();
+    const requestContext = limited ? getAvailabilityFallbackContext() : getPrimaryStreamProviderRequestContext();
     const params = new URLSearchParams({
       imdbId,
       type: "series",
       season: String(season),
       episode: String(episode)
     });
-    const directUrl = buildDirectStreamProviderUrl(imdbId, "series", String(season), String(episode));
+    const directUrl = limited ? buildAvailabilityFallbackDirectUrl(imdbId, "series", String(season), String(episode)) : buildDirectStreamProviderUrl(imdbId, "series", String(season), String(episode));
     let hadSuccessfulLookup = false;
+    await awaitAvailabilitySlot();
     if (directUrl) {
       try {
         const nativeStreams = await lookupPluginStreams(directUrl, void 0, 2500);
@@ -170316,7 +170359,12 @@
         hadSuccessfulLookup = true;
         return payload.streams ?? [];
       }
-    } catch {
+      if (isRateLimitNotice(payload.error)) {
+        markAvailabilityRateLimited();
+        throw new Error(payload.error);
+      }
+    } catch (error) {
+      if (isRateLimitNotice(error instanceof Error ? error.message : "")) throw error;
     }
     if (!directUrl) return [];
     try {
@@ -170355,6 +170403,8 @@
     }
     return null;
   }
+  var FAILED_CHECK_RETRY_MS = 5 * 60 * 1e3;
+  var failedCheckRetryAt = /* @__PURE__ */ new Map();
   async function checkEpisodeHasStream(imdbId, season, episode) {
     if (typeof window === "undefined" || !imdbId) return null;
     const cacheKey = getCacheKey(imdbId, season, episode);
@@ -170363,6 +170413,8 @@
     if (cached && Date.now() - cached.checkedAt < STREAM_CACHE_TTL_MS) {
       return cached.hasStream;
     }
+    const retryAt = failedCheckRetryAt.get(cacheKey);
+    if (retryAt && Date.now() < retryAt) return null;
     const existing = streamCheckInFlight.get(cacheKey);
     if (existing) return existing;
     const filters = getStreamFilters();
@@ -170386,7 +170438,10 @@
       cache5[cacheKey] = { checkedAt: Date.now(), hasStream };
       writeStreamCache(cache5);
       return hasStream;
-    })().catch(() => null).finally(() => {
+    })().catch(() => {
+      failedCheckRetryAt.set(cacheKey, Date.now() + FAILED_CHECK_RETRY_MS);
+      return null;
+    }).finally(() => {
       streamCheckInFlight.delete(cacheKey);
     });
     streamCheckInFlight.set(cacheKey, request);
@@ -170396,6 +170451,7 @@
   // lib/release-watchlist-feed.ts
   init_plugin_registry();
   var STREAM_CACHE_TTL_MS2 = 30 * 60 * 1e3;
+  var FAILED_CHECK_RETRY_MS2 = 5 * 60 * 1e3;
 
   // components/results/results-loading-indicator.tsx
   init_jsx_runtime_shim();
@@ -170407,7 +170463,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QBb8I2/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -180400,13 +180456,13 @@ ${cue.text}
         await searchStreams(String(selectedSeason.season_number), String(episode.episode_number));
       }
     }
-    const RATE_LIMIT_COOLDOWN_MS = 5 * 60 * 1e3;
+    const RATE_LIMIT_COOLDOWN_MS2 = 5 * 60 * 1e3;
     const scraperRateLimitedUntil = /* @__PURE__ */ new Map();
     function isRateLimitError(message) {
       return /rate.?limit/i.test(message);
     }
     function markScraperRateLimited(configId) {
-      scraperRateLimitedUntil.set(configId, Date.now() + RATE_LIMIT_COOLDOWN_MS);
+      scraperRateLimitedUntil.set(configId, Date.now() + RATE_LIMIT_COOLDOWN_MS2);
     }
     function scraperInCooldown(configId) {
       const until = scraperRateLimitedUntil.get(configId);
@@ -182214,7 +182270,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QBb8I2/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
