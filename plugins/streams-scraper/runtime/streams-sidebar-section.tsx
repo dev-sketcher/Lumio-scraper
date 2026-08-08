@@ -1136,11 +1136,18 @@ export function StreamsSidebarSection({
 
       const apiPromises = fallbackRequests.map(async (req) => {
         const directUrl = `${req.baseUrl}/${streamPath}`
+        // Jackettio queries Jackett indexers live and routinely needs 20-50 s
+        // on a cold search; the ordinary budgets abort it long before it can
+        // answer. Results publish per scraper, so the long wait only delays
+        // jackettio's own rows.
+        const isSlowScraper = req.config.preset === 'jackettio'
+        const nativeLookupTimeoutMs = isSlowScraper ? 50_000 : 3000
+        const apiFetchTimeoutMs = isSlowScraper ? 55_000 : 12_000
 
         // Desktop primary path: native lookup via Tauri command (bypasses both
         // Next.js server DNS and webview fetch/CORS edge-cases).
         try {
-          const nativeList = await lookupPluginStreams(directUrl, req.name, 3000)
+          const nativeList = await lookupPluginStreams(directUrl, req.name, nativeLookupTimeoutMs)
           if (nativeList && nativeList.length > 0) {
             const list = nativeList.map((s) => ({
               ...s,
@@ -1157,7 +1164,7 @@ export function StreamsSidebarSection({
         try {
           const data = await fetchJsonWithTimeout<{ streams?: StreamResult[]; error?: string }>(
             `/api/streams?${params}`,
-            12000,
+            apiFetchTimeoutMs,
             {
               headers: {
                 'x-stream-provider-url': req.baseUrl,
