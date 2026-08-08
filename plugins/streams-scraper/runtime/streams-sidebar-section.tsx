@@ -1015,9 +1015,13 @@ function scraperInCooldown(configId: string): boolean {
 }
 
   async function getStreamProviderRequests(): Promise<ScraperRequest[]> {
-    const configs = getStreamProviderConfigs()
-      .filter((config) => config.enabled)
-      .filter((config) => !scraperInCooldown(config.id))
+    const enabledConfigs = getStreamProviderConfigs().filter((config) => config.enabled)
+    // A cooling scraper sits out so the rate-limit window can close — but
+    // never to the point of an empty search. If every enabled scraper is
+    // cooling, the user's explicit search outranks the pause: try them all
+    // rather than answering "no providers" with providers configured.
+    const activeConfigs = enabledConfigs.filter((config) => !scraperInCooldown(config.id))
+    const configs = activeConfigs.length > 0 ? activeConfigs : enabledConfigs
 
     const requests = await Promise.all(
       configs.map(async (config) => {
