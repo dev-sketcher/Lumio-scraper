@@ -43,12 +43,12 @@ export const SCRAPER_PRESETS: ScraperPreset[] = [
     configUrl: 'https://comet.elfhosted.com',
   },
   {
-    id: 'mediafusion',
-    name: 'MediaFusion',
+    id: 'jackettio',
+    name: 'Jackettio',
     url: '',
     type: 'preconfigured',
     description: 'Snabb scraper med bra träffar. Kräver konfiguration med RD-nyckel.',
-    configUrl: 'https://mediafusion.elfhosted.com',
+    configUrl: 'https://jackettio.elfhosted.com/configure',
   },
 ]
 
@@ -95,7 +95,7 @@ export function loadPresetUrl(id: string): string {
 
 // ── Multi-scraper types ────────────────────────────────────────────────────
 
-export type ScraperPresetId = 'torrentio' | 'torrentsdb' | 'comet' | 'mediafusion' | 'orion' | 'custom'
+export type ScraperPresetId = 'torrentio' | 'torrentsdb' | 'comet' | 'jackettio' | 'orion' | 'custom'
 
 export interface GlobalScraperConfig {
   qualityFilter: string[]   // quality levels to exclude, e.g. ['cam', 'scr']
@@ -139,13 +139,13 @@ export interface CometOptions {
   sortCachedUncachedTogether: boolean
 }
 
-export interface MediaFusionOptions {
+export interface JackettioOptions {
   streamProvider?: string
-  debridProvider: string
-  languages: string[]           // full names e.g. ['Swedish','English']
-  qualityFilter: string[]       // MF inclusion list: 'BluRay/UHD' | 'WEB/HD' | 'DVD/TV/SAT' | 'CAM/Screener' | 'Unknown'
-  maxStreams: number             // mxs, 0 = use default (25)
-  maxSize: number               // GB, 0 = no limit
+  debridProvider: string        // jackettio supports realdebrid | alldebrid (of the app's providers)
+  languages: string[]           // ISO codes e.g. ['sv','en'] -> priotizeLanguages
+  qualityFilter: string[]       // resolutions to EXCLUDE e.g. ['480p','unknown']
+  maxTorrents: number           // 0 = jackettio default (8)
+  hideUncached: boolean
 }
 
 export interface OrionOptions {
@@ -162,12 +162,12 @@ export type ScraperOptions =
   | TorrentioOptions
   | TorrentsDbOptions
   | CometOptions
-  | MediaFusionOptions
+  | JackettioOptions
   | OrionOptions
   | CustomOptions
 
 export interface ScraperConfig {
-  id: string                 // 'torrentio' | 'torrentsdb' | 'comet' | 'mediafusion' | `custom-${string}`
+  id: string                 // 'torrentio' | 'torrentsdb' | 'comet' | 'jackettio' | `custom-${string}`
   preset: ScraperPresetId
   enabled: boolean
   options: ScraperOptions
@@ -192,6 +192,19 @@ const VALID_STREAM_PROVIDERS = new Set([
 function normalizeStreamProvider(provider: string | undefined | null): string {
   const normalized = provider?.trim().toLowerCase() || 'realdebrid'
   return VALID_STREAM_PROVIDERS.has(normalized) ? normalized : 'realdebrid'
+}
+
+/// Jackettio resolves through its own debrid integrations and only speaks
+/// realdebrid/alldebrid of the providers this app stores keys for. Anything
+/// else (torbox, offcloud, …) falls back to realdebrid rather than producing
+/// a config jackettio rejects.
+export const JACKETTIO_STREAM_PROVIDERS = ['realdebrid', 'alldebrid'] as const
+
+function normalizeJackettioProvider(provider: string | undefined | null): string {
+  const normalized = provider?.trim().toLowerCase() || 'realdebrid'
+  return (JACKETTIO_STREAM_PROVIDERS as readonly string[]).includes(normalized)
+    ? normalized
+    : 'realdebrid'
 }
 
 const DEFAULT_TORRENTIO_CONFIG: ScraperConfig = {
@@ -399,6 +412,25 @@ export function setScraperConfigs(configs: ScraperConfig[]): void {
 }
 
 function normalizeScraperConfig(config: ScraperConfig): ScraperConfig {
+  // MediaFusion is retired. A stored config keeps its slot in the list but
+  // becomes a Jackettio entry: the debrid choice carries over where jackettio
+  // supports it, quality/size options do not map and reset to defaults.
+  if ((config.preset as string) === 'mediafusion') {
+    const opts = config.options as { streamProvider?: string; debridProvider?: string }
+    config = {
+      ...config,
+      id: config.id === 'mediafusion' ? 'jackettio' : config.id,
+      preset: 'jackettio',
+      options: {
+        streamProvider: opts.streamProvider ?? opts.debridProvider ?? 'realdebrid',
+        debridProvider: opts.debridProvider ?? 'realdebrid',
+        languages: [],
+        qualityFilter: [],
+        maxTorrents: 0,
+        hideUncached: false,
+      } satisfies JackettioOptions,
+    }
+  }
   switch (config.preset) {
     case 'torrentio': {
       const opts = config.options as Partial<TorrentioOptions>
@@ -443,18 +475,18 @@ function normalizeScraperConfig(config: ScraperConfig): ScraperConfig {
         } satisfies CometOptions,
       }
     }
-    case 'mediafusion': {
-      const opts = config.options as Partial<MediaFusionOptions>
+    case 'jackettio': {
+      const opts = config.options as Partial<JackettioOptions>
       return {
         ...config,
         options: {
-          streamProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
-          debridProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
+          streamProvider: normalizeJackettioProvider(opts.streamProvider ?? opts.debridProvider),
+          debridProvider: normalizeJackettioProvider(opts.streamProvider ?? opts.debridProvider),
           languages: opts.languages ?? [],
-          qualityFilter: opts.qualityFilter ?? ['BluRay/UHD', 'WEB/HD', 'DVD/TV/SAT', 'CAM/Screener', 'Unknown'],
-          maxStreams: opts.maxStreams ?? 25,
-          maxSize: opts.maxSize ?? 0,
-        } satisfies MediaFusionOptions,
+          qualityFilter: opts.qualityFilter ?? [],
+          maxTorrents: opts.maxTorrents ?? 0,
+          hideUncached: opts.hideUncached ?? false,
+        } satisfies JackettioOptions,
       }
     }
     case 'orion': {
@@ -486,7 +518,7 @@ export type GlobalStreamProviderConfig = GlobalScraperConfig
 export type StreamProviderTorrentioOptions = TorrentioOptions
 export type StreamProviderTorrentsDbOptions = TorrentsDbOptions
 export type StreamProviderCometOptions = CometOptions
-export type StreamProviderMediaFusionOptions = MediaFusionOptions
+export type StreamProviderJackettioOptions = JackettioOptions
 export type StreamProviderOrionOptions = OrionOptions
 export type StreamProviderCustomOptions = CustomOptions
 

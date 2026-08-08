@@ -211,7 +211,7 @@ export function buildAutoplayCandidates(
   }
 
   // Autoplay walks these top-down until one actually plays; 5 gives a dead
-  // first source (common on mediafusion) enough fallbacks without letting a
+  // first source (common on some scrapers) enough fallbacks without letting a
   // fully-broken scraper hold the splash for minutes.
   return candidates.slice(0, 5)
 }

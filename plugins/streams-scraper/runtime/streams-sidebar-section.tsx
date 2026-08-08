@@ -39,7 +39,6 @@ import {
   getStreamProviderAccessKey,
 } from '@/lib/stream-provider-runtime/stream-provider-storage'
 import {
-  buildMediaFusionStreamProviderUrl,
   buildStreamProviderCacheUrl,
   buildStreamProviderUrl,
   getStreamProviderDisplayName,
@@ -684,7 +683,7 @@ export function StreamsSidebarSection({
       // Return the direct URL as-is. Whether it actually plays is verified in
       // the player via onFirstPlay (the autoplay loop moves to the next
       // candidate if playback doesn't start) — a reachability probe was
-      // unreliable for mediafusion redirect URLs and both passed dead ones
+      // unreliable for scraper redirect URLs and both passed dead ones
       // and rejected playable ones.
       const urlFilename = stream.directUrl.split('/').pop()?.split('?')[0]
       return {
@@ -994,11 +993,8 @@ export function StreamsSidebarSection({
 
     const requests = await Promise.all(
       configs.map(async (config) => {
-        let baseUrl = buildStreamProviderUrl(config)
-        if (config.preset === 'mediafusion') {
-          baseUrl = await buildMediaFusionStreamProviderUrl(config)
-        }
-        const cacheUrl = config.preset === 'mediafusion' ? baseUrl : buildStreamProviderCacheUrl(config)
+        const baseUrl = buildStreamProviderUrl(config)
+        const cacheUrl = buildStreamProviderCacheUrl(config)
         return {
           config,
           baseUrl,
@@ -1509,7 +1505,7 @@ export function StreamsSidebarSection({
 
       // Try each candidate in order until one succeeds.
       for (const candidate of candidates) {
-        // Handle direct URL scrapers (Comet/MediaFusion)
+        // Handle direct URL scrapers (Comet/Jackettio)
         if (candidate.directUrl) {
           const urlFilename = candidate.directUrl.split('/').pop()?.split('?')[0]
           if (epochStale()) return
@@ -1620,7 +1616,7 @@ export function StreamsSidebarSection({
       }
     }
 
-    // Pre-configured scrapers (Comet/MediaFusion) may return a direct play URL
+    // Pre-configured scrapers (Comet/Jackettio) may return a direct play URL
     if (selectedStream.directUrl) {
       const urlFilename = filenameForPlayback(selectedStream.directUrl.split('/').pop()?.split('?')[0], selectedStream.title)
       beginPlayerSession({
@@ -1767,7 +1763,7 @@ export function StreamsSidebarSection({
 
     // Try each candidate in the player and advance to the next if playback
     // does not actually start (onFirstPlay). This mirrors a user manually
-    // clicking streams until one plays: some mediafusion/debrid URLs are
+    // clicking streams until one plays: some scraper/debrid URLs are
     // reachable but never play, so committing to the first was the bug.
     // Switching to the next candidate's URL swaps the player source WITHOUT a
     // close (a close would exit the detail view to home), and the "starting…"

@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ctXdzH/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MHhxMc/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ctXdzH/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MHhxMc/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ctXdzH/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MHhxMc/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ctXdzH/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MHhxMc/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164076,7 +164076,7 @@
   // lib/i18n.tsx
   init_react_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ctXdzH/profile-storage-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MHhxMc/profile-storage-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
   var getActiveProfileId = () => sdk.getActiveProfileId();
   var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
@@ -164185,7 +164185,7 @@
       streamProviderAddIndexed: "+ TorrentsDB",
       streamProviderAddStandard: "+ Standard",
       streamProviderAddComet: "+ Comet",
-      streamProviderAddMediaFusion: "+ MediaFusion",
+      streamProviderAddJackettio: "+ Jackettio",
       streamProviderAddCustom: "+ Custom URL",
       useGlobal: "Use global",
       clearFilters: "Clear filters",
@@ -165531,7 +165531,7 @@
       streamProviderAddIndexed: "+ TorrentsDB",
       streamProviderAddStandard: "+ Standard",
       streamProviderAddComet: "+ Comet",
-      streamProviderAddMediaFusion: "+ MediaFusion",
+      streamProviderAddJackettio: "+ Jackettio",
       streamProviderAddCustom: "+ Egen URL",
       useGlobal: "Anv\xE4nd globalt",
       clearFilters: "Rensa filter",
@@ -166849,12 +166849,12 @@
       configUrl: "https://comet.elfhosted.com"
     },
     {
-      id: "mediafusion",
-      name: "MediaFusion",
+      id: "jackettio",
+      name: "Jackettio",
       url: "",
       type: "preconfigured",
-      description: "Snabb scraper med bra tr\xE4ffar. Kr\xE4ver konfiguration med RD-nyckel.",
-      configUrl: "https://mediafusion.elfhosted.com"
+      description: "Jackett-baserad scraper med breda indexers. Kr\xE4ver Real-Debrid eller AllDebrid.",
+      configUrl: "https://jackettio.elfhosted.com/configure"
     }
   ];
   var DEFAULT_SCRAPER_URL = SCRAPER_PRESETS[0].url;
@@ -166875,6 +166875,11 @@
   function normalizeStreamProvider(provider) {
     const normalized = provider?.trim().toLowerCase() || "realdebrid";
     return VALID_STREAM_PROVIDERS.has(normalized) ? normalized : "realdebrid";
+  }
+  var JACKETTIO_STREAM_PROVIDERS = ["realdebrid", "alldebrid"];
+  function normalizeJackettioProvider(provider) {
+    const normalized = provider?.trim().toLowerCase() || "realdebrid";
+    return JACKETTIO_STREAM_PROVIDERS.includes(normalized) ? normalized : "realdebrid";
   }
   var DEFAULT_TORRENTIO_CONFIG = {
     id: "torrentio",
@@ -167009,6 +167014,22 @@
     setScopedStorageItem(CONFIGS_KEY, JSON.stringify(configs));
   }
   function normalizeScraperConfig(config) {
+    if (config.preset === "mediafusion") {
+      const opts = config.options;
+      config = {
+        ...config,
+        id: config.id === "mediafusion" ? "jackettio" : config.id,
+        preset: "jackettio",
+        options: {
+          streamProvider: opts.streamProvider ?? opts.debridProvider ?? "realdebrid",
+          debridProvider: opts.debridProvider ?? "realdebrid",
+          languages: [],
+          qualityFilter: [],
+          maxTorrents: 0,
+          hideUncached: false
+        }
+      };
+    }
     switch (config.preset) {
       case "torrentio": {
         const opts = config.options;
@@ -167053,17 +167074,17 @@
           }
         };
       }
-      case "mediafusion": {
+      case "jackettio": {
         const opts = config.options;
         return {
           ...config,
           options: {
-            streamProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
-            debridProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
+            streamProvider: normalizeJackettioProvider(opts.streamProvider ?? opts.debridProvider),
+            debridProvider: normalizeJackettioProvider(opts.streamProvider ?? opts.debridProvider),
             languages: opts.languages ?? [],
-            qualityFilter: opts.qualityFilter ?? ["BluRay/UHD", "WEB/HD", "DVD/TV/SAT", "CAM/Screener", "Unknown"],
-            maxStreams: opts.maxStreams ?? 25,
-            maxSize: opts.maxSize ?? 0
+            qualityFilter: opts.qualityFilter ?? [],
+            maxTorrents: opts.maxTorrents ?? 0,
+            hideUncached: opts.hideUncached ?? false
           }
         };
       }
@@ -167101,277 +167122,6 @@
   }
   function getScraperStreamProvider(config) {
     return getScraperStreamProviderId(config);
-  }
-
-  // lib/stream-provider-runtime/stream-provider-url-builder.ts
-  function buildScraperUrl(config) {
-    switch (config.preset) {
-      case "torrentio":
-        return buildTorrentioUrl(config.options);
-      case "torrentsdb":
-        return buildTorrentsDbUrl(config.options);
-      case "comet":
-        return buildCometUrl(config.options);
-      case "mediafusion":
-        return "";
-      // MediaFusion URLs require async encryption — use buildMediaFusionEncryptedUrl instead
-      case "orion":
-        return buildOrionUrl(config.options);
-      case "custom":
-        return buildCustomUrl(config.options);
-      default:
-        return "";
-    }
-  }
-  function buildScraperCacheUrl(config) {
-    if (config.preset !== "torrentio") {
-      return buildScraperUrl(config);
-    }
-    return buildTorrentioCacheUrl(config.options);
-  }
-  function resolveScraperAccessKey(config) {
-    switch (config.preset) {
-      case "torrentio": {
-        const opts = config.options;
-        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
-      }
-      case "torrentsdb": {
-        const opts = config.options;
-        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
-      }
-      case "comet": {
-        const opts = config.options;
-        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
-      }
-      case "mediafusion": {
-        const opts = config.options;
-        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
-      }
-      case "orion": {
-        const opts = config.options;
-        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
-      }
-      default:
-        return "";
-    }
-  }
-  function getScraperTypeForApi(config) {
-    return config.preset === "torrentio" ? "torrentio" : "preconfigured";
-  }
-  function getScraperDisplayName(config) {
-    switch (config.preset) {
-      case "torrentio":
-        return "Torrentio";
-      case "torrentsdb":
-        return "TorrentsDB";
-      case "comet":
-        return "Comet";
-      case "mediafusion":
-        return "MediaFusion";
-      case "orion":
-        return "Orion";
-      case "custom": {
-        const opts = config.options;
-        try {
-          return new URL(opts.rawUrl.replace(/^stremio:\/\//, "https://")).hostname;
-        } catch {
-          return "Custom";
-        }
-      }
-      default:
-        return "Scraper";
-    }
-  }
-  function buildTorrentioSegments(options) {
-    const segments = [];
-    if (options.providers.length > 0) segments.push(`providers=${options.providers.join(",")}`);
-    if (options.sort && options.sort !== "quality") segments.push(`sort=${options.sort}`);
-    if (options.languages.length > 0) segments.push(`language=${options.languages.join(",")}`);
-    if (options.qualityFilter.length > 0) segments.push(`qualityfilter=${options.qualityFilter.join(",")}`);
-    if (options.limit > 0) segments.push(`limit=${options.limit}`);
-    return segments;
-  }
-  function buildTorrentioUrl(options) {
-    return buildTorrentioCacheUrl(options);
-  }
-  function buildTorrentioCacheUrl(options) {
-    const streamProvider = (options.streamProvider ?? options.debridProvider ?? "realdebrid").trim().toLowerCase();
-    const accessKey = getStreamProviderAccessKey(streamProvider);
-    const segments = buildTorrentioSegments(options);
-    if (accessKey && streamProvider !== "none") segments.push(`${streamProvider}=${accessKey}`);
-    const base = "https://torrentio.strem.fun";
-    return segments.length > 0 ? `${base}/${segments.join("|")}` : base;
-  }
-  function buildTorrentsDbUrl(options) {
-    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
-    const accessKey = getStreamProviderAccessKey(streamProvider);
-    const cfg = {};
-    if (accessKey && streamProvider !== "none") cfg[streamProvider] = accessKey;
-    const b64 = btoa(JSON.stringify(cfg));
-    return `https://torrentsdb.com/${b64}`;
-  }
-  var COMET_RESOLUTION_MAP = {
-    "240p": "r240p",
-    "360p": "r360p",
-    "480p": "r480p",
-    "576p": "r576p",
-    "720p": "r720p",
-    "1080p": "r1080p",
-    "1440p": "r1440p",
-    "2160p": "r2160p",
-    "unknown": "unknown"
-  };
-  function buildCometUrl(options) {
-    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
-    const accessKey = getStreamProviderAccessKey(streamProvider);
-    const resolutions = {};
-    for (const q of options.qualityFilter) {
-      const key = COMET_RESOLUTION_MAP[q];
-      if (key) resolutions[key] = false;
-    }
-    const cfg = {
-      debridServices: accessKey && streamProvider !== "none" ? [{ service: streamProvider, apiKey: accessKey }] : [],
-      enableTorrent: !accessKey || streamProvider === "none",
-      deduplicateStreams: false,
-      scrapeDebridAccountTorrents: false,
-      maxResultsPerResolution: options.maxResults,
-      maxSize: options.maxSize > 0 ? options.maxSize * 1024 * 1024 * 1024 : 0,
-      cachedOnly: options.cachedOnly,
-      sortCachedUncachedTogether: options.sortCachedUncachedTogether,
-      removeTrash: true,
-      debridStreamProxyPassword: "",
-      resultFormat: ["all"],
-      resolutions,
-      languages: {
-        required: [],
-        allowed: [],
-        exclude: [],
-        preferred: options.languages
-      },
-      options: {
-        remove_ranks_under: -1e10,
-        allow_english_in_languages: false,
-        remove_unknown_languages: false
-      }
-    };
-    return `https://comet.elfhosted.com/${btoa(JSON.stringify(cfg))}`;
-  }
-  var MF_QUALITY_CATEGORIES = ["BluRay/UHD", "WEB/HD", "DVD/TV/SAT", "CAM/Screener", "Unknown"];
-  function buildMediaFusionUserData(options) {
-    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
-    const accessKey = getStreamProviderAccessKey(streamProvider);
-    const LANG_MAP = {
-      en: "English",
-      sv: "Swedish",
-      no: "Norwegian",
-      da: "Danish",
-      fi: "Finnish",
-      de: "German",
-      fr: "French",
-      es: "Spanish",
-      it: "Italian",
-      pt: "Portuguese",
-      nl: "Dutch",
-      pl: "Polish",
-      ru: "Russian",
-      zh: "Chinese",
-      ja: "Japanese",
-      ko: "Korean",
-      ar: "Arabic",
-      hi: "Hindi",
-      tr: "Turkish",
-      uk: "Ukrainian",
-      cs: "Czech",
-      hu: "Hungarian",
-      ro: "Romanian",
-      bg: "Bulgarian",
-      sr: "Serbian",
-      hr: "Croatian",
-      el: "Greek",
-      he: "Hebrew",
-      vi: "Vietnamese",
-      id: "Indonesian",
-      ms: "Malay",
-      th: "Thai"
-    };
-    const mappedLanguages = options.languages.map((l) => LANG_MAP[l] ?? null).filter(Boolean);
-    const userData = {};
-    if (accessKey && streamProvider !== "none") {
-      userData.sps = [{ sv: streamProvider, tk: accessKey }];
-    }
-    if (mappedLanguages.length > 0) {
-      userData.ls = mappedLanguages;
-    }
-    if (options.qualityFilter.length > 0 && options.qualityFilter.length < MF_QUALITY_CATEGORIES.length) {
-      userData.qf = options.qualityFilter;
-    }
-    if (options.maxStreams > 0) {
-      userData.mspr = options.maxStreams;
-    }
-    if (options.maxSize > 0) {
-      userData.ms = options.maxSize * 1024 * 1024 * 1024;
-    }
-    return userData;
-  }
-  var mediaFusionUrlCache = /* @__PURE__ */ new Map();
-  async function buildMediaFusionEncryptedUrl(config) {
-    const userData = buildMediaFusionUserData(config.options);
-    const cacheKey = JSON.stringify(userData);
-    const hit = mediaFusionUrlCache.get(cacheKey);
-    if (hit) return hit;
-    try {
-      const res = await fetch("/api/mediafusion-url", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: cacheKey
-      });
-      if (!res.ok) {
-        const errText = await res.text().catch(() => "(unreadable)");
-        console.error("[MediaFusion] encrypt-user-data failed:", res.status, errText);
-        return "";
-      }
-      const data = await res.json();
-      if (!data.encrypted_str) {
-        console.error("[MediaFusion] no encrypted_str in response:", data);
-        return "";
-      }
-      const url = `https://mediafusion.elfhosted.com/${data.encrypted_str}`;
-      mediaFusionUrlCache.set(cacheKey, url);
-      return url;
-    } catch (err) {
-      console.error("[MediaFusion] encrypt URL error:", err);
-      return "";
-    }
-  }
-  function buildOrionUrl(options) {
-    if (!options.orionKey.trim()) return "";
-    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
-    const rdToken = getStreamProviderAccessKey(streamProvider);
-    const params = [];
-    if (rdToken && streamProvider !== "none") params.push(`${streamProvider}=${rdToken}`);
-    const key = options.orionKey.trim();
-    return params.length > 0 ? `https://addon.orionoid.com/${key}/${params.join("|")}` : `https://addon.orionoid.com/${key}`;
-  }
-  function buildCustomUrl(options) {
-    return options.rawUrl.trim().replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "").replace(/\/$/, "");
-  }
-  function buildStreamProviderUrl(config) {
-    return buildScraperUrl(config);
-  }
-  function buildStreamProviderCacheUrl(config) {
-    return buildScraperCacheUrl(config);
-  }
-  function resolveStreamProviderAccessKey(config) {
-    return resolveScraperAccessKey(config);
-  }
-  function getStreamProviderTypeForApi(config) {
-    return getScraperTypeForApi(config);
-  }
-  function getStreamProviderDisplayName(config) {
-    return getScraperDisplayName(config);
-  }
-  async function buildMediaFusionStreamProviderUrl(config) {
-    return buildMediaFusionEncryptedUrl(config);
   }
 
   // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
@@ -167420,6 +167170,7 @@
     }
   }
   var COMET_QUALITY_OPTIONS = ["240p", "360p", "480p", "576p", "720p", "1080p", "1440p", "2160p", "unknown"];
+  var JACKETTIO_QUALITY_OPTIONS = ["360p", "480p", "720p", "1080p", "2160p", "unknown"];
   var TORRENTIO_LANGUAGE_OPTIONS = [
     { id: "swedish", label: "Svenska" },
     { id: "english", label: "English" },
@@ -167546,7 +167297,7 @@
     torrentio: "Torrentio",
     torrentsdb: "TorrentsDB",
     comet: "Comet",
-    mediafusion: "MediaFusion",
+    jackettio: "Jackettio",
     orion: "Orion",
     custom: "Custom URL"
   };
@@ -168075,7 +167826,7 @@
             ] })
           ] });
         })(),
-        config.preset === "mediafusion" && (() => {
+        config.preset === "jackettio" && (() => {
           const opts = config.options;
           return /* @__PURE__ */ jsxs(Fragment2, { children: [
             /* @__PURE__ */ jsx(
@@ -168085,16 +167836,16 @@
                 onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
               }
             ),
+            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: "Jackettio st\xF6djer Real-Debrid och AllDebrid \u2014 andra val faller tillbaka till Real-Debrid." }),
             /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: "Quality categories (include)" }),
-              /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: "Select which categories to include. All = no filter." }),
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
               /* @__PURE__ */ jsx(
                 MultiSelectDropdown,
                 {
                   value: opts.qualityFilter,
                   onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: "All categories",
-                  options: MF_QUALITY_CATEGORIES.map((q) => ({ id: q, label: q }))
+                  placeholder: t("streamProviderSelectQualities"),
+                  options: JACKETTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))
                 }
               )
             ] }),
@@ -168112,28 +167863,27 @@
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
               /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Max streams (0 = default 25)" }),
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Max torrents (0 = default 8)" }),
                 /* @__PURE__ */ jsx(
                   import_react56.Input,
                   {
                     type: "number",
-                    value: String(opts.maxStreams),
-                    onValueChange: (v) => updateOptions({ maxStreams: Math.max(0, Number(v) || 0) }),
+                    value: String(opts.maxTorrents),
+                    onValueChange: (v) => updateOptions({ maxTorrents: Math.max(0, Number(v) || 0) }),
                     radius: "lg",
                     classNames: heroInputClassNames
                   }
                 )
               ] }),
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Max size (GB, 0 = no limit)" }),
+              /* @__PURE__ */ jsxs("div", { className: "flex items-end justify-between gap-3 pb-1", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Endast cachade" }),
                 /* @__PURE__ */ jsx(
-                  import_react56.Input,
+                  import_react56.Switch,
                   {
-                    type: "number",
-                    value: String(opts.maxSize),
-                    onValueChange: (v) => updateOptions({ maxSize: Math.max(0, Number(v) || 0) }),
-                    radius: "lg",
-                    classNames: heroInputClassNames
+                    isSelected: opts.hideUncached,
+                    onValueChange: (v) => updateOptions({ hideUncached: v }),
+                    size: "sm",
+                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
                   }
                 )
               ] })
@@ -168240,14 +167990,14 @@
           cachedOnly: false,
           sortCachedUncachedTogether: true
         };
-      case "mediafusion":
+      case "jackettio":
         return {
           streamProvider: "realdebrid",
           debridProvider: "realdebrid",
           languages: [],
           qualityFilter: [],
-          maxStreams: 0,
-          maxSize: 0
+          maxTorrents: 0,
+          hideUncached: false
         };
       case "orion":
         return {
@@ -168262,7 +168012,7 @@
   var ADDABLE_PRESETS = [
     "torrentio",
     "comet",
-    "mediafusion",
+    "jackettio",
     "orion",
     "custom"
   ];
@@ -168319,7 +168069,7 @@
           type: "button",
           onClick: () => handleAddPreset(preset),
           className: "rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs text-slate-500 transition hover:border-white/30 hover:text-slate-300",
-          children: preset === "torrentio" ? t("streamProviderAddStandard") : preset === "torrentsdb" ? t("streamProviderAddIndexed") : preset === "comet" ? t("streamProviderAddComet") : preset === "mediafusion" ? t("streamProviderAddMediaFusion") : preset === "orion" ? "+ Orion" : t("streamProviderAddCustom")
+          children: preset === "torrentio" ? t("streamProviderAddStandard") : preset === "torrentsdb" ? t("streamProviderAddIndexed") : preset === "comet" ? t("streamProviderAddComet") : preset === "jackettio" ? t("streamProviderAddJackettio") : preset === "orion" ? "+ Orion" : t("streamProviderAddCustom")
         },
         preset
       )) })
@@ -170234,6 +169984,225 @@
     });
   }
 
+  // lib/stream-provider-runtime/stream-provider-url-builder.ts
+  function buildScraperUrl(config) {
+    switch (config.preset) {
+      case "torrentio":
+        return buildTorrentioUrl(config.options);
+      case "torrentsdb":
+        return buildTorrentsDbUrl(config.options);
+      case "comet":
+        return buildCometUrl(config.options);
+      case "jackettio":
+        return buildJackettioUrl(config.options);
+      case "orion":
+        return buildOrionUrl(config.options);
+      case "custom":
+        return buildCustomUrl(config.options);
+      default:
+        return "";
+    }
+  }
+  function buildScraperCacheUrl(config) {
+    if (config.preset !== "torrentio") {
+      return buildScraperUrl(config);
+    }
+    return buildTorrentioCacheUrl(config.options);
+  }
+  function resolveScraperAccessKey(config) {
+    switch (config.preset) {
+      case "torrentio": {
+        const opts = config.options;
+        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
+      }
+      case "torrentsdb": {
+        const opts = config.options;
+        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
+      }
+      case "comet": {
+        const opts = config.options;
+        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
+      }
+      case "jackettio": {
+        const opts = config.options;
+        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
+      }
+      case "orion": {
+        const opts = config.options;
+        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
+      }
+      default:
+        return "";
+    }
+  }
+  function getScraperTypeForApi(config) {
+    return config.preset === "torrentio" ? "torrentio" : "preconfigured";
+  }
+  function getScraperDisplayName(config) {
+    switch (config.preset) {
+      case "torrentio":
+        return "Torrentio";
+      case "torrentsdb":
+        return "TorrentsDB";
+      case "comet":
+        return "Comet";
+      case "jackettio":
+        return "Jackettio";
+      case "orion":
+        return "Orion";
+      case "custom": {
+        const opts = config.options;
+        try {
+          return new URL(opts.rawUrl.replace(/^stremio:\/\//, "https://")).hostname;
+        } catch {
+          return "Custom";
+        }
+      }
+      default:
+        return "Scraper";
+    }
+  }
+  function buildTorrentioSegments(options) {
+    const segments = [];
+    if (options.providers.length > 0) segments.push(`providers=${options.providers.join(",")}`);
+    if (options.sort && options.sort !== "quality") segments.push(`sort=${options.sort}`);
+    if (options.languages.length > 0) segments.push(`language=${options.languages.join(",")}`);
+    if (options.qualityFilter.length > 0) segments.push(`qualityfilter=${options.qualityFilter.join(",")}`);
+    if (options.limit > 0) segments.push(`limit=${options.limit}`);
+    return segments;
+  }
+  function buildTorrentioUrl(options) {
+    return buildTorrentioCacheUrl(options);
+  }
+  function buildTorrentioCacheUrl(options) {
+    const streamProvider = (options.streamProvider ?? options.debridProvider ?? "realdebrid").trim().toLowerCase();
+    const accessKey = getStreamProviderAccessKey(streamProvider);
+    const segments = buildTorrentioSegments(options);
+    if (accessKey && streamProvider !== "none") segments.push(`${streamProvider}=${accessKey}`);
+    const base = "https://torrentio.strem.fun";
+    return segments.length > 0 ? `${base}/${segments.join("|")}` : base;
+  }
+  function buildTorrentsDbUrl(options) {
+    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
+    const accessKey = getStreamProviderAccessKey(streamProvider);
+    const cfg = {};
+    if (accessKey && streamProvider !== "none") cfg[streamProvider] = accessKey;
+    const b64 = btoa(JSON.stringify(cfg));
+    return `https://torrentsdb.com/${b64}`;
+  }
+  var COMET_RESOLUTION_MAP = {
+    "240p": "r240p",
+    "360p": "r360p",
+    "480p": "r480p",
+    "576p": "r576p",
+    "720p": "r720p",
+    "1080p": "r1080p",
+    "1440p": "r1440p",
+    "2160p": "r2160p",
+    "unknown": "unknown"
+  };
+  function buildCometUrl(options) {
+    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
+    const accessKey = getStreamProviderAccessKey(streamProvider);
+    const resolutions = {};
+    for (const q of options.qualityFilter) {
+      const key = COMET_RESOLUTION_MAP[q];
+      if (key) resolutions[key] = false;
+    }
+    const cfg = {
+      debridServices: accessKey && streamProvider !== "none" ? [{ service: streamProvider, apiKey: accessKey }] : [],
+      enableTorrent: !accessKey || streamProvider === "none",
+      deduplicateStreams: false,
+      scrapeDebridAccountTorrents: false,
+      maxResultsPerResolution: options.maxResults,
+      maxSize: options.maxSize > 0 ? options.maxSize * 1024 * 1024 * 1024 : 0,
+      cachedOnly: options.cachedOnly,
+      sortCachedUncachedTogether: options.sortCachedUncachedTogether,
+      removeTrash: true,
+      debridStreamProxyPassword: "",
+      resultFormat: ["all"],
+      resolutions,
+      languages: {
+        required: [],
+        allowed: [],
+        exclude: [],
+        preferred: options.languages
+      },
+      options: {
+        remove_ranks_under: -1e10,
+        allow_english_in_languages: false,
+        remove_unknown_languages: false
+      }
+    };
+    return `https://comet.elfhosted.com/${btoa(JSON.stringify(cfg))}`;
+  }
+  var JACKETTIO_QUALITY_MAP = {
+    "unknown": 0,
+    "360p": 360,
+    "480p": 480,
+    "720p": 720,
+    "1080p": 1080,
+    "2160p": 2160
+  };
+  function buildJackettioUrl(options) {
+    const streamProvider = (options.streamProvider ?? options.debridProvider ?? "realdebrid").trim().toLowerCase();
+    const accessKey = getStreamProviderAccessKey(streamProvider);
+    if (!accessKey || streamProvider === "none") return "";
+    const excluded = new Set(
+      options.qualityFilter.map((q) => JACKETTIO_QUALITY_MAP[q]).filter((v) => v !== void 0)
+    );
+    const qualities = Object.values(JACKETTIO_QUALITY_MAP).filter((v) => !excluded.has(v));
+    const cfg = {
+      qualities,
+      excludeKeywords: [],
+      maxTorrents: options.maxTorrents > 0 ? options.maxTorrents : 8,
+      priotizeLanguages: options.languages,
+      priotizePackTorrents: 2,
+      forceCacheNextEpisode: false,
+      sortCached: [["quality", true], ["size", true]],
+      sortUncached: [["seeders", true]],
+      hideUncached: options.hideUncached,
+      indexers: ["all"],
+      indexerTimeoutSec: 60,
+      passkey: "",
+      metaLanguage: "",
+      enableMediaFlow: false,
+      mediaflowProxyUrl: "",
+      mediaflowApiPassword: "",
+      mediaflowPublicIp: "",
+      debridId: streamProvider,
+      debridApiKey: accessKey
+    };
+    return `https://jackettio.elfhosted.com/${btoa(JSON.stringify(cfg))}`;
+  }
+  function buildOrionUrl(options) {
+    if (!options.orionKey.trim()) return "";
+    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
+    const rdToken = getStreamProviderAccessKey(streamProvider);
+    const params = [];
+    if (rdToken && streamProvider !== "none") params.push(`${streamProvider}=${rdToken}`);
+    const key = options.orionKey.trim();
+    return params.length > 0 ? `https://addon.orionoid.com/${key}/${params.join("|")}` : `https://addon.orionoid.com/${key}`;
+  }
+  function buildCustomUrl(options) {
+    return options.rawUrl.trim().replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "").replace(/\/$/, "");
+  }
+  function buildStreamProviderUrl(config) {
+    return buildScraperUrl(config);
+  }
+  function buildStreamProviderCacheUrl(config) {
+    return buildScraperCacheUrl(config);
+  }
+  function resolveStreamProviderAccessKey(config) {
+    return resolveScraperAccessKey(config);
+  }
+  function getStreamProviderTypeForApi(config) {
+    return getScraperTypeForApi(config);
+  }
+  function getStreamProviderDisplayName(config) {
+    return getScraperDisplayName(config);
+  }
+
   // lib/stream-provider-runtime/stream-provider-request-context.ts
   var DEFAULT_STREAM_PROVIDER_URL = "https://torrentio.strem.fun";
   function getPrimaryStreamProviderConfig() {
@@ -170438,7 +170407,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ctXdzH/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MHhxMc/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -180435,11 +180404,8 @@ ${cue.text}
       const configs = getStreamProviderConfigs().filter((config) => config.enabled);
       const requests = await Promise.all(
         configs.map(async (config) => {
-          let baseUrl = buildStreamProviderUrl(config);
-          if (config.preset === "mediafusion") {
-            baseUrl = await buildMediaFusionStreamProviderUrl(config);
-          }
-          const cacheUrl = config.preset === "mediafusion" ? baseUrl : buildStreamProviderCacheUrl(config);
+          const baseUrl = buildStreamProviderUrl(config);
+          const cacheUrl = buildStreamProviderCacheUrl(config);
           return {
             config,
             baseUrl,
@@ -182222,7 +182188,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-ctXdzH/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-MHhxMc/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

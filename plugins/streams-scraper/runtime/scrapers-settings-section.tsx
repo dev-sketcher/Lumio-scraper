@@ -10,12 +10,11 @@ import {
   type TorrentioOptions,
   type TorrentsDbOptions,
   type CometOptions,
-  type MediaFusionOptions,
+  type JackettioOptions,
   type OrionOptions,
   type CustomOptions,
   type ScraperPresetId,
 } from '@/lib/stream-provider-runtime/stream-provider-settings'
-import { MF_QUALITY_CATEGORIES } from '@/lib/stream-provider-runtime/stream-provider-url-builder'
 import {
   getStreamProviderAccessKey,
   setStreamProviderAccessKey,
@@ -85,6 +84,7 @@ async function fetchScraperOptionCatalogs(): Promise<ScraperOptionCatalogs | nul
   }
 }
 const COMET_QUALITY_OPTIONS = ['240p', '360p', '480p', '576p', '720p', '1080p', '1440p', '2160p', 'unknown']
+const JACKETTIO_QUALITY_OPTIONS = ['360p', '480p', '720p', '1080p', '2160p', 'unknown']
 
 // Torrentio languages: full lowercase names as used in the URL
 const TORRENTIO_LANGUAGE_OPTIONS = [
@@ -124,7 +124,7 @@ const TORRENTIO_LANGUAGE_OPTIONS = [
   { id: 'latin', label: 'Latina' },
 ]
 
-// ISO-code languages for Comet, TorrentsDB, MediaFusion
+// ISO-code languages for Comet, TorrentsDB, Jackettio
 const ISO_LANGUAGE_OPTIONS = [
   { code: 'sv', label: 'Svenska' },
   { code: 'en', label: 'English' },
@@ -202,7 +202,7 @@ const PRESET_NAMES: Record<ScraperPresetId, string> = {
   torrentio: 'Torrentio',
   torrentsdb: 'TorrentsDB',
   comet: 'Comet',
-  mediafusion: 'MediaFusion',
+  jackettio: 'Jackettio',
   orion: 'Orion',
   custom: 'Custom URL',
 }
@@ -789,23 +789,23 @@ function ScraperCard({
             )
           })()}
 
-          {config.preset === 'mediafusion' && (() => {
-            const opts = config.options as MediaFusionOptions
+          {config.preset === 'jackettio' && (() => {
+            const opts = config.options as JackettioOptions
             return (
               <>
                 <DebridKeyField
                   debridProvider={opts.debridProvider}
                   onProviderChange={(v) => updateOptions({ streamProvider: v, debridProvider: v })}
                 />
+                <p className="text-[11px] text-slate-600">Jackettio stödjer Real-Debrid och AllDebrid — andra val faller tillbaka till Real-Debrid.</p>
 
                 <div className="space-y-2">
-                  <FieldHeader label="Quality categories (include)" />
-                  <p className="text-[11px] text-slate-600">Select which categories to include. All = no filter.</p>
+                  <FieldHeader label={t('streamProviderQualityFilter')} />
                   <MultiSelectDropdown
                     value={opts.qualityFilter}
                     onChange={(v) => updateOptions({ qualityFilter: v })}
-                    placeholder="All categories"
-                    options={MF_QUALITY_CATEGORIES.map((q) => ({ id: q, label: q }))}
+                    placeholder={t('streamProviderSelectQualities')}
+                    options={JACKETTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))}
                   />
                 </div>
 
@@ -821,23 +821,22 @@ function ScraperCard({
 
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <FieldHeader label="Max streams (0 = default 25)" />
+                    <FieldHeader label="Max torrents (0 = default 8)" />
                     <Input
                       type="number"
-                      value={String(opts.maxStreams)}
-                      onValueChange={(v) => updateOptions({ maxStreams: Math.max(0, Number(v) || 0) })}
+                      value={String(opts.maxTorrents)}
+                      onValueChange={(v) => updateOptions({ maxTorrents: Math.max(0, Number(v) || 0) })}
                       radius="lg"
                       classNames={heroInputClassNames}
                     />
                   </div>
-                  <div className="space-y-1.5">
-                    <FieldHeader label="Max size (GB, 0 = no limit)" />
-                    <Input
-                      type="number"
-                      value={String(opts.maxSize)}
-                      onValueChange={(v) => updateOptions({ maxSize: Math.max(0, Number(v) || 0) })}
-                      radius="lg"
-                      classNames={heroInputClassNames}
+                  <div className="flex items-end justify-between gap-3 pb-1">
+                    <FieldHeader label="Endast cachade" />
+                    <Switch
+                      isSelected={opts.hideUncached}
+                      onValueChange={(v) => updateOptions({ hideUncached: v })}
+                      size="sm"
+                      classNames={{ wrapper: 'bg-white/10 group-data-[selected=true]:bg-aurora-500/70' }}
                     />
                   </div>
                 </div>
@@ -955,15 +954,15 @@ function defaultOptions(preset: ScraperPresetId): ScraperConfig['options'] {
         cachedOnly: false,
         sortCachedUncachedTogether: true,
       } satisfies CometOptions
-    case 'mediafusion':
+    case 'jackettio':
       return {
         streamProvider: 'realdebrid',
         debridProvider: 'realdebrid',
         languages: [],
         qualityFilter: [],
-        maxStreams: 0,
-        maxSize: 0,
-      } satisfies MediaFusionOptions
+        maxTorrents: 0,
+        hideUncached: false,
+      } satisfies JackettioOptions
     case 'orion':
       return {
         orionKey: '',
@@ -983,7 +982,7 @@ function defaultOptions(preset: ScraperPresetId): ScraperConfig['options'] {
 const ADDABLE_PRESETS: ScraperPresetId[] = [
   'torrentio',
   'comet',
-  'mediafusion',
+  'jackettio',
   'orion',
   'custom',
 ]
@@ -1065,8 +1064,8 @@ export function ScrapersSettingsSection() {
                   ? t('streamProviderAddIndexed')
                   : preset === 'comet'
                     ? t('streamProviderAddComet')
-                    : preset === 'mediafusion'
-                      ? t('streamProviderAddMediaFusion')
+                    : preset === 'jackettio'
+                      ? t('streamProviderAddJackettio')
                       : preset === 'orion'
                         ? '+ Orion'
                         : t('streamProviderAddCustom')}

@@ -3,7 +3,7 @@ import type {
   TorrentioOptions,
   TorrentsDbOptions,
   CometOptions,
-  MediaFusionOptions,
+  JackettioOptions,
   OrionOptions,
   CustomOptions,
 } from './stream-provider-settings'
@@ -22,8 +22,8 @@ export function buildScraperUrl(config: ScraperConfig): string {
       return buildTorrentsDbUrl(config.options as TorrentsDbOptions)
     case 'comet':
       return buildCometUrl(config.options as CometOptions)
-    case 'mediafusion':
-      return '' // MediaFusion URLs require async encryption — use buildMediaFusionEncryptedUrl instead
+    case 'jackettio':
+      return buildJackettioUrl(config.options as JackettioOptions)
     case 'orion':
       return buildOrionUrl(config.options as OrionOptions)
     case 'custom':
@@ -54,8 +54,8 @@ export function resolveScraperAccessKey(config: ScraperConfig): string {
       const opts = config.options as CometOptions
       return getStreamProviderAccessKey((opts.streamProvider ?? opts.debridProvider)).trim()
     }
-    case 'mediafusion': {
-      const opts = config.options as MediaFusionOptions
+    case 'jackettio': {
+      const opts = config.options as JackettioOptions
       return getStreamProviderAccessKey((opts.streamProvider ?? opts.debridProvider)).trim()
     }
     case 'orion': {
@@ -78,7 +78,7 @@ export function getScraperDisplayName(config: ScraperConfig): string {
     case 'torrentio': return 'Torrentio'
     case 'torrentsdb': return 'TorrentsDB'
     case 'comet': return 'Comet'
-    case 'mediafusion': return 'MediaFusion'
+    case 'jackettio': return 'Jackettio'
     case 'orion': return 'Orion'
     case 'custom': {
       const opts = config.options as CustomOptions
@@ -176,87 +176,50 @@ function buildCometUrl(options: CometOptions): string {
   return `https://comet.elfhosted.com/${btoa(JSON.stringify(cfg))}`
 }
 
-// ── MediaFusion ───────────────────────────────────────────────────────────
+// ── Jackettio ─────────────────────────────────────────────────────────────
 
-// All MF quality categories (inclusion list)
-export const MF_QUALITY_CATEGORIES = ['BluRay/UHD', 'WEB/HD', 'DVD/TV/SAT', 'CAM/Screener', 'Unknown'] as const
-
-function buildMediaFusionUserData(options: MediaFusionOptions): Record<string, unknown> {
-  const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase()
-  const accessKey = getStreamProviderAccessKey(streamProvider)
-
-  // MediaFusion language_sorting (ls) expects full names like "English"
-  const LANG_MAP: Record<string, string> = {
-    en: 'English', sv: 'Swedish', no: 'Norwegian', da: 'Danish', fi: 'Finnish',
-    de: 'German', fr: 'French', es: 'Spanish', it: 'Italian', pt: 'Portuguese',
-    nl: 'Dutch', pl: 'Polish', ru: 'Russian', zh: 'Chinese', ja: 'Japanese',
-    ko: 'Korean', ar: 'Arabic', hi: 'Hindi', tr: 'Turkish', uk: 'Ukrainian',
-    cs: 'Czech', hu: 'Hungarian', ro: 'Romanian', bg: 'Bulgarian', sr: 'Serbian',
-    hr: 'Croatian', el: 'Greek', he: 'Hebrew', vi: 'Vietnamese', id: 'Indonesian',
-    ms: 'Malay', th: 'Thai',
-  }
-  const mappedLanguages = options.languages.map((l) => LANG_MAP[l] ?? null).filter(Boolean) as string[]
-
-  const userData: Record<string, unknown> = {}
-
-  if (accessKey && streamProvider !== 'none') {
-    userData.sps = [{ sv: streamProvider, tk: accessKey }]
-  }
-  if (mappedLanguages.length > 0) {
-    userData.ls = mappedLanguages
-  }
-  // Quality filter: send inclusion list (all MF categories that are selected)
-  if (options.qualityFilter.length > 0 && options.qualityFilter.length < MF_QUALITY_CATEGORIES.length) {
-    userData.qf = options.qualityFilter
-  }
-  // Max streams per resolution
-  if (options.maxStreams > 0) {
-    userData.mspr = options.maxStreams
-  }
-  // Max size in bytes (user sets GB)
-  if (options.maxSize > 0) {
-    userData.ms = options.maxSize * 1024 * 1024 * 1024
-  }
-
-  return userData
+// Resolutions jackettio understands; map from our quality filter labels.
+// Jackettio takes an INCLUSION list of numeric qualities (0 = unknown).
+const JACKETTIO_QUALITY_MAP: Record<string, number> = {
+  'unknown': 0, '360p': 360, '480p': 480, '720p': 720, '1080p': 1080, '2160p': 2160,
 }
 
-/** Module-level cache: userData JSON → encrypted URL */
-const mediaFusionUrlCache = new Map<string, string>()
+function buildJackettioUrl(options: JackettioOptions): string {
+  const streamProvider = (options.streamProvider ?? options.debridProvider ?? 'realdebrid').trim().toLowerCase()
+  const accessKey = getStreamProviderAccessKey(streamProvider)
+  // Jackettio cannot serve streams without a debrid account — an entry
+  // without a key is silently skipped rather than sent to fail upstream.
+  if (!accessKey || streamProvider === 'none') return ''
 
-/**
- * Fetch the encrypted MediaFusion manifest base URL via our API proxy.
- * Returns empty string on failure so the scraper is silently skipped.
- */
-export async function buildMediaFusionEncryptedUrl(config: ScraperConfig): Promise<string> {
-  const userData = buildMediaFusionUserData(config.options as MediaFusionOptions)
-  const cacheKey = JSON.stringify(userData)
-  const hit = mediaFusionUrlCache.get(cacheKey)
-  if (hit) return hit
+  const excluded = new Set(
+    options.qualityFilter
+      .map((q) => JACKETTIO_QUALITY_MAP[q])
+      .filter((v): v is number => v !== undefined),
+  )
+  const qualities = Object.values(JACKETTIO_QUALITY_MAP).filter((v) => !excluded.has(v))
 
-  try {
-    const res = await fetch('/api/mediafusion-url', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: cacheKey,
-    })
-    if (!res.ok) {
-      const errText = await res.text().catch(() => '(unreadable)')
-      console.error('[MediaFusion] encrypt-user-data failed:', res.status, errText)
-      return ''
-    }
-    const data = (await res.json()) as { encrypted_str?: string; status?: string; detail?: unknown }
-    if (!data.encrypted_str) {
-      console.error('[MediaFusion] no encrypted_str in response:', data)
-      return ''
-    }
-    const url = `https://mediafusion.elfhosted.com/${data.encrypted_str}`
-    mediaFusionUrlCache.set(cacheKey, url)
-    return url
-  } catch (err) {
-    console.error('[MediaFusion] encrypt URL error:', err)
-    return ''
+  const cfg = {
+    qualities,
+    excludeKeywords: [],
+    maxTorrents: options.maxTorrents > 0 ? options.maxTorrents : 8,
+    priotizeLanguages: options.languages,
+    priotizePackTorrents: 2,
+    forceCacheNextEpisode: false,
+    sortCached: [['quality', true], ['size', true]],
+    sortUncached: [['seeders', true]],
+    hideUncached: options.hideUncached,
+    indexers: ['all'],
+    indexerTimeoutSec: 60,
+    passkey: '',
+    metaLanguage: '',
+    enableMediaFlow: false,
+    mediaflowProxyUrl: '',
+    mediaflowApiPassword: '',
+    mediaflowPublicIp: '',
+    debridId: streamProvider,
+    debridApiKey: accessKey,
   }
+  return `https://jackettio.elfhosted.com/${btoa(JSON.stringify(cfg))}`
 }
 
 function buildOrionUrl(options: OrionOptions): string {
@@ -279,8 +242,6 @@ function buildCustomUrl(options: CustomOptions): string {
     .replace(/\/$/, '')
 }
 
-export const STREAM_PROVIDER_QUALITY_CATEGORIES = MF_QUALITY_CATEGORIES
-
 export function buildStreamProviderUrl(config: ScraperConfig): string {
   return buildScraperUrl(config)
 }
@@ -301,6 +262,3 @@ export function getStreamProviderDisplayName(config: ScraperConfig): string {
   return getScraperDisplayName(config)
 }
 
-export async function buildMediaFusionStreamProviderUrl(config: ScraperConfig): Promise<string> {
-  return buildMediaFusionEncryptedUrl(config)
-}
