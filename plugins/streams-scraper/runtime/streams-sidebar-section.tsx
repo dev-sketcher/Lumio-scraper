@@ -988,8 +988,36 @@ export function StreamsSidebarSection({
     }
   }
 
+
+// ── Rate-limit cooldown ────────────────────────────────────────────────────
+// ElfHosted's public instances limit requests per IP over a short window.
+// Once a scraper reports the limit, keep asking and the window never cools —
+// so a limited scraper sits out for a few minutes instead.
+const RATE_LIMIT_COOLDOWN_MS = 5 * 60 * 1000
+const scraperRateLimitedUntil = new Map<string, number>()
+
+function isRateLimitError(message: string): boolean {
+  return /rate.?limit/i.test(message)
+}
+
+function markScraperRateLimited(configId: string): void {
+  scraperRateLimitedUntil.set(configId, Date.now() + RATE_LIMIT_COOLDOWN_MS)
+}
+
+function scraperInCooldown(configId: string): boolean {
+  const until = scraperRateLimitedUntil.get(configId)
+  if (!until) return false
+  if (Date.now() >= until) {
+    scraperRateLimitedUntil.delete(configId)
+    return false
+  }
+  return true
+}
+
   async function getStreamProviderRequests(): Promise<ScraperRequest[]> {
-    const configs = getStreamProviderConfigs().filter((config) => config.enabled)
+    const configs = getStreamProviderConfigs()
+      .filter((config) => config.enabled)
+      .filter((config) => !scraperInCooldown(config.id))
 
     const requests = await Promise.all(
       configs.map(async (config) => {
@@ -1183,6 +1211,12 @@ export function StreamsSidebarSection({
             return list
           }
           providerErrors.push(`${req.name}: ${data.error}`)
+          if (isRateLimitError(data.error)) {
+            // The provider is telling us to back off — a direct retry from
+            // the browser would be one more request against a hot window.
+            markScraperRateLimited(req.config.id)
+            return []
+          }
         } catch (error) {
           // Server-side fetch failed (DNS, timeout) — try direct browser fetch
           const message = error instanceof Error ? error.message : 'server fetch failed'
