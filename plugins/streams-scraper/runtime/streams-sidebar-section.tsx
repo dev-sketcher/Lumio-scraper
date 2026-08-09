@@ -1117,9 +1117,19 @@ function scraperInCooldown(configId: string): boolean {
       }
 
       const failedNativeSources = new Set<string>()
+      // Slow aggregators (jackettio, AIOStreams) can never answer inside the
+      // batch's 3 s budget — the two aborted probes still LAND upstream and
+      // count against tight per-IP limits. They skip the batch entirely and
+      // go straight to the per-scraper path with budgets sized for them.
+      const isSlowPreset = (req: ScraperRequest) =>
+        req.config.preset === 'jackettio' || req.config.preset === 'aiostreams'
+      const batchRequests = streamProviderRequests.filter((req) => !isSlowPreset(req))
+      for (const req of streamProviderRequests.filter(isSlowPreset)) {
+        failedNativeSources.add(req.name)
+      }
       try {
         const nativeBatch = await lookupPluginStreamsBatchRanked(
-          streamProviderRequests.map((req) => ({
+          batchRequests.map((req) => ({
             url: `${req.baseUrl}/${streamPath}`,
             streamProviderName: req.name,
             timeoutMs: 3000,
@@ -1173,13 +1183,17 @@ function scraperInCooldown(configId: string): boolean {
         // answer. Results publish per scraper, so the long wait only delays
         // jackettio's own rows.
         const isSlowScraper = req.config.preset === 'jackettio' || req.config.preset === 'aiostreams'
-        const nativeLookupTimeoutMs = isSlowScraper ? 50_000 : 3000
+        const nativeLookupTimeoutMs = 3000
         const apiFetchTimeoutMs = isSlowScraper ? 55_000 : 12_000
 
         // Desktop primary path: native lookup via Tauri command (bypasses both
-        // Next.js server DNS and webview fetch/CORS edge-cases).
+        // Next.js server DNS and webview fetch/CORS edge-cases). Slow
+        // aggregators skip it — their one request per search goes through
+        // the server route, which turns rate-limit notices into errors.
         try {
-          const nativeList = await lookupPluginStreams(directUrl, req.name, nativeLookupTimeoutMs)
+          const nativeList = isSlowScraper
+            ? null
+            : await lookupPluginStreams(directUrl, req.name, nativeLookupTimeoutMs)
           if (nativeList && nativeList.length > 0) {
             const list = nativeList.map((s) => ({
               ...s,
