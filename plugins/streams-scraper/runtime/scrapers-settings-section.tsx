@@ -11,6 +11,7 @@ import {
   type TorrentsDbOptions,
   type CometOptions,
   type JackettioOptions,
+  type AiostreamsOptions,
   type OrionOptions,
   type CustomOptions,
   type ScraperPresetId,
@@ -203,6 +204,7 @@ const PRESET_NAMES: Record<ScraperPresetId, string> = {
   torrentsdb: 'TorrentsDB',
   comet: 'Comet',
   jackettio: 'Jackettio',
+  aiostreams: 'AIOStreams',
   orion: 'Orion',
   custom: 'Custom URL',
 }
@@ -225,7 +227,7 @@ interface ManifestStatus {
 
 async function fetchScraperManifest(preset: ScraperPresetId, customUrl?: string): Promise<{ name?: string; version?: string; error?: string }> {
   const params = new URLSearchParams()
-  if (preset === 'custom' && customUrl) {
+  if ((preset === 'custom' || preset === 'aiostreams') && customUrl) {
     params.set('url', customUrl)
   } else {
     params.set('preset', preset)
@@ -446,8 +448,12 @@ function ScraperCard({
   useEffect(() => {
     if (fetchedRef.current) return
     fetchedRef.current = true
-    const customUrl = config.preset === 'custom' ? (config.options as CustomOptions).rawUrl : undefined
-    if (config.preset === 'custom' && !customUrl) return
+    const customUrl = config.preset === 'custom'
+      ? (config.options as CustomOptions).rawUrl
+      : config.preset === 'aiostreams'
+        ? (config.options as AiostreamsOptions).manifestUrl
+        : undefined
+    if ((config.preset === 'custom' || config.preset === 'aiostreams') && !customUrl) return
     setManifest({ state: 'loading' })
     void fetchScraperManifest(config.preset, customUrl)
       .then((data) => setManifest({ state: 'ok', name: data.name, version: data.version }))
@@ -474,8 +480,12 @@ function ScraperCard({
 
   function refresh() {
     fetchedRef.current = false
-    const customUrl = config.preset === 'custom' ? (config.options as CustomOptions).rawUrl : undefined
-    if (config.preset === 'custom' && !customUrl) return
+    const customUrl = config.preset === 'custom'
+      ? (config.options as CustomOptions).rawUrl
+      : config.preset === 'aiostreams'
+        ? (config.options as AiostreamsOptions).manifestUrl
+        : undefined
+    if ((config.preset === 'custom' || config.preset === 'aiostreams') && !customUrl) return
     setManifest({ state: 'loading' })
     void fetchScraperManifest(config.preset, customUrl)
       .then((data) => setManifest({ state: 'ok', name: data.name, version: data.version }))
@@ -844,6 +854,34 @@ function ScraperCard({
             )
           })()}
 
+          {config.preset === 'aiostreams' && (() => {
+            const opts = config.options as AiostreamsOptions
+            return (
+              <>
+                <p className="text-[11px] text-slate-600">{t('aiostreamsHint')}</p>
+                <a
+                  href="https://aiostreams.elfhosted.com/stremio/configure"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex rounded-full border border-white/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-slate-300 transition hover:border-white/30 hover:text-white"
+                >
+                  {t('aiostreamsOpenConfig')}
+                </a>
+                <div className="space-y-1.5">
+                  <FieldHeader label={t('aiostreamsManifestLabel')} />
+                  <Input
+                    type="text"
+                    value={opts.manifestUrl}
+                    onValueChange={(v) => updateOptions({ manifestUrl: v })}
+                    placeholder="https://aiostreams.elfhosted.com/stremio/<uuid>/<lösenord>/manifest.json"
+                    radius="lg"
+                    classNames={heroInputClassNames}
+                  />
+                </div>
+              </>
+            )
+          })()}
+
           {config.preset === 'orion' && (() => {
             const opts = config.options as OrionOptions
             return (
@@ -963,6 +1001,8 @@ function defaultOptions(preset: ScraperPresetId): ScraperConfig['options'] {
         maxTorrents: 0,
         hideUncached: false,
       } satisfies JackettioOptions
+    case 'aiostreams':
+      return { manifestUrl: '' } satisfies AiostreamsOptions
     case 'orion':
       return {
         orionKey: '',
@@ -983,6 +1023,7 @@ const ADDABLE_PRESETS: ScraperPresetId[] = [
   'torrentio',
   'comet',
   'jackettio',
+  'aiostreams',
   'orion',
   'custom',
 ]
@@ -1066,6 +1107,8 @@ export function ScrapersSettingsSection() {
                     ? t('streamProviderAddComet')
                     : preset === 'jackettio'
                       ? t('streamProviderAddJackettio')
+                    : preset === 'aiostreams'
+                      ? t('streamProviderAddAiostreams')
                       : preset === 'orion'
                         ? '+ Orion'
                         : t('streamProviderAddCustom')}

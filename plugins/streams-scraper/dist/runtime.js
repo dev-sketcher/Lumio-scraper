@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-W0nWIE/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-W0nWIE/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-W0nWIE/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-W0nWIE/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164076,7 +164076,7 @@
   // lib/i18n.tsx
   init_react_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/profile-storage-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-W0nWIE/profile-storage-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
   var getActiveProfileId = () => sdk.getActiveProfileId();
   var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
@@ -164186,6 +164186,10 @@
       streamProviderAddStandard: "+ Standard",
       streamProviderAddComet: "+ Comet",
       streamProviderAddJackettio: "+ Jackettio",
+      streamProviderAddAiostreams: "+ AIOStreams",
+      aiostreamsHint: "AIOStreams is configured on its own site (UUID + password, debrid keys and filters live there). Configure once, then paste the manifest URL from the Save & Install page here.",
+      aiostreamsOpenConfig: "Open the configurator",
+      aiostreamsManifestLabel: "Manifest URL",
       streamProviderAddCustom: "+ Custom URL",
       useGlobal: "Use global",
       clearFilters: "Clear filters",
@@ -165532,6 +165536,10 @@
       streamProviderAddStandard: "+ Standard",
       streamProviderAddComet: "+ Comet",
       streamProviderAddJackettio: "+ Jackettio",
+      streamProviderAddAiostreams: "+ AIOStreams",
+      aiostreamsHint: "AIOStreams konfigureras p\xE5 sin egen sida (UUID + l\xF6senord \u2014 debrid-nycklar och filter bor d\xE4r). Konfigurera en g\xE5ng, klistra sedan in manifest-URL:en fr\xE5n Save & Install-sidan h\xE4r.",
+      aiostreamsOpenConfig: "\xD6ppna konfiguratorn",
+      aiostreamsManifestLabel: "Manifest-URL",
       streamProviderAddCustom: "+ Egen URL",
       useGlobal: "Anv\xE4nd globalt",
       clearFilters: "Rensa filter",
@@ -166855,6 +166863,14 @@
       type: "preconfigured",
       description: "Jackett-baserad scraper med breda indexers. Kr\xE4ver Real-Debrid eller AllDebrid.",
       configUrl: "https://jackettio.elfhosted.com/configure"
+    },
+    {
+      id: "aiostreams",
+      name: "AIOStreams",
+      url: "",
+      type: "preconfigured",
+      description: "Aggregerar m\xE5nga addons och debrid-tj\xE4nster bakom en enda konfiguration.",
+      configUrl: "https://aiostreams.elfhosted.com/stremio/configure"
     }
   ];
   var DEFAULT_SCRAPER_URL = SCRAPER_PRESETS[0].url;
@@ -167088,6 +167104,13 @@
           }
         };
       }
+      case "aiostreams": {
+        const opts = config.options;
+        return {
+          ...config,
+          options: { manifestUrl: opts.manifestUrl ?? "" }
+        };
+      }
       case "orion": {
         const opts = config.options;
         return {
@@ -167298,6 +167321,7 @@
     torrentsdb: "TorrentsDB",
     comet: "Comet",
     jackettio: "Jackettio",
+    aiostreams: "AIOStreams",
     orion: "Orion",
     custom: "Custom URL"
   };
@@ -167307,7 +167331,7 @@
   };
   async function fetchScraperManifest(preset, customUrl) {
     const params = new URLSearchParams();
-    if (preset === "custom" && customUrl) {
+    if ((preset === "custom" || preset === "aiostreams") && customUrl) {
       params.set("url", customUrl);
     } else {
       params.set("preset", preset);
@@ -167483,8 +167507,8 @@
     useEffect(() => {
       if (fetchedRef.current) return;
       fetchedRef.current = true;
-      const customUrl = config.preset === "custom" ? config.options.rawUrl : void 0;
-      if (config.preset === "custom" && !customUrl) return;
+      const customUrl = config.preset === "custom" ? config.options.rawUrl : config.preset === "aiostreams" ? config.options.manifestUrl : void 0;
+      if ((config.preset === "custom" || config.preset === "aiostreams") && !customUrl) return;
       setManifest({ state: "loading" });
       void fetchScraperManifest(config.preset, customUrl).then((data) => setManifest({ state: "ok", name: data.name, version: data.version })).catch((err) => setManifest({ state: "error", error: String(err) }));
     }, [config.preset, config.options]);
@@ -167505,8 +167529,8 @@
     }, []);
     function refresh() {
       fetchedRef.current = false;
-      const customUrl = config.preset === "custom" ? config.options.rawUrl : void 0;
-      if (config.preset === "custom" && !customUrl) return;
+      const customUrl = config.preset === "custom" ? config.options.rawUrl : config.preset === "aiostreams" ? config.options.manifestUrl : void 0;
+      if ((config.preset === "custom" || config.preset === "aiostreams") && !customUrl) return;
       setManifest({ state: "loading" });
       void fetchScraperManifest(config.preset, customUrl).then((data) => setManifest({ state: "ok", name: data.name, version: data.version })).catch((err) => setManifest({ state: "error", error: String(err) }));
     }
@@ -167890,6 +167914,36 @@
             ] })
           ] });
         })(),
+        config.preset === "aiostreams" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: t("aiostreamsHint") }),
+            /* @__PURE__ */ jsx(
+              "a",
+              {
+                href: "https://aiostreams.elfhosted.com/stremio/configure",
+                target: "_blank",
+                rel: "noreferrer",
+                className: "inline-flex rounded-full border border-white/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-slate-300 transition hover:border-white/30 hover:text-white",
+                children: t("aiostreamsOpenConfig")
+              }
+            ),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("aiostreamsManifestLabel") }),
+              /* @__PURE__ */ jsx(
+                import_react56.Input,
+                {
+                  type: "text",
+                  value: opts.manifestUrl,
+                  onValueChange: (v) => updateOptions({ manifestUrl: v }),
+                  placeholder: "https://aiostreams.elfhosted.com/stremio/<uuid>/<l\xF6senord>/manifest.json",
+                  radius: "lg",
+                  classNames: heroInputClassNames
+                }
+              )
+            ] })
+          ] });
+        })(),
         config.preset === "orion" && (() => {
           const opts = config.options;
           return /* @__PURE__ */ jsxs(Fragment2, { children: [
@@ -167999,6 +168053,8 @@
           maxTorrents: 0,
           hideUncached: false
         };
+      case "aiostreams":
+        return { manifestUrl: "" };
       case "orion":
         return {
           orionKey: "",
@@ -168013,6 +168069,7 @@
     "torrentio",
     "comet",
     "jackettio",
+    "aiostreams",
     "orion",
     "custom"
   ];
@@ -168069,7 +168126,7 @@
           type: "button",
           onClick: () => handleAddPreset(preset),
           className: "rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs text-slate-500 transition hover:border-white/30 hover:text-slate-300",
-          children: preset === "torrentio" ? t("streamProviderAddStandard") : preset === "torrentsdb" ? t("streamProviderAddIndexed") : preset === "comet" ? t("streamProviderAddComet") : preset === "jackettio" ? t("streamProviderAddJackettio") : preset === "orion" ? "+ Orion" : t("streamProviderAddCustom")
+          children: preset === "torrentio" ? t("streamProviderAddStandard") : preset === "torrentsdb" ? t("streamProviderAddIndexed") : preset === "comet" ? t("streamProviderAddComet") : preset === "jackettio" ? t("streamProviderAddJackettio") : preset === "aiostreams" ? t("streamProviderAddAiostreams") : preset === "orion" ? "+ Orion" : t("streamProviderAddCustom")
         },
         preset
       )) })
@@ -170018,6 +170075,8 @@
         return buildCometUrl(config.options);
       case "jackettio":
         return buildJackettioUrl(config.options);
+      case "aiostreams":
+        return buildAiostreamsUrl(config.options);
       case "orion":
         return buildOrionUrl(config.options);
       case "custom":
@@ -170071,6 +170130,8 @@
         return "Comet";
       case "jackettio":
         return "Jackettio";
+      case "aiostreams":
+        return "AIOStreams";
       case "orion":
         return "Orion";
       case "custom": {
@@ -170197,6 +170258,9 @@
       debridApiKey: accessKey
     };
     return `https://jackettio.elfhosted.com/${btoa(JSON.stringify(cfg))}`;
+  }
+  function buildAiostreamsUrl(options) {
+    return options.manifestUrl.trim().replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "").replace(/\/$/, "");
   }
   function buildOrionUrl(options) {
     if (!options.orionKey.trim()) return "";
@@ -170463,7 +170527,7 @@
   var import_react57 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-W0nWIE/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/tauri-mpv.ts
@@ -180597,7 +180661,7 @@ ${cue.text}
         const fallbackRequests = published ? streamProviderRequests.filter((req) => failedNativeSources.has(req.name)) : streamProviderRequests;
         const apiPromises = fallbackRequests.map(async (req) => {
           const directUrl = `${req.baseUrl}/${streamPath}`;
-          const isSlowScraper = req.config.preset === "jackettio";
+          const isSlowScraper = req.config.preset === "jackettio" || req.config.preset === "aiostreams";
           const nativeLookupTimeoutMs = isSlowScraper ? 5e4 : 3e3;
           const apiFetchTimeoutMs = isSlowScraper ? 55e3 : 12e3;
           try {
@@ -182270,7 +182334,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-69iTVD/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-W0nWIE/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

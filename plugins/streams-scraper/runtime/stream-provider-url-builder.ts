@@ -4,6 +4,7 @@ import type {
   TorrentsDbOptions,
   CometOptions,
   JackettioOptions,
+  AiostreamsOptions,
   OrionOptions,
   CustomOptions,
 } from './stream-provider-settings'
@@ -24,6 +25,8 @@ export function buildScraperUrl(config: ScraperConfig): string {
       return buildCometUrl(config.options as CometOptions)
     case 'jackettio':
       return buildJackettioUrl(config.options as JackettioOptions)
+    case 'aiostreams':
+      return buildAiostreamsUrl(config.options as AiostreamsOptions)
     case 'orion':
       return buildOrionUrl(config.options as OrionOptions)
     case 'custom':
@@ -79,6 +82,7 @@ export function getScraperDisplayName(config: ScraperConfig): string {
     case 'torrentsdb': return 'TorrentsDB'
     case 'comet': return 'Comet'
     case 'jackettio': return 'Jackettio'
+    case 'aiostreams': return 'AIOStreams'
     case 'orion': return 'Orion'
     case 'custom': {
       const opts = config.options as CustomOptions
@@ -220,6 +224,17 @@ function buildJackettioUrl(options: JackettioOptions): string {
     debridApiKey: accessKey,
   }
   return `https://jackettio.elfhosted.com/${btoa(JSON.stringify(cfg))}`
+}
+
+/// AIOStreams' debrid keys and filtering live server-side behind the pasted
+/// manifest URL, so the base URL is the manifest URL minus its tail — same
+/// normalisation as a custom addon.
+function buildAiostreamsUrl(options: AiostreamsOptions): string {
+  return options.manifestUrl
+    .trim()
+    .replace(/^stremio:\/\//, 'https://')
+    .replace(/\/manifest\.json$/i, '')
+    .replace(/\/$/, '')
 }
 
 function buildOrionUrl(options: OrionOptions): string {

@@ -1172,7 +1172,7 @@ function scraperInCooldown(configId: string): boolean {
         // on a cold search; the ordinary budgets abort it long before it can
         // answer. Results publish per scraper, so the long wait only delays
         // jackettio's own rows.
-        const isSlowScraper = req.config.preset === 'jackettio'
+        const isSlowScraper = req.config.preset === 'jackettio' || req.config.preset === 'aiostreams'
         const nativeLookupTimeoutMs = isSlowScraper ? 50_000 : 3000
         const apiFetchTimeoutMs = isSlowScraper ? 55_000 : 12_000
 

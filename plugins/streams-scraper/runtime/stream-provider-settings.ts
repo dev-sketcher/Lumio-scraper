@@ -50,6 +50,14 @@ export const SCRAPER_PRESETS: ScraperPreset[] = [
     description: 'Snabb scraper med bra träffar. Kräver konfiguration med RD-nyckel.',
     configUrl: 'https://jackettio.elfhosted.com/configure',
   },
+  {
+    id: 'aiostreams',
+    name: 'AIOStreams',
+    url: '',
+    type: 'preconfigured',
+    description: 'Aggregerar många addons och debrid-tjänster bakom en enda konfiguration.',
+    configUrl: 'https://aiostreams.elfhosted.com/stremio/configure',
+  },
 ]
 
 export const DEFAULT_SCRAPER_URL = SCRAPER_PRESETS[0].url
@@ -95,7 +103,7 @@ export function loadPresetUrl(id: string): string {
 
 // ── Multi-scraper types ────────────────────────────────────────────────────
 
-export type ScraperPresetId = 'torrentio' | 'torrentsdb' | 'comet' | 'jackettio' | 'orion' | 'custom'
+export type ScraperPresetId = 'torrentio' | 'torrentsdb' | 'comet' | 'jackettio' | 'aiostreams' | 'orion' | 'custom'
 
 export interface GlobalScraperConfig {
   qualityFilter: string[]   // quality levels to exclude, e.g. ['cam', 'scr']
@@ -148,6 +156,14 @@ export interface JackettioOptions {
   hideUncached: boolean
 }
 
+export interface AiostreamsOptions {
+  /// The personal manifest URL from the instance's Save & Install page.
+  /// AIOStreams keeps the actual configuration (addons, debrid keys,
+  /// filters) server-side behind a UUID + password, so this URL is the
+  /// whole integration — debrid is already inside it.
+  manifestUrl: string
+}
+
 export interface OrionOptions {
   orionKey: string           // Orion API key
   streamProvider?: string
@@ -163,6 +179,7 @@ export type ScraperOptions =
   | TorrentsDbOptions
   | CometOptions
   | JackettioOptions
+  | AiostreamsOptions
   | OrionOptions
   | CustomOptions
 
@@ -489,6 +506,13 @@ function normalizeScraperConfig(config: ScraperConfig): ScraperConfig {
         } satisfies JackettioOptions,
       }
     }
+    case 'aiostreams': {
+      const opts = config.options as Partial<AiostreamsOptions>
+      return {
+        ...config,
+        options: { manifestUrl: opts.manifestUrl ?? '' } satisfies AiostreamsOptions,
+      }
+    }
     case 'orion': {
       const opts = config.options as Partial<OrionOptions>
       return {
@@ -519,6 +543,7 @@ export type StreamProviderTorrentioOptions = TorrentioOptions
 export type StreamProviderTorrentsDbOptions = TorrentsDbOptions
 export type StreamProviderCometOptions = CometOptions
 export type StreamProviderJackettioOptions = JackettioOptions
+export type StreamProviderAiostreamsOptions = AiostreamsOptions
 export type StreamProviderOrionOptions = OrionOptions
 export type StreamProviderCustomOptions = CustomOptions
 
