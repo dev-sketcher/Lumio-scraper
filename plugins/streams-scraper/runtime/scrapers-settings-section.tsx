@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Input, Switch } from '@heroui/react'
 import { useLang } from '@/lib/i18n'
+import { openExternalUrl } from '@/lib/open-external'
 import {
   getStreamProviderConfigs,
   setStreamProviderConfigs,
@@ -859,21 +860,20 @@ function ScraperCard({
             return (
               <>
                 <p className="text-[11px] text-slate-600">{t('aiostreamsHint')}</p>
-                <a
-                  href="https://aiostreams.elfhosted.com/stremio/configure"
-                  target="_blank"
-                  rel="noreferrer"
+                <button
+                  type="button"
+                  onClick={() => void openExternalUrl('https://aiostreams-nightly.fortheweak.cloud/stremio/configure')}
                   className="inline-flex rounded-full border border-white/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-slate-300 transition hover:border-white/30 hover:text-white"
                 >
                   {t('aiostreamsOpenConfig')}
-                </a>
+                </button>
                 <div className="space-y-1.5">
                   <FieldHeader label={t('aiostreamsManifestLabel')} />
                   <Input
                     type="text"
                     value={opts.manifestUrl}
                     onValueChange={(v) => updateOptions({ manifestUrl: v })}
-                    placeholder="https://aiostreams.elfhosted.com/stremio/<uuid>/<lösenord>/manifest.json"
+                    placeholder="https://aiostreams-nightly.fortheweak.cloud/stremio/<uuid>/<lösenord>/manifest.json"
                     radius="lg"
                     classNames={heroInputClassNames}
                   />

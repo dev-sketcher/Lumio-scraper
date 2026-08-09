@@ -56,7 +56,7 @@ export const SCRAPER_PRESETS: ScraperPreset[] = [
     url: '',
     type: 'preconfigured',
     description: 'Aggregerar många addons och debrid-tjänster bakom en enda konfiguration.',
-    configUrl: 'https://aiostreams.elfhosted.com/stremio/configure',
+    configUrl: 'https://aiostreams-nightly.fortheweak.cloud/stremio/configure',
   },
 ]
 

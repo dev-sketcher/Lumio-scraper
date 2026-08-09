@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-R8sidV/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-juJJa8/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-R8sidV/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-juJJa8/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-R8sidV/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-juJJa8/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-R8sidV/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-juJJa8/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -163736,6 +163736,68 @@
     }
   });
 
+  // node_modules/@tauri-apps/api/event.js
+  async function _unlisten(event, eventId) {
+    window.__TAURI_EVENT_PLUGIN_INTERNALS__.unregisterListener(event, eventId);
+    await invoke("plugin:event|unlisten", {
+      event,
+      eventId
+    });
+  }
+  async function listen(event, handler, options) {
+    var _a;
+    const target = typeof (options === null || options === void 0 ? void 0 : options.target) === "string" ? { kind: "AnyLabel", label: options.target } : (_a = options === null || options === void 0 ? void 0 : options.target) !== null && _a !== void 0 ? _a : { kind: "Any" };
+    return invoke("plugin:event|listen", {
+      event,
+      target,
+      handler: transformCallback(handler)
+    }).then((eventId) => {
+      return async () => _unlisten(event, eventId);
+    });
+  }
+  async function once(event, handler, options) {
+    return listen(event, (eventData) => {
+      void _unlisten(event, eventData.id);
+      handler(eventData);
+    }, options);
+  }
+  async function emit(event, payload) {
+    await invoke("plugin:event|emit", {
+      event,
+      payload
+    });
+  }
+  async function emitTo(target, event, payload) {
+    const eventTarget = typeof target === "string" ? { kind: "AnyLabel", label: target } : target;
+    await invoke("plugin:event|emit_to", {
+      target: eventTarget,
+      event,
+      payload
+    });
+  }
+  var TauriEvent;
+  var init_event = __esm({
+    "node_modules/@tauri-apps/api/event.js"() {
+      init_core();
+      (function(TauriEvent2) {
+        TauriEvent2["WINDOW_RESIZED"] = "tauri://resize";
+        TauriEvent2["WINDOW_MOVED"] = "tauri://move";
+        TauriEvent2["WINDOW_CLOSE_REQUESTED"] = "tauri://close-requested";
+        TauriEvent2["WINDOW_DESTROYED"] = "tauri://destroyed";
+        TauriEvent2["WINDOW_FOCUS"] = "tauri://focus";
+        TauriEvent2["WINDOW_BLUR"] = "tauri://blur";
+        TauriEvent2["WINDOW_SCALE_FACTOR_CHANGED"] = "tauri://scale-change";
+        TauriEvent2["WINDOW_THEME_CHANGED"] = "tauri://theme-changed";
+        TauriEvent2["WINDOW_CREATED"] = "tauri://window-created";
+        TauriEvent2["WEBVIEW_CREATED"] = "tauri://webview-created";
+        TauriEvent2["DRAG_ENTER"] = "tauri://drag-enter";
+        TauriEvent2["DRAG_OVER"] = "tauri://drag-over";
+        TauriEvent2["DRAG_DROP"] = "tauri://drag-drop";
+        TauriEvent2["DRAG_LEAVE"] = "tauri://drag-leave";
+      })(TauriEvent || (TauriEvent = {}));
+    }
+  });
+
   // lib/plugin-registry.ts
   var plugin_registry_exports = {};
   __export(plugin_registry_exports, {
@@ -163971,68 +164033,6 @@
     }
   });
 
-  // node_modules/@tauri-apps/api/event.js
-  async function _unlisten(event, eventId) {
-    window.__TAURI_EVENT_PLUGIN_INTERNALS__.unregisterListener(event, eventId);
-    await invoke("plugin:event|unlisten", {
-      event,
-      eventId
-    });
-  }
-  async function listen(event, handler, options) {
-    var _a;
-    const target = typeof (options === null || options === void 0 ? void 0 : options.target) === "string" ? { kind: "AnyLabel", label: options.target } : (_a = options === null || options === void 0 ? void 0 : options.target) !== null && _a !== void 0 ? _a : { kind: "Any" };
-    return invoke("plugin:event|listen", {
-      event,
-      target,
-      handler: transformCallback(handler)
-    }).then((eventId) => {
-      return async () => _unlisten(event, eventId);
-    });
-  }
-  async function once(event, handler, options) {
-    return listen(event, (eventData) => {
-      void _unlisten(event, eventData.id);
-      handler(eventData);
-    }, options);
-  }
-  async function emit(event, payload) {
-    await invoke("plugin:event|emit", {
-      event,
-      payload
-    });
-  }
-  async function emitTo(target, event, payload) {
-    const eventTarget = typeof target === "string" ? { kind: "AnyLabel", label: target } : target;
-    await invoke("plugin:event|emit_to", {
-      target: eventTarget,
-      event,
-      payload
-    });
-  }
-  var TauriEvent;
-  var init_event = __esm({
-    "node_modules/@tauri-apps/api/event.js"() {
-      init_core();
-      (function(TauriEvent2) {
-        TauriEvent2["WINDOW_RESIZED"] = "tauri://resize";
-        TauriEvent2["WINDOW_MOVED"] = "tauri://move";
-        TauriEvent2["WINDOW_CLOSE_REQUESTED"] = "tauri://close-requested";
-        TauriEvent2["WINDOW_DESTROYED"] = "tauri://destroyed";
-        TauriEvent2["WINDOW_FOCUS"] = "tauri://focus";
-        TauriEvent2["WINDOW_BLUR"] = "tauri://blur";
-        TauriEvent2["WINDOW_SCALE_FACTOR_CHANGED"] = "tauri://scale-change";
-        TauriEvent2["WINDOW_THEME_CHANGED"] = "tauri://theme-changed";
-        TauriEvent2["WINDOW_CREATED"] = "tauri://window-created";
-        TauriEvent2["WEBVIEW_CREATED"] = "tauri://webview-created";
-        TauriEvent2["DRAG_ENTER"] = "tauri://drag-enter";
-        TauriEvent2["DRAG_OVER"] = "tauri://drag-over";
-        TauriEvent2["DRAG_DROP"] = "tauri://drag-drop";
-        TauriEvent2["DRAG_LEAVE"] = "tauri://drag-leave";
-      })(TauriEvent || (TauriEvent = {}));
-    }
-  });
-
   // ../Lumio-scraper/plugins/streams-scraper/runtime/index.ts
   var runtime_exports = {};
   __export(runtime_exports, {
@@ -164041,7 +164041,7 @@
 
   // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
   init_react_shim();
-  var import_react56 = __toESM(require_dist89());
+  var import_react63 = __toESM(require_dist89());
 
   // lib/app-storage.ts
   var store = null;
@@ -164076,7 +164076,7 @@
   // lib/i18n.tsx
   init_react_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-R8sidV/profile-storage-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-juJJa8/profile-storage-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
   var getActiveProfileId = () => sdk.getActiveProfileId();
   var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
@@ -166838,6 +166838,30 @@
     };
   }
 
+  // lib/tauri-mpv.ts
+  init_core();
+  init_event();
+  init_react_shim();
+
+  // lib/session-host.ts
+  function normalizeHost(rawHost) {
+    return rawHost.trim().toLowerCase().replace(/\.+$/, "");
+  }
+  function isLocalAppHost(hostname) {
+    const host = normalizeHost(hostname);
+    if (!host) return false;
+    if (host === "localhost" || host === "127.0.0.1" || host === "::1") return true;
+    if (host === "tauri.localhost" || host.endsWith(".tauri.localhost")) return true;
+    return false;
+  }
+  function isLanClientHost(hostname) {
+    return !isLocalAppHost(hostname);
+  }
+  function isLanClientSession() {
+    if (typeof window === "undefined") return false;
+    return isLanClientHost(window.location.hostname);
+  }
+
   // lib/stream-provider-runtime/stream-provider-settings.ts
   var SCRAPER_PRESETS = [
     {
@@ -166870,7 +166894,7 @@
       url: "",
       type: "preconfigured",
       description: "Aggregerar m\xE5nga addons och debrid-tj\xE4nster bakom en enda konfiguration.",
-      configUrl: "https://aiostreams.elfhosted.com/stremio/configure"
+      configUrl: "https://aiostreams-nightly.fortheweak.cloud/stremio/configure"
     }
   ];
   var DEFAULT_SCRAPER_URL = SCRAPER_PRESETS[0].url;
@@ -167145,1405 +167169,6 @@
   }
   function getScraperStreamProvider(config) {
     return getScraperStreamProviderId(config);
-  }
-
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
-  init_jsx_runtime_shim();
-  var TORRENTIO_QUALITY_OPTIONS = [
-    { id: "brremux", label: "BluRay REMUX" },
-    { id: "hdrall", label: "HDR/HDR10+/Dolby Vision" },
-    { id: "dolbyvision", label: "Dolby Vision" },
-    { id: "dolbyvisionwithhdr", label: "Dolby Vision + HDR" },
-    { id: "threed", label: "3D" },
-    { id: "4k", label: "4K" },
-    { id: "1080p", label: "1080p" },
-    { id: "720p", label: "720p" },
-    { id: "480p", label: "480p" },
-    { id: "other", label: "Other (DVDRip/HDRip/BDRip\u2026)" },
-    { id: "scr", label: "Screener" },
-    { id: "cam", label: "Cam" },
-    { id: "unknown", label: "Unknown" }
-  ];
-  function toOptionItems(raw) {
-    if (!Array.isArray(raw)) return [];
-    return raw.map((entry) => {
-      const value = String(entry.value ?? "").trim();
-      const label = String(entry.label ?? "").trim() || value;
-      return { id: value, label };
-    }).filter((item) => item.id.length > 0);
-  }
-  var cachedCatalogs = null;
-  async function fetchScraperOptionCatalogs() {
-    if (cachedCatalogs) return cachedCatalogs;
-    try {
-      const res = await fetch("/api/scraper-options");
-      if (!res.ok) return null;
-      const data = await res.json();
-      const catalogs = {
-        qualities: toOptionItems(data.qualities),
-        languages: toOptionItems(data.languages),
-        providers: toOptionItems(data.providers),
-        sort: toOptionItems(data.sort)
-      };
-      if (catalogs.qualities.length === 0) return null;
-      cachedCatalogs = catalogs;
-      return catalogs;
-    } catch {
-      return null;
-    }
-  }
-  var COMET_QUALITY_OPTIONS = ["240p", "360p", "480p", "576p", "720p", "1080p", "1440p", "2160p", "unknown"];
-  var JACKETTIO_QUALITY_OPTIONS = ["360p", "480p", "720p", "1080p", "2160p", "unknown"];
-  var TORRENTIO_LANGUAGE_OPTIONS = [
-    { id: "swedish", label: "Svenska" },
-    { id: "english", label: "English" },
-    { id: "danish", label: "Dansk" },
-    { id: "norwegian", label: "Norsk" },
-    { id: "finnish", label: "Suomi" },
-    { id: "german", label: "Deutsch" },
-    { id: "french", label: "Fran\xE7ais" },
-    { id: "spanish", label: "Espa\xF1ol" },
-    { id: "portuguese", label: "Portugu\xEAs" },
-    { id: "italian", label: "Italiano" },
-    { id: "dutch", label: "Nederlands" },
-    { id: "polish", label: "Polski" },
-    { id: "russian", label: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439" },
-    { id: "japanese", label: "\u65E5\u672C\u8A9E" },
-    { id: "korean", label: "\uD55C\uAD6D\uC5B4" },
-    { id: "chinese", label: "\u4E2D\u6587" },
-    { id: "arabic", label: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" },
-    { id: "hindi", label: "\u0939\u093F\u0928\u094D\u0926\u0940" },
-    { id: "turkish", label: "T\xFCrk\xE7e" },
-    { id: "ukrainian", label: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430" },
-    { id: "romanian", label: "Rom\xE2n\u0103" },
-    { id: "hungarian", label: "Magyar" },
-    { id: "czech", label: "\u010Ce\u0161tina" },
-    { id: "greek", label: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC" },
-    { id: "bulgarian", label: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438" },
-    { id: "serbian", label: "Srpski" },
-    { id: "croatian", label: "Hrvatski" },
-    { id: "hebrew", label: "\u05E2\u05D1\u05E8\u05D9\u05EA" },
-    { id: "vietnamese", label: "Ti\u1EBFng Vi\u1EC7t" },
-    { id: "thai", label: "\u0E20\u0E32\u0E29\u0E32\u0E44\u0E17\u0E22" },
-    { id: "indonesian", label: "Bahasa Indonesia" },
-    { id: "malay", label: "Bahasa Melayu" },
-    { id: "catalan", label: "Catal\xE0" },
-    { id: "latin", label: "Latina" }
-  ];
-  var ISO_LANGUAGE_OPTIONS = [
-    { code: "sv", label: "Svenska" },
-    { code: "en", label: "English" },
-    { code: "da", label: "Dansk" },
-    { code: "no", label: "Norsk" },
-    { code: "fi", label: "Suomi" },
-    { code: "de", label: "Deutsch" },
-    { code: "fr", label: "Fran\xE7ais" },
-    { code: "es", label: "Espa\xF1ol" },
-    { code: "pt", label: "Portugu\xEAs" },
-    { code: "it", label: "Italiano" },
-    { code: "nl", label: "Nederlands" },
-    { code: "pl", label: "Polski" },
-    { code: "ru", label: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439" },
-    { code: "ja", label: "\u65E5\u672C\u8A9E" },
-    { code: "ko", label: "\uD55C\uAD6D\uC5B4" },
-    { code: "zh", label: "\u4E2D\u6587" },
-    { code: "ar", label: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" },
-    { code: "hi", label: "\u0939\u093F\u0928\u094D\u0926\u0940" },
-    { code: "tr", label: "T\xFCrk\xE7e" },
-    { code: "uk", label: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430" },
-    { code: "ro", label: "Rom\xE2n\u0103" },
-    { code: "hu", label: "Magyar" },
-    { code: "cs", label: "\u010Ce\u0161tina" },
-    { code: "el", label: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC" },
-    { code: "bg", label: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438" },
-    { code: "sr", label: "Srpski" },
-    { code: "hr", label: "Hrvatski" },
-    { code: "he", label: "\u05E2\u05D1\u05E8\u05D9\u05EA" },
-    { code: "vi", label: "Ti\u1EBFng Vi\u1EC7t" },
-    { code: "th", label: "\u0E20\u0E32\u0E29\u0E32\u0E44\u0E17\u0E22" },
-    { code: "id", label: "Bahasa Indonesia" },
-    { code: "ms", label: "Bahasa Melayu" }
-  ];
-  var TORRENTIO_PROVIDERS = [
-    "YTS",
-    "EZTV",
-    "RARBG",
-    "ThePirateBay",
-    "1337x",
-    "KickassTorrents",
-    "TorrentGalaxy",
-    "MagnetDL",
-    "HorribleSubs",
-    "NyaaSi",
-    "TokyoTosho",
-    "AniDex",
-    "Rutor",
-    "Rutracker",
-    "Comando",
-    "CineCalidad",
-    "FilmeHD",
-    "BitSearch",
-    "ETTV",
-    "TorrentDownloads",
-    "TheRarbg",
-    "TGx",
-    "Zooqle",
-    "AnimeTosho"
-  ];
-  var TORRENTIO_SORT_OPTIONS = [
-    { id: "quality", label: "Quality" },
-    { id: "qualitysize", label: "Quality + Size" },
-    { id: "seeders", label: "Seeders" },
-    { id: "size", label: "Size" }
-  ];
-  var DEBRID_PROVIDER_LABELS = {
-    none: "None",
-    realdebrid: "RealDebrid",
-    alldebrid: "AllDebrid",
-    easydebrid: "EasyDebrid",
-    offcloud: "Offcloud",
-    torbox: "TorBox",
-    putio: "Put.io"
-  };
-  var DEBRID_PROVIDERS = [
-    { id: "none", label: "None" },
-    { id: "realdebrid", label: "RealDebrid" },
-    { id: "alldebrid", label: "AllDebrid" },
-    { id: "offcloud", label: "Offcloud" },
-    { id: "torbox", label: "TorBox" },
-    { id: "putio", label: "Put.io" }
-  ];
-  function getDebridProviderLabel(id4) {
-    return DEBRID_PROVIDER_LABELS[id4] ?? id4;
-  }
-  var PRESET_NAMES = {
-    torrentio: "Torrentio",
-    torrentsdb: "TorrentsDB",
-    comet: "Comet",
-    jackettio: "Jackettio",
-    aiostreams: "AIOStreams",
-    orion: "Orion",
-    custom: "Custom URL"
-  };
-  var heroInputClassNames = {
-    inputWrapper: "border border-white/10 bg-white/[0.03] hover:border-white/20 h-12 focus-within:outline-none focus-within:ring-0",
-    input: "text-sm text-white placeholder:text-slate-600 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 shadow-none"
-  };
-  async function fetchScraperManifest(preset, customUrl) {
-    const params = new URLSearchParams();
-    if ((preset === "custom" || preset === "aiostreams") && customUrl) {
-      params.set("url", customUrl);
-    } else {
-      params.set("preset", preset);
-    }
-    const res = await fetch(`/api/stream-providers/manifest?${params.toString()}`);
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
-    return data;
-  }
-  function SectionLabel({ children }) {
-    return /* @__PURE__ */ jsx("p", { className: "text-[11px] uppercase tracking-[0.12em] text-slate-500", children });
-  }
-  function FieldHeader({ label }) {
-    return /* @__PURE__ */ jsx(SectionLabel, { children: label });
-  }
-  function MultiSelectDropdown({
-    value,
-    onChange,
-    placeholder,
-    options
-  }) {
-    const [open, setOpen] = useState(false);
-    const rootRef = useRef(null);
-    useEffect(() => {
-      if (!open) return;
-      function onDocPointer(event) {
-        if (rootRef.current && !rootRef.current.contains(event.target)) {
-          setOpen(false);
-        }
-      }
-      document.addEventListener("mousedown", onDocPointer);
-      return () => document.removeEventListener("mousedown", onDocPointer);
-    }, [open]);
-    const selectedLabels = options.filter((option) => value.includes(option.id)).map((option) => option.label);
-    const summary = selectedLabels.length > 0 ? selectedLabels.join(", ") : placeholder;
-    return /* @__PURE__ */ jsxs("div", { ref: rootRef, className: "relative", children: [
-      /* @__PURE__ */ jsxs(
-        "button",
-        {
-          type: "button",
-          onClick: () => setOpen((current2) => !current2),
-          className: "flex h-12 w-full items-center justify-between rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-left text-sm text-white outline-none transition hover:border-white/20",
-          children: [
-            /* @__PURE__ */ jsx("span", { className: `truncate ${selectedLabels.length === 0 ? "text-slate-500" : ""}`, children: summary }),
-            /* @__PURE__ */ jsx("span", { className: `ml-2 flex-none text-slate-500 transition-transform ${open ? "rotate-180" : ""}`, children: "\u25BE" })
-          ]
-        }
-      ),
-      open ? /* @__PURE__ */ jsx(
-        "div",
-        {
-          className: "absolute left-0 right-0 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-[1.1rem] border border-white/10 p-1.5 shadow-2xl",
-          style: { backgroundColor: "#10162a" },
-          children: options.map(({ id: id4, label }) => {
-            const checked = value.includes(id4);
-            return /* @__PURE__ */ jsxs(
-              "button",
-              {
-                type: "button",
-                onClick: () => onChange(checked ? value.filter((v) => v !== id4) : [...value, id4]),
-                className: "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-slate-100 transition hover:bg-white/5",
-                children: [
-                  /* @__PURE__ */ jsx(
-                    "span",
-                    {
-                      "aria-hidden": "true",
-                      className: `flex h-4 w-4 flex-none items-center justify-center rounded-[3px] border text-[10px] ${checked ? "border-aurora-400/80 bg-aurora-500/20 text-aurora-200" : "border-white/15 bg-white/[0.02] text-transparent"}`,
-                      children: "\u2713"
-                    }
-                  ),
-                  /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: label })
-                ]
-              },
-              id4
-            );
-          })
-        }
-      ) : null
-    ] });
-  }
-  function DebridSelect({
-    value,
-    onChange
-  }) {
-    return /* @__PURE__ */ jsx(
-      "select",
-      {
-        value,
-        onChange: (event) => onChange(event.target.value),
-        className: "h-12 w-full rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition hover:border-white/20 focus:border-white/20",
-        children: DEBRID_PROVIDERS.map(({ id: id4, label }) => /* @__PURE__ */ jsx("option", { value: id4, className: "bg-slate-900 text-white", children: label }, id4))
-      }
-    );
-  }
-  function DebridKeyField({
-    debridProvider,
-    onProviderChange
-  }) {
-    const { t } = useLang();
-    const [keyValue, setKeyValue] = useState(() => getStreamProviderAccessKey(debridProvider));
-    useEffect(() => {
-      setKeyValue(getStreamProviderAccessKey(debridProvider));
-    }, [debridProvider]);
-    if (debridProvider === "none") return null;
-    return /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-      /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-        /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderSelection") }),
-        /* @__PURE__ */ jsx(
-          DebridSelect,
-          {
-            value: debridProvider,
-            onChange: (v) => {
-              onProviderChange(v);
-              setKeyValue(getStreamProviderAccessKey(v));
-            }
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-        /* @__PURE__ */ jsx(SectionLabel, { children: `${getDebridProviderLabel(debridProvider)} ${t("apiKeyLabel")}` }),
-        /* @__PURE__ */ jsx(
-          import_react56.Input,
-          {
-            type: "password",
-            value: keyValue,
-            onValueChange: (v) => {
-              setKeyValue(v);
-              setStreamProviderAccessKey(debridProvider, v);
-            },
-            placeholder: t("streamProviderApiKeyPlaceholder"),
-            radius: "lg",
-            classNames: heroInputClassNames
-          }
-        )
-      ] })
-    ] });
-  }
-  function getScraperSnapshot(config) {
-    const debridProvider = config.options.streamProvider?.trim().toLowerCase() ?? config.options.debridProvider?.trim().toLowerCase() ?? "";
-    const providerKey = debridProvider && debridProvider !== "none" ? getStreamProviderAccessKey(debridProvider).trim() : "";
-    return JSON.stringify({
-      config,
-      debridProvider,
-      providerKey
-    });
-  }
-  function ScraperCard({
-    config,
-    onChange,
-    onRemove,
-    onMoveUp,
-    onMoveDown,
-    isFirst,
-    isLast
-  }) {
-    const { t } = useLang();
-    const [catalogs, setCatalogs] = useState(cachedCatalogs);
-    useEffect(() => {
-      let cancelled = false;
-      void fetchScraperOptionCatalogs().then((result) => {
-        if (!cancelled && result) setCatalogs(result);
-      });
-      return () => {
-        cancelled = true;
-      };
-    }, []);
-    const [manifest, setManifest] = useState({ state: "idle" });
-    const [expanded, setExpanded] = useState(false);
-    const [saveState, setSaveState] = useState("idle");
-    const [savedSnapshot, setSavedSnapshot] = useState(() => getScraperSnapshot(config));
-    const saveTimerRef = useRef(null);
-    const fetchedRef = useRef(false);
-    useEffect(() => {
-      if (fetchedRef.current) return;
-      fetchedRef.current = true;
-      const customUrl = config.preset === "custom" ? config.options.rawUrl : config.preset === "aiostreams" ? config.options.manifestUrl : void 0;
-      if ((config.preset === "custom" || config.preset === "aiostreams") && !customUrl) return;
-      setManifest({ state: "loading" });
-      void fetchScraperManifest(config.preset, customUrl).then((data) => setManifest({ state: "ok", name: data.name, version: data.version })).catch((err) => setManifest({ state: "error", error: String(err) }));
-    }, [config.preset, config.options]);
-    const currentSnapshot = getScraperSnapshot(config);
-    const hasPendingChanges = currentSnapshot !== savedSnapshot;
-    useEffect(() => {
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current);
-        saveTimerRef.current = null;
-      }
-      setSaveState("idle");
-      setSavedSnapshot(getScraperSnapshot(config));
-    }, [config.id]);
-    useEffect(() => {
-      return () => {
-        if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      };
-    }, []);
-    function refresh() {
-      fetchedRef.current = false;
-      const customUrl = config.preset === "custom" ? config.options.rawUrl : config.preset === "aiostreams" ? config.options.manifestUrl : void 0;
-      if ((config.preset === "custom" || config.preset === "aiostreams") && !customUrl) return;
-      setManifest({ state: "loading" });
-      void fetchScraperManifest(config.preset, customUrl).then((data) => setManifest({ state: "ok", name: data.name, version: data.version })).catch((err) => setManifest({ state: "error", error: String(err) }));
-    }
-    function persistCard() {
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current);
-        saveTimerRef.current = null;
-      }
-      try {
-        const debridProvider = config.options.debridProvider?.trim().toLowerCase();
-        if (debridProvider && debridProvider !== "none") {
-          const key = getStreamProviderAccessKey(debridProvider);
-          setStreamProviderAccessKey(debridProvider, key);
-        }
-        setSavedSnapshot(getScraperSnapshot(config));
-        setSaveState("saved");
-        saveTimerRef.current = setTimeout(() => {
-          setSaveState("idle");
-          saveTimerRef.current = null;
-        }, 1800);
-      } catch {
-        setSaveState("error");
-        saveTimerRef.current = setTimeout(() => {
-          setSaveState("idle");
-          saveTimerRef.current = null;
-        }, 2200);
-      }
-    }
-    function updateOptions(patch) {
-      onChange({ ...config, options: { ...config.options, ...patch } });
-    }
-    const isCustom = config.preset === "custom";
-    const title = isCustom ? manifest.state === "ok" && manifest.name ? manifest.name : t("streamProviderCustomUrl") : PRESET_NAMES[config.preset];
-    return /* @__PURE__ */ jsxs("div", { className: `rounded-xl border transition ${config.enabled ? "border-aurora-400/30 bg-aurora-400/5" : "border-white/10 bg-slate-900/60"}`, children: [
-      /* @__PURE__ */ jsxs(
-        "div",
-        {
-          className: "flex cursor-pointer items-center justify-between gap-3 px-4 py-3 select-none",
-          onClick: () => setExpanded((v) => !v),
-          children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-2", children: [
-              /* @__PURE__ */ jsx(
-                "input",
-                {
-                  type: "checkbox",
-                  checked: config.enabled,
-                  onChange: (e) => {
-                    e.stopPropagation();
-                    onChange({ ...config, enabled: e.target.checked });
-                  },
-                  onClick: (e) => e.stopPropagation(),
-                  className: "h-3.5 w-3.5 cursor-pointer rounded accent-aurora-400"
-                }
-              ),
-              /* @__PURE__ */ jsx("p", { className: `text-sm font-medium ${config.enabled ? "text-white" : "text-slate-500"}`, children: title }),
-              manifest.state === "ok" && manifest.version && /* @__PURE__ */ jsxs("span", { className: "text-[10px] text-slate-600", children: [
-                "v",
-                manifest.version
-              ] }),
-              /* @__PURE__ */ jsx(
-                "span",
-                {
-                  className: `h-1.5 w-1.5 flex-shrink-0 rounded-full ${!config.enabled ? "bg-red-500" : manifest.state === "loading" ? "bg-amber-400 animate-pulse" : manifest.state === "ok" ? "bg-emerald-400" : manifest.state === "error" ? "bg-red-400" : "bg-slate-700"}`,
-                  title: manifest.state === "error" ? manifest.error : manifest.state
-                }
-              ),
-              isCustom && /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-600", children: (() => {
-                const rawUrl = config.options.rawUrl;
-                if (!rawUrl) return t("streamProviderNoUrl");
-                try {
-                  return new URL(rawUrl.replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "")).hostname;
-                } catch {
-                  return rawUrl.slice(0, 40);
-                }
-              })() })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5", onClick: (e) => e.stopPropagation(), children: [
-              /* @__PURE__ */ jsx(
-                "button",
-                {
-                  type: "button",
-                  onClick: onMoveUp,
-                  disabled: isFirst,
-                  className: "rounded-md border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 transition hover:border-white/20 hover:text-slate-300 disabled:opacity-30",
-                  children: "\u2191"
-                }
-              ),
-              /* @__PURE__ */ jsx(
-                "button",
-                {
-                  type: "button",
-                  onClick: onMoveDown,
-                  disabled: isLast,
-                  className: "rounded-md border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 transition hover:border-white/20 hover:text-slate-300 disabled:opacity-30",
-                  children: "\u2193"
-                }
-              ),
-              onRemove && /* @__PURE__ */ jsx(
-                "button",
-                {
-                  type: "button",
-                  onClick: onRemove,
-                  className: "text-[10px] uppercase tracking-[0.1em] text-red-400/70 transition hover:text-red-300",
-                  children: t("remove")
-                }
-              ),
-              /* @__PURE__ */ jsx("span", { className: "ml-1 text-[10px] text-slate-600", children: expanded ? "\u25B2" : "\u25BC" })
-            ] })
-          ]
-        }
-      ),
-      expanded && /* @__PURE__ */ jsxs("div", { className: "space-y-4 border-t border-white/5 px-4 pb-4 pt-4", children: [
-        config.preset === "torrentio" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsx(
-              DebridKeyField,
-              {
-                debridProvider: opts.debridProvider,
-                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
-              }
-            ),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.qualityFilter,
-                  onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t("streamProviderSelectQualities"),
-                  options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.languages,
-                  onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t("streamProviderSelectLanguages"),
-                  options: catalogs?.languages ?? TORRENTIO_LANGUAGE_OPTIONS
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderSources") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.providers,
-                  onChange: (v) => updateOptions({ providers: v }),
-                  placeholder: t("streamProviderSelectSources"),
-                  options: catalogs?.providers ?? TORRENTIO_PROVIDERS.map((p) => ({ id: p, label: p }))
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Sort" }),
-                /* @__PURE__ */ jsx(
-                  "select",
-                  {
-                    value: opts.sort,
-                    onChange: (event) => updateOptions({ sort: event.target.value }),
-                    className: "h-12 w-full rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition hover:border-white/20 focus:border-white/20",
-                    children: (catalogs?.sort ?? TORRENTIO_SORT_OPTIONS).map(({ id: id4, label }) => /* @__PURE__ */ jsx("option", { value: id4, className: "bg-slate-900 text-white", children: label }, id4))
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Max results (0 = no limit)" }),
-                /* @__PURE__ */ jsx(
-                  import_react56.Input,
-                  {
-                    type: "number",
-                    value: String(opts.limit),
-                    onValueChange: (v) => updateOptions({ limit: Math.max(0, Number(v) || 0) }),
-                    radius: "lg",
-                    classNames: heroInputClassNames
-                  }
-                )
-              ] })
-            ] })
-          ] });
-        })(),
-        config.preset === "torrentsdb" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsx(
-              DebridKeyField,
-              {
-                debridProvider: opts.debridProvider,
-                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
-              }
-            ),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.qualityFilter,
-                  onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t("streamProviderSelectQualities"),
-                  options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.languages,
-                  onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t("streamProviderSelectLanguages"),
-                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
-                }
-              )
-            ] })
-          ] });
-        })(),
-        config.preset === "comet" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsx(
-              DebridKeyField,
-              {
-                debridProvider: opts.debridProvider,
-                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
-              }
-            ),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.qualityFilter,
-                  onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t("streamProviderSelectQualities"),
-                  options: COMET_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.languages,
-                  onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t("streamProviderSelectLanguages"),
-                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderMaxResults") }),
-                /* @__PURE__ */ jsx(
-                  import_react56.Input,
-                  {
-                    type: "number",
-                    value: String(opts.maxResults),
-                    onValueChange: (v) => updateOptions({ maxResults: Number(v) || 5 }),
-                    radius: "lg",
-                    classNames: heroInputClassNames
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Max size (GB, 0 = no limit)" }),
-                /* @__PURE__ */ jsx(
-                  import_react56.Input,
-                  {
-                    type: "number",
-                    value: String(opts.maxSize),
-                    onValueChange: (v) => updateOptions({ maxSize: Math.max(0, Number(v) || 0) }),
-                    radius: "lg",
-                    classNames: heroInputClassNames
-                  }
-                )
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3", children: [
-              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
-                /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsx("p", { className: "text-sm text-white", children: "Cached only" }),
-                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: "Only show cached (instant) results" })
-                ] }),
-                /* @__PURE__ */ jsx(
-                  import_react56.Switch,
-                  {
-                    isSelected: opts.cachedOnly,
-                    onValueChange: (v) => updateOptions({ cachedOnly: v }),
-                    size: "sm",
-                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
-                /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsx("p", { className: "text-sm text-white", children: "Mix cached & uncached" }),
-                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: "Sort cached and uncached results together" })
-                ] }),
-                /* @__PURE__ */ jsx(
-                  import_react56.Switch,
-                  {
-                    isSelected: opts.sortCachedUncachedTogether,
-                    onValueChange: (v) => updateOptions({ sortCachedUncachedTogether: v }),
-                    size: "sm",
-                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
-                  }
-                )
-              ] })
-            ] })
-          ] });
-        })(),
-        config.preset === "jackettio" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsx(
-              DebridKeyField,
-              {
-                debridProvider: opts.debridProvider,
-                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
-              }
-            ),
-            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: "Jackettio st\xF6djer Real-Debrid och AllDebrid \u2014 andra val faller tillbaka till Real-Debrid." }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.qualityFilter,
-                  onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t("streamProviderSelectQualities"),
-                  options: JACKETTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.languages,
-                  onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t("streamProviderSelectLanguages"),
-                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Max torrents (0 = default 8)" }),
-                /* @__PURE__ */ jsx(
-                  import_react56.Input,
-                  {
-                    type: "number",
-                    value: String(opts.maxTorrents),
-                    onValueChange: (v) => updateOptions({ maxTorrents: Math.max(0, Number(v) || 0) }),
-                    radius: "lg",
-                    classNames: heroInputClassNames
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxs("div", { className: "flex items-end justify-between gap-3 pb-1", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Endast cachade" }),
-                /* @__PURE__ */ jsx(
-                  import_react56.Switch,
-                  {
-                    isSelected: opts.hideUncached,
-                    onValueChange: (v) => updateOptions({ hideUncached: v }),
-                    size: "sm",
-                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
-                  }
-                )
-              ] })
-            ] })
-          ] });
-        })(),
-        config.preset === "aiostreams" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: t("aiostreamsHint") }),
-            /* @__PURE__ */ jsx(
-              "a",
-              {
-                href: "https://aiostreams.elfhosted.com/stremio/configure",
-                target: "_blank",
-                rel: "noreferrer",
-                className: "inline-flex rounded-full border border-white/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-slate-300 transition hover:border-white/30 hover:text-white",
-                children: t("aiostreamsOpenConfig")
-              }
-            ),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("aiostreamsManifestLabel") }),
-              /* @__PURE__ */ jsx(
-                import_react56.Input,
-                {
-                  type: "text",
-                  value: opts.manifestUrl,
-                  onValueChange: (v) => updateOptions({ manifestUrl: v }),
-                  placeholder: "https://aiostreams.elfhosted.com/stremio/<uuid>/<l\xF6senord>/manifest.json",
-                  radius: "lg",
-                  classNames: heroInputClassNames
-                }
-              )
-            ] })
-          ] });
-        })(),
-        config.preset === "orion" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsx(SectionLabel, { children: "Orion API Key" }),
-              /* @__PURE__ */ jsx(
-                import_react56.Input,
-                {
-                  type: "password",
-                  value: opts.orionKey,
-                  onValueChange: (v) => updateOptions({ orionKey: v.trim() }),
-                  placeholder: "Klistra in din Orion API-nyckel",
-                  radius: "lg",
-                  classNames: heroInputClassNames
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsx(
-              DebridKeyField,
-              {
-                debridProvider: opts.debridProvider,
-                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
-              }
-            )
-          ] });
-        })(),
-        config.preset === "custom" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx(SectionLabel, { children: t("streamProviderManifestUrl") }),
-            /* @__PURE__ */ jsx(
-              import_react56.Input,
-              {
-                type: "text",
-                value: opts.rawUrl,
-                onValueChange: (v) => updateOptions({ rawUrl: v.trim() }),
-                placeholder: t("streamProviderManifestPlaceholder"),
-                radius: "lg",
-                classNames: heroInputClassNames
-              }
-            )
-          ] });
-        })(),
-        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-3 border-t border-white/5 pt-3", children: [
-          /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-500", children: saveState === "saved" ? /* @__PURE__ */ jsx("span", { className: "text-emerald-300", children: "Sparat!" }) : saveState === "error" ? /* @__PURE__ */ jsx("span", { className: "text-rose-300", children: "Kunde inte spara" }) : hasPendingChanges ? /* @__PURE__ */ jsx("span", { children: "Osparade \xE4ndringar" }) : /* @__PURE__ */ jsx("span", { children: "\xA0" }) }),
-          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-            /* @__PURE__ */ jsx(
-              "button",
-              {
-                type: "button",
-                onClick: persistCard,
-                className: "rounded-md border border-white/10 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-300 transition hover:border-white/20 hover:text-white",
-                children: saveState === "saved" ? "Sparat" : "Spara"
-              }
-            ),
-            /* @__PURE__ */ jsx(
-              "button",
-              {
-                type: "button",
-                onClick: refresh,
-                disabled: manifest.state === "loading",
-                className: "text-[10px] uppercase tracking-[0.1em] text-slate-500 transition hover:text-slate-300 disabled:opacity-40",
-                children: manifest.state === "loading" ? "..." : "Refresh manifest"
-              }
-            )
-          ] })
-        ] })
-      ] })
-    ] });
-  }
-  function defaultOptions(preset) {
-    switch (preset) {
-      case "torrentio":
-        return {
-          streamProvider: "realdebrid",
-          debridProvider: "realdebrid",
-          qualityFilter: [],
-          languages: [],
-          providers: [],
-          sort: "quality",
-          limit: 0
-        };
-      case "torrentsdb":
-        return {
-          streamProvider: "realdebrid",
-          debridProvider: "realdebrid",
-          qualityFilter: [],
-          languages: []
-        };
-      case "comet":
-        return {
-          streamProvider: "realdebrid",
-          debridProvider: "realdebrid",
-          languages: [],
-          qualityFilter: [],
-          maxResults: 5,
-          maxSize: 0,
-          cachedOnly: false,
-          sortCachedUncachedTogether: true
-        };
-      case "jackettio":
-        return {
-          streamProvider: "realdebrid",
-          debridProvider: "realdebrid",
-          languages: [],
-          qualityFilter: [],
-          maxTorrents: 0,
-          hideUncached: false
-        };
-      case "aiostreams":
-        return { manifestUrl: "" };
-      case "orion":
-        return {
-          orionKey: "",
-          streamProvider: "realdebrid",
-          debridProvider: "realdebrid"
-        };
-      case "custom":
-        return { rawUrl: "" };
-    }
-  }
-  var ADDABLE_PRESETS = [
-    "torrentio",
-    "comet",
-    "jackettio",
-    "aiostreams",
-    "orion",
-    "custom"
-  ];
-  function ScrapersSettingsSection() {
-    const { t } = useLang();
-    const [configs, setConfigsState] = useState(() => getStreamProviderConfigs());
-    const configsRef = useRef(configs);
-    configsRef.current = configs;
-    const addedPresets = new Set(configs.map((c) => c.preset));
-    const availableToAdd = ADDABLE_PRESETS.filter((preset) => !addedPresets.has(preset) || preset === "custom");
-    function saveConfigs(next2) {
-      configsRef.current = next2;
-      setConfigsState(next2);
-      setStreamProviderConfigs(next2);
-    }
-    function handleConfigChange(updated) {
-      saveConfigs(configsRef.current.map((c) => c.id === updated.id ? updated : c));
-    }
-    function handleRemove(id4) {
-      saveConfigs(configsRef.current.filter((c) => c.id !== id4));
-    }
-    function handleMoveByOffset(id4, offset) {
-      const current2 = configsRef.current;
-      const idx = current2.findIndex((c) => c.id === id4);
-      if (idx < 0) return;
-      const next2 = [...current2];
-      const target = idx + offset;
-      if (target < 0 || target >= next2.length) return;
-      [next2[idx], next2[target]] = [next2[target], next2[idx]];
-      saveConfigs(next2);
-    }
-    function handleAddPreset(preset) {
-      const id4 = preset === "custom" ? `custom-${Date.now()}` : preset;
-      const newConfig = { id: id4, preset, enabled: true, options: defaultOptions(preset) };
-      saveConfigs([...configsRef.current, newConfig]);
-    }
-    return /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
-      configs.map((config, idx) => /* @__PURE__ */ jsx(
-        ScraperCard,
-        {
-          config,
-          onChange: handleConfigChange,
-          onRemove: () => handleRemove(config.id),
-          onMoveUp: () => handleMoveByOffset(config.id, -1),
-          onMoveDown: () => handleMoveByOffset(config.id, 1),
-          isFirst: idx === 0,
-          isLast: idx === configs.length - 1
-        },
-        config.id
-      )),
-      availableToAdd.length > 0 && /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: availableToAdd.map((preset) => /* @__PURE__ */ jsx(
-        "button",
-        {
-          type: "button",
-          onClick: () => handleAddPreset(preset),
-          className: "rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs text-slate-500 transition hover:border-white/30 hover:text-slate-300",
-          children: preset === "torrentio" ? t("streamProviderAddStandard") : preset === "torrentsdb" ? t("streamProviderAddIndexed") : preset === "comet" ? t("streamProviderAddComet") : preset === "jackettio" ? t("streamProviderAddJackettio") : preset === "aiostreams" ? t("streamProviderAddAiostreams") : preset === "orion" ? "+ Orion" : t("streamProviderAddCustom")
-        },
-        preset
-      )) })
-    ] });
-  }
-
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
-  init_react_shim();
-  var import_react_dom2 = __toESM(require_react_dom());
-
-  // lib/watched-episodes.ts
-  var KEY = "watched_episodes";
-  var EVENT = "lumio-watched-episodes-changed";
-  var DETAIL_EVENT = "lumio-watched-episode-mutated";
-  function epKey(tmdbId, season, episode) {
-    return `${tmdbId}-S${season}E${episode}`;
-  }
-  function read() {
-    if (typeof window === "undefined") return {};
-    try {
-      return JSON.parse(getScopedStorageItem(KEY) ?? "{}");
-    } catch {
-      return {};
-    }
-  }
-  function write(data) {
-    setScopedStorageItem(KEY, JSON.stringify(data));
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent(EVENT));
-    }
-  }
-  function isWatched(tmdbId, season, episode) {
-    return !!read()[epKey(tmdbId, season, episode)];
-  }
-  function setWatched(tmdbId, season, episode, watched, options) {
-    const data = read();
-    if (watched) {
-      data[epKey(tmdbId, season, episode)] = true;
-    } else {
-      delete data[epKey(tmdbId, season, episode)];
-    }
-    write(data);
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent(DETAIL_EVENT, {
-        detail: {
-          tmdbId,
-          imdbId: options?.imdbId ?? null,
-          season,
-          episode,
-          watched,
-          source: options?.source ?? "local"
-        }
-      }));
-    }
-  }
-  function toggleWatched(tmdbId, season, episode, options) {
-    const next2 = !isWatched(tmdbId, season, episode);
-    setWatched(tmdbId, season, episode, next2, options);
-    return next2;
-  }
-  function getWatchedForSeries(tmdbId) {
-    const data = read();
-    const prefix = `${tmdbId}-`;
-    return new Set(Object.keys(data).filter((k) => k.startsWith(prefix)));
-  }
-  function markSeasonWatched(tmdbId, season, episodeCount, options) {
-    const data = read();
-    for (let e = 1; e <= episodeCount; e++) {
-      data[epKey(tmdbId, season, e)] = true;
-    }
-    write(data);
-    if (typeof window !== "undefined") {
-      for (let e = 1; e <= episodeCount; e++) {
-        window.dispatchEvent(new CustomEvent(DETAIL_EVENT, {
-          detail: {
-            tmdbId,
-            imdbId: options?.imdbId ?? null,
-            season,
-            episode: e,
-            watched: true,
-            source: options?.source ?? "local"
-          }
-        }));
-      }
-    }
-  }
-  function onWatchedEpisodesChanged(listener) {
-    if (typeof window === "undefined") return () => {
-    };
-    window.addEventListener(EVENT, listener);
-    return () => window.removeEventListener(EVENT, listener);
-  }
-
-  // lib/watched-movies.ts
-  var KEY_WATCHED_MOVIES = "watched_movies";
-  var EVENT_WATCHED_MOVIES_CHANGED = "lumio-watched-movies-changed";
-  var DETAIL_EVENT_WATCHED_MOVIE_MUTATED = "lumio-watched-movie-mutated";
-  function normalizeId(value) {
-    if (typeof value !== "string") return null;
-    const trimmed = value.trim();
-    return trimmed.length > 0 ? trimmed : null;
-  }
-  function normalizeTitle(value) {
-    if (typeof value !== "string") return null;
-    const normalized = value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-    return normalized.length > 0 ? normalized : null;
-  }
-  function normalizeYear(value) {
-    return typeof value === "number" && Number.isFinite(value) ? value : null;
-  }
-  function readEntries() {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = getScopedStorageItem(KEY_WATCHED_MOVIES);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) return [];
-      return parsed.filter((entry) => Boolean(entry) && typeof entry === "object").map((entry) => ({
-        tmdbId: normalizeId(typeof entry.tmdbId === "string" ? entry.tmdbId : null),
-        imdbId: normalizeId(typeof entry.imdbId === "string" ? entry.imdbId : null),
-        title: typeof entry.title === "string" ? entry.title : null,
-        year: normalizeYear(typeof entry.year === "number" ? entry.year : null),
-        posterUrl: typeof entry.posterUrl === "string" ? entry.posterUrl : null,
-        watchedAt: typeof entry.watchedAt === "string" && entry.watchedAt.trim().length > 0 ? entry.watchedAt : (/* @__PURE__ */ new Date()).toISOString()
-      })).filter((entry) => Boolean(entry.tmdbId || entry.imdbId || normalizeTitle(entry.title) && entry.year != null));
-    } catch {
-      return [];
-    }
-  }
-  function writeEntries(entries) {
-    if (typeof window === "undefined") return;
-    setScopedStorageItem(KEY_WATCHED_MOVIES, JSON.stringify(entries));
-    window.dispatchEvent(new CustomEvent(EVENT_WATCHED_MOVIES_CHANGED, {
-      detail: {
-        action: "add",
-        entry: entries[0] ?? { watchedAt: (/* @__PURE__ */ new Date()).toISOString() },
-        source: "local",
-        entries
-      }
-    }));
-  }
-  function emitMutation(mutation) {
-    if (typeof window === "undefined") return;
-    window.dispatchEvent(new CustomEvent(DETAIL_EVENT_WATCHED_MOVIE_MUTATED, {
-      detail: {
-        ...mutation,
-        entries: readEntries()
-      }
-    }));
-  }
-  function sameMovie(entry, target) {
-    const entryTmdbId = normalizeId(entry.tmdbId);
-    const entryImdbId = normalizeId(entry.imdbId);
-    const entryTitle = normalizeTitle(entry.title);
-    const entryYear = normalizeYear(entry.year);
-    const targetTmdbId = normalizeId(target.tmdbId);
-    const targetImdbId = normalizeId(target.imdbId);
-    const targetTitle = normalizeTitle(target.title);
-    const targetYear = normalizeYear(target.year);
-    return Boolean(
-      entryTmdbId && targetTmdbId && entryTmdbId === targetTmdbId || entryImdbId && targetImdbId && entryImdbId === targetImdbId
-    ) || Boolean(
-      entryTitle && targetTitle && entryYear != null && targetYear != null && entryTitle === targetTitle && entryYear === targetYear
-    );
-  }
-  function setMovieWatched(entry, watched, options) {
-    const tmdbId = normalizeId(entry.tmdbId);
-    const imdbId = normalizeId(entry.imdbId);
-    const title = entry.title ?? null;
-    const year = normalizeYear(entry.year);
-    if (!tmdbId && !imdbId && !(normalizeTitle(title) && year != null)) return;
-    const current2 = readEntries();
-    const next2 = current2.filter((currentEntry) => !sameMovie(currentEntry, { tmdbId, imdbId, title, year }));
-    const nextEntry = {
-      tmdbId,
-      imdbId,
-      title,
-      year,
-      posterUrl: entry.posterUrl ?? null,
-      watchedAt: options?.watchedAt ?? entry.watchedAt ?? (/* @__PURE__ */ new Date()).toISOString()
-    };
-    if (watched) {
-      next2.unshift(nextEntry);
-    }
-    writeEntries(next2);
-    emitMutation({
-      action: watched ? "add" : "remove",
-      entry: nextEntry,
-      source: options?.source ?? "local"
-    });
-  }
-
-  // lib/playback-settings.ts
-  var KEY_DEFAULT_SUBTITLE_LANGUAGE = "playback_defaultSubtitleLanguage";
-  var KEY_FALLBACK_SUBTITLE_LANGUAGE = "playback_fallbackSubtitleLanguage";
-  var KEY_DEFAULT_AUDIO_LANGUAGE = "playback_defaultAudioLanguage";
-  var KEY_AUDIO_OUTPUT_MODE = "playback_audioOutputMode";
-  var KEY_DEFAULT_SUBTITLE_SIZE = "playback_defaultSubtitleSize";
-  var KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION = "playback_defaultSubtitleVerticalPosition";
-  var KEY_DEFAULT_SUBTITLE_OPACITY = "playback_defaultSubtitleOpacity";
-  var KEY_SUBTITLE_TEXT_COLOR = "playback_subtitleTextColor";
-  var KEY_SUBTITLE_BACKGROUND_COLOR = "playback_subtitleBackgroundColor";
-  var KEY_SUBTITLE_OUTLINE_COLOR = "playback_subtitleOutlineColor";
-  var KEY_DEFAULT_ASPECT_RATIO = "playback_defaultAspectRatio";
-  var KEY_REMEMBER_ASPECT_RATIO = "playback_rememberAspectRatio";
-  var KEY_AUTO_SKIP_INTRO = "playback_autoSkipIntro";
-  var KEY_AUTO_PLAY_MAX_STREAM_SIZE_GB = "playback_autoPlayMaxStreamSizeGb";
-  var KEY_STILL_WATCHING_ENABLED = "playback_stillWatchingEnabled";
-  var KEY_STILL_WATCHING_MAX_MINUTES = "playback_stillWatchingMaxMinutes";
-  var KEY_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES = "playback_disableSubtitlesWhenAudioMatches";
-  var KEY_NIGHT_MODE = "playback_nightMode";
-  var PLAYBACK_SETTINGS_CHANGED_EVENT = "lumio-playback-settings-changed";
-  var LANG_NAMES = {
-    en: "English",
-    sv: "Svenska",
-    no: "Norsk",
-    da: "Dansk",
-    fi: "Suomi",
-    de: "Deutsch",
-    fr: "Fran\xE7ais",
-    es: "Espa\xF1ol",
-    it: "Italiano",
-    pt: "Portugu\xEAs",
-    nl: "Nederlands",
-    pl: "Polski",
-    ru: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
-    ar: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629",
-    hi: "\u0939\u093F\u0928\u094D\u0926\u0940",
-    zh: "\u4E2D\u6587",
-    ja: "\u65E5\u672C\u8A9E",
-    ko: "\uD55C\uAD6D\uC5B4",
-    tr: "T\xFCrk\xE7e",
-    cs: "\u010Ce\u0161tina",
-    ro: "Rom\xE2n\u0103",
-    hu: "Magyar",
-    el: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC",
-    he: "\u05E2\u05D1\u05E8\u05D9\u05EA",
-    uk: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430",
-    sr: "Srpski",
-    hr: "Hrvatski",
-    sk: "Sloven\u010Dina",
-    bg: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438",
-    vi: "Ti\u1EBFng Vi\u1EC7t",
-    th: "\u0E44\u0E17\u0E22",
-    id: "Bahasa Indonesia"
-  };
-  var NIGHT_MODE_OPTIONS = ["off", "mild", "strong"];
-  var ASPECT_RATIO_MODES = ["auto", "contain", "fill", "ratio_16_9", "ratio_4_3"];
-  var LANG3_TO_2 = {
-    eng: "en",
-    swe: "sv",
-    nor: "no",
-    dan: "da",
-    fin: "fi",
-    deu: "de",
-    ger: "de",
-    fra: "fr",
-    fre: "fr",
-    spa: "es",
-    ita: "it",
-    por: "pt",
-    nld: "nl",
-    dut: "nl",
-    pol: "pl",
-    rus: "ru",
-    ara: "ar",
-    hin: "hi",
-    zho: "zh",
-    chi: "zh",
-    jpn: "ja",
-    kor: "ko",
-    tur: "tr",
-    ces: "cs",
-    cze: "cs",
-    ron: "ro",
-    rum: "ro",
-    hun: "hu",
-    ell: "el",
-    gre: "el",
-    heb: "he",
-    ukr: "uk",
-    srp: "sr",
-    hrv: "hr",
-    slk: "sk",
-    bul: "bg",
-    vie: "vi",
-    tha: "th",
-    ind: "id"
-  };
-  var DEFAULT_SUBTITLE_SIZE = 100;
-  var DEFAULT_AUDIO_OUTPUT_MODE = "best";
-  var DEFAULT_SUBTITLE_VERTICAL_POSITION = 5;
-  var DEFAULT_SUBTITLE_OPACITY = 100;
-  var DEFAULT_SUBTITLE_TEXT_COLOR = "#ffffff";
-  var DEFAULT_SUBTITLE_BACKGROUND_COLOR = "transparent";
-  var DEFAULT_SUBTITLE_OUTLINE_COLOR = "#000000";
-  var DEFAULT_ASPECT_RATIO = "auto";
-  var DEFAULT_REMEMBER_ASPECT_RATIO = false;
-  var DEFAULT_AUTO_SKIP_INTRO = false;
-  var DEFAULT_STILL_WATCHING_ENABLED = false;
-  var DEFAULT_STILL_WATCHING_MAX_MINUTES = 90;
-  var DEFAULT_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES = false;
-  var DEFAULT_NIGHT_MODE = "off";
-  function getStoredString(key, fallback = "") {
-    if (typeof window === "undefined") return fallback;
-    return getScopedStorageItem(key) ?? fallback;
-  }
-  function emitPlaybackSettingsChanged() {
-    if (typeof window === "undefined") return;
-    window.dispatchEvent(new Event(PLAYBACK_SETTINGS_CHANGED_EVENT));
-  }
-  function onPlaybackSettingsChanged(listener) {
-    if (typeof window === "undefined") return () => {
-    };
-    window.addEventListener(PLAYBACK_SETTINGS_CHANGED_EVENT, listener);
-    return () => window.removeEventListener(PLAYBACK_SETTINGS_CHANGED_EVENT, listener);
-  }
-  function normalizeLanguageCode(value) {
-    if (!value) return null;
-    const normalized = value.trim().toLowerCase();
-    if (!normalized) return null;
-    return LANG3_TO_2[normalized] ?? normalized;
-  }
-  function getDefaultSubtitleLanguage() {
-    return normalizeLanguageCode(getStoredString(KEY_DEFAULT_SUBTITLE_LANGUAGE, "")) ?? "";
-  }
-  function getFallbackSubtitleLanguage() {
-    return normalizeLanguageCode(getStoredString(KEY_FALLBACK_SUBTITLE_LANGUAGE, "")) ?? "";
-  }
-  function getDefaultAudioLanguage() {
-    return normalizeLanguageCode(getStoredString(KEY_DEFAULT_AUDIO_LANGUAGE, "")) ?? "";
-  }
-  function getAudioOutputMode() {
-    const stored = getStoredString(KEY_AUDIO_OUTPUT_MODE, DEFAULT_AUDIO_OUTPUT_MODE);
-    return stored === "compatible" || stored === "best" ? stored : DEFAULT_AUDIO_OUTPUT_MODE;
-  }
-  function getDefaultSubtitleSize() {
-    if (typeof window === "undefined") return DEFAULT_SUBTITLE_SIZE;
-    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_SIZE) ?? "", 10);
-    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_SIZE;
-  }
-  function setDefaultSubtitleSize(value) {
-    setScopedStorageItem(KEY_DEFAULT_SUBTITLE_SIZE, String(value));
-    emitPlaybackSettingsChanged();
-  }
-  function getDefaultSubtitleVerticalPosition() {
-    if (typeof window === "undefined") return DEFAULT_SUBTITLE_VERTICAL_POSITION;
-    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION) ?? "", 10);
-    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_VERTICAL_POSITION;
-  }
-  function setDefaultSubtitleVerticalPosition(value) {
-    setScopedStorageItem(KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION, String(value));
-    emitPlaybackSettingsChanged();
-  }
-  function getDefaultSubtitleOpacity() {
-    if (typeof window === "undefined") return DEFAULT_SUBTITLE_OPACITY;
-    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_OPACITY) ?? "", 10);
-    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_OPACITY;
-  }
-  function getSubtitleTextColor() {
-    return getStoredString(KEY_SUBTITLE_TEXT_COLOR, DEFAULT_SUBTITLE_TEXT_COLOR);
-  }
-  function getSubtitleBackgroundColor() {
-    return getStoredString(KEY_SUBTITLE_BACKGROUND_COLOR, DEFAULT_SUBTITLE_BACKGROUND_COLOR);
-  }
-  function getSubtitleOutlineColor() {
-    return getStoredString(KEY_SUBTITLE_OUTLINE_COLOR, DEFAULT_SUBTITLE_OUTLINE_COLOR);
-  }
-  function getDefaultAspectRatio() {
-    const stored = getStoredString(KEY_DEFAULT_ASPECT_RATIO, DEFAULT_ASPECT_RATIO);
-    return ASPECT_RATIO_MODES.includes(stored) ? stored : DEFAULT_ASPECT_RATIO;
-  }
-  function setDefaultAspectRatio(value) {
-    setScopedStorageItem(KEY_DEFAULT_ASPECT_RATIO, value);
-    emitPlaybackSettingsChanged();
-  }
-  function getRememberAspectRatio() {
-    if (typeof window === "undefined") return DEFAULT_REMEMBER_ASPECT_RATIO;
-    return (getScopedStorageItem(KEY_REMEMBER_ASPECT_RATIO) ?? "0") === "1";
-  }
-  function getAutoSkipIntro() {
-    if (typeof window === "undefined") return DEFAULT_AUTO_SKIP_INTRO;
-    return (getScopedStorageItem(KEY_AUTO_SKIP_INTRO) ?? "0") === "1";
-  }
-  function getStillWatchingEnabled() {
-    if (typeof window === "undefined") return DEFAULT_STILL_WATCHING_ENABLED;
-    return (getScopedStorageItem(KEY_STILL_WATCHING_ENABLED) ?? "0") === "1";
-  }
-  function getStillWatchingMaxMinutes() {
-    if (typeof window === "undefined") return DEFAULT_STILL_WATCHING_MAX_MINUTES;
-    const raw = Number.parseInt(getScopedStorageItem(KEY_STILL_WATCHING_MAX_MINUTES) ?? "", 10);
-    if (!Number.isFinite(raw) || raw <= 0) return DEFAULT_STILL_WATCHING_MAX_MINUTES;
-    return raw;
-  }
-  function getDisableSubtitlesWhenAudioMatches() {
-    if (typeof window === "undefined") return DEFAULT_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES;
-    return (getScopedStorageItem(KEY_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES) ?? "0") === "1";
-  }
-  function getAutoPlayMaxStreamSizeGb() {
-    if (typeof window === "undefined") return null;
-    const raw = Number.parseFloat(getScopedStorageItem(KEY_AUTO_PLAY_MAX_STREAM_SIZE_GB) ?? "");
-    if (!Number.isFinite(raw) || raw <= 0) return null;
-    return raw;
-  }
-  var KEY_EXTERNAL_PLAYER_APP = "playback_externalPlayerApp";
-  function getExternalPlayerApp() {
-    if (typeof window === "undefined") return "VLC";
-    const stored = (getScopedStorageItem(KEY_EXTERNAL_PLAYER_APP) ?? "").trim();
-    return stored || "VLC";
-  }
-  function getNightMode() {
-    const stored = getStoredString(KEY_NIGHT_MODE, DEFAULT_NIGHT_MODE);
-    return NIGHT_MODE_OPTIONS.includes(stored) ? stored : DEFAULT_NIGHT_MODE;
-  }
-  function setNightMode(value) {
-    setScopedStorageItem(KEY_NIGHT_MODE, value);
-    emitPlaybackSettingsChanged();
   }
 
   // lib/async-utils.ts
@@ -169130,836 +167755,413 @@
     }
   };
 
-  // lib/stream-provider-runtime/real-debrid/rd-client.ts
-  var RD_PROXY = "/api/stream-providers/realdebrid";
-  var RD_API_BASE_URL = "https://api.real-debrid.com/rest/1.0";
-  function getRdApiKey() {
-    if (typeof window === "undefined") return null;
-    const key = getGlobalStreamProviderAccessKey("realdebrid").trim();
-    return key || null;
+  // lib/watched-episodes.ts
+  var KEY = "watched_episodes";
+  var EVENT = "lumio-watched-episodes-changed";
+  var DETAIL_EVENT = "lumio-watched-episode-mutated";
+  function epKey(tmdbId, season, episode) {
+    return `${tmdbId}-S${season}E${episode}`;
   }
-  async function rdFetch(path, options = {}) {
-    const key = getRdApiKey();
-    const headers = {
-      ...options.headers
-    };
-    if (key) headers["x-stream-provider-token"] = key;
-    return fetch(`${RD_PROXY}${path}`, { ...options, headers });
-  }
-  async function rdDesktopJson(path, method = "GET", body) {
-    const token = getRdApiKey();
-    if (!token) throw new Error("No Real-Debrid API key configured");
-    const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
-    const headers = [`Authorization: Bearer ${token}`];
-    if (body && body.trim().length > 0) {
-      headers.push("Content-Type: application/x-www-form-urlencoded");
-    }
-    return invoke2("desktop_external_api_request", {
-      baseUrl: RD_API_BASE_URL,
-      path,
-      method,
-      headers,
-      body: body ?? null,
-      timeoutMs: 12e3
-    });
-  }
-  function isTransientDesktopRdError(error) {
-    const message = error instanceof Error ? error.message : String(error);
-    const normalized = message.toLowerCase();
-    return normalized.includes("timeout") || normalized.includes("timed out") || normalized.includes("failed to fetch") || normalized.includes("connection") || normalized.includes("network") || normalized.includes("reset by peer") || normalized.includes("could not resolve host") || normalized.includes("empty reply");
-  }
-  async function rdDesktopJsonWithRetry(path, method = "GET", body, attempts = 3) {
-    let lastError = null;
-    for (let attempt = 1; attempt <= attempts; attempt += 1) {
-      try {
-        return await rdDesktopJson(path, method, body);
-      } catch (error) {
-        lastError = error;
-        if (attempt >= attempts || !isTransientDesktopRdError(error)) break;
-        await new Promise((resolve) => setTimeout(resolve, 350 * attempt));
-      }
-    }
-    throw lastError instanceof Error ? lastError : new Error(String(lastError));
-  }
-  async function rdJson(path, options) {
-    if (isPluginDesktopHost()) {
-      const method = (options?.method ?? "GET").toUpperCase();
-      const rawBody = options?.body;
-      const body = typeof rawBody === "string" ? rawBody : rawBody instanceof URLSearchParams ? rawBody.toString() : void 0;
-      return rdDesktopJsonWithRetry(path, method, body, 3);
-    }
-    const res = await rdFetch(path, options);
-    const data = await res.json();
-    if (!res.ok) {
-      const msg = data.error ?? `HTTP ${res.status}`;
-      throw new Error(msg);
-    }
-    return data;
-  }
-  async function rdUnrestrictLink(link) {
-    return rdJson("/unrestrict/link", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ link }).toString()
-    });
-  }
-  async function rdAddMagnet(magnet) {
-    return rdJson("/torrents/addMagnet", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ magnet }).toString()
-    });
-  }
-  async function rdGetTorrentInfo(id4) {
-    return rdJson(`/torrents/info/${id4}`);
-  }
-  async function rdGetInstantAvailability(hashes) {
-    const cleaned = hashes.map((hash) => hash.trim().toLowerCase()).filter(Boolean);
-    if (cleaned.length === 0) return {};
-    return rdJson(
-      `/torrents/instantAvailability/${cleaned.join("/")}`
-    );
-  }
-  async function rdSelectFiles(id4, files = "all") {
-    if (isPluginDesktopHost()) {
-      await rdDesktopJsonWithRetry(
-        `/torrents/selectFiles/${id4}`,
-        "POST",
-        new URLSearchParams({ files }).toString(),
-        3
-      );
-      return;
-    }
-    const res = await rdFetch(`/torrents/selectFiles/${id4}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ files }).toString()
-    });
-    if (!res.ok && res.status !== 204) {
-      const data = await res.json();
-      throw new Error(data.error ?? `HTTP ${res.status}`);
-    }
-  }
-  function isMagnetLink(input) {
-    return input.trim().toLowerCase().startsWith("magnet:");
-  }
-
-  // lib/stream-provider-runtime/playback/providers/legacy-playback-provider.ts
-  function chunk(items, size) {
-    const result = [];
-    for (let index3 = 0; index3 < items.length; index3 += size) {
-      result.push(items.slice(index3, index3 + size));
-    }
-    return result;
-  }
-  async function lookupCachedStreams3(candidates) {
-    const cachedHashes = /* @__PURE__ */ new Set();
-    const cachedTitles = /* @__PURE__ */ new Set();
-    const downloadableHashes = /* @__PURE__ */ new Set();
-    const downloadableTitles = /* @__PURE__ */ new Set();
-    const cachedStreamKeys = /* @__PURE__ */ new Set();
-    const downloadableStreamKeys = /* @__PURE__ */ new Set();
-    const byHash = /* @__PURE__ */ new Map();
-    for (const candidate of candidates) {
-      const hash = candidate.infoHash.trim().toLowerCase();
-      if (!hash) continue;
-      const bucket = byHash.get(hash);
-      if (bucket) {
-        bucket.push(candidate);
-      } else {
-        byHash.set(hash, [candidate]);
-      }
-    }
-    const chunks = chunk([...byHash.keys()], 40);
-    const chunkResults = await Promise.all(
-      chunks.map(async (hashes) => {
-        try {
-          return await rdGetInstantAvailability(hashes);
-        } catch {
-          return {};
-        }
-      })
-    );
-    for (let i = 0; i < chunks.length; i++) {
-      const hashes = chunks[i];
-      const availability = chunkResults[i];
-      for (const hash of hashes) {
-        const relatedCandidates = byHash.get(hash) ?? [];
-        const availabilityEntry = availability[hash];
-        const rdEntries = Array.isArray(availabilityEntry) ? availabilityEntry : availabilityEntry?.rd;
-        const cachedFileIds = /* @__PURE__ */ new Set();
-        for (const rdVariant of rdEntries ?? []) {
-          if (!rdVariant || typeof rdVariant !== "object") continue;
-          for (const fileIdRaw of Object.keys(rdVariant)) {
-            const fileId = Number.parseInt(fileIdRaw, 10);
-            if (!Number.isNaN(fileId) && fileId >= 0) cachedFileIds.add(fileId);
-          }
-        }
-        const hasPerFileAvailability = cachedFileIds.size > 0;
-        const isCached = hasPerFileAvailability || (rdEntries?.length ?? 0) > 0;
-        downloadableHashes.add(hash);
-        downloadableStreamKeys.add(`${hash}@*`);
-        if (isCached) cachedHashes.add(hash);
-        if (isCached && !hasPerFileAvailability) cachedStreamKeys.add(`${hash}@*`);
-        for (const candidate of relatedCandidates) {
-          const title = candidate.title.trim();
-          const fileIdx = Number.isFinite(candidate.fileIdx) ? Math.trunc(candidate.fileIdx) : null;
-          const streamKey = `${hash}@${fileIdx != null ? fileIdx : "*"}`;
-          downloadableStreamKeys.add(streamKey);
-          if (title) downloadableTitles.add(title);
-          const candidateCached = hasPerFileAvailability ? fileIdx != null ? cachedFileIds.has(fileIdx) || cachedFileIds.has(fileIdx + 1) : true : isCached;
-          if (candidateCached) {
-            cachedStreamKeys.add(streamKey);
-            if (title) cachedTitles.add(title);
-          }
-        }
-      }
-    }
-    return {
-      cachedHashes,
-      cachedTitles,
-      downloadableHashes,
-      downloadableTitles,
-      cachedStreamKeys,
-      downloadableStreamKeys
-    };
-  }
-  var legacyPlaybackProvider = {
-    id: "legacy",
-    label: "Legacy playback provider",
-    getAccessKey() {
-      return getRdApiKey();
-    },
-    buildConfigSegment(accessKey, qualityFilter = "") {
-      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
-      segments.push(`realdebrid=${accessKey}`);
-      return segments.join("|");
-    },
-    lookupCachedStreams: lookupCachedStreams3,
-    hideUnknownStreamsFromList() {
-      return false;
-    },
-    isMagnetSource(input) {
-      return isMagnetLink(input);
-    },
-    addMagnet(magnet) {
-      return rdAddMagnet(magnet);
-    },
-    getSourceInfo(id4) {
-      return rdGetTorrentInfo(id4);
-    },
-    selectFiles(id4, files = "all") {
-      return rdSelectFiles(id4, files);
-    },
-    resolveLink(link) {
-      return rdUnrestrictLink(link);
-    }
-  };
-
-  // lib/stream-provider-runtime/playback/providers/offcloud-playback-provider.ts
-  var OFFCLOUD_PROXY = "/api/stream-providers/offcloud";
-  var sourceState2 = /* @__PURE__ */ new Map();
-  var linkCache = /* @__PURE__ */ new Map();
-  function getAccessKey2() {
-    const key = getStreamProviderAccessKey("offcloud").trim();
-    return key || null;
-  }
-  async function offcloudJson(path, init = {}) {
-    const token = getAccessKey2();
-    if (!token) throw new Error("Offcloud API key missing");
-    const headers = new Headers(init.headers);
-    headers.set("x-offcloud-key", token);
-    headers.set("Accept", "application/json");
-    if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
-    const response = await fetch(`${OFFCLOUD_PROXY}${path}`, {
-      ...init,
-      headers
-    });
-    const data = await response.json().catch(() => null);
-    if (!response.ok) {
-      const message = data?.error || data?.not_available || `Offcloud request failed (${response.status})`;
-      throw new Error(message);
-    }
-    if (data && typeof data === "object" && ("error" in data || "not_available" in data)) {
-      const message = data.error || data.not_available;
-      if (message) throw new Error(message);
-    }
-    return data;
-  }
-  function extractInfoHash2(input) {
-    const match = input.match(/btih:([a-f0-9]+)/i);
-    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
-  }
-  function buildSourceId2(requestId) {
-    return `oc-${requestId}`;
-  }
-  function getSourceState2(id4) {
-    const state = sourceState2.get(id4);
-    if (!state) throw new Error("Offcloud source not found");
-    return state;
-  }
-  function parseFilenameFromUrl(link) {
+  function read() {
+    if (typeof window === "undefined") return {};
     try {
-      const url = new URL(link);
-      const lastSegment = url.pathname.split("/").filter(Boolean).pop();
-      return decodeURIComponent(lastSegment || "download");
+      return JSON.parse(getScopedStorageItem(KEY) ?? "{}");
     } catch {
-      return link.split("/").pop()?.split("?")[0] ?? "download";
+      return {};
     }
   }
-  function toTrimmedString(value) {
-    if (typeof value === "string") return value.trim();
-    if (typeof value === "number" || typeof value === "boolean") return String(value).trim();
-    return "";
-  }
-  function toTorrentFile(link, index3, path, bytes = 0) {
-    return {
-      id: index3 + 1,
-      path: path || parseFilenameFromUrl(link),
-      bytes,
-      selected: 1
-    };
-  }
-  function mapStatus(status) {
-    switch (toTrimmedString(status).toLowerCase()) {
-      case "downloaded":
-        return "downloaded";
-      case "downloading":
-        return "downloading";
-      case "error":
-      case "canceled":
-        return "error";
-      case "queued":
-      case "created":
-      default:
-        return "queued";
+  function write(data) {
+    setScopedStorageItem(KEY, JSON.stringify(data));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent(EVENT));
     }
   }
-  async function getCloudStatus(requestId) {
-    return offcloudJson("/cloud/status", {
-      method: "POST",
-      body: JSON.stringify({ requestId })
-    });
+  function isWatched(tmdbId, season, episode) {
+    return !!read()[epKey(tmdbId, season, episode)];
   }
-  async function getCacheEntry(magnet) {
-    const data = await offcloudJson("/cache", {
-      method: "POST",
-      body: JSON.stringify({
-        urls: [magnet],
-        includeFiles: true
-      })
-    });
-    if (!Array.isArray(data)) return null;
-    const entry = data[0];
-    if (!entry || typeof entry !== "object") return null;
-    return entry;
-  }
-  async function lookupCachedStreams4(candidates) {
-    const data = await offcloudJson("/cache", {
-      method: "POST",
-      body: JSON.stringify({
-        urls: candidates.map((candidate) => `magnet:?xt=urn:btih:${candidate.infoHash}`),
-        includeFiles: false
-      })
-    });
-    const cachedHashes = /* @__PURE__ */ new Set();
-    const cachedTitles = /* @__PURE__ */ new Set();
-    const downloadableHashes = /* @__PURE__ */ new Set();
-    const downloadableTitles = /* @__PURE__ */ new Set();
-    if (!Array.isArray(data)) {
-      return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
+  function setWatched(tmdbId, season, episode, watched, options) {
+    const data = read();
+    if (watched) {
+      data[epKey(tmdbId, season, episode)] = true;
+    } else {
+      delete data[epKey(tmdbId, season, episode)];
     }
-    for (const [index3, entry] of data.entries()) {
-      if (!entry || typeof entry !== "object") continue;
-      if (!entry.cached) continue;
-      const candidate = candidates[index3];
-      if (!candidate) continue;
-      cachedHashes.add(candidate.infoHash);
-      if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
+    write(data);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent(DETAIL_EVENT, {
+        detail: {
+          tmdbId,
+          imdbId: options?.imdbId ?? null,
+          season,
+          episode,
+          watched,
+          source: options?.source ?? "local"
+        }
+      }));
     }
-    return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
   }
-  async function getExploreFiles(requestId) {
-    const data = await offcloudJson(`/cloud/explore/${encodeURIComponent(requestId)}`);
-    return Array.isArray(data.files) ? data.files : [];
+  function toggleWatched(tmdbId, season, episode, options) {
+    const next2 = !isWatched(tmdbId, season, episode);
+    setWatched(tmdbId, season, episode, next2, options);
+    return next2;
   }
-  async function buildTorrentInfo2(id4) {
-    const state = getSourceState2(id4);
-    const status = await getCloudStatus(state.requestId);
-    const normalizedStatus = mapStatus(status.status);
-    const statusLabel = toTrimmedString(status.status) || normalizedStatus;
-    const fileName = toTrimmedString(status.fileName);
-    const createdOn = toTrimmedString(status.createdOn);
-    const directUrl = toTrimmedString(status.url);
-    const exploreFiles = normalizedStatus === "downloaded" ? await getExploreFiles(state.requestId) : [];
-    const directLinks = exploreFiles.map((file) => toTrimmedString(file.url)).filter(Boolean);
-    if (normalizedStatus === "downloaded" && directLinks.length === 0 && directUrl) {
-      directLinks.push(directUrl);
+  function getWatchedForSeries(tmdbId) {
+    const data = read();
+    const prefix = `${tmdbId}-`;
+    return new Set(Object.keys(data).filter((k) => k.startsWith(prefix)));
+  }
+  function markSeasonWatched(tmdbId, season, episodeCount, options) {
+    const data = read();
+    for (let e = 1; e <= episodeCount; e++) {
+      data[epKey(tmdbId, season, e)] = true;
     }
-    for (const file of exploreFiles) {
-      const link = toTrimmedString(file.url);
-      if (link && !linkCache.has(link)) {
-        linkCache.set(link, {
-          filename: toTrimmedString(file.path) || toTrimmedString(file.name) || parseFilenameFromUrl(link),
-          filesize: typeof file.size === "number" ? file.size : 0
-        });
+    write(data);
+    if (typeof window !== "undefined") {
+      for (let e = 1; e <= episodeCount; e++) {
+        window.dispatchEvent(new CustomEvent(DETAIL_EVENT, {
+          detail: {
+            tmdbId,
+            imdbId: options?.imdbId ?? null,
+            season,
+            episode: e,
+            watched: true,
+            source: options?.source ?? "local"
+          }
+        }));
       }
     }
-    if (normalizedStatus === "downloaded" && directUrl && !linkCache.has(directUrl)) {
-      linkCache.set(directUrl, {
-        filename: fileName || parseFilenameFromUrl(directUrl),
-        filesize: 0
-      });
-    }
-    const files = directLinks.map((link, index3) => {
-      const cached = linkCache.get(link);
-      return toTorrentFile(link, index3, cached?.filename, cached?.filesize ?? 0);
-    });
-    const totalBytes = files.reduce((sum, file) => sum + file.bytes, 0);
-    return {
-      id: id4,
-      filename: fileName || files[0]?.path || state.hash,
-      hash: state.hash,
-      bytes: totalBytes,
-      host: "offcloud",
-      split: 0,
-      progress: normalizedStatus === "downloaded" ? 100 : normalizedStatus === "downloading" ? 50 : 0,
-      status: normalizedStatus,
-      statusLabel,
-      added: createdOn || state.addedAt,
-      links: directLinks,
-      original_filename: fileName || state.hash,
-      original_bytes: totalBytes,
-      files
-    };
   }
-  var offcloudPlaybackProvider = {
-    id: "offcloud",
-    label: "Offcloud playback provider",
-    getAccessKey: getAccessKey2,
-    buildConfigSegment(accessKey, qualityFilter = "") {
-      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
-      segments.push(`offcloud=${accessKey}`);
-      return segments.join("|");
-    },
-    lookupCachedStreams: lookupCachedStreams4,
-    hideUncachedStreamsFromList() {
-      return true;
-    },
-    hideUnknownStreamsFromList() {
-      return true;
-    },
-    isMagnetSource(input) {
-      return input.trim().toLowerCase().startsWith("magnet:");
-    },
-    async addMagnet(magnet) {
-      const cacheEntry = await getCacheEntry(magnet);
-      if (!cacheEntry?.cached) {
-        throw new Error("Not cached on Offcloud");
-      }
-      const data = await offcloudJson("/cloud", {
-        method: "POST",
-        body: JSON.stringify({ url: magnet })
-      });
-      const requestId = toTrimmedString(data.requestId);
-      if (!requestId) throw new Error("Offcloud did not return a request ID");
-      const id4 = buildSourceId2(requestId);
-      sourceState2.set(id4, {
-        requestId,
-        magnet,
-        hash: extractInfoHash2(magnet),
-        addedAt: toTrimmedString(data.createdOn) || (/* @__PURE__ */ new Date()).toISOString()
-      });
-      return {
-        id: id4,
-        uri: magnet,
-        hash: extractInfoHash2(magnet)
-      };
-    },
-    async getSourceInfo(id4) {
-      return buildTorrentInfo2(id4);
-    },
-    async selectFiles() {
-    },
-    async resolveLink(link) {
-      const cached = linkCache.get(link);
-      return {
-        id: link,
-        filename: cached?.filename ?? parseFilenameFromUrl(link),
-        mimeType: "application/octet-stream",
-        filesize: cached?.filesize ?? 0,
-        link,
-        host: "offcloud",
-        chunks: 1,
-        crc: 0,
-        download: link,
-        streamable: 0
-      };
-    }
-  };
+  function onWatchedEpisodesChanged(listener) {
+    if (typeof window === "undefined") return () => {
+    };
+    window.addEventListener(EVENT, listener);
+    return () => window.removeEventListener(EVENT, listener);
+  }
 
-  // lib/stream-provider-runtime/playback/providers/torbox-playback-provider.ts
-  var TORBOX_PROXY = "/api/stream-providers/torbox";
-  var INFO_CACHE_TTL_MS = 1500;
-  var VIDEO_EXT_RE = /\.(mkv|mp4|avi|m4v|mov|webm|ts|m2ts|wmv|flv)$/i;
-  var sourceState3 = /* @__PURE__ */ new Map();
-  var directLinkCache2 = /* @__PURE__ */ new Map();
-  function getAccessKey3() {
-    const key = getStreamProviderAccessKey("torbox").trim();
-    return key || null;
+  // lib/watched-movies.ts
+  var KEY_WATCHED_MOVIES = "watched_movies";
+  var EVENT_WATCHED_MOVIES_CHANGED = "lumio-watched-movies-changed";
+  var DETAIL_EVENT_WATCHED_MOVIE_MUTATED = "lumio-watched-movie-mutated";
+  function normalizeId(value) {
+    if (typeof value !== "string") return null;
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : null;
   }
-  function extractInfoHash3(input) {
-    const match = input.match(/btih:([a-f0-9]+)/i);
-    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
+  function normalizeTitle(value) {
+    if (typeof value !== "string") return null;
+    const normalized = value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+    return normalized.length > 0 ? normalized : null;
   }
-  function buildSourceId3(magnet) {
-    return `tb-${extractInfoHash3(magnet)}`;
+  function normalizeYear(value) {
+    return typeof value === "number" && Number.isFinite(value) ? value : null;
   }
-  function getSourceState3(id4) {
-    const state = sourceState3.get(id4);
-    if (!state) throw new Error("TorBox source not found");
-    return state;
-  }
-  async function torboxJson(path, init = {}) {
-    const token = getAccessKey3();
-    if (!token) throw new Error("TorBox key missing");
-    const headers = new Headers(init.headers);
-    headers.set("x-tb-token", token);
-    headers.set("Accept", "application/json");
-    const response = await fetch(`${TORBOX_PROXY}${path}`, { ...init, headers });
-    const data = await response.json().catch(() => null);
-    if (!response.ok) {
-      const message = data && typeof data === "object" && "error" in data && typeof data.error === "string" && data.error || data && typeof data === "object" && "detail" in data && typeof data.detail === "string" && data.detail || `TorBox request failed (${response.status})`;
-      throw new Error(message);
-    }
-    return data;
-  }
-  async function torboxCreateTorrent(magnet) {
-    const formData = new FormData();
-    formData.append("magnet", magnet);
-    formData.append("seed", "3");
-    formData.append("allow_zip", "false");
-    const data = await torboxJson(
-      "/torrents/createtorrent",
-      { method: "POST", body: formData }
-    );
-    if (!data.success || typeof data.data?.torrent_id !== "number") {
-      throw new Error(data.detail || data.error || "TorBox createtorrent failed");
-    }
-    return {
-      torrent_id: data.data.torrent_id,
-      hash: (data.data.hash ?? "").toLowerCase()
-    };
-  }
-  async function torboxGetInfo(torrentId) {
-    const data = await torboxJson(
-      `/torrents/mylist?bypass_cache=true&id=${torrentId}`
-    );
-    if (!data.success || !data.data) return null;
-    if (Array.isArray(data.data)) return data.data[0] ?? null;
-    return data.data;
-  }
-  async function prefetchVideoFileUrls(state) {
-    if (state.torrentId == null || !state.pendingInfo) return;
-    const info = await state.pendingInfo;
-    if (!info?.files || state.torrentId == null) return;
-    for (const file of info.files) {
-      const name = file.short_name?.trim() || file.name.trim();
-      if (!VIDEO_EXT_RE.test(name)) continue;
-      if (state.pendingDlUrls.has(file.id)) continue;
-      state.pendingDlUrls.set(file.id, torboxRequestDl(state.torrentId, file.id).catch(() => null));
-    }
-  }
-  async function torboxRequestDl(torrentId, fileId) {
-    const token = getAccessKey3();
-    if (!token) return null;
-    const data = await torboxJson(
-      `/torrents/requestdl?token=${encodeURIComponent(token)}&torrent_id=${torrentId}&file_id=${fileId}&redirect=false`
-    );
-    if (!data.success || typeof data.data !== "string") return null;
-    return data.data;
-  }
-  async function torboxCheckCached(hashes) {
-    const result = /* @__PURE__ */ new Set();
-    if (hashes.length === 0) return result;
-    const params = new URLSearchParams();
-    for (const h of hashes) params.append("hash", h);
-    params.set("format", "list");
-    params.set("list_files", "false");
+  function readEntries() {
+    if (typeof window === "undefined") return [];
     try {
-      const data = await torboxJson(
-        `/torrents/checkcached?${params}`
-      );
-      if (!data.success || !data.data) return result;
-      if (Array.isArray(data.data)) {
-        for (const entry of data.data) {
-          if (typeof entry?.hash === "string") result.add(entry.hash.toLowerCase());
-        }
-      } else if (typeof data.data === "object") {
-        for (const [hash, value] of Object.entries(data.data)) {
-          if (value) result.add(hash.toLowerCase());
-        }
-      }
+      const raw = getScopedStorageItem(KEY_WATCHED_MOVIES);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((entry) => Boolean(entry) && typeof entry === "object").map((entry) => ({
+        tmdbId: normalizeId(typeof entry.tmdbId === "string" ? entry.tmdbId : null),
+        imdbId: normalizeId(typeof entry.imdbId === "string" ? entry.imdbId : null),
+        title: typeof entry.title === "string" ? entry.title : null,
+        year: normalizeYear(typeof entry.year === "number" ? entry.year : null),
+        posterUrl: typeof entry.posterUrl === "string" ? entry.posterUrl : null,
+        watchedAt: typeof entry.watchedAt === "string" && entry.watchedAt.trim().length > 0 ? entry.watchedAt : (/* @__PURE__ */ new Date()).toISOString()
+      })).filter((entry) => Boolean(entry.tmdbId || entry.imdbId || normalizeTitle(entry.title) && entry.year != null));
     } catch {
+      return [];
     }
-    return result;
   }
-  function toTorrentFiles2(files, isSelected) {
-    return files.map((file) => ({
-      id: file.id,
-      path: file.short_name?.trim() || file.name.trim(),
-      bytes: file.size,
-      selected: isSelected(file.id) ? 1 : 0
+  function writeEntries(entries) {
+    if (typeof window === "undefined") return;
+    setScopedStorageItem(KEY_WATCHED_MOVIES, JSON.stringify(entries));
+    window.dispatchEvent(new CustomEvent(EVENT_WATCHED_MOVIES_CHANGED, {
+      detail: {
+        action: "add",
+        entry: entries[0] ?? { watchedAt: (/* @__PURE__ */ new Date()).toISOString() },
+        source: "local",
+        entries
+      }
     }));
   }
-  function mapStatus2(info) {
-    if (info.download_finished) return "downloaded";
-    const state = info.download_state?.toLowerCase() ?? "";
-    if (state.includes("cached")) return "downloaded";
-    if (state.includes("error") || state.includes("failed") || state.includes("dead")) return "error";
-    if (state.includes("queue")) return "queued";
-    if (state.includes("upload")) return "uploading";
-    if (state.includes("processing")) return "magnet_conversion";
-    return "downloading";
+  function emitMutation(mutation) {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new CustomEvent(DETAIL_EVENT_WATCHED_MOVIE_MUTATED, {
+      detail: {
+        ...mutation,
+        entries: readEntries()
+      }
+    }));
   }
-  function buildTorrentInfo3(state, info, status, files, links = [], statusLabel) {
-    const totalBytes = info?.size ?? files.reduce((sum, file) => sum + file.bytes, 0);
-    const selectedFiles = files.filter((file) => file.selected === 1);
-    return {
-      id: buildSourceId3(state.magnet),
-      filename: selectedFiles[0]?.path ?? files[0]?.path ?? info?.name ?? state.hash,
-      hash: state.hash,
-      bytes: totalBytes,
-      host: "torbox",
-      split: 0,
-      progress: status === "downloaded" ? 100 : 0,
-      status,
-      statusLabel,
-      added: state.addedAt,
-      links,
-      original_filename: info?.name ?? files[0]?.path ?? state.hash,
-      original_bytes: totalBytes,
-      files
+  function sameMovie(entry, target) {
+    const entryTmdbId = normalizeId(entry.tmdbId);
+    const entryImdbId = normalizeId(entry.imdbId);
+    const entryTitle = normalizeTitle(entry.title);
+    const entryYear = normalizeYear(entry.year);
+    const targetTmdbId = normalizeId(target.tmdbId);
+    const targetImdbId = normalizeId(target.imdbId);
+    const targetTitle = normalizeTitle(target.title);
+    const targetYear = normalizeYear(target.year);
+    return Boolean(
+      entryTmdbId && targetTmdbId && entryTmdbId === targetTmdbId || entryImdbId && targetImdbId && entryImdbId === targetImdbId
+    ) || Boolean(
+      entryTitle && targetTitle && entryYear != null && targetYear != null && entryTitle === targetTitle && entryYear === targetYear
+    );
+  }
+  function setMovieWatched(entry, watched, options) {
+    const tmdbId = normalizeId(entry.tmdbId);
+    const imdbId = normalizeId(entry.imdbId);
+    const title = entry.title ?? null;
+    const year = normalizeYear(entry.year);
+    if (!tmdbId && !imdbId && !(normalizeTitle(title) && year != null)) return;
+    const current2 = readEntries();
+    const next2 = current2.filter((currentEntry) => !sameMovie(currentEntry, { tmdbId, imdbId, title, year }));
+    const nextEntry = {
+      tmdbId,
+      imdbId,
+      title,
+      year,
+      posterUrl: entry.posterUrl ?? null,
+      watchedAt: options?.watchedAt ?? entry.watchedAt ?? (/* @__PURE__ */ new Date()).toISOString()
     };
-  }
-  var torboxPlaybackProvider = {
-    id: "torbox",
-    label: "TorBox playback provider",
-    getAccessKey: getAccessKey3,
-    // Torrentio's config segment for TorBox addons is `torbox=<api_key>`,
-    // analogous to `realdebrid=<api_key>` / `easydebrid=<api_key>` etc.
-    buildConfigSegment(accessKey, qualityFilter = "") {
-      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
-      segments.push(`torbox=${accessKey}`);
-      return segments.join("|");
-    },
-    async lookupCachedStreams(candidates) {
-      const hashes = candidates.map((candidate) => candidate.infoHash?.toLowerCase()).filter((hash) => Boolean(hash));
-      if (hashes.length === 0) {
-        return {
-          cachedHashes: /* @__PURE__ */ new Set(),
-          cachedTitles: /* @__PURE__ */ new Set(),
-          downloadableHashes: /* @__PURE__ */ new Set(),
-          downloadableTitles: /* @__PURE__ */ new Set()
-        };
-      }
-      const cached = await torboxCheckCached(hashes);
-      const cachedHashes = /* @__PURE__ */ new Set();
-      const cachedTitles = /* @__PURE__ */ new Set();
-      for (const candidate of candidates) {
-        const hash = candidate.infoHash?.toLowerCase();
-        if (hash && cached.has(hash)) {
-          cachedHashes.add(candidate.infoHash);
-          if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
-        }
-      }
-      return {
-        cachedHashes,
-        cachedTitles,
-        downloadableHashes: /* @__PURE__ */ new Set(),
-        downloadableTitles: /* @__PURE__ */ new Set()
-      };
-    },
-    hideUncachedStreamsFromList() {
-      return false;
-    },
-    hideUnknownStreamsFromList() {
-      return false;
-    },
-    isMagnetSource(input) {
-      return input.trim().toLowerCase().startsWith("magnet:");
-    },
-    async addMagnet(magnet) {
-      const id4 = buildSourceId3(magnet);
-      const hash = extractInfoHash3(magnet);
-      const existing = sourceState3.get(id4);
-      if (existing && existing.torrentId != null) {
-        existing.pendingInfo = torboxGetInfo(existing.torrentId).catch(() => null);
-        existing.pendingDlUrls = /* @__PURE__ */ new Map();
-        void prefetchVideoFileUrls(existing);
-        return { id: id4, uri: magnet, hash: existing.hash };
-      }
-      const created = await torboxCreateTorrent(magnet);
-      const pendingInfo = torboxGetInfo(created.torrent_id).catch(() => null);
-      const state = {
-        magnet,
-        hash: created.hash || hash,
-        addedAt: (/* @__PURE__ */ new Date()).toISOString(),
-        torrentId: created.torrent_id,
-        selectedFileIds: null,
-        pendingInfo,
-        lastInfo: null,
-        lastInfoAt: 0,
-        pendingDlUrls: /* @__PURE__ */ new Map()
-      };
-      sourceState3.set(id4, state);
-      void prefetchVideoFileUrls(state);
-      return { id: id4, uri: magnet, hash: created.hash || hash };
-    },
-    async getSourceInfo(id4) {
-      const state = getSourceState3(id4);
-      if (state.torrentId == null) {
-        throw new Error("TorBox torrent id not yet known");
-      }
-      let info;
-      if (state.pendingInfo) {
-        info = await state.pendingInfo;
-        state.pendingInfo = null;
-        state.lastInfo = info;
-        state.lastInfoAt = Date.now();
-      } else if (state.lastInfo && Date.now() - state.lastInfoAt < INFO_CACHE_TTL_MS) {
-        info = state.lastInfo;
-      } else {
-        info = await torboxGetInfo(state.torrentId);
-        state.lastInfo = info;
-        state.lastInfoAt = Date.now();
-      }
-      if (!info) {
-        return buildTorrentInfo3(state, null, "magnet_conversion", [], [], "Looking up on TorBox\u2026");
-      }
-      const isSelected = (fileId) => state.selectedFileIds === "all" || state.selectedFileIds instanceof Set && state.selectedFileIds.has(fileId);
-      const status = mapStatus2(info);
-      const files = toTorrentFiles2(info.files ?? [], isSelected);
-      if (status !== "downloaded") {
-        return buildTorrentInfo3(state, info, status, files, [], info.download_state);
-      }
-      if (state.selectedFileIds === null) {
-        return buildTorrentInfo3(state, info, "waiting_files_selection", files, [], "Select files");
-      }
-      const selectedFiles = files.filter((file) => file.selected === 1);
-      const resolvedLinks = await Promise.all(
-        selectedFiles.map(async (file) => {
-          const pending = state.pendingDlUrls.get(file.id);
-          const url = pending != null ? await pending : await torboxRequestDl(state.torrentId, file.id);
-          return url ? { url, file } : null;
-        })
-      );
-      const links = [];
-      for (const entry of resolvedLinks) {
-        if (!entry) continue;
-        links.push(entry.url);
-        directLinkCache2.set(entry.url, { filename: entry.file.path, filesize: entry.file.bytes });
-      }
-      if (links.length === 0) {
-        return buildTorrentInfo3(state, info, "error", files, [], "No playable links from TorBox");
-      }
-      return buildTorrentInfo3(state, info, "downloaded", files, links, "Ready");
-    },
-    async selectFiles(id4, files = "all") {
-      const state = getSourceState3(id4);
-      state.selectedFileIds = files === "all" ? "all" : new Set(
-        files.split(",").map((value) => Number.parseInt(value.trim(), 10)).filter((value) => Number.isFinite(value))
-      );
-    },
-    async resolveLink(link) {
-      const cached = directLinkCache2.get(link);
-      return {
-        id: link,
-        filename: cached?.filename ?? link.split("/").pop()?.split("?")[0] ?? "download",
-        mimeType: "application/octet-stream",
-        filesize: cached?.filesize ?? 0,
-        link,
-        host: "torbox",
-        chunks: 1,
-        crc: 0,
-        download: link,
-        streamable: 1
-      };
+    if (watched) {
+      next2.unshift(nextEntry);
     }
-  };
+    writeEntries(next2);
+    emitMutation({
+      action: watched ? "add" : "remove",
+      entry: nextEntry,
+      source: options?.source ?? "local"
+    });
+  }
 
-  // lib/stream-provider-runtime/playback/stream-provider-playback.ts
-  var playbackProviders = /* @__PURE__ */ new Map([
-    ["alldebrid", alldebridPlaybackProvider],
-    ["easydebrid", easyDebridPlaybackProvider],
-    ["offcloud", offcloudPlaybackProvider],
-    ["realdebrid", legacyPlaybackProvider],
-    ["torbox", torboxPlaybackProvider]
-  ]);
-  function getPlaybackProviderOverride() {
+  // lib/playback-settings.ts
+  var KEY_DEFAULT_SUBTITLE_LANGUAGE = "playback_defaultSubtitleLanguage";
+  var KEY_FALLBACK_SUBTITLE_LANGUAGE = "playback_fallbackSubtitleLanguage";
+  var KEY_DEFAULT_AUDIO_LANGUAGE = "playback_defaultAudioLanguage";
+  var KEY_AUDIO_OUTPUT_MODE = "playback_audioOutputMode";
+  var KEY_DEFAULT_SUBTITLE_SIZE = "playback_defaultSubtitleSize";
+  var KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION = "playback_defaultSubtitleVerticalPosition";
+  var KEY_DEFAULT_SUBTITLE_OPACITY = "playback_defaultSubtitleOpacity";
+  var KEY_SUBTITLE_TEXT_COLOR = "playback_subtitleTextColor";
+  var KEY_SUBTITLE_BACKGROUND_COLOR = "playback_subtitleBackgroundColor";
+  var KEY_SUBTITLE_OUTLINE_COLOR = "playback_subtitleOutlineColor";
+  var KEY_DEFAULT_ASPECT_RATIO = "playback_defaultAspectRatio";
+  var KEY_REMEMBER_ASPECT_RATIO = "playback_rememberAspectRatio";
+  var KEY_AUTO_SKIP_INTRO = "playback_autoSkipIntro";
+  var KEY_AUTO_PLAY_MAX_STREAM_SIZE_GB = "playback_autoPlayMaxStreamSizeGb";
+  var KEY_STILL_WATCHING_ENABLED = "playback_stillWatchingEnabled";
+  var KEY_STILL_WATCHING_MAX_MINUTES = "playback_stillWatchingMaxMinutes";
+  var KEY_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES = "playback_disableSubtitlesWhenAudioMatches";
+  var KEY_NIGHT_MODE = "playback_nightMode";
+  var PLAYBACK_SETTINGS_CHANGED_EVENT = "lumio-playback-settings-changed";
+  var LANG_NAMES = {
+    en: "English",
+    sv: "Svenska",
+    no: "Norsk",
+    da: "Dansk",
+    fi: "Suomi",
+    de: "Deutsch",
+    fr: "Fran\xE7ais",
+    es: "Espa\xF1ol",
+    it: "Italiano",
+    pt: "Portugu\xEAs",
+    nl: "Nederlands",
+    pl: "Polski",
+    ru: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
+    ar: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629",
+    hi: "\u0939\u093F\u0928\u094D\u0926\u0940",
+    zh: "\u4E2D\u6587",
+    ja: "\u65E5\u672C\u8A9E",
+    ko: "\uD55C\uAD6D\uC5B4",
+    tr: "T\xFCrk\xE7e",
+    cs: "\u010Ce\u0161tina",
+    ro: "Rom\xE2n\u0103",
+    hu: "Magyar",
+    el: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC",
+    he: "\u05E2\u05D1\u05E8\u05D9\u05EA",
+    uk: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430",
+    sr: "Srpski",
+    hr: "Hrvatski",
+    sk: "Sloven\u010Dina",
+    bg: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438",
+    vi: "Ti\u1EBFng Vi\u1EC7t",
+    th: "\u0E44\u0E17\u0E22",
+    id: "Bahasa Indonesia"
+  };
+  var NIGHT_MODE_OPTIONS = ["off", "mild", "strong"];
+  var ASPECT_RATIO_MODES = ["auto", "contain", "fill", "ratio_16_9", "ratio_4_3"];
+  var LANG3_TO_2 = {
+    eng: "en",
+    swe: "sv",
+    nor: "no",
+    dan: "da",
+    fin: "fi",
+    deu: "de",
+    ger: "de",
+    fra: "fr",
+    fre: "fr",
+    spa: "es",
+    ita: "it",
+    por: "pt",
+    nld: "nl",
+    dut: "nl",
+    pol: "pl",
+    rus: "ru",
+    ara: "ar",
+    hin: "hi",
+    zho: "zh",
+    chi: "zh",
+    jpn: "ja",
+    kor: "ko",
+    tur: "tr",
+    ces: "cs",
+    cze: "cs",
+    ron: "ro",
+    rum: "ro",
+    hun: "hu",
+    ell: "el",
+    gre: "el",
+    heb: "he",
+    ukr: "uk",
+    srp: "sr",
+    hrv: "hr",
+    slk: "sk",
+    bul: "bg",
+    vie: "vi",
+    tha: "th",
+    ind: "id"
+  };
+  var DEFAULT_SUBTITLE_SIZE = 100;
+  var DEFAULT_AUDIO_OUTPUT_MODE = "best";
+  var DEFAULT_SUBTITLE_VERTICAL_POSITION = 5;
+  var DEFAULT_SUBTITLE_OPACITY = 100;
+  var DEFAULT_SUBTITLE_TEXT_COLOR = "#ffffff";
+  var DEFAULT_SUBTITLE_BACKGROUND_COLOR = "transparent";
+  var DEFAULT_SUBTITLE_OUTLINE_COLOR = "#000000";
+  var DEFAULT_ASPECT_RATIO = "auto";
+  var DEFAULT_REMEMBER_ASPECT_RATIO = false;
+  var DEFAULT_AUTO_SKIP_INTRO = false;
+  var DEFAULT_STILL_WATCHING_ENABLED = false;
+  var DEFAULT_STILL_WATCHING_MAX_MINUTES = 90;
+  var DEFAULT_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES = false;
+  var DEFAULT_NIGHT_MODE = "off";
+  function getStoredString(key, fallback = "") {
+    if (typeof window === "undefined") return fallback;
+    return getScopedStorageItem(key) ?? fallback;
+  }
+  function emitPlaybackSettingsChanged() {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new Event(PLAYBACK_SETTINGS_CHANGED_EVENT));
+  }
+  function onPlaybackSettingsChanged(listener) {
+    if (typeof window === "undefined") return () => {
+    };
+    window.addEventListener(PLAYBACK_SETTINGS_CHANGED_EVENT, listener);
+    return () => window.removeEventListener(PLAYBACK_SETTINGS_CHANGED_EVENT, listener);
+  }
+  function normalizeLanguageCode(value) {
+    if (!value) return null;
+    const normalized = value.trim().toLowerCase();
+    if (!normalized) return null;
+    return LANG3_TO_2[normalized] ?? normalized;
+  }
+  function getDefaultSubtitleLanguage() {
+    return normalizeLanguageCode(getStoredString(KEY_DEFAULT_SUBTITLE_LANGUAGE, "")) ?? "";
+  }
+  function getFallbackSubtitleLanguage() {
+    return normalizeLanguageCode(getStoredString(KEY_FALLBACK_SUBTITLE_LANGUAGE, "")) ?? "";
+  }
+  function getDefaultAudioLanguage() {
+    return normalizeLanguageCode(getStoredString(KEY_DEFAULT_AUDIO_LANGUAGE, "")) ?? "";
+  }
+  function getAudioOutputMode() {
+    const stored = getStoredString(KEY_AUDIO_OUTPUT_MODE, DEFAULT_AUDIO_OUTPUT_MODE);
+    return stored === "compatible" || stored === "best" ? stored : DEFAULT_AUDIO_OUTPUT_MODE;
+  }
+  function getDefaultSubtitleSize() {
+    if (typeof window === "undefined") return DEFAULT_SUBTITLE_SIZE;
+    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_SIZE) ?? "", 10);
+    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_SIZE;
+  }
+  function setDefaultSubtitleSize(value) {
+    setScopedStorageItem(KEY_DEFAULT_SUBTITLE_SIZE, String(value));
+    emitPlaybackSettingsChanged();
+  }
+  function getDefaultSubtitleVerticalPosition() {
+    if (typeof window === "undefined") return DEFAULT_SUBTITLE_VERTICAL_POSITION;
+    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION) ?? "", 10);
+    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_VERTICAL_POSITION;
+  }
+  function setDefaultSubtitleVerticalPosition(value) {
+    setScopedStorageItem(KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION, String(value));
+    emitPlaybackSettingsChanged();
+  }
+  function getDefaultSubtitleOpacity() {
+    if (typeof window === "undefined") return DEFAULT_SUBTITLE_OPACITY;
+    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_OPACITY) ?? "", 10);
+    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_OPACITY;
+  }
+  function getSubtitleTextColor() {
+    return getStoredString(KEY_SUBTITLE_TEXT_COLOR, DEFAULT_SUBTITLE_TEXT_COLOR);
+  }
+  function getSubtitleBackgroundColor() {
+    return getStoredString(KEY_SUBTITLE_BACKGROUND_COLOR, DEFAULT_SUBTITLE_BACKGROUND_COLOR);
+  }
+  function getSubtitleOutlineColor() {
+    return getStoredString(KEY_SUBTITLE_OUTLINE_COLOR, DEFAULT_SUBTITLE_OUTLINE_COLOR);
+  }
+  function getDefaultAspectRatio() {
+    const stored = getStoredString(KEY_DEFAULT_ASPECT_RATIO, DEFAULT_ASPECT_RATIO);
+    return ASPECT_RATIO_MODES.includes(stored) ? stored : DEFAULT_ASPECT_RATIO;
+  }
+  function setDefaultAspectRatio(value) {
+    setScopedStorageItem(KEY_DEFAULT_ASPECT_RATIO, value);
+    emitPlaybackSettingsChanged();
+  }
+  function getRememberAspectRatio() {
+    if (typeof window === "undefined") return DEFAULT_REMEMBER_ASPECT_RATIO;
+    return (getScopedStorageItem(KEY_REMEMBER_ASPECT_RATIO) ?? "0") === "1";
+  }
+  function getAutoSkipIntro() {
+    if (typeof window === "undefined") return DEFAULT_AUTO_SKIP_INTRO;
+    return (getScopedStorageItem(KEY_AUTO_SKIP_INTRO) ?? "0") === "1";
+  }
+  function getStillWatchingEnabled() {
+    if (typeof window === "undefined") return DEFAULT_STILL_WATCHING_ENABLED;
+    return (getScopedStorageItem(KEY_STILL_WATCHING_ENABLED) ?? "0") === "1";
+  }
+  function getStillWatchingMaxMinutes() {
+    if (typeof window === "undefined") return DEFAULT_STILL_WATCHING_MAX_MINUTES;
+    const raw = Number.parseInt(getScopedStorageItem(KEY_STILL_WATCHING_MAX_MINUTES) ?? "", 10);
+    if (!Number.isFinite(raw) || raw <= 0) return DEFAULT_STILL_WATCHING_MAX_MINUTES;
+    return raw;
+  }
+  function getDisableSubtitlesWhenAudioMatches() {
+    if (typeof window === "undefined") return DEFAULT_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES;
+    return (getScopedStorageItem(KEY_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES) ?? "0") === "1";
+  }
+  function getAutoPlayMaxStreamSizeGb() {
     if (typeof window === "undefined") return null;
-    return window.__lumioPluginRuntime?.playbackProviderOverride ?? null;
+    const raw = Number.parseFloat(getScopedStorageItem(KEY_AUTO_PLAY_MAX_STREAM_SIZE_GB) ?? "");
+    if (!Number.isFinite(raw) || raw <= 0) return null;
+    return raw;
   }
-  function resolveActiveProviderId() {
-    return getPlaybackProviderOverride() ?? getActiveStreamProvider().trim().toLowerCase();
+  var KEY_EXTERNAL_PLAYER_APP = "playback_externalPlayerApp";
+  function getExternalPlayerApp() {
+    if (typeof window === "undefined") return "VLC";
+    const stored = (getScopedStorageItem(KEY_EXTERNAL_PLAYER_APP) ?? "").trim();
+    return stored || "VLC";
   }
-  function getActivePlaybackProvider() {
-    const providerId = resolveActiveProviderId();
-    const provider = playbackProviders.get(providerId);
-    if (!provider) throw new Error(`Playback provider "${providerId}" is not supported`);
-    return provider;
+  function getNightMode() {
+    const stored = getStoredString(KEY_NIGHT_MODE, DEFAULT_NIGHT_MODE);
+    return NIGHT_MODE_OPTIONS.includes(stored) ? stored : DEFAULT_NIGHT_MODE;
   }
-  function findActivePlaybackProvider() {
-    const providerId = resolveActiveProviderId();
-    return playbackProviders.get(providerId) ?? null;
-  }
-  function getPlaybackAccessKey() {
-    return findActivePlaybackProvider()?.getAccessKey() ?? null;
-  }
-  function buildPlaybackProviderConfigSegment(qualityFilter = "") {
-    const accessKey = getPlaybackAccessKey();
-    if (!accessKey) return null;
-    const provider = findActivePlaybackProvider();
-    if (!provider) return null;
-    return provider.buildConfigSegment(accessKey, qualityFilter);
-  }
-  var cacheProbeTtlMs = 6e4;
-  var cacheProbeMemo = /* @__PURE__ */ new Map();
-  function buildCacheProbeKey(providerId, candidates) {
-    const hashes = candidates.map((c) => c.infoHash?.toLowerCase() ?? "").filter(Boolean).sort().join(",");
-    return `${providerId}|${hashes}`;
-  }
-  async function lookupPlaybackCachedStreams(candidates) {
-    const provider = findActivePlaybackProvider();
-    if (!provider?.lookupCachedStreams) return null;
-    const key = buildCacheProbeKey(provider.id, candidates);
-    const now3 = Date.now();
-    const cached = cacheProbeMemo.get(key);
-    if (cached && cached.expiresAt > now3) return cached.result;
-    const result = await provider.lookupCachedStreams(candidates);
-    cacheProbeMemo.set(key, { expiresAt: now3 + cacheProbeTtlMs, result });
-    return result;
-  }
-  function hideUncachedPlaybackStreamsFromList() {
-    return findActivePlaybackProvider()?.hideUncachedStreamsFromList?.() ?? false;
-  }
-  function hideUnknownPlaybackStreamsFromList() {
-    return findActivePlaybackProvider()?.hideUnknownStreamsFromList?.() ?? false;
-  }
-  function isMagnetPlaybackSource(input) {
-    return getActivePlaybackProvider().isMagnetSource(input);
-  }
-  async function queueMagnetForPlayback(magnet) {
-    return getActivePlaybackProvider().addMagnet(magnet);
-  }
-  async function getPlaybackSourceInfo(id4) {
-    return getActivePlaybackProvider().getSourceInfo(id4);
-  }
-  async function selectPlaybackFiles(id4, files = "all") {
-    return getActivePlaybackProvider().selectFiles(id4, files);
-  }
-  async function resolvePlaybackLink(link) {
-    return getActivePlaybackProvider().resolveLink(link);
+  function setNightMode(value) {
+    setScopedStorageItem(KEY_NIGHT_MODE, value);
+    emitPlaybackSettingsChanged();
   }
 
   // lib/series-watchlist-feed.ts
@@ -170524,325 +168726,11 @@
   init_jsx_runtime_shim();
 
   // components/results/results-pagination.tsx
-  var import_react57 = __toESM(require_dist89());
+  var import_react55 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-R8sidV/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-juJJa8/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
-
-  // lib/tauri-mpv.ts
-  init_core();
-  init_event();
-  init_react_shim();
-
-  // lib/session-host.ts
-  function normalizeHost(rawHost) {
-    return rawHost.trim().toLowerCase().replace(/\.+$/, "");
-  }
-  function isLocalAppHost(hostname) {
-    const host = normalizeHost(hostname);
-    if (!host) return false;
-    if (host === "localhost" || host === "127.0.0.1" || host === "::1") return true;
-    if (host === "tauri.localhost" || host.endsWith(".tauri.localhost")) return true;
-    return false;
-  }
-  function isLanClientHost(hostname) {
-    return !isLocalAppHost(hostname);
-  }
-  function isLanClientSession() {
-    if (typeof window === "undefined") return false;
-    return isLanClientHost(window.location.hostname);
-  }
-
-  // lib/stream-provider-runtime/playback/resolve-stream-url.ts
-  var RESOLVE_URL_RE = /\/resolve\/(torbox|realdebrid|alldebrid|easydebrid|offcloud)\/[^/]+\/([a-f0-9]{40})\//i;
-  var VIDEO_EXT_RE2 = /\.(mkv|mp4|avi|m4v|mov|webm|ts|m2ts|wmv|flv)$/i;
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-  async function resolvePlayableStreamUrl(url) {
-    const match = url.match(RESOLVE_URL_RE);
-    if (!match) return url;
-    const provider = match[1].toLowerCase();
-    if (provider !== getActiveStreamProvider().trim().toLowerCase()) return url;
-    const infoHash = match[2].toLowerCase();
-    const wantedName = decodeURIComponent(url.split("/").pop()?.split("?")[0] ?? "").trim().toLowerCase();
-    try {
-      const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${infoHash}`);
-      const pollSchedule = [250, 500, 1e3, 1500, 1500, 2e3, 2e3, 2500, 2500];
-      for (let attempt = 0; attempt < pollSchedule.length; attempt += 1) {
-        const info = await getPlaybackSourceInfo(added.id);
-        if (info.status === "waiting_files_selection") {
-          const videoFiles = info.files.filter((file) => VIDEO_EXT_RE2.test(file.path));
-          const byName = wantedName ? videoFiles.find((file) => file.path.trim().toLowerCase().endsWith(wantedName)) : void 0;
-          const best = byName ?? [...videoFiles].sort((a, b) => b.bytes - a.bytes)[0];
-          if (!best) return url;
-          await selectPlaybackFiles(added.id, String(best.id));
-        } else if (info.status === "downloaded") {
-          if (info.links.length === 0) return url;
-          const link = await resolvePlaybackLink(info.links[0]);
-          return link.download || url;
-        } else if (info.status === "error" || info.status === "magnet_error" || info.status === "dead" || info.status === "virus" || info.status === "downloading") {
-          return url;
-        }
-        await sleep(pollSchedule[attempt]);
-      }
-    } catch {
-    }
-    return url;
-  }
-
-  // lib/tauri-mpv.ts
-  function detectTauriEnv() {
-    if (typeof window === "undefined") return false;
-    const maybeTauriWindow = window;
-    if (maybeTauriWindow.__TAURI_INTERNALS__ || maybeTauriWindow.__TAURI__) {
-      return true;
-    }
-    const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : "";
-    if (userAgent.includes("Tauri")) return true;
-    const host = window.location.hostname;
-    const port = window.location.port;
-    return isLocalAppHost(host) && port === "3011";
-  }
-  var isTauriEnv = detectTauriEnv();
-  var isDesktopTauriEnv = isTauriEnv && !(typeof navigator !== "undefined" && /android/i.test(navigator.userAgent));
-  function isLiveStreamUrl(url) {
-    const lower = url.toLowerCase();
-    const pathOnly = lower.split("?")[0].split("#")[0];
-    if (pathOnly.endsWith(".m3u8") || pathOnly.endsWith(".mpd")) return true;
-    return lower.includes("/live/") || lower.includes("hls/") || lower.includes("/dash/");
-  }
-  function sourceCacheUrl(originalUrl) {
-    if (!/^https?:\/\//i.test(originalUrl)) return null;
-    if (isLiveStreamUrl(originalUrl)) return null;
-    try {
-      if (isLocalAppHost(new URL(originalUrl).hostname)) return null;
-    } catch {
-      return null;
-    }
-    return `${window.location.origin}/api/source-cache?u=${encodeURIComponent(originalUrl)}`;
-  }
-  function warmSourceCache(originalUrl) {
-    const wrapped = sourceCacheUrl(originalUrl);
-    if (!wrapped) return;
-    void fetch(wrapped, { headers: { Range: "bytes=0-1" } }).then((r) => r.body?.cancel()).catch(() => {
-    });
-  }
-  function releaseSourceCache(originalUrl) {
-    if (!sourceCacheUrl(originalUrl)) return;
-    void fetch("/api/source-cache/release", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ u: originalUrl }),
-      keepalive: true
-    }).catch(() => {
-    });
-  }
-  async function openMpvPlayer(args) {
-    const { shouldAbort: _ignored, ...rest } = args;
-    const cached = sourceCacheUrl(args.url);
-    if (cached) {
-      if (args.shouldAbort?.()) return;
-      return invoke("mpv_open", { args: { ...rest, url: cached } });
-    }
-    const url = await resolvePlayableStreamUrl(args.url).catch(() => args.url);
-    if (args.shouldAbort?.()) return;
-    return invoke("mpv_open", { args: { ...rest, url } });
-  }
-  async function closeMpvPlayer() {
-    return invoke("mpv_close");
-  }
-  async function setMpvPause(paused) {
-    return invoke("mpv_set_pause", { paused });
-  }
-  async function setMpvAudioTrack(aid) {
-    return invoke("mpv_set_audio_track", { aid });
-  }
-  async function setMpvVideoGeometry(args) {
-    try {
-      return await invoke("mpv_set_video_geometry", {
-        aspectOverride: args.aspectOverride ?? null,
-        panscan: args.panscan,
-        videoZoom: args.videoZoom
-      });
-    } catch (error) {
-      const message = String(error ?? "");
-      if (!/mpv not initialized/i.test(message)) {
-        console.warn("[mpv] set video geometry error:", error);
-      }
-    }
-  }
-  async function setMpvSubtitleTrack(sid) {
-    return invoke("mpv_set_subtitle_track", { sid });
-  }
-  async function getMpvSid() {
-    return invoke("mpv_get_sid");
-  }
-  async function getMpvSubtitleTracks() {
-    return invoke("mpv_get_subtitle_tracks");
-  }
-  async function getMpvAudioTracks() {
-    return invoke("mpv_get_audio_tracks");
-  }
-  async function toggleWindowFullscreen() {
-    return invoke("toggle_window_fullscreen");
-  }
-  async function getWindowFullscreen() {
-    return invoke("get_window_fullscreen");
-  }
-  async function getWindowNativeFullscreen() {
-    return invoke("get_window_native_fullscreen");
-  }
-  async function setWindowFullscreen(fullscreen) {
-    return invoke("set_window_fullscreen", { fullscreen });
-  }
-  async function setWindowNativeFullscreen(fullscreen) {
-    return invoke("set_window_native_fullscreen", { fullscreen });
-  }
-  async function mpvGetAudioFilterChain() {
-    try {
-      return await invoke("mpv_get_af") || "(tom)";
-    } catch (e) {
-      return `(ol\xE4sbar: ${String(e)})`;
-    }
-  }
-  async function mpvCommand(args) {
-    try {
-      return await invoke("mpv_command_ts", { args });
-    } catch (e) {
-      console.warn("[mpv] command error:", args, e);
-    }
-  }
-  async function mpvSetPropertyStrings(props) {
-    try {
-      return await invoke("mpv_set_property_strings", { props });
-    } catch (e) {
-      console.warn("[mpv] set property error:", props, e);
-    }
-  }
-  async function mpvApplySubtitleStyle(args) {
-    try {
-      return await invoke("mpv_apply_subtitle_style", { args });
-    } catch (e) {
-      console.warn("[mpv] apply subtitle style error:", args, e);
-    }
-  }
-  function mpvSetBounds(rect) {
-    if (rect.width <= 0 || rect.height <= 0) return;
-    void invoke("mpv_set_bounds", {
-      x: rect.left,
-      y: rect.top,
-      w: rect.width,
-      h: rect.height,
-      windowHeight: window.innerHeight,
-      scale: window.devicePixelRatio
-    });
-  }
-  function useMpvPlayer(enabled = true) {
-    const [timePos, setTimePos] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [paused, setPaused] = useState(false);
-    const [ended, setEnded] = useState(false);
-    const [sid, setSid] = useState(null);
-    const [fileLoaded, setFileLoaded] = useState(false);
-    const [fileLoadedToken, setFileLoadedToken] = useState(0);
-    const [playbackRestarted, setPlaybackRestarted] = useState(false);
-    const [playbackRestartedToken, setPlaybackRestartedToken] = useState(0);
-    const [pausedForCache, setPausedForCache] = useState(false);
-    const [coreIdle, setCoreIdle] = useState(true);
-    const [firstFrameRendered, setFirstFrameRendered] = useState(false);
-    const [loadFailed, setLoadFailed] = useState(false);
-    const [loadFailedToken, setLoadFailedToken] = useState(0);
-    const [loadFailedError, setLoadFailedError] = useState(null);
-    useEffect(() => {
-      if (!isTauriEnv || !enabled) return;
-      const cleanups = [];
-      void listen("mpv://time-pos", (e) => setTimePos(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://duration", (e) => setDuration(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://paused", (e) => setPaused(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://ended", () => setEnded(true)).then((u) => cleanups.push(u));
-      void listen("mpv://sid", (e) => setSid(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://file-loaded", () => {
-        setFileLoaded(true);
-        setFileLoadedToken((t) => t + 1);
-      }).then((u) => cleanups.push(u));
-      void listen("mpv://playback-restart", () => {
-        setPlaybackRestarted(true);
-        setPlaybackRestartedToken((t) => t + 1);
-      }).then((u) => cleanups.push(u));
-      void listen("mpv://paused-for-cache", (e) => setPausedForCache(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://core-idle", (e) => setCoreIdle(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://first-frame-rendered", () => {
-        void fetch(`/api/debug-log?msg=${encodeURIComponent(`${performance.now().toFixed(0)} first-frame-rendered received`)}`);
-        setFirstFrameRendered(true);
-      }).then((u) => cleanups.push(u));
-      void listen("mpv://load-failed", (e) => {
-        setLoadFailedError(typeof e.payload === "number" ? e.payload : null);
-        setLoadFailed(true);
-        setLoadFailedToken((t) => t + 1);
-      }).then((u) => cleanups.push(u));
-      return () => cleanups.forEach((fn) => fn());
-    }, [enabled]);
-    const seek = useCallback((time2) => {
-      void mpvCommand(["seek", time2, "absolute"]);
-    }, []);
-    const seekRelative = useCallback((delta) => {
-      void mpvCommand(["seek", delta, "relative"]);
-    }, []);
-    const setPlayPause = useCallback((pause) => {
-      void mpvCommand(["set_property", "pause", pause]);
-    }, []);
-    const setVolume = useCallback((vol) => {
-      void mpvSetPropertyStrings([{ name: "volume", value: String(Math.round(vol * 100)) }]);
-    }, []);
-    const setMuted = useCallback((muted) => {
-      void mpvSetPropertyStrings([{ name: "mute", value: muted ? "yes" : "no" }]);
-    }, []);
-    const setAudioTrack = useCallback((aid) => {
-      void setMpvAudioTrack(aid);
-    }, []);
-    const resetFileLoaded = useCallback(() => {
-      setFileLoaded(false);
-    }, []);
-    const resetPlaybackRestarted = useCallback(() => {
-      setPlaybackRestarted(false);
-    }, []);
-    const resetFirstFrameRendered = useCallback(() => {
-      setFirstFrameRendered(false);
-    }, []);
-    const resetLoadFailed = useCallback(() => {
-      setLoadFailed(false);
-      setLoadFailedError(null);
-    }, []);
-    return {
-      timePos,
-      duration,
-      paused,
-      ended,
-      sid,
-      fileLoaded,
-      fileLoadedToken,
-      playbackRestarted,
-      playbackRestartedToken,
-      pausedForCache,
-      coreIdle,
-      firstFrameRendered,
-      loadFailed,
-      loadFailedToken,
-      loadFailedError,
-      seek,
-      seekRelative,
-      setPlayPause,
-      setVolume,
-      setMuted,
-      setAudioTrack,
-      resetFileLoaded,
-      resetPlaybackRestarted,
-      resetFirstFrameRendered,
-      resetLoadFailed
-    };
-  }
 
   // lib/utils/scroll-lock.ts
   function currentLockCount() {
@@ -173029,7 +170917,7 @@
   function isAbortError(error) {
     return error instanceof DOMException && error.name === "AbortError";
   }
-  function sleep2(ms) {
+  function sleep(ms) {
     return new Promise((resolve) => {
       window.setTimeout(resolve, ms);
     });
@@ -173077,7 +170965,7 @@
         const kind = classifyFetchError(error);
         if (kind === "rate_limited") throw error;
         lastError = error;
-        if (attempt < retries && retryDelayMs > 0) await sleep2(retryDelayMs);
+        if (attempt < retries && retryDelayMs > 0) await sleep(retryDelayMs);
       }
     }
     throw lastError ?? new Error("fetch_failed");
@@ -173097,7 +170985,7 @@
         const kind = classifyFetchError(error);
         if (kind === "rate_limited") throw error;
         lastError = error;
-        if (attempt < retries && retryDelayMs > 0) await sleep2(retryDelayMs);
+        if (attempt < retries && retryDelayMs > 0) await sleep(retryDelayMs);
       }
     }
     throw lastError ?? new Error("fetch_failed");
@@ -173595,7 +171483,7 @@
   var MAX_CACHE_ENTRIES = 600;
   var resultCache = /* @__PURE__ */ new Map();
   var inflight4 = /* @__PURE__ */ new Map();
-  function sleep3(ms) {
+  function sleep2(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
   function pruneCache(now3 = Date.now()) {
@@ -173686,7 +171574,7 @@
           const res = await fetch(url, { cache: "no-store", signal: controller.signal });
           if (!res.ok) {
             if (attempt === 0 && (res.status === 429 || res.status >= 500)) {
-              await sleep3(180);
+              await sleep2(180);
               continue;
             }
             throw new Error(`Subtitle search failed: ${res.status}`);
@@ -173695,7 +171583,7 @@
         } catch (error) {
           lastError = error;
           if (attempt === 0) {
-            await sleep3(180);
+            await sleep2(180);
             continue;
           }
         } finally {
@@ -178891,7 +176779,2132 @@ ${cue.text}
     }
   }
 
+  // lib/stream-provider-runtime/real-debrid/rd-client.ts
+  var RD_PROXY = "/api/stream-providers/realdebrid";
+  var RD_API_BASE_URL = "https://api.real-debrid.com/rest/1.0";
+  function getRdApiKey() {
+    if (typeof window === "undefined") return null;
+    const key = getGlobalStreamProviderAccessKey("realdebrid").trim();
+    return key || null;
+  }
+  async function rdFetch(path, options = {}) {
+    const key = getRdApiKey();
+    const headers = {
+      ...options.headers
+    };
+    if (key) headers["x-stream-provider-token"] = key;
+    return fetch(`${RD_PROXY}${path}`, { ...options, headers });
+  }
+  async function rdDesktopJson(path, method = "GET", body) {
+    const token = getRdApiKey();
+    if (!token) throw new Error("No Real-Debrid API key configured");
+    const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
+    const headers = [`Authorization: Bearer ${token}`];
+    if (body && body.trim().length > 0) {
+      headers.push("Content-Type: application/x-www-form-urlencoded");
+    }
+    return invoke2("desktop_external_api_request", {
+      baseUrl: RD_API_BASE_URL,
+      path,
+      method,
+      headers,
+      body: body ?? null,
+      timeoutMs: 12e3
+    });
+  }
+  function isTransientDesktopRdError(error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const normalized = message.toLowerCase();
+    return normalized.includes("timeout") || normalized.includes("timed out") || normalized.includes("failed to fetch") || normalized.includes("connection") || normalized.includes("network") || normalized.includes("reset by peer") || normalized.includes("could not resolve host") || normalized.includes("empty reply");
+  }
+  async function rdDesktopJsonWithRetry(path, method = "GET", body, attempts = 3) {
+    let lastError = null;
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+      try {
+        return await rdDesktopJson(path, method, body);
+      } catch (error) {
+        lastError = error;
+        if (attempt >= attempts || !isTransientDesktopRdError(error)) break;
+        await new Promise((resolve) => setTimeout(resolve, 350 * attempt));
+      }
+    }
+    throw lastError instanceof Error ? lastError : new Error(String(lastError));
+  }
+  async function rdJson(path, options) {
+    if (isPluginDesktopHost()) {
+      const method = (options?.method ?? "GET").toUpperCase();
+      const rawBody = options?.body;
+      const body = typeof rawBody === "string" ? rawBody : rawBody instanceof URLSearchParams ? rawBody.toString() : void 0;
+      return rdDesktopJsonWithRetry(path, method, body, 3);
+    }
+    const res = await rdFetch(path, options);
+    const data = await res.json();
+    if (!res.ok) {
+      const msg = data.error ?? `HTTP ${res.status}`;
+      throw new Error(msg);
+    }
+    return data;
+  }
+  async function rdUnrestrictLink(link) {
+    return rdJson("/unrestrict/link", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ link }).toString()
+    });
+  }
+  async function rdAddMagnet(magnet) {
+    return rdJson("/torrents/addMagnet", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ magnet }).toString()
+    });
+  }
+  async function rdGetTorrentInfo(id4) {
+    return rdJson(`/torrents/info/${id4}`);
+  }
+  async function rdGetInstantAvailability(hashes) {
+    const cleaned = hashes.map((hash) => hash.trim().toLowerCase()).filter(Boolean);
+    if (cleaned.length === 0) return {};
+    return rdJson(
+      `/torrents/instantAvailability/${cleaned.join("/")}`
+    );
+  }
+  async function rdSelectFiles(id4, files = "all") {
+    if (isPluginDesktopHost()) {
+      await rdDesktopJsonWithRetry(
+        `/torrents/selectFiles/${id4}`,
+        "POST",
+        new URLSearchParams({ files }).toString(),
+        3
+      );
+      return;
+    }
+    const res = await rdFetch(`/torrents/selectFiles/${id4}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ files }).toString()
+    });
+    if (!res.ok && res.status !== 204) {
+      const data = await res.json();
+      throw new Error(data.error ?? `HTTP ${res.status}`);
+    }
+  }
+  function isMagnetLink(input) {
+    return input.trim().toLowerCase().startsWith("magnet:");
+  }
+
+  // lib/stream-provider-runtime/playback/providers/legacy-playback-provider.ts
+  function chunk(items, size) {
+    const result = [];
+    for (let index3 = 0; index3 < items.length; index3 += size) {
+      result.push(items.slice(index3, index3 + size));
+    }
+    return result;
+  }
+  async function lookupCachedStreams3(candidates) {
+    const cachedHashes = /* @__PURE__ */ new Set();
+    const cachedTitles = /* @__PURE__ */ new Set();
+    const downloadableHashes = /* @__PURE__ */ new Set();
+    const downloadableTitles = /* @__PURE__ */ new Set();
+    const cachedStreamKeys = /* @__PURE__ */ new Set();
+    const downloadableStreamKeys = /* @__PURE__ */ new Set();
+    const byHash = /* @__PURE__ */ new Map();
+    for (const candidate of candidates) {
+      const hash = candidate.infoHash.trim().toLowerCase();
+      if (!hash) continue;
+      const bucket = byHash.get(hash);
+      if (bucket) {
+        bucket.push(candidate);
+      } else {
+        byHash.set(hash, [candidate]);
+      }
+    }
+    const chunks = chunk([...byHash.keys()], 40);
+    const chunkResults = await Promise.all(
+      chunks.map(async (hashes) => {
+        try {
+          return await rdGetInstantAvailability(hashes);
+        } catch {
+          return {};
+        }
+      })
+    );
+    for (let i = 0; i < chunks.length; i++) {
+      const hashes = chunks[i];
+      const availability = chunkResults[i];
+      for (const hash of hashes) {
+        const relatedCandidates = byHash.get(hash) ?? [];
+        const availabilityEntry = availability[hash];
+        const rdEntries = Array.isArray(availabilityEntry) ? availabilityEntry : availabilityEntry?.rd;
+        const cachedFileIds = /* @__PURE__ */ new Set();
+        for (const rdVariant of rdEntries ?? []) {
+          if (!rdVariant || typeof rdVariant !== "object") continue;
+          for (const fileIdRaw of Object.keys(rdVariant)) {
+            const fileId = Number.parseInt(fileIdRaw, 10);
+            if (!Number.isNaN(fileId) && fileId >= 0) cachedFileIds.add(fileId);
+          }
+        }
+        const hasPerFileAvailability = cachedFileIds.size > 0;
+        const isCached = hasPerFileAvailability || (rdEntries?.length ?? 0) > 0;
+        downloadableHashes.add(hash);
+        downloadableStreamKeys.add(`${hash}@*`);
+        if (isCached) cachedHashes.add(hash);
+        if (isCached && !hasPerFileAvailability) cachedStreamKeys.add(`${hash}@*`);
+        for (const candidate of relatedCandidates) {
+          const title = candidate.title.trim();
+          const fileIdx = Number.isFinite(candidate.fileIdx) ? Math.trunc(candidate.fileIdx) : null;
+          const streamKey = `${hash}@${fileIdx != null ? fileIdx : "*"}`;
+          downloadableStreamKeys.add(streamKey);
+          if (title) downloadableTitles.add(title);
+          const candidateCached = hasPerFileAvailability ? fileIdx != null ? cachedFileIds.has(fileIdx) || cachedFileIds.has(fileIdx + 1) : true : isCached;
+          if (candidateCached) {
+            cachedStreamKeys.add(streamKey);
+            if (title) cachedTitles.add(title);
+          }
+        }
+      }
+    }
+    return {
+      cachedHashes,
+      cachedTitles,
+      downloadableHashes,
+      downloadableTitles,
+      cachedStreamKeys,
+      downloadableStreamKeys
+    };
+  }
+  var legacyPlaybackProvider = {
+    id: "legacy",
+    label: "Legacy playback provider",
+    getAccessKey() {
+      return getRdApiKey();
+    },
+    buildConfigSegment(accessKey, qualityFilter = "") {
+      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
+      segments.push(`realdebrid=${accessKey}`);
+      return segments.join("|");
+    },
+    lookupCachedStreams: lookupCachedStreams3,
+    hideUnknownStreamsFromList() {
+      return false;
+    },
+    isMagnetSource(input) {
+      return isMagnetLink(input);
+    },
+    addMagnet(magnet) {
+      return rdAddMagnet(magnet);
+    },
+    getSourceInfo(id4) {
+      return rdGetTorrentInfo(id4);
+    },
+    selectFiles(id4, files = "all") {
+      return rdSelectFiles(id4, files);
+    },
+    resolveLink(link) {
+      return rdUnrestrictLink(link);
+    }
+  };
+
+  // lib/stream-provider-runtime/playback/providers/offcloud-playback-provider.ts
+  var OFFCLOUD_PROXY = "/api/stream-providers/offcloud";
+  var sourceState2 = /* @__PURE__ */ new Map();
+  var linkCache = /* @__PURE__ */ new Map();
+  function getAccessKey2() {
+    const key = getStreamProviderAccessKey("offcloud").trim();
+    return key || null;
+  }
+  async function offcloudJson(path, init = {}) {
+    const token = getAccessKey2();
+    if (!token) throw new Error("Offcloud API key missing");
+    const headers = new Headers(init.headers);
+    headers.set("x-offcloud-key", token);
+    headers.set("Accept", "application/json");
+    if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+    const response = await fetch(`${OFFCLOUD_PROXY}${path}`, {
+      ...init,
+      headers
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = data?.error || data?.not_available || `Offcloud request failed (${response.status})`;
+      throw new Error(message);
+    }
+    if (data && typeof data === "object" && ("error" in data || "not_available" in data)) {
+      const message = data.error || data.not_available;
+      if (message) throw new Error(message);
+    }
+    return data;
+  }
+  function extractInfoHash2(input) {
+    const match = input.match(/btih:([a-f0-9]+)/i);
+    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
+  }
+  function buildSourceId2(requestId) {
+    return `oc-${requestId}`;
+  }
+  function getSourceState2(id4) {
+    const state = sourceState2.get(id4);
+    if (!state) throw new Error("Offcloud source not found");
+    return state;
+  }
+  function parseFilenameFromUrl(link) {
+    try {
+      const url = new URL(link);
+      const lastSegment = url.pathname.split("/").filter(Boolean).pop();
+      return decodeURIComponent(lastSegment || "download");
+    } catch {
+      return link.split("/").pop()?.split("?")[0] ?? "download";
+    }
+  }
+  function toTrimmedString(value) {
+    if (typeof value === "string") return value.trim();
+    if (typeof value === "number" || typeof value === "boolean") return String(value).trim();
+    return "";
+  }
+  function toTorrentFile(link, index3, path, bytes = 0) {
+    return {
+      id: index3 + 1,
+      path: path || parseFilenameFromUrl(link),
+      bytes,
+      selected: 1
+    };
+  }
+  function mapStatus(status) {
+    switch (toTrimmedString(status).toLowerCase()) {
+      case "downloaded":
+        return "downloaded";
+      case "downloading":
+        return "downloading";
+      case "error":
+      case "canceled":
+        return "error";
+      case "queued":
+      case "created":
+      default:
+        return "queued";
+    }
+  }
+  async function getCloudStatus(requestId) {
+    return offcloudJson("/cloud/status", {
+      method: "POST",
+      body: JSON.stringify({ requestId })
+    });
+  }
+  async function getCacheEntry(magnet) {
+    const data = await offcloudJson("/cache", {
+      method: "POST",
+      body: JSON.stringify({
+        urls: [magnet],
+        includeFiles: true
+      })
+    });
+    if (!Array.isArray(data)) return null;
+    const entry = data[0];
+    if (!entry || typeof entry !== "object") return null;
+    return entry;
+  }
+  async function lookupCachedStreams4(candidates) {
+    const data = await offcloudJson("/cache", {
+      method: "POST",
+      body: JSON.stringify({
+        urls: candidates.map((candidate) => `magnet:?xt=urn:btih:${candidate.infoHash}`),
+        includeFiles: false
+      })
+    });
+    const cachedHashes = /* @__PURE__ */ new Set();
+    const cachedTitles = /* @__PURE__ */ new Set();
+    const downloadableHashes = /* @__PURE__ */ new Set();
+    const downloadableTitles = /* @__PURE__ */ new Set();
+    if (!Array.isArray(data)) {
+      return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
+    }
+    for (const [index3, entry] of data.entries()) {
+      if (!entry || typeof entry !== "object") continue;
+      if (!entry.cached) continue;
+      const candidate = candidates[index3];
+      if (!candidate) continue;
+      cachedHashes.add(candidate.infoHash);
+      if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
+    }
+    return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
+  }
+  async function getExploreFiles(requestId) {
+    const data = await offcloudJson(`/cloud/explore/${encodeURIComponent(requestId)}`);
+    return Array.isArray(data.files) ? data.files : [];
+  }
+  async function buildTorrentInfo2(id4) {
+    const state = getSourceState2(id4);
+    const status = await getCloudStatus(state.requestId);
+    const normalizedStatus = mapStatus(status.status);
+    const statusLabel = toTrimmedString(status.status) || normalizedStatus;
+    const fileName = toTrimmedString(status.fileName);
+    const createdOn = toTrimmedString(status.createdOn);
+    const directUrl = toTrimmedString(status.url);
+    const exploreFiles = normalizedStatus === "downloaded" ? await getExploreFiles(state.requestId) : [];
+    const directLinks = exploreFiles.map((file) => toTrimmedString(file.url)).filter(Boolean);
+    if (normalizedStatus === "downloaded" && directLinks.length === 0 && directUrl) {
+      directLinks.push(directUrl);
+    }
+    for (const file of exploreFiles) {
+      const link = toTrimmedString(file.url);
+      if (link && !linkCache.has(link)) {
+        linkCache.set(link, {
+          filename: toTrimmedString(file.path) || toTrimmedString(file.name) || parseFilenameFromUrl(link),
+          filesize: typeof file.size === "number" ? file.size : 0
+        });
+      }
+    }
+    if (normalizedStatus === "downloaded" && directUrl && !linkCache.has(directUrl)) {
+      linkCache.set(directUrl, {
+        filename: fileName || parseFilenameFromUrl(directUrl),
+        filesize: 0
+      });
+    }
+    const files = directLinks.map((link, index3) => {
+      const cached = linkCache.get(link);
+      return toTorrentFile(link, index3, cached?.filename, cached?.filesize ?? 0);
+    });
+    const totalBytes = files.reduce((sum, file) => sum + file.bytes, 0);
+    return {
+      id: id4,
+      filename: fileName || files[0]?.path || state.hash,
+      hash: state.hash,
+      bytes: totalBytes,
+      host: "offcloud",
+      split: 0,
+      progress: normalizedStatus === "downloaded" ? 100 : normalizedStatus === "downloading" ? 50 : 0,
+      status: normalizedStatus,
+      statusLabel,
+      added: createdOn || state.addedAt,
+      links: directLinks,
+      original_filename: fileName || state.hash,
+      original_bytes: totalBytes,
+      files
+    };
+  }
+  var offcloudPlaybackProvider = {
+    id: "offcloud",
+    label: "Offcloud playback provider",
+    getAccessKey: getAccessKey2,
+    buildConfigSegment(accessKey, qualityFilter = "") {
+      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
+      segments.push(`offcloud=${accessKey}`);
+      return segments.join("|");
+    },
+    lookupCachedStreams: lookupCachedStreams4,
+    hideUncachedStreamsFromList() {
+      return true;
+    },
+    hideUnknownStreamsFromList() {
+      return true;
+    },
+    isMagnetSource(input) {
+      return input.trim().toLowerCase().startsWith("magnet:");
+    },
+    async addMagnet(magnet) {
+      const cacheEntry = await getCacheEntry(magnet);
+      if (!cacheEntry?.cached) {
+        throw new Error("Not cached on Offcloud");
+      }
+      const data = await offcloudJson("/cloud", {
+        method: "POST",
+        body: JSON.stringify({ url: magnet })
+      });
+      const requestId = toTrimmedString(data.requestId);
+      if (!requestId) throw new Error("Offcloud did not return a request ID");
+      const id4 = buildSourceId2(requestId);
+      sourceState2.set(id4, {
+        requestId,
+        magnet,
+        hash: extractInfoHash2(magnet),
+        addedAt: toTrimmedString(data.createdOn) || (/* @__PURE__ */ new Date()).toISOString()
+      });
+      return {
+        id: id4,
+        uri: magnet,
+        hash: extractInfoHash2(magnet)
+      };
+    },
+    async getSourceInfo(id4) {
+      return buildTorrentInfo2(id4);
+    },
+    async selectFiles() {
+    },
+    async resolveLink(link) {
+      const cached = linkCache.get(link);
+      return {
+        id: link,
+        filename: cached?.filename ?? parseFilenameFromUrl(link),
+        mimeType: "application/octet-stream",
+        filesize: cached?.filesize ?? 0,
+        link,
+        host: "offcloud",
+        chunks: 1,
+        crc: 0,
+        download: link,
+        streamable: 0
+      };
+    }
+  };
+
+  // lib/stream-provider-runtime/playback/providers/torbox-playback-provider.ts
+  var TORBOX_PROXY = "/api/stream-providers/torbox";
+  var INFO_CACHE_TTL_MS = 1500;
+  var VIDEO_EXT_RE = /\.(mkv|mp4|avi|m4v|mov|webm|ts|m2ts|wmv|flv)$/i;
+  var sourceState3 = /* @__PURE__ */ new Map();
+  var directLinkCache2 = /* @__PURE__ */ new Map();
+  function getAccessKey3() {
+    const key = getStreamProviderAccessKey("torbox").trim();
+    return key || null;
+  }
+  function extractInfoHash3(input) {
+    const match = input.match(/btih:([a-f0-9]+)/i);
+    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
+  }
+  function buildSourceId3(magnet) {
+    return `tb-${extractInfoHash3(magnet)}`;
+  }
+  function getSourceState3(id4) {
+    const state = sourceState3.get(id4);
+    if (!state) throw new Error("TorBox source not found");
+    return state;
+  }
+  async function torboxJson(path, init = {}) {
+    const token = getAccessKey3();
+    if (!token) throw new Error("TorBox key missing");
+    const headers = new Headers(init.headers);
+    headers.set("x-tb-token", token);
+    headers.set("Accept", "application/json");
+    const response = await fetch(`${TORBOX_PROXY}${path}`, { ...init, headers });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = data && typeof data === "object" && "error" in data && typeof data.error === "string" && data.error || data && typeof data === "object" && "detail" in data && typeof data.detail === "string" && data.detail || `TorBox request failed (${response.status})`;
+      throw new Error(message);
+    }
+    return data;
+  }
+  async function torboxCreateTorrent(magnet) {
+    const formData = new FormData();
+    formData.append("magnet", magnet);
+    formData.append("seed", "3");
+    formData.append("allow_zip", "false");
+    const data = await torboxJson(
+      "/torrents/createtorrent",
+      { method: "POST", body: formData }
+    );
+    if (!data.success || typeof data.data?.torrent_id !== "number") {
+      throw new Error(data.detail || data.error || "TorBox createtorrent failed");
+    }
+    return {
+      torrent_id: data.data.torrent_id,
+      hash: (data.data.hash ?? "").toLowerCase()
+    };
+  }
+  async function torboxGetInfo(torrentId) {
+    const data = await torboxJson(
+      `/torrents/mylist?bypass_cache=true&id=${torrentId}`
+    );
+    if (!data.success || !data.data) return null;
+    if (Array.isArray(data.data)) return data.data[0] ?? null;
+    return data.data;
+  }
+  async function prefetchVideoFileUrls(state) {
+    if (state.torrentId == null || !state.pendingInfo) return;
+    const info = await state.pendingInfo;
+    if (!info?.files || state.torrentId == null) return;
+    for (const file of info.files) {
+      const name = file.short_name?.trim() || file.name.trim();
+      if (!VIDEO_EXT_RE.test(name)) continue;
+      if (state.pendingDlUrls.has(file.id)) continue;
+      state.pendingDlUrls.set(file.id, torboxRequestDl(state.torrentId, file.id).catch(() => null));
+    }
+  }
+  async function torboxRequestDl(torrentId, fileId) {
+    const token = getAccessKey3();
+    if (!token) return null;
+    const data = await torboxJson(
+      `/torrents/requestdl?token=${encodeURIComponent(token)}&torrent_id=${torrentId}&file_id=${fileId}&redirect=false`
+    );
+    if (!data.success || typeof data.data !== "string") return null;
+    return data.data;
+  }
+  async function torboxCheckCached(hashes) {
+    const result = /* @__PURE__ */ new Set();
+    if (hashes.length === 0) return result;
+    const params = new URLSearchParams();
+    for (const h of hashes) params.append("hash", h);
+    params.set("format", "list");
+    params.set("list_files", "false");
+    try {
+      const data = await torboxJson(
+        `/torrents/checkcached?${params}`
+      );
+      if (!data.success || !data.data) return result;
+      if (Array.isArray(data.data)) {
+        for (const entry of data.data) {
+          if (typeof entry?.hash === "string") result.add(entry.hash.toLowerCase());
+        }
+      } else if (typeof data.data === "object") {
+        for (const [hash, value] of Object.entries(data.data)) {
+          if (value) result.add(hash.toLowerCase());
+        }
+      }
+    } catch {
+    }
+    return result;
+  }
+  function toTorrentFiles2(files, isSelected) {
+    return files.map((file) => ({
+      id: file.id,
+      path: file.short_name?.trim() || file.name.trim(),
+      bytes: file.size,
+      selected: isSelected(file.id) ? 1 : 0
+    }));
+  }
+  function mapStatus2(info) {
+    if (info.download_finished) return "downloaded";
+    const state = info.download_state?.toLowerCase() ?? "";
+    if (state.includes("cached")) return "downloaded";
+    if (state.includes("error") || state.includes("failed") || state.includes("dead")) return "error";
+    if (state.includes("queue")) return "queued";
+    if (state.includes("upload")) return "uploading";
+    if (state.includes("processing")) return "magnet_conversion";
+    return "downloading";
+  }
+  function buildTorrentInfo3(state, info, status, files, links = [], statusLabel) {
+    const totalBytes = info?.size ?? files.reduce((sum, file) => sum + file.bytes, 0);
+    const selectedFiles = files.filter((file) => file.selected === 1);
+    return {
+      id: buildSourceId3(state.magnet),
+      filename: selectedFiles[0]?.path ?? files[0]?.path ?? info?.name ?? state.hash,
+      hash: state.hash,
+      bytes: totalBytes,
+      host: "torbox",
+      split: 0,
+      progress: status === "downloaded" ? 100 : 0,
+      status,
+      statusLabel,
+      added: state.addedAt,
+      links,
+      original_filename: info?.name ?? files[0]?.path ?? state.hash,
+      original_bytes: totalBytes,
+      files
+    };
+  }
+  var torboxPlaybackProvider = {
+    id: "torbox",
+    label: "TorBox playback provider",
+    getAccessKey: getAccessKey3,
+    // Torrentio's config segment for TorBox addons is `torbox=<api_key>`,
+    // analogous to `realdebrid=<api_key>` / `easydebrid=<api_key>` etc.
+    buildConfigSegment(accessKey, qualityFilter = "") {
+      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
+      segments.push(`torbox=${accessKey}`);
+      return segments.join("|");
+    },
+    async lookupCachedStreams(candidates) {
+      const hashes = candidates.map((candidate) => candidate.infoHash?.toLowerCase()).filter((hash) => Boolean(hash));
+      if (hashes.length === 0) {
+        return {
+          cachedHashes: /* @__PURE__ */ new Set(),
+          cachedTitles: /* @__PURE__ */ new Set(),
+          downloadableHashes: /* @__PURE__ */ new Set(),
+          downloadableTitles: /* @__PURE__ */ new Set()
+        };
+      }
+      const cached = await torboxCheckCached(hashes);
+      const cachedHashes = /* @__PURE__ */ new Set();
+      const cachedTitles = /* @__PURE__ */ new Set();
+      for (const candidate of candidates) {
+        const hash = candidate.infoHash?.toLowerCase();
+        if (hash && cached.has(hash)) {
+          cachedHashes.add(candidate.infoHash);
+          if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
+        }
+      }
+      return {
+        cachedHashes,
+        cachedTitles,
+        downloadableHashes: /* @__PURE__ */ new Set(),
+        downloadableTitles: /* @__PURE__ */ new Set()
+      };
+    },
+    hideUncachedStreamsFromList() {
+      return false;
+    },
+    hideUnknownStreamsFromList() {
+      return false;
+    },
+    isMagnetSource(input) {
+      return input.trim().toLowerCase().startsWith("magnet:");
+    },
+    async addMagnet(magnet) {
+      const id4 = buildSourceId3(magnet);
+      const hash = extractInfoHash3(magnet);
+      const existing = sourceState3.get(id4);
+      if (existing && existing.torrentId != null) {
+        existing.pendingInfo = torboxGetInfo(existing.torrentId).catch(() => null);
+        existing.pendingDlUrls = /* @__PURE__ */ new Map();
+        void prefetchVideoFileUrls(existing);
+        return { id: id4, uri: magnet, hash: existing.hash };
+      }
+      const created = await torboxCreateTorrent(magnet);
+      const pendingInfo = torboxGetInfo(created.torrent_id).catch(() => null);
+      const state = {
+        magnet,
+        hash: created.hash || hash,
+        addedAt: (/* @__PURE__ */ new Date()).toISOString(),
+        torrentId: created.torrent_id,
+        selectedFileIds: null,
+        pendingInfo,
+        lastInfo: null,
+        lastInfoAt: 0,
+        pendingDlUrls: /* @__PURE__ */ new Map()
+      };
+      sourceState3.set(id4, state);
+      void prefetchVideoFileUrls(state);
+      return { id: id4, uri: magnet, hash: created.hash || hash };
+    },
+    async getSourceInfo(id4) {
+      const state = getSourceState3(id4);
+      if (state.torrentId == null) {
+        throw new Error("TorBox torrent id not yet known");
+      }
+      let info;
+      if (state.pendingInfo) {
+        info = await state.pendingInfo;
+        state.pendingInfo = null;
+        state.lastInfo = info;
+        state.lastInfoAt = Date.now();
+      } else if (state.lastInfo && Date.now() - state.lastInfoAt < INFO_CACHE_TTL_MS) {
+        info = state.lastInfo;
+      } else {
+        info = await torboxGetInfo(state.torrentId);
+        state.lastInfo = info;
+        state.lastInfoAt = Date.now();
+      }
+      if (!info) {
+        return buildTorrentInfo3(state, null, "magnet_conversion", [], [], "Looking up on TorBox\u2026");
+      }
+      const isSelected = (fileId) => state.selectedFileIds === "all" || state.selectedFileIds instanceof Set && state.selectedFileIds.has(fileId);
+      const status = mapStatus2(info);
+      const files = toTorrentFiles2(info.files ?? [], isSelected);
+      if (status !== "downloaded") {
+        return buildTorrentInfo3(state, info, status, files, [], info.download_state);
+      }
+      if (state.selectedFileIds === null) {
+        return buildTorrentInfo3(state, info, "waiting_files_selection", files, [], "Select files");
+      }
+      const selectedFiles = files.filter((file) => file.selected === 1);
+      const resolvedLinks = await Promise.all(
+        selectedFiles.map(async (file) => {
+          const pending = state.pendingDlUrls.get(file.id);
+          const url = pending != null ? await pending : await torboxRequestDl(state.torrentId, file.id);
+          return url ? { url, file } : null;
+        })
+      );
+      const links = [];
+      for (const entry of resolvedLinks) {
+        if (!entry) continue;
+        links.push(entry.url);
+        directLinkCache2.set(entry.url, { filename: entry.file.path, filesize: entry.file.bytes });
+      }
+      if (links.length === 0) {
+        return buildTorrentInfo3(state, info, "error", files, [], "No playable links from TorBox");
+      }
+      return buildTorrentInfo3(state, info, "downloaded", files, links, "Ready");
+    },
+    async selectFiles(id4, files = "all") {
+      const state = getSourceState3(id4);
+      state.selectedFileIds = files === "all" ? "all" : new Set(
+        files.split(",").map((value) => Number.parseInt(value.trim(), 10)).filter((value) => Number.isFinite(value))
+      );
+    },
+    async resolveLink(link) {
+      const cached = directLinkCache2.get(link);
+      return {
+        id: link,
+        filename: cached?.filename ?? link.split("/").pop()?.split("?")[0] ?? "download",
+        mimeType: "application/octet-stream",
+        filesize: cached?.filesize ?? 0,
+        link,
+        host: "torbox",
+        chunks: 1,
+        crc: 0,
+        download: link,
+        streamable: 1
+      };
+    }
+  };
+
+  // lib/stream-provider-runtime/playback/stream-provider-playback.ts
+  var playbackProviders = /* @__PURE__ */ new Map([
+    ["alldebrid", alldebridPlaybackProvider],
+    ["easydebrid", easyDebridPlaybackProvider],
+    ["offcloud", offcloudPlaybackProvider],
+    ["realdebrid", legacyPlaybackProvider],
+    ["torbox", torboxPlaybackProvider]
+  ]);
+  function getPlaybackProviderOverride() {
+    if (typeof window === "undefined") return null;
+    return window.__lumioPluginRuntime?.playbackProviderOverride ?? null;
+  }
+  function resolveActiveProviderId() {
+    return getPlaybackProviderOverride() ?? getActiveStreamProvider().trim().toLowerCase();
+  }
+  function getActivePlaybackProvider() {
+    const providerId = resolveActiveProviderId();
+    const provider = playbackProviders.get(providerId);
+    if (!provider) throw new Error(`Playback provider "${providerId}" is not supported`);
+    return provider;
+  }
+  function findActivePlaybackProvider() {
+    const providerId = resolveActiveProviderId();
+    return playbackProviders.get(providerId) ?? null;
+  }
+  function getPlaybackAccessKey() {
+    return findActivePlaybackProvider()?.getAccessKey() ?? null;
+  }
+  function buildPlaybackProviderConfigSegment(qualityFilter = "") {
+    const accessKey = getPlaybackAccessKey();
+    if (!accessKey) return null;
+    const provider = findActivePlaybackProvider();
+    if (!provider) return null;
+    return provider.buildConfigSegment(accessKey, qualityFilter);
+  }
+  var cacheProbeTtlMs = 6e4;
+  var cacheProbeMemo = /* @__PURE__ */ new Map();
+  function buildCacheProbeKey(providerId, candidates) {
+    const hashes = candidates.map((c) => c.infoHash?.toLowerCase() ?? "").filter(Boolean).sort().join(",");
+    return `${providerId}|${hashes}`;
+  }
+  async function lookupPlaybackCachedStreams(candidates) {
+    const provider = findActivePlaybackProvider();
+    if (!provider?.lookupCachedStreams) return null;
+    const key = buildCacheProbeKey(provider.id, candidates);
+    const now3 = Date.now();
+    const cached = cacheProbeMemo.get(key);
+    if (cached && cached.expiresAt > now3) return cached.result;
+    const result = await provider.lookupCachedStreams(candidates);
+    cacheProbeMemo.set(key, { expiresAt: now3 + cacheProbeTtlMs, result });
+    return result;
+  }
+  function hideUncachedPlaybackStreamsFromList() {
+    return findActivePlaybackProvider()?.hideUncachedStreamsFromList?.() ?? false;
+  }
+  function hideUnknownPlaybackStreamsFromList() {
+    return findActivePlaybackProvider()?.hideUnknownStreamsFromList?.() ?? false;
+  }
+  function isMagnetPlaybackSource(input) {
+    return getActivePlaybackProvider().isMagnetSource(input);
+  }
+  async function queueMagnetForPlayback(magnet) {
+    return getActivePlaybackProvider().addMagnet(magnet);
+  }
+  async function getPlaybackSourceInfo(id4) {
+    return getActivePlaybackProvider().getSourceInfo(id4);
+  }
+  async function selectPlaybackFiles(id4, files = "all") {
+    return getActivePlaybackProvider().selectFiles(id4, files);
+  }
+  async function resolvePlaybackLink(link) {
+    return getActivePlaybackProvider().resolveLink(link);
+  }
+
+  // lib/stream-provider-runtime/playback/resolve-stream-url.ts
+  var RESOLVE_URL_RE = /\/resolve\/(torbox|realdebrid|alldebrid|easydebrid|offcloud)\/[^/]+\/([a-f0-9]{40})\//i;
+  var VIDEO_EXT_RE2 = /\.(mkv|mp4|avi|m4v|mov|webm|ts|m2ts|wmv|flv)$/i;
+  function sleep3(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  async function resolvePlayableStreamUrl(url) {
+    const match = url.match(RESOLVE_URL_RE);
+    if (!match) return url;
+    const provider = match[1].toLowerCase();
+    if (provider !== getActiveStreamProvider().trim().toLowerCase()) return url;
+    const infoHash = match[2].toLowerCase();
+    const wantedName = decodeURIComponent(url.split("/").pop()?.split("?")[0] ?? "").trim().toLowerCase();
+    try {
+      const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${infoHash}`);
+      const pollSchedule = [250, 500, 1e3, 1500, 1500, 2e3, 2e3, 2500, 2500];
+      for (let attempt = 0; attempt < pollSchedule.length; attempt += 1) {
+        const info = await getPlaybackSourceInfo(added.id);
+        if (info.status === "waiting_files_selection") {
+          const videoFiles = info.files.filter((file) => VIDEO_EXT_RE2.test(file.path));
+          const byName = wantedName ? videoFiles.find((file) => file.path.trim().toLowerCase().endsWith(wantedName)) : void 0;
+          const best = byName ?? [...videoFiles].sort((a, b) => b.bytes - a.bytes)[0];
+          if (!best) return url;
+          await selectPlaybackFiles(added.id, String(best.id));
+        } else if (info.status === "downloaded") {
+          if (info.links.length === 0) return url;
+          const link = await resolvePlaybackLink(info.links[0]);
+          return link.download || url;
+        } else if (info.status === "error" || info.status === "magnet_error" || info.status === "dead" || info.status === "virus" || info.status === "downloading") {
+          return url;
+        }
+        await sleep3(pollSchedule[attempt]);
+      }
+    } catch {
+    }
+    return url;
+  }
+
+  // lib/tauri-mpv.ts
+  function detectTauriEnv() {
+    if (typeof window === "undefined") return false;
+    const maybeTauriWindow = window;
+    if (maybeTauriWindow.__TAURI_INTERNALS__ || maybeTauriWindow.__TAURI__) {
+      return true;
+    }
+    const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : "";
+    if (userAgent.includes("Tauri")) return true;
+    const host = window.location.hostname;
+    const port = window.location.port;
+    return isLocalAppHost(host) && port === "3011";
+  }
+  var isTauriEnv = detectTauriEnv();
+  var isDesktopTauriEnv = isTauriEnv && !(typeof navigator !== "undefined" && /android/i.test(navigator.userAgent));
+  function isLiveStreamUrl(url) {
+    const lower = url.toLowerCase();
+    const pathOnly = lower.split("?")[0].split("#")[0];
+    if (pathOnly.endsWith(".m3u8") || pathOnly.endsWith(".mpd")) return true;
+    return lower.includes("/live/") || lower.includes("hls/") || lower.includes("/dash/");
+  }
+  function sourceCacheUrl(originalUrl) {
+    if (!/^https?:\/\//i.test(originalUrl)) return null;
+    if (isLiveStreamUrl(originalUrl)) return null;
+    try {
+      if (isLocalAppHost(new URL(originalUrl).hostname)) return null;
+    } catch {
+      return null;
+    }
+    return `${window.location.origin}/api/source-cache?u=${encodeURIComponent(originalUrl)}`;
+  }
+  function warmSourceCache(originalUrl) {
+    const wrapped = sourceCacheUrl(originalUrl);
+    if (!wrapped) return;
+    void fetch(wrapped, { headers: { Range: "bytes=0-1" } }).then((r) => r.body?.cancel()).catch(() => {
+    });
+  }
+  function releaseSourceCache(originalUrl) {
+    if (!sourceCacheUrl(originalUrl)) return;
+    void fetch("/api/source-cache/release", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ u: originalUrl }),
+      keepalive: true
+    }).catch(() => {
+    });
+  }
+  async function openMpvPlayer(args) {
+    const { shouldAbort: _ignored, ...rest } = args;
+    const cached = sourceCacheUrl(args.url);
+    if (cached) {
+      if (args.shouldAbort?.()) return;
+      return invoke("mpv_open", { args: { ...rest, url: cached } });
+    }
+    const url = await resolvePlayableStreamUrl(args.url).catch(() => args.url);
+    if (args.shouldAbort?.()) return;
+    return invoke("mpv_open", { args: { ...rest, url } });
+  }
+  async function closeMpvPlayer() {
+    return invoke("mpv_close");
+  }
+  async function setMpvPause(paused) {
+    return invoke("mpv_set_pause", { paused });
+  }
+  async function setMpvAudioTrack(aid) {
+    return invoke("mpv_set_audio_track", { aid });
+  }
+  async function setMpvVideoGeometry(args) {
+    try {
+      return await invoke("mpv_set_video_geometry", {
+        aspectOverride: args.aspectOverride ?? null,
+        panscan: args.panscan,
+        videoZoom: args.videoZoom
+      });
+    } catch (error) {
+      const message = String(error ?? "");
+      if (!/mpv not initialized/i.test(message)) {
+        console.warn("[mpv] set video geometry error:", error);
+      }
+    }
+  }
+  async function setMpvSubtitleTrack(sid) {
+    return invoke("mpv_set_subtitle_track", { sid });
+  }
+  async function getMpvSid() {
+    return invoke("mpv_get_sid");
+  }
+  async function getMpvSubtitleTracks() {
+    return invoke("mpv_get_subtitle_tracks");
+  }
+  async function getMpvAudioTracks() {
+    return invoke("mpv_get_audio_tracks");
+  }
+  async function toggleWindowFullscreen() {
+    return invoke("toggle_window_fullscreen");
+  }
+  async function getWindowFullscreen() {
+    return invoke("get_window_fullscreen");
+  }
+  async function getWindowNativeFullscreen() {
+    return invoke("get_window_native_fullscreen");
+  }
+  async function setWindowFullscreen(fullscreen) {
+    return invoke("set_window_fullscreen", { fullscreen });
+  }
+  async function setWindowNativeFullscreen(fullscreen) {
+    return invoke("set_window_native_fullscreen", { fullscreen });
+  }
+  async function mpvGetAudioFilterChain() {
+    try {
+      return await invoke("mpv_get_af") || "(tom)";
+    } catch (e) {
+      return `(ol\xE4sbar: ${String(e)})`;
+    }
+  }
+  async function mpvCommand(args) {
+    try {
+      return await invoke("mpv_command_ts", { args });
+    } catch (e) {
+      console.warn("[mpv] command error:", args, e);
+    }
+  }
+  async function mpvSetPropertyStrings(props) {
+    try {
+      return await invoke("mpv_set_property_strings", { props });
+    } catch (e) {
+      console.warn("[mpv] set property error:", props, e);
+    }
+  }
+  async function mpvApplySubtitleStyle(args) {
+    try {
+      return await invoke("mpv_apply_subtitle_style", { args });
+    } catch (e) {
+      console.warn("[mpv] apply subtitle style error:", args, e);
+    }
+  }
+  function mpvSetBounds(rect) {
+    if (rect.width <= 0 || rect.height <= 0) return;
+    void invoke("mpv_set_bounds", {
+      x: rect.left,
+      y: rect.top,
+      w: rect.width,
+      h: rect.height,
+      windowHeight: window.innerHeight,
+      scale: window.devicePixelRatio
+    });
+  }
+  function useMpvPlayer(enabled = true) {
+    const [timePos, setTimePos] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [paused, setPaused] = useState(false);
+    const [ended, setEnded] = useState(false);
+    const [sid, setSid] = useState(null);
+    const [fileLoaded, setFileLoaded] = useState(false);
+    const [fileLoadedToken, setFileLoadedToken] = useState(0);
+    const [playbackRestarted, setPlaybackRestarted] = useState(false);
+    const [playbackRestartedToken, setPlaybackRestartedToken] = useState(0);
+    const [pausedForCache, setPausedForCache] = useState(false);
+    const [coreIdle, setCoreIdle] = useState(true);
+    const [firstFrameRendered, setFirstFrameRendered] = useState(false);
+    const [loadFailed, setLoadFailed] = useState(false);
+    const [loadFailedToken, setLoadFailedToken] = useState(0);
+    const [loadFailedError, setLoadFailedError] = useState(null);
+    useEffect(() => {
+      if (!isTauriEnv || !enabled) return;
+      const cleanups = [];
+      void listen("mpv://time-pos", (e) => setTimePos(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://duration", (e) => setDuration(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://paused", (e) => setPaused(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://ended", () => setEnded(true)).then((u) => cleanups.push(u));
+      void listen("mpv://sid", (e) => setSid(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://file-loaded", () => {
+        setFileLoaded(true);
+        setFileLoadedToken((t) => t + 1);
+      }).then((u) => cleanups.push(u));
+      void listen("mpv://playback-restart", () => {
+        setPlaybackRestarted(true);
+        setPlaybackRestartedToken((t) => t + 1);
+      }).then((u) => cleanups.push(u));
+      void listen("mpv://paused-for-cache", (e) => setPausedForCache(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://core-idle", (e) => setCoreIdle(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://first-frame-rendered", () => {
+        void fetch(`/api/debug-log?msg=${encodeURIComponent(`${performance.now().toFixed(0)} first-frame-rendered received`)}`);
+        setFirstFrameRendered(true);
+      }).then((u) => cleanups.push(u));
+      void listen("mpv://load-failed", (e) => {
+        setLoadFailedError(typeof e.payload === "number" ? e.payload : null);
+        setLoadFailed(true);
+        setLoadFailedToken((t) => t + 1);
+      }).then((u) => cleanups.push(u));
+      return () => cleanups.forEach((fn) => fn());
+    }, [enabled]);
+    const seek = useCallback((time2) => {
+      void mpvCommand(["seek", time2, "absolute"]);
+    }, []);
+    const seekRelative = useCallback((delta) => {
+      void mpvCommand(["seek", delta, "relative"]);
+    }, []);
+    const setPlayPause = useCallback((pause) => {
+      void mpvCommand(["set_property", "pause", pause]);
+    }, []);
+    const setVolume = useCallback((vol) => {
+      void mpvSetPropertyStrings([{ name: "volume", value: String(Math.round(vol * 100)) }]);
+    }, []);
+    const setMuted = useCallback((muted) => {
+      void mpvSetPropertyStrings([{ name: "mute", value: muted ? "yes" : "no" }]);
+    }, []);
+    const setAudioTrack = useCallback((aid) => {
+      void setMpvAudioTrack(aid);
+    }, []);
+    const resetFileLoaded = useCallback(() => {
+      setFileLoaded(false);
+    }, []);
+    const resetPlaybackRestarted = useCallback(() => {
+      setPlaybackRestarted(false);
+    }, []);
+    const resetFirstFrameRendered = useCallback(() => {
+      setFirstFrameRendered(false);
+    }, []);
+    const resetLoadFailed = useCallback(() => {
+      setLoadFailed(false);
+      setLoadFailedError(null);
+    }, []);
+    return {
+      timePos,
+      duration,
+      paused,
+      ended,
+      sid,
+      fileLoaded,
+      fileLoadedToken,
+      playbackRestarted,
+      playbackRestartedToken,
+      pausedForCache,
+      coreIdle,
+      firstFrameRendered,
+      loadFailed,
+      loadFailedToken,
+      loadFailedError,
+      seek,
+      seekRelative,
+      setPlayPause,
+      setVolume,
+      setMuted,
+      setAudioTrack,
+      resetFileLoaded,
+      resetPlaybackRestarted,
+      resetFirstFrameRendered,
+      resetLoadFailed
+    };
+  }
+
+  // lib/open-external.ts
+  async function openExternalUrl(url) {
+    if (!url) return;
+    if (isTauriEnv) {
+      try {
+        const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
+        await invoke2("open_external_url", { url });
+        return;
+      } catch {
+      }
+    }
+    if (typeof window !== "undefined") {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  }
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
+  init_jsx_runtime_shim();
+  var TORRENTIO_QUALITY_OPTIONS = [
+    { id: "brremux", label: "BluRay REMUX" },
+    { id: "hdrall", label: "HDR/HDR10+/Dolby Vision" },
+    { id: "dolbyvision", label: "Dolby Vision" },
+    { id: "dolbyvisionwithhdr", label: "Dolby Vision + HDR" },
+    { id: "threed", label: "3D" },
+    { id: "4k", label: "4K" },
+    { id: "1080p", label: "1080p" },
+    { id: "720p", label: "720p" },
+    { id: "480p", label: "480p" },
+    { id: "other", label: "Other (DVDRip/HDRip/BDRip\u2026)" },
+    { id: "scr", label: "Screener" },
+    { id: "cam", label: "Cam" },
+    { id: "unknown", label: "Unknown" }
+  ];
+  function toOptionItems(raw) {
+    if (!Array.isArray(raw)) return [];
+    return raw.map((entry) => {
+      const value = String(entry.value ?? "").trim();
+      const label = String(entry.label ?? "").trim() || value;
+      return { id: value, label };
+    }).filter((item) => item.id.length > 0);
+  }
+  var cachedCatalogs = null;
+  async function fetchScraperOptionCatalogs() {
+    if (cachedCatalogs) return cachedCatalogs;
+    try {
+      const res = await fetch("/api/scraper-options");
+      if (!res.ok) return null;
+      const data = await res.json();
+      const catalogs = {
+        qualities: toOptionItems(data.qualities),
+        languages: toOptionItems(data.languages),
+        providers: toOptionItems(data.providers),
+        sort: toOptionItems(data.sort)
+      };
+      if (catalogs.qualities.length === 0) return null;
+      cachedCatalogs = catalogs;
+      return catalogs;
+    } catch {
+      return null;
+    }
+  }
+  var COMET_QUALITY_OPTIONS = ["240p", "360p", "480p", "576p", "720p", "1080p", "1440p", "2160p", "unknown"];
+  var JACKETTIO_QUALITY_OPTIONS = ["360p", "480p", "720p", "1080p", "2160p", "unknown"];
+  var TORRENTIO_LANGUAGE_OPTIONS = [
+    { id: "swedish", label: "Svenska" },
+    { id: "english", label: "English" },
+    { id: "danish", label: "Dansk" },
+    { id: "norwegian", label: "Norsk" },
+    { id: "finnish", label: "Suomi" },
+    { id: "german", label: "Deutsch" },
+    { id: "french", label: "Fran\xE7ais" },
+    { id: "spanish", label: "Espa\xF1ol" },
+    { id: "portuguese", label: "Portugu\xEAs" },
+    { id: "italian", label: "Italiano" },
+    { id: "dutch", label: "Nederlands" },
+    { id: "polish", label: "Polski" },
+    { id: "russian", label: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439" },
+    { id: "japanese", label: "\u65E5\u672C\u8A9E" },
+    { id: "korean", label: "\uD55C\uAD6D\uC5B4" },
+    { id: "chinese", label: "\u4E2D\u6587" },
+    { id: "arabic", label: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" },
+    { id: "hindi", label: "\u0939\u093F\u0928\u094D\u0926\u0940" },
+    { id: "turkish", label: "T\xFCrk\xE7e" },
+    { id: "ukrainian", label: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430" },
+    { id: "romanian", label: "Rom\xE2n\u0103" },
+    { id: "hungarian", label: "Magyar" },
+    { id: "czech", label: "\u010Ce\u0161tina" },
+    { id: "greek", label: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC" },
+    { id: "bulgarian", label: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438" },
+    { id: "serbian", label: "Srpski" },
+    { id: "croatian", label: "Hrvatski" },
+    { id: "hebrew", label: "\u05E2\u05D1\u05E8\u05D9\u05EA" },
+    { id: "vietnamese", label: "Ti\u1EBFng Vi\u1EC7t" },
+    { id: "thai", label: "\u0E20\u0E32\u0E29\u0E32\u0E44\u0E17\u0E22" },
+    { id: "indonesian", label: "Bahasa Indonesia" },
+    { id: "malay", label: "Bahasa Melayu" },
+    { id: "catalan", label: "Catal\xE0" },
+    { id: "latin", label: "Latina" }
+  ];
+  var ISO_LANGUAGE_OPTIONS = [
+    { code: "sv", label: "Svenska" },
+    { code: "en", label: "English" },
+    { code: "da", label: "Dansk" },
+    { code: "no", label: "Norsk" },
+    { code: "fi", label: "Suomi" },
+    { code: "de", label: "Deutsch" },
+    { code: "fr", label: "Fran\xE7ais" },
+    { code: "es", label: "Espa\xF1ol" },
+    { code: "pt", label: "Portugu\xEAs" },
+    { code: "it", label: "Italiano" },
+    { code: "nl", label: "Nederlands" },
+    { code: "pl", label: "Polski" },
+    { code: "ru", label: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439" },
+    { code: "ja", label: "\u65E5\u672C\u8A9E" },
+    { code: "ko", label: "\uD55C\uAD6D\uC5B4" },
+    { code: "zh", label: "\u4E2D\u6587" },
+    { code: "ar", label: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" },
+    { code: "hi", label: "\u0939\u093F\u0928\u094D\u0926\u0940" },
+    { code: "tr", label: "T\xFCrk\xE7e" },
+    { code: "uk", label: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430" },
+    { code: "ro", label: "Rom\xE2n\u0103" },
+    { code: "hu", label: "Magyar" },
+    { code: "cs", label: "\u010Ce\u0161tina" },
+    { code: "el", label: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC" },
+    { code: "bg", label: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438" },
+    { code: "sr", label: "Srpski" },
+    { code: "hr", label: "Hrvatski" },
+    { code: "he", label: "\u05E2\u05D1\u05E8\u05D9\u05EA" },
+    { code: "vi", label: "Ti\u1EBFng Vi\u1EC7t" },
+    { code: "th", label: "\u0E20\u0E32\u0E29\u0E32\u0E44\u0E17\u0E22" },
+    { code: "id", label: "Bahasa Indonesia" },
+    { code: "ms", label: "Bahasa Melayu" }
+  ];
+  var TORRENTIO_PROVIDERS = [
+    "YTS",
+    "EZTV",
+    "RARBG",
+    "ThePirateBay",
+    "1337x",
+    "KickassTorrents",
+    "TorrentGalaxy",
+    "MagnetDL",
+    "HorribleSubs",
+    "NyaaSi",
+    "TokyoTosho",
+    "AniDex",
+    "Rutor",
+    "Rutracker",
+    "Comando",
+    "CineCalidad",
+    "FilmeHD",
+    "BitSearch",
+    "ETTV",
+    "TorrentDownloads",
+    "TheRarbg",
+    "TGx",
+    "Zooqle",
+    "AnimeTosho"
+  ];
+  var TORRENTIO_SORT_OPTIONS = [
+    { id: "quality", label: "Quality" },
+    { id: "qualitysize", label: "Quality + Size" },
+    { id: "seeders", label: "Seeders" },
+    { id: "size", label: "Size" }
+  ];
+  var DEBRID_PROVIDER_LABELS = {
+    none: "None",
+    realdebrid: "RealDebrid",
+    alldebrid: "AllDebrid",
+    easydebrid: "EasyDebrid",
+    offcloud: "Offcloud",
+    torbox: "TorBox",
+    putio: "Put.io"
+  };
+  var DEBRID_PROVIDERS = [
+    { id: "none", label: "None" },
+    { id: "realdebrid", label: "RealDebrid" },
+    { id: "alldebrid", label: "AllDebrid" },
+    { id: "offcloud", label: "Offcloud" },
+    { id: "torbox", label: "TorBox" },
+    { id: "putio", label: "Put.io" }
+  ];
+  function getDebridProviderLabel(id4) {
+    return DEBRID_PROVIDER_LABELS[id4] ?? id4;
+  }
+  var PRESET_NAMES = {
+    torrentio: "Torrentio",
+    torrentsdb: "TorrentsDB",
+    comet: "Comet",
+    jackettio: "Jackettio",
+    aiostreams: "AIOStreams",
+    orion: "Orion",
+    custom: "Custom URL"
+  };
+  var heroInputClassNames = {
+    inputWrapper: "border border-white/10 bg-white/[0.03] hover:border-white/20 h-12 focus-within:outline-none focus-within:ring-0",
+    input: "text-sm text-white placeholder:text-slate-600 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 shadow-none"
+  };
+  async function fetchScraperManifest(preset, customUrl) {
+    const params = new URLSearchParams();
+    if ((preset === "custom" || preset === "aiostreams") && customUrl) {
+      params.set("url", customUrl);
+    } else {
+      params.set("preset", preset);
+    }
+    const res = await fetch(`/api/stream-providers/manifest?${params.toString()}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+    return data;
+  }
+  function SectionLabel({ children }) {
+    return /* @__PURE__ */ jsx("p", { className: "text-[11px] uppercase tracking-[0.12em] text-slate-500", children });
+  }
+  function FieldHeader({ label }) {
+    return /* @__PURE__ */ jsx(SectionLabel, { children: label });
+  }
+  function MultiSelectDropdown({
+    value,
+    onChange,
+    placeholder,
+    options
+  }) {
+    const [open, setOpen] = useState(false);
+    const rootRef = useRef(null);
+    useEffect(() => {
+      if (!open) return;
+      function onDocPointer(event) {
+        if (rootRef.current && !rootRef.current.contains(event.target)) {
+          setOpen(false);
+        }
+      }
+      document.addEventListener("mousedown", onDocPointer);
+      return () => document.removeEventListener("mousedown", onDocPointer);
+    }, [open]);
+    const selectedLabels = options.filter((option) => value.includes(option.id)).map((option) => option.label);
+    const summary = selectedLabels.length > 0 ? selectedLabels.join(", ") : placeholder;
+    return /* @__PURE__ */ jsxs("div", { ref: rootRef, className: "relative", children: [
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => setOpen((current2) => !current2),
+          className: "flex h-12 w-full items-center justify-between rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-left text-sm text-white outline-none transition hover:border-white/20",
+          children: [
+            /* @__PURE__ */ jsx("span", { className: `truncate ${selectedLabels.length === 0 ? "text-slate-500" : ""}`, children: summary }),
+            /* @__PURE__ */ jsx("span", { className: `ml-2 flex-none text-slate-500 transition-transform ${open ? "rotate-180" : ""}`, children: "\u25BE" })
+          ]
+        }
+      ),
+      open ? /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: "absolute left-0 right-0 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-[1.1rem] border border-white/10 p-1.5 shadow-2xl",
+          style: { backgroundColor: "#10162a" },
+          children: options.map(({ id: id4, label }) => {
+            const checked = value.includes(id4);
+            return /* @__PURE__ */ jsxs(
+              "button",
+              {
+                type: "button",
+                onClick: () => onChange(checked ? value.filter((v) => v !== id4) : [...value, id4]),
+                className: "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-slate-100 transition hover:bg-white/5",
+                children: [
+                  /* @__PURE__ */ jsx(
+                    "span",
+                    {
+                      "aria-hidden": "true",
+                      className: `flex h-4 w-4 flex-none items-center justify-center rounded-[3px] border text-[10px] ${checked ? "border-aurora-400/80 bg-aurora-500/20 text-aurora-200" : "border-white/15 bg-white/[0.02] text-transparent"}`,
+                      children: "\u2713"
+                    }
+                  ),
+                  /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: label })
+                ]
+              },
+              id4
+            );
+          })
+        }
+      ) : null
+    ] });
+  }
+  function DebridSelect({
+    value,
+    onChange
+  }) {
+    return /* @__PURE__ */ jsx(
+      "select",
+      {
+        value,
+        onChange: (event) => onChange(event.target.value),
+        className: "h-12 w-full rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition hover:border-white/20 focus:border-white/20",
+        children: DEBRID_PROVIDERS.map(({ id: id4, label }) => /* @__PURE__ */ jsx("option", { value: id4, className: "bg-slate-900 text-white", children: label }, id4))
+      }
+    );
+  }
+  function DebridKeyField({
+    debridProvider,
+    onProviderChange
+  }) {
+    const { t } = useLang();
+    const [keyValue, setKeyValue] = useState(() => getStreamProviderAccessKey(debridProvider));
+    useEffect(() => {
+      setKeyValue(getStreamProviderAccessKey(debridProvider));
+    }, [debridProvider]);
+    if (debridProvider === "none") return null;
+    return /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+      /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+        /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderSelection") }),
+        /* @__PURE__ */ jsx(
+          DebridSelect,
+          {
+            value: debridProvider,
+            onChange: (v) => {
+              onProviderChange(v);
+              setKeyValue(getStreamProviderAccessKey(v));
+            }
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+        /* @__PURE__ */ jsx(SectionLabel, { children: `${getDebridProviderLabel(debridProvider)} ${t("apiKeyLabel")}` }),
+        /* @__PURE__ */ jsx(
+          import_react63.Input,
+          {
+            type: "password",
+            value: keyValue,
+            onValueChange: (v) => {
+              setKeyValue(v);
+              setStreamProviderAccessKey(debridProvider, v);
+            },
+            placeholder: t("streamProviderApiKeyPlaceholder"),
+            radius: "lg",
+            classNames: heroInputClassNames
+          }
+        )
+      ] })
+    ] });
+  }
+  function getScraperSnapshot(config) {
+    const debridProvider = config.options.streamProvider?.trim().toLowerCase() ?? config.options.debridProvider?.trim().toLowerCase() ?? "";
+    const providerKey = debridProvider && debridProvider !== "none" ? getStreamProviderAccessKey(debridProvider).trim() : "";
+    return JSON.stringify({
+      config,
+      debridProvider,
+      providerKey
+    });
+  }
+  function ScraperCard({
+    config,
+    onChange,
+    onRemove,
+    onMoveUp,
+    onMoveDown,
+    isFirst,
+    isLast
+  }) {
+    const { t } = useLang();
+    const [catalogs, setCatalogs] = useState(cachedCatalogs);
+    useEffect(() => {
+      let cancelled = false;
+      void fetchScraperOptionCatalogs().then((result) => {
+        if (!cancelled && result) setCatalogs(result);
+      });
+      return () => {
+        cancelled = true;
+      };
+    }, []);
+    const [manifest, setManifest] = useState({ state: "idle" });
+    const [expanded, setExpanded] = useState(false);
+    const [saveState, setSaveState] = useState("idle");
+    const [savedSnapshot, setSavedSnapshot] = useState(() => getScraperSnapshot(config));
+    const saveTimerRef = useRef(null);
+    const fetchedRef = useRef(false);
+    useEffect(() => {
+      if (fetchedRef.current) return;
+      fetchedRef.current = true;
+      const customUrl = config.preset === "custom" ? config.options.rawUrl : config.preset === "aiostreams" ? config.options.manifestUrl : void 0;
+      if ((config.preset === "custom" || config.preset === "aiostreams") && !customUrl) return;
+      setManifest({ state: "loading" });
+      void fetchScraperManifest(config.preset, customUrl).then((data) => setManifest({ state: "ok", name: data.name, version: data.version })).catch((err) => setManifest({ state: "error", error: String(err) }));
+    }, [config.preset, config.options]);
+    const currentSnapshot = getScraperSnapshot(config);
+    const hasPendingChanges = currentSnapshot !== savedSnapshot;
+    useEffect(() => {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+      setSaveState("idle");
+      setSavedSnapshot(getScraperSnapshot(config));
+    }, [config.id]);
+    useEffect(() => {
+      return () => {
+        if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      };
+    }, []);
+    function refresh() {
+      fetchedRef.current = false;
+      const customUrl = config.preset === "custom" ? config.options.rawUrl : config.preset === "aiostreams" ? config.options.manifestUrl : void 0;
+      if ((config.preset === "custom" || config.preset === "aiostreams") && !customUrl) return;
+      setManifest({ state: "loading" });
+      void fetchScraperManifest(config.preset, customUrl).then((data) => setManifest({ state: "ok", name: data.name, version: data.version })).catch((err) => setManifest({ state: "error", error: String(err) }));
+    }
+    function persistCard() {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+      try {
+        const debridProvider = config.options.debridProvider?.trim().toLowerCase();
+        if (debridProvider && debridProvider !== "none") {
+          const key = getStreamProviderAccessKey(debridProvider);
+          setStreamProviderAccessKey(debridProvider, key);
+        }
+        setSavedSnapshot(getScraperSnapshot(config));
+        setSaveState("saved");
+        saveTimerRef.current = setTimeout(() => {
+          setSaveState("idle");
+          saveTimerRef.current = null;
+        }, 1800);
+      } catch {
+        setSaveState("error");
+        saveTimerRef.current = setTimeout(() => {
+          setSaveState("idle");
+          saveTimerRef.current = null;
+        }, 2200);
+      }
+    }
+    function updateOptions(patch) {
+      onChange({ ...config, options: { ...config.options, ...patch } });
+    }
+    const isCustom = config.preset === "custom";
+    const title = isCustom ? manifest.state === "ok" && manifest.name ? manifest.name : t("streamProviderCustomUrl") : PRESET_NAMES[config.preset];
+    return /* @__PURE__ */ jsxs("div", { className: `rounded-xl border transition ${config.enabled ? "border-aurora-400/30 bg-aurora-400/5" : "border-white/10 bg-slate-900/60"}`, children: [
+      /* @__PURE__ */ jsxs(
+        "div",
+        {
+          className: "flex cursor-pointer items-center justify-between gap-3 px-4 py-3 select-none",
+          onClick: () => setExpanded((v) => !v),
+          children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-2", children: [
+              /* @__PURE__ */ jsx(
+                "input",
+                {
+                  type: "checkbox",
+                  checked: config.enabled,
+                  onChange: (e) => {
+                    e.stopPropagation();
+                    onChange({ ...config, enabled: e.target.checked });
+                  },
+                  onClick: (e) => e.stopPropagation(),
+                  className: "h-3.5 w-3.5 cursor-pointer rounded accent-aurora-400"
+                }
+              ),
+              /* @__PURE__ */ jsx("p", { className: `text-sm font-medium ${config.enabled ? "text-white" : "text-slate-500"}`, children: title }),
+              manifest.state === "ok" && manifest.version && /* @__PURE__ */ jsxs("span", { className: "text-[10px] text-slate-600", children: [
+                "v",
+                manifest.version
+              ] }),
+              /* @__PURE__ */ jsx(
+                "span",
+                {
+                  className: `h-1.5 w-1.5 flex-shrink-0 rounded-full ${!config.enabled ? "bg-red-500" : manifest.state === "loading" ? "bg-amber-400 animate-pulse" : manifest.state === "ok" ? "bg-emerald-400" : manifest.state === "error" ? "bg-red-400" : "bg-slate-700"}`,
+                  title: manifest.state === "error" ? manifest.error : manifest.state
+                }
+              ),
+              isCustom && /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-600", children: (() => {
+                const rawUrl = config.options.rawUrl;
+                if (!rawUrl) return t("streamProviderNoUrl");
+                try {
+                  return new URL(rawUrl.replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "")).hostname;
+                } catch {
+                  return rawUrl.slice(0, 40);
+                }
+              })() })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5", onClick: (e) => e.stopPropagation(), children: [
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: onMoveUp,
+                  disabled: isFirst,
+                  className: "rounded-md border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 transition hover:border-white/20 hover:text-slate-300 disabled:opacity-30",
+                  children: "\u2191"
+                }
+              ),
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: onMoveDown,
+                  disabled: isLast,
+                  className: "rounded-md border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 transition hover:border-white/20 hover:text-slate-300 disabled:opacity-30",
+                  children: "\u2193"
+                }
+              ),
+              onRemove && /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: onRemove,
+                  className: "text-[10px] uppercase tracking-[0.1em] text-red-400/70 transition hover:text-red-300",
+                  children: t("remove")
+                }
+              ),
+              /* @__PURE__ */ jsx("span", { className: "ml-1 text-[10px] text-slate-600", children: expanded ? "\u25B2" : "\u25BC" })
+            ] })
+          ]
+        }
+      ),
+      expanded && /* @__PURE__ */ jsxs("div", { className: "space-y-4 border-t border-white/5 px-4 pb-4 pt-4", children: [
+        config.preset === "torrentio" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx(
+              DebridKeyField,
+              {
+                debridProvider: opts.debridProvider,
+                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
+              }
+            ),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.qualityFilter,
+                  onChange: (v) => updateOptions({ qualityFilter: v }),
+                  placeholder: t("streamProviderSelectQualities"),
+                  options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.languages,
+                  onChange: (v) => updateOptions({ languages: v }),
+                  placeholder: t("streamProviderSelectLanguages"),
+                  options: catalogs?.languages ?? TORRENTIO_LANGUAGE_OPTIONS
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderSources") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.providers,
+                  onChange: (v) => updateOptions({ providers: v }),
+                  placeholder: t("streamProviderSelectSources"),
+                  options: catalogs?.providers ?? TORRENTIO_PROVIDERS.map((p) => ({ id: p, label: p }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Sort" }),
+                /* @__PURE__ */ jsx(
+                  "select",
+                  {
+                    value: opts.sort,
+                    onChange: (event) => updateOptions({ sort: event.target.value }),
+                    className: "h-12 w-full rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition hover:border-white/20 focus:border-white/20",
+                    children: (catalogs?.sort ?? TORRENTIO_SORT_OPTIONS).map(({ id: id4, label }) => /* @__PURE__ */ jsx("option", { value: id4, className: "bg-slate-900 text-white", children: label }, id4))
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Max results (0 = no limit)" }),
+                /* @__PURE__ */ jsx(
+                  import_react63.Input,
+                  {
+                    type: "number",
+                    value: String(opts.limit),
+                    onValueChange: (v) => updateOptions({ limit: Math.max(0, Number(v) || 0) }),
+                    radius: "lg",
+                    classNames: heroInputClassNames
+                  }
+                )
+              ] })
+            ] })
+          ] });
+        })(),
+        config.preset === "torrentsdb" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx(
+              DebridKeyField,
+              {
+                debridProvider: opts.debridProvider,
+                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
+              }
+            ),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.qualityFilter,
+                  onChange: (v) => updateOptions({ qualityFilter: v }),
+                  placeholder: t("streamProviderSelectQualities"),
+                  options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.languages,
+                  onChange: (v) => updateOptions({ languages: v }),
+                  placeholder: t("streamProviderSelectLanguages"),
+                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
+                }
+              )
+            ] })
+          ] });
+        })(),
+        config.preset === "comet" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx(
+              DebridKeyField,
+              {
+                debridProvider: opts.debridProvider,
+                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
+              }
+            ),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.qualityFilter,
+                  onChange: (v) => updateOptions({ qualityFilter: v }),
+                  placeholder: t("streamProviderSelectQualities"),
+                  options: COMET_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.languages,
+                  onChange: (v) => updateOptions({ languages: v }),
+                  placeholder: t("streamProviderSelectLanguages"),
+                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderMaxResults") }),
+                /* @__PURE__ */ jsx(
+                  import_react63.Input,
+                  {
+                    type: "number",
+                    value: String(opts.maxResults),
+                    onValueChange: (v) => updateOptions({ maxResults: Number(v) || 5 }),
+                    radius: "lg",
+                    classNames: heroInputClassNames
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Max size (GB, 0 = no limit)" }),
+                /* @__PURE__ */ jsx(
+                  import_react63.Input,
+                  {
+                    type: "number",
+                    value: String(opts.maxSize),
+                    onValueChange: (v) => updateOptions({ maxSize: Math.max(0, Number(v) || 0) }),
+                    radius: "lg",
+                    classNames: heroInputClassNames
+                  }
+                )
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3", children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsx("p", { className: "text-sm text-white", children: "Cached only" }),
+                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: "Only show cached (instant) results" })
+                ] }),
+                /* @__PURE__ */ jsx(
+                  import_react63.Switch,
+                  {
+                    isSelected: opts.cachedOnly,
+                    onValueChange: (v) => updateOptions({ cachedOnly: v }),
+                    size: "sm",
+                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsx("p", { className: "text-sm text-white", children: "Mix cached & uncached" }),
+                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: "Sort cached and uncached results together" })
+                ] }),
+                /* @__PURE__ */ jsx(
+                  import_react63.Switch,
+                  {
+                    isSelected: opts.sortCachedUncachedTogether,
+                    onValueChange: (v) => updateOptions({ sortCachedUncachedTogether: v }),
+                    size: "sm",
+                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
+                  }
+                )
+              ] })
+            ] })
+          ] });
+        })(),
+        config.preset === "jackettio" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx(
+              DebridKeyField,
+              {
+                debridProvider: opts.debridProvider,
+                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
+              }
+            ),
+            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: "Jackettio st\xF6djer Real-Debrid och AllDebrid \u2014 andra val faller tillbaka till Real-Debrid." }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.qualityFilter,
+                  onChange: (v) => updateOptions({ qualityFilter: v }),
+                  placeholder: t("streamProviderSelectQualities"),
+                  options: JACKETTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.languages,
+                  onChange: (v) => updateOptions({ languages: v }),
+                  placeholder: t("streamProviderSelectLanguages"),
+                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Max torrents (0 = default 8)" }),
+                /* @__PURE__ */ jsx(
+                  import_react63.Input,
+                  {
+                    type: "number",
+                    value: String(opts.maxTorrents),
+                    onValueChange: (v) => updateOptions({ maxTorrents: Math.max(0, Number(v) || 0) }),
+                    radius: "lg",
+                    classNames: heroInputClassNames
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "flex items-end justify-between gap-3 pb-1", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Endast cachade" }),
+                /* @__PURE__ */ jsx(
+                  import_react63.Switch,
+                  {
+                    isSelected: opts.hideUncached,
+                    onValueChange: (v) => updateOptions({ hideUncached: v }),
+                    size: "sm",
+                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
+                  }
+                )
+              ] })
+            ] })
+          ] });
+        })(),
+        config.preset === "aiostreams" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: t("aiostreamsHint") }),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                onClick: () => void openExternalUrl("https://aiostreams-nightly.fortheweak.cloud/stremio/configure"),
+                className: "inline-flex rounded-full border border-white/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-slate-300 transition hover:border-white/30 hover:text-white",
+                children: t("aiostreamsOpenConfig")
+              }
+            ),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("aiostreamsManifestLabel") }),
+              /* @__PURE__ */ jsx(
+                import_react63.Input,
+                {
+                  type: "text",
+                  value: opts.manifestUrl,
+                  onValueChange: (v) => updateOptions({ manifestUrl: v }),
+                  placeholder: "https://aiostreams-nightly.fortheweak.cloud/stremio/<uuid>/<l\xF6senord>/manifest.json",
+                  radius: "lg",
+                  classNames: heroInputClassNames
+                }
+              )
+            ] })
+          ] });
+        })(),
+        config.preset === "orion" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+              /* @__PURE__ */ jsx(SectionLabel, { children: "Orion API Key" }),
+              /* @__PURE__ */ jsx(
+                import_react63.Input,
+                {
+                  type: "password",
+                  value: opts.orionKey,
+                  onValueChange: (v) => updateOptions({ orionKey: v.trim() }),
+                  placeholder: "Klistra in din Orion API-nyckel",
+                  radius: "lg",
+                  classNames: heroInputClassNames
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsx(
+              DebridKeyField,
+              {
+                debridProvider: opts.debridProvider,
+                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
+              }
+            )
+          ] });
+        })(),
+        config.preset === "custom" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+            /* @__PURE__ */ jsx(SectionLabel, { children: t("streamProviderManifestUrl") }),
+            /* @__PURE__ */ jsx(
+              import_react63.Input,
+              {
+                type: "text",
+                value: opts.rawUrl,
+                onValueChange: (v) => updateOptions({ rawUrl: v.trim() }),
+                placeholder: t("streamProviderManifestPlaceholder"),
+                radius: "lg",
+                classNames: heroInputClassNames
+              }
+            )
+          ] });
+        })(),
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-3 border-t border-white/5 pt-3", children: [
+          /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-500", children: saveState === "saved" ? /* @__PURE__ */ jsx("span", { className: "text-emerald-300", children: "Sparat!" }) : saveState === "error" ? /* @__PURE__ */ jsx("span", { className: "text-rose-300", children: "Kunde inte spara" }) : hasPendingChanges ? /* @__PURE__ */ jsx("span", { children: "Osparade \xE4ndringar" }) : /* @__PURE__ */ jsx("span", { children: "\xA0" }) }),
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                onClick: persistCard,
+                className: "rounded-md border border-white/10 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-300 transition hover:border-white/20 hover:text-white",
+                children: saveState === "saved" ? "Sparat" : "Spara"
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                onClick: refresh,
+                disabled: manifest.state === "loading",
+                className: "text-[10px] uppercase tracking-[0.1em] text-slate-500 transition hover:text-slate-300 disabled:opacity-40",
+                children: manifest.state === "loading" ? "..." : "Refresh manifest"
+              }
+            )
+          ] })
+        ] })
+      ] })
+    ] });
+  }
+  function defaultOptions(preset) {
+    switch (preset) {
+      case "torrentio":
+        return {
+          streamProvider: "realdebrid",
+          debridProvider: "realdebrid",
+          qualityFilter: [],
+          languages: [],
+          providers: [],
+          sort: "quality",
+          limit: 0
+        };
+      case "torrentsdb":
+        return {
+          streamProvider: "realdebrid",
+          debridProvider: "realdebrid",
+          qualityFilter: [],
+          languages: []
+        };
+      case "comet":
+        return {
+          streamProvider: "realdebrid",
+          debridProvider: "realdebrid",
+          languages: [],
+          qualityFilter: [],
+          maxResults: 5,
+          maxSize: 0,
+          cachedOnly: false,
+          sortCachedUncachedTogether: true
+        };
+      case "jackettio":
+        return {
+          streamProvider: "realdebrid",
+          debridProvider: "realdebrid",
+          languages: [],
+          qualityFilter: [],
+          maxTorrents: 0,
+          hideUncached: false
+        };
+      case "aiostreams":
+        return { manifestUrl: "" };
+      case "orion":
+        return {
+          orionKey: "",
+          streamProvider: "realdebrid",
+          debridProvider: "realdebrid"
+        };
+      case "custom":
+        return { rawUrl: "" };
+    }
+  }
+  var ADDABLE_PRESETS = [
+    "torrentio",
+    "comet",
+    "jackettio",
+    "aiostreams",
+    "orion",
+    "custom"
+  ];
+  function ScrapersSettingsSection() {
+    const { t } = useLang();
+    const [configs, setConfigsState] = useState(() => getStreamProviderConfigs());
+    const configsRef = useRef(configs);
+    configsRef.current = configs;
+    const addedPresets = new Set(configs.map((c) => c.preset));
+    const availableToAdd = ADDABLE_PRESETS.filter((preset) => !addedPresets.has(preset) || preset === "custom");
+    function saveConfigs(next2) {
+      configsRef.current = next2;
+      setConfigsState(next2);
+      setStreamProviderConfigs(next2);
+    }
+    function handleConfigChange(updated) {
+      saveConfigs(configsRef.current.map((c) => c.id === updated.id ? updated : c));
+    }
+    function handleRemove(id4) {
+      saveConfigs(configsRef.current.filter((c) => c.id !== id4));
+    }
+    function handleMoveByOffset(id4, offset) {
+      const current2 = configsRef.current;
+      const idx = current2.findIndex((c) => c.id === id4);
+      if (idx < 0) return;
+      const next2 = [...current2];
+      const target = idx + offset;
+      if (target < 0 || target >= next2.length) return;
+      [next2[idx], next2[target]] = [next2[target], next2[idx]];
+      saveConfigs(next2);
+    }
+    function handleAddPreset(preset) {
+      const id4 = preset === "custom" ? `custom-${Date.now()}` : preset;
+      const newConfig = { id: id4, preset, enabled: true, options: defaultOptions(preset) };
+      saveConfigs([...configsRef.current, newConfig]);
+    }
+    return /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+      configs.map((config, idx) => /* @__PURE__ */ jsx(
+        ScraperCard,
+        {
+          config,
+          onChange: handleConfigChange,
+          onRemove: () => handleRemove(config.id),
+          onMoveUp: () => handleMoveByOffset(config.id, -1),
+          onMoveDown: () => handleMoveByOffset(config.id, 1),
+          isFirst: idx === 0,
+          isLast: idx === configs.length - 1
+        },
+        config.id
+      )),
+      availableToAdd.length > 0 && /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: availableToAdd.map((preset) => /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => handleAddPreset(preset),
+          className: "rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs text-slate-500 transition hover:border-white/30 hover:text-slate-300",
+          children: preset === "torrentio" ? t("streamProviderAddStandard") : preset === "torrentsdb" ? t("streamProviderAddIndexed") : preset === "comet" ? t("streamProviderAddComet") : preset === "jackettio" ? t("streamProviderAddJackettio") : preset === "aiostreams" ? t("streamProviderAddAiostreams") : preset === "orion" ? "+ Orion" : t("streamProviderAddCustom")
+        },
+        preset
+      )) })
+    ] });
+  }
+
   // ../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
+  init_react_shim();
+  var import_react_dom2 = __toESM(require_react_dom());
   init_jsx_runtime_shim();
   function qualityRank(name) {
     const n = name.toLowerCase();
@@ -182339,7 +182352,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-R8sidV/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-juJJa8/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
