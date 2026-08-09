@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Julb9Z/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-NyJjPz/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Julb9Z/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-NyJjPz/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Julb9Z/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-NyJjPz/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Julb9Z/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-NyJjPz/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164076,7 +164076,7 @@
   // lib/i18n.tsx
   init_react_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Julb9Z/profile-storage-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-NyJjPz/profile-storage-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
   var getActiveProfileId = () => sdk.getActiveProfileId();
   var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
@@ -165217,7 +165217,9 @@
       hpCategoryLabel: "Category",
       hpMinRatingImdb: "Minimum rating (IMDb) \u2014 {value}",
       hpPersistentHero: "Persistent hero",
-      hpPersistentHeroHint: "Keep the same movie between sessions",
+      hpPersistentHeroHint: "The hero stays visible while you filter and navigate",
+      hpKeepStartupMovie: "Keep the same movie between sessions",
+      hpKeepStartupMovieHint: "On app start, show the last hero again instead of rotating to a new one",
       hpRefreshHeroNow: "Refresh hero now",
       hpBackgroundEyebrow: "Background",
       hpBackgroundTitle: "Home page background",
@@ -166567,7 +166569,9 @@
       hpCategoryLabel: "Kategori",
       hpMinRatingImdb: "Minimumbetyg (IMDb) \u2014 {value}",
       hpPersistentHero: "Persistent hero",
-      hpPersistentHeroHint: "Beh\xE5ll samma film mellan sessioner",
+      hpPersistentHeroHint: "Heron ligger kvar n\xE4r du filtrerar och navigerar",
+      hpKeepStartupMovie: "Beh\xE5ll samma film mellan sessioner",
+      hpKeepStartupMovieHint: "Vid appstart visas senaste heron igen i st\xE4llet f\xF6r att rotera fram en ny",
       hpRefreshHeroNow: "Refresh hero nu",
       hpBackgroundEyebrow: "Bakgrund",
       hpBackgroundTitle: "Bakgrund p\xE5 startsidan",
@@ -166812,7 +166816,7 @@
   function useLang() {
     const ctx = useContext(LangContext);
     const detached = ctx === detachedLangContextValue;
-    const [detachedLang, setDetachedLang] = useState(DEFAULT_LANG);
+    const [detachedLang, setDetachedLang] = useState(() => readStoredLang());
     useEffect(() => {
       if (!detached || typeof window === "undefined") return;
       const sync2 = () => setDetachedLang(readStoredLang());
@@ -168729,7 +168733,7 @@
   var import_react55 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Julb9Z/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-NyJjPz/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/utils/scroll-lock.ts
@@ -173067,6 +173071,7 @@ ${cue.text}
     const watchedMarkedRef = useRef(false);
     const hasStartedForUrlRef = useRef(false);
     const playbackStartedAtRef = useRef(0);
+    const prematureEndHandledRef = useRef(false);
     const autoSubtitleSuppressedRef = useRef(false);
     const manualSubtitleOverrideRef = useRef(false);
     const subtitlePreferenceRef = useRef({ mode: "default" });
@@ -173309,6 +173314,17 @@ ${cue.text}
     const totalDuration = useMpv ? mpv.duration > 0 ? mpv.duration : probedDuration ?? 0 : probedDuration ?? (isFinite(duration) && duration > 0 ? duration : 0);
     const isPlaying = useMpv ? !mpv.paused : playing;
     const hasEndedPlayback = useMpv ? mpv.ended : hasEnded;
+    useEffect(() => {
+      if (!useMpv || !hasEndedPlayback) return;
+      if (prematureEndHandledRef.current) return;
+      const watchedThisSession = Math.max(0, realTime - playbackStartedAtRef.current);
+      const nearRealEnd = totalDuration > 0 && realTime / totalDuration >= 0.9;
+      if (nearRealEnd || watchedThisSession >= 60) return;
+      prematureEndHandledRef.current = true;
+      if (onLoadFailedRef.current?.()) {
+        console.warn("[player] stream ended prematurely, parent retrying", { realTime, totalDuration, url });
+      }
+    }, [hasEndedPlayback, useMpv]);
     const playbackEventRef = useRef({
       started: false,
       wasPlaying: false
@@ -173724,6 +173740,8 @@ ${cue.text}
       mpv.resetPlaybackRestarted();
       mpv.resetFirstFrameRendered();
       mpv.resetLoadFailed();
+      mpv.resetEnded();
+      prematureEndHandledRef.current = false;
       warmSourceCache(url);
       let openPromise;
       void closeMpvPlayer().catch(() => {
@@ -177862,6 +177880,9 @@ ${cue.text}
     const resetFileLoaded = useCallback(() => {
       setFileLoaded(false);
     }, []);
+    const resetEnded = useCallback(() => {
+      setEnded(false);
+    }, []);
     const resetPlaybackRestarted = useCallback(() => {
       setPlaybackRestarted(false);
     }, []);
@@ -177880,6 +177901,7 @@ ${cue.text}
       sid,
       fileLoaded,
       fileLoadedToken,
+      resetEnded,
       playbackRestarted,
       playbackRestartedToken,
       pausedForCache,
@@ -180032,6 +180054,9 @@ ${cue.text}
     const nextEpAutoplayPendingRef = useRef(false);
     const sawEarlyPlaybackForEpisodeRef = useRef(false);
     const firstPlaySeenRef = useRef(false);
+    const lastPlaybackTimeRef = useRef(0);
+    const lastAutoplayStreamsRef = useRef([]);
+    const playbackRecoveryAttemptsRef = useRef(0);
     const autoplayLoopActiveRef = useRef(false);
     const autoplayLoadFailedRef = useRef(false);
     const watchedMarkedInSessionRef = useRef(false);
@@ -181138,7 +181163,9 @@ ${cue.text}
       }
       return firstPlaySeenRef.current;
     }
-    async function tryPlayRequestAutoplay(streamList, attemptId) {
+    async function tryPlayRequestAutoplay(streamList, attemptId, initialTimeOverride) {
+      lastAutoplayStreamsRef.current = streamList;
+      if (initialTimeOverride === void 0) playbackRecoveryAttemptsRef.current = 0;
       const playable = streamList.filter((s) => Boolean(s.directUrl) || Boolean(s.infoHash));
       const maxSizeGb = getAutoPlayMaxStreamSizeGb();
       const maxSizeBytes = maxSizeGb ? maxSizeGb * 1024 ** 3 : null;
@@ -181205,7 +181232,7 @@ ${cue.text}
             filename: resolved.filename,
             season: selectedSeason?.season_number,
             episode: selectedEpisode?.episode_number,
-            initialTime: playRequestInitialTime ?? void 0,
+            initialTime: initialTimeOverride ?? playRequestInitialTime ?? void 0,
             forceProxy: resolved.forceProxy
           }, attemptId);
           const started = await waitForFirstPlay(attemptId, 2e4);
@@ -181677,6 +181704,7 @@ ${cue.text}
       }
     }, [loadingStreams, onAutoPlayFallback, pendingPlayRequestToken, playerUrl, streams, streamsError]);
     function handleTimeUpdate(current2, duration) {
+      lastPlaybackTimeRef.current = current2;
       if (nextEpTransitionRef.current) {
         if (current2 < 20) return;
         nextEpTransitionRef.current = false;
@@ -182142,7 +182170,18 @@ ${cue.text}
           title: playerTitle,
           onClose: handlePlayerClose,
           onLoadFailed: () => {
-            if (!autoplayLoopActiveRef.current) return false;
+            if (!autoplayLoopActiveRef.current) {
+              if (firstPlaySeenRef.current && playbackRecoveryAttemptsRef.current === 0 && lastAutoplayStreamsRef.current.length > 0) {
+                playbackRecoveryAttemptsRef.current += 1;
+                const resumeAt = Math.max(0, lastPlaybackTimeRef.current - 5);
+                const attemptId = playAttemptRef.current + 1;
+                playAttemptRef.current = attemptId;
+                sendTelemetry("playback.autoplay", "info", "post-start death -> recovery", { resumeAt });
+                void tryPlayRequestAutoplay(lastAutoplayStreamsRef.current, attemptId, resumeAt);
+                return true;
+              }
+              return false;
+            }
             autoplayLoadFailedRef.current = true;
             return true;
           },
@@ -182352,7 +182391,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-Julb9Z/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-NyJjPz/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

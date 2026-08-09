@@ -358,6 +358,11 @@ export function StreamsSidebarSection({
   // Set the moment the player reports real playback (onFirstPlay). Autoplay uses
   // this to verify a candidate actually plays and, if not, move to the next.
   const firstPlaySeenRef = useRef(false)
+  // Post-start failover: where playback last was, the stream list the
+  // session started from, and a one-recovery-per-session guard.
+  const lastPlaybackTimeRef = useRef(0)
+  const lastAutoplayStreamsRef = useRef<StreamResult[]>([])
+  const playbackRecoveryAttemptsRef = useRef(0)
   // True while tryPlayRequestAutoplay's candidate loop is driving the player.
   // During this window the player modal's dead-stream escape hatch must NOT
   // close the session — the loop swaps in the next candidate instead. A close
@@ -1765,7 +1770,9 @@ function scraperInCooldown(configId: string): boolean {
     return firstPlaySeenRef.current
   }
 
-  async function tryPlayRequestAutoplay(streamList: StreamResult[], attemptId: number) {
+  async function tryPlayRequestAutoplay(streamList: StreamResult[], attemptId: number, initialTimeOverride?: number) {
+    lastAutoplayStreamsRef.current = streamList
+    if (initialTimeOverride === undefined) playbackRecoveryAttemptsRef.current = 0
     // Build the pool in the sidebar's own display order — a play button should
     // behave like the user clicking streams top-down until one plays. The
     // shared buildAutoplayCandidates (resolved against the HOST's copy at
@@ -1859,7 +1866,7 @@ function scraperInCooldown(configId: string): boolean {
           filename: resolved.filename,
           season: selectedSeason?.season_number,
           episode: selectedEpisode?.episode_number,
-          initialTime: playRequestInitialTime ?? undefined,
+          initialTime: initialTimeOverride ?? playRequestInitialTime ?? undefined,
           forceProxy: resolved.forceProxy,
         }, attemptId)
 
@@ -2396,6 +2403,7 @@ function scraperInCooldown(configId: string): boolean {
   }, [loadingStreams, onAutoPlayFallback, pendingPlayRequestToken, playerUrl, streams, streamsError])
 
   function handleTimeUpdate(current: number, duration: number) {
+    lastPlaybackTimeRef.current = current
     if (nextEpTransitionRef.current) {
       if (current < 20) return
       nextEpTransitionRef.current = false
@@ -2981,7 +2989,28 @@ function scraperInCooldown(configId: string): boolean {
             // false here (or not handling this at all, as before 1.0.27) made
             // the modal close itself, which cancelled the play attempt and
             // closed the whole details playback session ~10 s in.
-            if (!autoplayLoopActiveRef.current) return false
+            if (!autoplayLoopActiveRef.current) {
+              // Post-start death: the source EOF'd or errored after playback
+              // began (expired debrid link, upstream cut). Re-run the play
+              // attempt at the last position — the remembered stream
+              // re-resolves first and the ranked list stays as fallback.
+              // One recovery per session, so a genuinely dead target still
+              // closes instead of looping.
+              if (
+                firstPlaySeenRef.current
+                && playbackRecoveryAttemptsRef.current === 0
+                && lastAutoplayStreamsRef.current.length > 0
+              ) {
+                playbackRecoveryAttemptsRef.current += 1
+                const resumeAt = Math.max(0, lastPlaybackTimeRef.current - 5)
+                const attemptId = playAttemptRef.current + 1
+                playAttemptRef.current = attemptId
+                sendTelemetry('playback.autoplay', 'info', 'post-start death -> recovery', { resumeAt })
+                void tryPlayRequestAutoplay(lastAutoplayStreamsRef.current, attemptId, resumeAt)
+                return true
+              }
+              return false
+            }
             autoplayLoadFailedRef.current = true
             return true
           }}
