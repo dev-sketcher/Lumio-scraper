@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.97
+
+- Open in external player button on the Android app (Quest and phones): hands
+  the stream URL to the system chooser so 4XVR/Skybox/DeoVR (Quest) or VLC/MX
+  Player (phones) can play it natively. Requires app 0.1.38+.
+
 ## 1.0.96
 
 - Copy stream URL button per stream row on desktop remote/LAN client browsers

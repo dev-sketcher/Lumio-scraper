@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/react-shim.ts
+  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/react-shim.ts"() {
+    "../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/jsx-runtime-shim.ts
+  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/jsx-runtime-shim.ts"() {
+    "../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164076,7 +164076,7 @@
   // lib/i18n.tsx
   init_react_shim();
 
-  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/profile-storage-shim.ts
+  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/profile-storage-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
   var getActiveProfileId = () => sdk.getActiveProfileId();
   var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
@@ -168772,7 +168772,7 @@
   var import_react55 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/auth-capabilities-shim.ts
+  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/utils/scroll-lock.ts
@@ -172546,6 +172546,9 @@
   }
   async function closeNativePlayer() {
     await np({ cmd: "close" });
+  }
+  function openInExternalAndroidPlayer(url, title) {
+    void np({ cmd: "openExternal", url, ...title ? { title } : {} });
   }
   function nativeSetBounds(rect) {
     const scale2 = window.devicePixelRatio || 1;
@@ -181777,7 +181780,7 @@ ${cue.text}`).join("\n\n")}
         }
       }
       sendTelemetry("playback.autoplay", "info", "autoplay resolve start", {
-        pluginVersion: "1.0.96",
+        pluginVersion: "1.0.97",
         streamCount: streamList.length,
         candidateCount: pool.length,
         withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -182911,6 +182914,20 @@ ${cue.text}`).join("\n\n")}
             ] })
           }
         ),
+        isAndroidTauriEnv && url && /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            onClick: () => openInExternalAndroidPlayer(url, stream.name),
+            title: t("openInExternalPlayer"),
+            "aria-label": t("openInExternalPlayer"),
+            className: "flex-shrink-0 rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:border-white/30 hover:text-white",
+            children: /* @__PURE__ */ jsxs("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
+              /* @__PURE__ */ jsx("path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", strokeLinecap: "round", strokeLinejoin: "round" }),
+              /* @__PURE__ */ jsx("path", { d: "M15 3h6v6M10 14 21 3", strokeLinecap: "round", strokeLinejoin: "round" })
+            ] })
+          }
+        ),
         isClientSession() && vlcSupported() && url && /* @__PURE__ */ jsx(
           "button",
           {
@@ -183055,7 +183072,7 @@ ${cue.text}`).join("\n\n")}
     }
   };
 
-  // ../../../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/wrapper-entry.ts
+  // ../../../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

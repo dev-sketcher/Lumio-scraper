@@ -20,6 +20,7 @@ import { getWatchedForSeries, markSeasonWatched, onWatchedEpisodesChanged, setWa
 import { VideoPlayerModal } from '@/components/player/video-player-modal'
 import { isRemoteSession } from '@/lib/remote-session'
 import { isClientSession } from '@/lib/session-host'
+import { isAndroidTauriEnv, openInExternalAndroidPlayer } from '@/lib/tauri-native-player'
 import { openInVlc, prefersVlc, resolveDirectStreamUrl, vlcSupported } from '@/lib/vlc-deep-link'
 import { applyStreamFilters, getStreamFilters, DEFAULT_FILTERS } from '@/lib/stream-provider-runtime/stream-filters'
 import { useLang } from '@/lib/i18n'
@@ -1874,7 +1875,7 @@ function scraperInCooldown(configId: string): boolean {
       }
     }
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.96',
+      pluginVersion: '1.0.97',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -3279,6 +3280,23 @@ function StreamRow({ stream, onPlay }: { stream: StreamResult; onPlay: (s: Strea
                 <path d="M5 15V5a2 2 0 0 1 2-2h10" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             )}
+          </button>
+        )}
+        {/* Android APP (Quest/phone): hand the stream to another installed
+            video app via the system chooser — 4XVR/Skybox on Quest, VLC/MX
+            Player on phones. Not shown in browser client sessions. */}
+        {isAndroidTauriEnv && url && (
+          <button
+            type="button"
+            onClick={() => openInExternalAndroidPlayer(url, stream.name)}
+            title={t('openInExternalPlayer')}
+            aria-label={t('openInExternalPlayer')}
+            className="flex-shrink-0 rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:border-white/30 hover:text-white"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M15 3h6v6M10 14 21 3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
         )}
         {/* Mobile client (VLC scheme works): deep-link straight into VLC. */}
