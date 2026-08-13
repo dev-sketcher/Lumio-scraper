@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.96
+
+- Copy stream URL button per stream row on desktop remote/LAN client browsers
+  (paste into VLC → Open Network Stream). Field-agnostic direct-URL lookup:
+  comet/torrentio streams often carry the http URL outside `directUrl`.
+- Open in VLC per stream row on mobile clients (deep link), replacing the
+  desktop-useless variant; the "always VLC" toggle stays mobile-only.
+- The download picker becomes a full-width bottom sheet on narrow phones so
+  it can no longer run off the left edge of the screen.
+- Removes temporary debug logging.
+
 ## 1.0.81
 
 - Removes the 1.0.80 diagnostic. The cause was outside this plugin: the app's

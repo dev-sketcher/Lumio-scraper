@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import type { StreamResult } from '@/app/api/streams/route'
 import type { DownloadJob } from '@/lib/download-manager'
@@ -272,10 +272,23 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
   const btnBase = `flex h-9 items-center rounded-full border border-white/10 text-xs text-slate-300 transition hover:border-white/30 hover:text-white ${effectiveIconOnly ? 'w-9 justify-center px-0' : 'gap-1.5 px-3.5'} ${className ?? ''}`
 
   if (state.type === 'picking-stream') {
+    // The dropdown is portaled to <body> so `position: fixed` is viewport-relative
+    // regardless of any transformed ancestor on the details panel. On narrow
+    // phones, anchoring a 320px panel at the trigger's right edge could still run
+    // off the left edge, so switch to a full-width bottom sheet there (left/right
+    // pinned to 8px, no dependency on the trigger position). Desktop keeps the
+    // anchored dropdown, clamped so its left edge always stays ≥ 8px.
+    const vw = typeof window !== 'undefined' ? window.innerWidth : 1024
+    const isNarrow = vw < 480
+    const ddWidth = Math.min(320, vw - 16)
+    const ddRight = Math.min(Math.max(posRef.current.right, 8), Math.max(8, vw - ddWidth - 8))
+    const dropdownStyle: CSSProperties = isNarrow
+      ? { left: 8, right: 8, bottom: 8, width: 'auto', zIndex: 9999 }
+      : { top: posRef.current.top, right: ddRight, width: ddWidth, zIndex: 9999 }
     const dropdown = (
       <div
-        className="fixed w-80 rounded-2xl border border-white/10 bg-[#0d1220] p-2 shadow-2xl"
-        style={{ top: posRef.current.top, right: posRef.current.right, zIndex: 9999 }}
+        className="fixed rounded-2xl border border-white/10 bg-[#0d1220] p-2 shadow-2xl"
+        style={dropdownStyle}
       >
         <p className="mb-2 px-2 text-[10px] uppercase tracking-[0.2em] text-slate-500">{t('pickStreamToDownload')}</p>
         <div className="max-h-72 overflow-y-auto space-y-1">

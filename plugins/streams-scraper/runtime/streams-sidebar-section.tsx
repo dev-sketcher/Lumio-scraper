@@ -18,6 +18,9 @@ import type { StreamResult } from '@/app/api/streams/route'
 import type { TvSeason, TvEpisode } from '@/app/api/tv-info/route'
 import { getWatchedForSeries, markSeasonWatched, onWatchedEpisodesChanged, setWatched, toggleWatched } from '@/lib/watched-episodes'
 import { VideoPlayerModal } from '@/components/player/video-player-modal'
+import { isRemoteSession } from '@/lib/remote-session'
+import { isClientSession } from '@/lib/session-host'
+import { openInVlc, prefersVlc, resolveDirectStreamUrl, vlcSupported } from '@/lib/vlc-deep-link'
 import { applyStreamFilters, getStreamFilters, DEFAULT_FILTERS } from '@/lib/stream-provider-runtime/stream-filters'
 import { useLang } from '@/lib/i18n'
 import {
@@ -243,6 +246,7 @@ interface RdStreamingSectionProps {
   playRequestInitialTime?: number | null
   onAutoPlayFallback?: () => void
   onAutoPlayPlayerClose?: () => void
+  onOpenedInVlc?: () => void
   onPlaybackStarted?: () => void
   /** Reports how many streams the search settled on (0 = none found) so the
    * host can hide play/download affordances that could never succeed. */
@@ -268,6 +272,7 @@ export function StreamsSidebarSection({
   playRequestInitialTime = null,
   onAutoPlayFallback,
   onAutoPlayPlayerClose,
+  onOpenedInVlc,
   onPlaybackStarted,
   onStreamsResult,
   posterUrl,
@@ -1628,6 +1633,17 @@ function scraperInCooldown(configId: string): boolean {
     // An explicit pick is the strongest signal of what to resume with.
     saveLastPlayedStream(playbackTargetKey, stream)
     resetNextEpisodeState()
+    // Remote "always open in VLC": hand the clicked stream straight to VLC
+    // WITHOUT raising the sidebar splash or resolving in-app — the whole point
+    // is no loading screen, VLC starts immediately. Only when the picked stream
+    // already carries a direct http(s) URL (Comet/Jackettio/Torrentio resolve).
+    // Torrent-only picks (infoHash, no URL) fall through to the normal resolve
+    // flow, which still ends at the VLC intercept in beginPlayerSession.
+    if (isRemoteSession() && prefersVlc() && stream.directUrl && openInVlc(stream.directUrl)) {
+      setStep({ type: 'idle' })
+      onOpenedInVlc?.()
+      return
+    }
     // Show the sidebar splash from the moment the user clicks PLAY so the
     // flow is one continuous opaque overlay through stream resolution →
     // modal mount → mpv first frame. Setting this `false` here used to
@@ -1797,6 +1813,42 @@ function scraperInCooldown(configId: string): boolean {
     // it has since disappeared.
     const remembered = getLastPlayedStream(playbackTargetKey)
     const ordered = [...withinCap, ...oversized]
+    // Remote: reorder for the delivery path.
+    //  • Mobile (VLC): VLC streams DIRECTLY from the debrid CDN over the phone's
+    //    connection, so a 4K/HEVC release (~30-80 Mbps) stutters where 1080p is
+    //    smooth. Prefer cached + 1080p > 720p > unknown > 4K.
+    //  • Desktop browser (no VLC scheme): playback is DIRECT in the browser too,
+    //    but a browser can only decode h264 video + non-Atmos audio. So there,
+    //    also prefer h264/x264 over HEVC/x265 and avoid Atmos/TrueHD/DTS tracks
+    //    (they play silently). Cached always wins; remembered still floats up.
+    if (isRemoteSession()) {
+      // The browser player is used whenever we're NOT going to hand off to VLC
+      // (VLC toggled off, or a desktop browser where the scheme doesn't work).
+      // Only then does the h264/non-Atmos constraint apply; a real VLC handoff
+      // plays anything, so there we just prefer 1080p for smoother direct CDN.
+      const browserPlayback = !(prefersVlc() && vlcSupported())
+      const rank = (name?: string): number => {
+        const n = (name ?? '').toLowerCase()
+        let score = 0
+        if (n.includes('1080')) score += 30
+        else if (n.includes('720')) score += 20
+        else if (n.includes('2160') || n.includes('4k')) score += 0
+        else score += 10
+        if (browserPlayback) {
+          if (n.includes('x264') || n.includes('h264') || n.includes('avc')) score += 100
+          if (n.includes('x265') || n.includes('hevc') || n.includes('h265') || n.includes('2160') || n.includes('4k')) score -= 100
+          if (n.includes('atmos') || n.includes('truehd') || n.includes('dts') || n.includes('ddp') || n.includes('eac3') || n.includes('e-ac3')) score -= 50
+          if (n.includes('aac')) score += 20
+        }
+        return score
+      }
+      ordered.sort((a, b) => {
+        if (a.cached !== b.cached) return a.cached ? -1 : 1
+        const d = rank(b.name) - rank(a.name)
+        if (d !== 0) return d
+        return (getStreamSizeBytes(a) ?? Number.POSITIVE_INFINITY) - (getStreamSizeBytes(b) ?? Number.POSITIVE_INFINITY)
+      })
+    }
     const rememberedIndex = ordered.findIndex((stream) => matchesLastPlayed(stream, remembered))
     if (rememberedIndex > 0) {
       const [hit] = ordered.splice(rememberedIndex, 1)
@@ -1809,8 +1861,20 @@ function scraperInCooldown(configId: string): boolean {
       targetKey: playbackTargetKey.slice(0, 80),
     })
     const pool = ordered.slice(0, 5)
+    // Remote "always open in VLC": hand the first direct-URL candidate straight
+    // to VLC before the 'processing' loading step — the play button should feel
+    // as instant as a stream-row click. Torrent-only pools (no directUrl) fall
+    // through to the normal resolve, still ending at the VLC intercept.
+    if (isRemoteSession() && prefersVlc()) {
+      const directCandidate = pool.find((s) => Boolean(s.directUrl))
+      if (directCandidate?.directUrl && openInVlc(directCandidate.directUrl)) {
+        setStep({ type: 'idle' })
+        onOpenedInVlc?.()
+        return true
+      }
+    }
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.34',
+      pluginVersion: '1.0.96',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -2114,6 +2178,19 @@ function scraperInCooldown(configId: string): boolean {
       setPlayerSplashFading(false)
       setStep({ type: 'idle' })
       onAutoPlayFallback?.()
+      return
+    }
+    // Remote session with "always open in VLC" on: hand the resolved URL
+    // straight to VLC instead of opening the in-browser player. This is the
+    // whole point on a phone — the browser can't play most debrid releases, so
+    // loading them in the player first (only to bounce to VLC) is wasted work.
+    // Covers every play path (hero auto-play, stream list, next-episode) since
+    // they all funnel through here. Desktop is never affected: isRemoteSession()
+    // is false there. Falls through to the normal player when there's no direct
+    // http(s) URL to give VLC (openInVlc returns false, e.g. a local file).
+    if (isRemoteSession() && prefersVlc() && openInVlc(config.url)) {
+      setStep({ type: 'idle' })
+      onOpenedInVlc?.()
       return
     }
     nextEpTransitionRef.current = false
@@ -3103,8 +3180,59 @@ function StreamList({ streams, onPlay }: { streams: StreamResult[]; onPlay: (s: 
   )
 }
 
+/// Copies text to the clipboard. Prefers the async Clipboard API, but that needs
+/// a secure context (https / localhost) — a LAN/remote client browser is often
+/// plain http, where `navigator.clipboard` is undefined or rejects. Falls back to
+/// a hidden textarea + `document.execCommand('copy')`, which works there too.
+async function copyTextToClipboard(text: string): Promise<boolean> {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text)
+      return true
+    }
+  } catch {
+    // Denied / non-secure context — fall through to the execCommand path.
+  }
+  try {
+    const ta = document.createElement('textarea')
+    ta.value = text
+    ta.setAttribute('readonly', '')
+    ta.style.position = 'fixed'
+    ta.style.top = '0'
+    ta.style.left = '-9999px'
+    document.body.appendChild(ta)
+    ta.select()
+    ta.setSelectionRange(0, text.length)
+    const ok = document.execCommand('copy')
+    ta.remove()
+    return ok
+  } catch {
+    return false
+  }
+}
+
+/// The http(s) playback URL of a stream, field-agnostic: comet/torrentio streams
+/// often DON'T carry it in the typed `directUrl` field (it lives under a runtime
+/// `url`/similar prop), so we fall back to scanning the stream's other string
+/// props (skipping human-readable label fields) for the first http(s) URL.
+function streamHttpUrl(stream: StreamResult): string | null {
+  const direct = resolveDirectStreamUrl(stream.directUrl)
+  if (direct) return direct
+  const record = stream as unknown as Record<string, unknown>
+  for (const [key, value] of Object.entries(record)) {
+    if (key === 'name' || key === 'title' || key === 'source') continue
+    if (typeof value === 'string') {
+      const resolved = resolveDirectStreamUrl(value)
+      if (resolved) return resolved
+    }
+  }
+  return null
+}
+
 function StreamRow({ stream, onPlay }: { stream: StreamResult; onPlay: (s: StreamResult) => void }) {
   const { t } = useLang()
+  const [copied, setCopied] = useState(false)
+  const url = streamHttpUrl(stream)
   return (
     <div className="rounded-xl border border-white/10 bg-slate-900 px-4 py-3 space-y-2">
       <div className="flex items-center justify-between gap-3">
@@ -3125,6 +3253,48 @@ function StreamRow({ stream, onPlay }: { stream: StreamResult; onPlay: (s: Strea
             </span>
           )}
         </div>
+        {/* Desktop client browser (can't launch VLC): copy the direct URL so the
+            user can paste it into VLC → Open Network Stream. */}
+        {isClientSession() && !vlcSupported() && url && (
+          <button
+            type="button"
+            onClick={() => {
+              void copyTextToClipboard(url).then((ok) => {
+                if (!ok) return
+                setCopied(true)
+                window.setTimeout(() => setCopied(false), 1800)
+              })
+            }}
+            title={copied ? t('copied') : t('copyStreamUrl')}
+            aria-label={t('copyStreamUrl')}
+            className="flex-shrink-0 rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:border-white/30 hover:text-white"
+          >
+            {copied ? (
+              <svg className="h-4 w-4 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : (
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" />
+                <path d="M5 15V5a2 2 0 0 1 2-2h10" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
+          </button>
+        )}
+        {/* Mobile client (VLC scheme works): deep-link straight into VLC. */}
+        {isClientSession() && vlcSupported() && url && (
+          <button
+            type="button"
+            onClick={() => openInVlc(url)}
+            title="Öppna i VLC"
+            aria-label="Öppna i VLC"
+            className="flex-shrink-0 rounded-full bg-orange-500/90 p-2 text-white transition hover:bg-orange-500"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.5c-.5 0-.9.3-1.1.8L9.6 7h4.8l-1.3-3.7c-.2-.5-.6-.8-1.1-.8zM8.9 8.8 6 18.2c-.3.9.4 1.8 1.3 1.8h9.4c.9 0 1.6-.9 1.3-1.8l-2.9-9.4H8.9z" />
+            </svg>
+          </button>
+        )}
         <button
           type="button"
           onClick={() => onPlay(stream)}

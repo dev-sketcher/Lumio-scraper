@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-cfe4TC/react-shim.ts
+  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-cfe4TC/react-shim.ts"() {
+    "../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-cfe4TC/jsx-runtime-shim.ts
+  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-cfe4TC/jsx-runtime-shim.ts"() {
+    "../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -164033,13 +164033,13 @@
     }
   });
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/index.ts
+  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/index.ts
   var runtime_exports = {};
   __export(runtime_exports, {
     StreamsScraperPlugin: () => StreamsScraperPlugin
   });
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
+  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
   init_react_shim();
   var import_react64 = __toESM(require_dist89());
 
@@ -164076,7 +164076,7 @@
   // lib/i18n.tsx
   init_react_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-cfe4TC/profile-storage-shim.ts
+  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/profile-storage-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
   var getActiveProfileId = () => sdk.getActiveProfileId();
   var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
@@ -164211,7 +164211,9 @@
       streamDownload: "Download",
       startingMovie: "Starting movie...",
       findingMovie: "Finding movie...",
+      findingStreams: "Finding streams...",
       startingEpisode: "Starting episode...",
+      sourceNotResponding: "Couldn't start the movie \u2014 the source isn't responding.",
       // Media card / details
       movie: "Movie",
       series: "Series",
@@ -164279,6 +164281,7 @@
       tryAgain: "Try again",
       cancel: "Cancel",
       copyLink: "Copy link",
+      copyStreamUrl: "Copy stream URL",
       copied: "Copied \u2713",
       moreActions: "More actions",
       copyStreamLink: "Copy stream link",
@@ -164286,6 +164289,7 @@
       openInVlc: "Play in VLC",
       openInExternalPrefix: "Play in",
       openInExternalPlayer: "Open in external player",
+      externalPlayerToggle: "External player",
       externalPlayerApp: "External player",
       externalPlayerPick: "Choose\u2026",
       licensesTitle: "Licenses",
@@ -164299,6 +164303,7 @@
       appUpdateInstall: "Download & install",
       appUpdatePromptTitle: "Update available",
       appUpdatePromptBody: "Lumio {version} is ready to install. Update now?",
+      appUpdateNotesTitle: "What\u2019s new",
       appUpdatePromptInstall: "Update now",
       appUpdatePromptInstalling: "Updating\u2026",
       appUpdatePromptLater: "Not now",
@@ -164307,6 +164312,13 @@
       appUpdateBrowserStarted: "The download started in the browser \u2014 open the APK to install.",
       licensesDesc: "Open-source components and services Lumio is built on.",
       licensesIntro: "Lumio bundles the following open-source software. GPL-licensed components include a pointer to their source code.",
+      remoteAccessTitle: "Remote access",
+      remoteAccessDesc: "Reach your library from outside your home network over an encrypted peer-to-peer connection.",
+      remoteConnectionTitle: "Remote connection",
+      remoteExternalTitle: "Outside the home network",
+      remoteExternalDesc: "Reach your library away from home. Requires an open router port and a public IP address (won't work behind CGNAT).",
+      remoteLanTitle: "Home network (LAN)",
+      remoteLanDesc: "Stream to other devices on the same home network.",
       externalPlayerAppDesc: 'App used by "Play in \u2026" (macOS app name, e.g. VLC or IINA). Android shows the system app chooser.',
       preparingDownload: "Preparing download...",
       downloadComplete: "Download complete",
@@ -164370,6 +164382,7 @@
       subtitleVariants: "Subtitles Variants",
       subtitleSettings: "Subtitles Settings",
       selectLanguage: "Select a language",
+      on: "On",
       off: "Off",
       delay: "Delay",
       subtitleAutoSync: "Auto-sync",
@@ -165563,7 +165576,9 @@
       streamDownload: "Ladda ned",
       startingMovie: "Startar film...",
       findingMovie: "Hittar film...",
+      findingStreams: "H\xE4mtar streams...",
       startingEpisode: "Startar avsnitt...",
+      sourceNotResponding: "Kunde inte starta filmen \u2014 k\xE4llan svarar inte.",
       // Media card / details
       movie: "Film",
       series: "Serie",
@@ -165631,6 +165646,7 @@
       tryAgain: "F\xF6rs\xF6k igen",
       cancel: "Avbryt",
       copyLink: "Kopiera l\xE4nk",
+      copyStreamUrl: "Kopiera stream-URL",
       copied: "Kopierat \u2713",
       moreActions: "Fler val",
       copyStreamLink: "Kopiera streaml\xE4nk",
@@ -165638,6 +165654,7 @@
       openInVlc: "Spela i VLC",
       openInExternalPrefix: "Spela i",
       openInExternalPlayer: "\xD6ppna i extern spelare",
+      externalPlayerToggle: "Extern spelare",
       externalPlayerApp: "Extern spelare",
       externalPlayerPick: "V\xE4lj\u2026",
       licensesTitle: "Licenser",
@@ -165651,6 +165668,7 @@
       appUpdateInstall: "H\xE4mta & installera",
       appUpdatePromptTitle: "Uppdatering finns",
       appUpdatePromptBody: "Lumio {version} \xE4r redo att installeras. Uppdatera nu?",
+      appUpdateNotesTitle: "Nyheter i den h\xE4r versionen",
       appUpdatePromptInstall: "Uppdatera nu",
       appUpdatePromptInstalling: "Uppdaterar\u2026",
       appUpdatePromptLater: "Inte nu",
@@ -165659,6 +165677,13 @@
       appUpdateBrowserStarted: "Nedladdningen startade i webbl\xE4saren \u2014 \xF6ppna APK:n f\xF6r att installera.",
       licensesDesc: "\xD6ppen k\xE4llkod och tj\xE4nster som Lumio bygger p\xE5.",
       licensesIntro: "Lumio buntar f\xF6ljande programvara med \xF6ppen k\xE4llkod. GPL-licensierade komponenter har h\xE4nvisning till k\xE4llkoden.",
+      remoteAccessTitle: "Fj\xE4rr\xE5tkomst",
+      remoteAccessDesc: "N\xE5 ditt bibliotek utanf\xF6r hemn\xE4tverket via en krypterad peer-to-peer-anslutning.",
+      remoteConnectionTitle: "Fj\xE4rranslutning",
+      remoteExternalTitle: "Utanf\xF6r hemn\xE4tet",
+      remoteExternalDesc: "N\xE5 biblioteket utanf\xF6r hemmet. Kr\xE4ver en \xF6ppen port i routern och en publik IP-adress (fungerar inte bakom CGNAT).",
+      remoteLanTitle: "Hemn\xE4tverket (LAN)",
+      remoteLanDesc: "Str\xF6mma till andra enheter p\xE5 samma n\xE4tverk hemma.",
       externalPlayerAppDesc: 'App som "Spela i \u2026" anv\xE4nder (macOS-appnamn, t.ex. VLC eller IINA). Android visar systemets appv\xE4ljare.',
       preparingDownload: "F\xF6rbereder nedladdning...",
       downloadComplete: "Nedladdning klar",
@@ -165722,6 +165747,7 @@
       subtitleVariants: "Undertextvarianter",
       subtitleSettings: "Undertextinst\xE4llningar",
       selectLanguage: "V\xE4lj ett spr\xE5k",
+      on: "P\xE5",
       off: "Av",
       delay: "F\xF6rdr\xF6jning",
       subtitleAutoSync: "Auto-sync",
@@ -166864,6 +166890,9 @@
   function isLanClientSession() {
     if (typeof window === "undefined") return false;
     return isLanClientHost(window.location.hostname);
+  }
+  function isClientSession() {
+    return isLanClientSession();
   }
 
   // lib/stream-provider-runtime/stream-provider-settings.ts
@@ -168743,7 +168772,7 @@
   var import_react55 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-cfe4TC/auth-capabilities-shim.ts
+  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/utils/scroll-lock.ts
@@ -170913,6 +170942,72 @@
     if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT2));
   }
 
+  // lib/vlc-deep-link.ts
+  var OPEN_IN_VLC_KEY = "remote_open_in_vlc";
+  function prefersVlc() {
+    if (typeof window === "undefined") return false;
+    try {
+      return window.localStorage.getItem(OPEN_IN_VLC_KEY) === "1";
+    } catch {
+      return false;
+    }
+  }
+  function resolveDirectStreamUrl(url) {
+    if (!url) return null;
+    if (/^https?:\/\//i.test(url)) return url;
+    if (typeof window === "undefined") return null;
+    try {
+      const original = new URL(url, window.location.href).searchParams.get("url");
+      if (original && /^https?:\/\//i.test(original)) return original;
+    } catch {
+    }
+    return null;
+  }
+  function vlcSupported() {
+    if (typeof window === "undefined") return false;
+    if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return true;
+    try {
+      return window.matchMedia("(pointer: coarse)").matches;
+    } catch {
+      return false;
+    }
+  }
+  function openInVlc(url) {
+    if (typeof window === "undefined") return false;
+    if (!vlcSupported()) return false;
+    const direct = resolveDirectStreamUrl(url);
+    if (!direct) return false;
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    window.location.href = isAndroid ? `vlc://${direct}` : `vlc-x-callback://x-callback-url/stream?url=${encodeURIComponent(direct)}`;
+    return true;
+  }
+  function isAppleMobile() {
+    if (typeof navigator === "undefined") return false;
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) return true;
+    if (!/Macintosh/i.test(navigator.userAgent)) return false;
+    try {
+      return window.matchMedia("(pointer: coarse)").matches;
+    } catch {
+      return false;
+    }
+  }
+  function openInExternalPlayer(url) {
+    if (typeof window === "undefined") return false;
+    const direct = resolveDirectStreamUrl(url);
+    if (!direct) return false;
+    if (/Android/i.test(navigator.userAgent)) {
+      const scheme = /^http:\/\//i.test(direct) ? "http" : "https";
+      const rest = direct.replace(/^https?:\/\//i, "");
+      window.location.href = `intent://${rest}#Intent;action=android.intent.action.VIEW;scheme=${scheme};type=video/*;end`;
+      return true;
+    }
+    if (isAppleMobile()) {
+      window.location.href = `vlc-x-callback://x-callback-url/stream?url=${encodeURIComponent(direct)}`;
+      return true;
+    }
+    return false;
+  }
+
   // lib/utils/fetch-client.ts
   var FETCH_TIMEOUT_ERROR = "FETCH_TIMEOUT";
   function classifyFetchError(error) {
@@ -171143,7 +171238,9 @@
     const key = normalizeApiPath(pathAndQuery);
     const requestGroup = classifyRequestGroup(key);
     const now3 = Date.now();
-    const ttlMs = Math.max(1e3, options.ttlMs ?? DEFAULT_TTL_MS);
+    const isRemote = typeof window !== "undefined" && (window.location.hostname.endsWith(".workers.dev") || window.__LUMIO_REMOTE__ === true);
+    const resolvedTimeoutMs = isRemote ? Math.max(options.timeoutMs ?? 4500, 25e3) : options.timeoutMs;
+    const ttlMs = Math.max(1e3, isRemote ? Math.max(options.ttlMs ?? DEFAULT_TTL_MS, 5 * 6e4) : options.ttlMs ?? DEFAULT_TTL_MS);
     if (!options.forceRefresh) {
       const cachedError = errorCache.get(key);
       if (cachedError && cachedError.expiresAt > now3) {
@@ -171163,14 +171260,14 @@
           try {
             const data = await fetchDesktopApiJson(
               key,
-              options.desktopTimeoutMs ?? options.timeoutMs ?? 4500
+              options.desktopTimeoutMs ?? resolvedTimeoutMs ?? 4500
             );
             if (data != null) return data;
           } catch {
           }
         }
         return fetchJsonWithRetry(key, {}, {
-          timeoutMs: options.timeoutMs,
+          timeoutMs: resolvedTimeoutMs,
           retries: options.retries,
           retryDelayMs: options.retryDelayMs,
           signal: options.signal
@@ -172624,6 +172721,8 @@
   init_jsx_runtime_shim();
   var EMBEDDED_SUBTITLES_ENABLED = true;
   var PLAYER_UI_TICK_MS = 250;
+  var BROWSER_START_TIMEOUT_MS = 3e4;
+  var BROWSER_MAX_FALLBACK_ATTEMPTS = 3;
   var PLAYER_PARENT_TIMEUPDATE_TICK_MS = 1e3;
   var PROXY_RESTART_MIN_GAP_MS = 3e4;
   function cuesToSrt(cues) {
@@ -172639,6 +172738,21 @@
 ${stamp(cue.start)} --> ${stamp(cue.end)}
 ${cue.text}
 `).join("\n");
+  }
+  function cuesToVtt(cues, delay2) {
+    const stamp = (sec) => {
+      const ms = Math.max(0, Math.round((sec + delay2) * 1e3));
+      const h = String(Math.floor(ms / 36e5)).padStart(2, "0");
+      const m2 = String(Math.floor(ms % 36e5 / 6e4)).padStart(2, "0");
+      const s = String(Math.floor(ms % 6e4 / 1e3)).padStart(2, "0");
+      const rest = String(ms % 1e3).padStart(3, "0");
+      return `${h}:${m2}:${s}.${rest}`;
+    };
+    return `WEBVTT
+
+${cues.map((cue) => `${stamp(cue.start)} --> ${stamp(cue.end)}
+${cue.text}`).join("\n\n")}
+`;
   }
   var INTRODB_CACHE = /* @__PURE__ */ new Map();
   function buildIntroDbCacheKey(mediaType, tmdbId, imdbId, season, episode) {
@@ -172758,6 +172872,42 @@ ${cue.text}
       return "";
     }
     return url;
+  }
+  function resolveDirectStreamUrl2(url) {
+    if (/^https?:\/\//i.test(url)) return url;
+    if (typeof window === "undefined") return null;
+    try {
+      const parsed = new URL(url, window.location.href);
+      const original = parsed.searchParams.get("url");
+      if (original && /^https?:\/\//i.test(original)) return original;
+    } catch {
+    }
+    return null;
+  }
+  async function writeTextToClipboard(text) {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch {
+    }
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "0";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      const ok = document.execCommand("copy");
+      ta.remove();
+      return ok;
+    } catch {
+      return false;
+    }
   }
   var isProxyUrl = (src) => src.startsWith("/api/proxy-stream");
   var isHlsUrl = (src) => src.startsWith("/api/hls-stream/");
@@ -172934,7 +173084,7 @@ ${cue.text}
     } catch {
     }
   }
-  function VideoPlayerModal({ url, filename, title, onClose, imdbId, tmdbId, mediaType, season, episode, mediaId, mediaTitle, mediaSource, posterUrl, backdropUrl, year, initialTime, onFirstPlay, hideStartSplash, forceProxy, onTimeUpdate, onOutroStart, onLoadFailed, skipHomeKitOnClose, skipHomeKitOnOpen, overlayContent, autoFullscreen, sourceInfoHash, playbackTraceId }) {
+  function VideoPlayerModal({ url, filename, title, onClose, imdbId, tmdbId, mediaType, season, episode, mediaId, mediaTitle, mediaSource, posterUrl, backdropUrl, year, initialTime, onFirstPlay, hideStartSplash, forceProxy, onTimeUpdate, onOutroStart, onLoadFailed, onOpenedExternally, skipHomeKitOnClose, skipHomeKitOnOpen, overlayContent, autoFullscreen, sourceInfoHash, playbackTraceId }) {
     const STILL_WATCHING_CLOSE_SECONDS = 20;
     const [engineKind, setEngineKind] = useState("none");
     useEffect(() => {
@@ -172944,12 +173094,25 @@ ${cue.text}
     const isMpvEngine = engineKind === "mpv";
     const isDroidEngine = engineKind === "droid";
     const inLanClientSession = isLanClientSession();
+    const clientOwnsSplash = !useMpv && isClientSession();
     const forceLanIosProxy = !useMpv && inLanClientSession && isIosWebKitBrowser();
-    const shouldProxyPlayback = !useMpv && (forceLanIosProxy || needsProxyForSource(url, filename, forceProxy));
+    const forceRemoteProxy = false;
+    const proxyTranscodeActive = forceLanIosProxy || forceRemoteProxy;
+    const useHlsForProxy = forceLanIosProxy || forceRemoteProxy && isIosWebKitBrowser();
+    const shouldProxyPlayback = !useMpv && (proxyTranscodeActive || needsProxyForSource(url, filename, forceProxy));
     const isDirectLocalFileSource = !/^https?:\/\//i.test(url) && !url.startsWith("/api/");
-    const shouldForceProxyTranscode = forceLanIosProxy || shouldProxyPlayback && isDirectLocalFileSource;
+    const shouldForceProxyTranscode = proxyTranscodeActive || shouldProxyPlayback && isDirectLocalFileSource;
     useEffect(() => {
-      void fetch(`/api/debug-log?msg=${encodeURIComponent(`VideoPlayerModal mount ${performance.now().toFixed(0)} url=${url} hideStartSplash=${hideStartSplash}`)}`);
+      if (isClientSession()) {
+        let vlcPref = false;
+        try {
+          vlcPref = window.localStorage.getItem("remote_open_in_vlc") === "1";
+        } catch {
+        }
+        if (vlcPref && openInVlc(url)) {
+          onClose();
+        }
+      }
     }, []);
     const [portalEl] = useState(() => {
       if (typeof document === "undefined") return null;
@@ -173015,6 +173178,10 @@ ${cue.text}
     const streamStartRef = useRef(initialTime ?? 0);
     const [videoSrc, setVideoSrc] = useState("");
     const [preparingProxySource, setPreparingProxySource] = useState(false);
+    const [startError, setStartError] = useState(false);
+    const browserFailAttemptsRef = useRef(0);
+    const escalateBrowserFailureRef = useRef(() => {
+    });
     const [seekingProxy, setSeekingProxy] = useState(false);
     const [proxyBufferReady, setProxyBufferReady] = useState(false);
     const seekDebounceRef = useRef(null);
@@ -173054,23 +173221,22 @@ ${cue.text}
       });
     }, []);
     const applyStreamSrc = useCallback((originalUrl, track, start2, vcodec, channels, audioMode, night, transcode) => {
-      console.log("[stream-src] forceLanIosProxy=", forceLanIosProxy, "branch=", forceLanIosProxy ? "HLS" : "proxy-stream", "start=", start2, "transcode=", transcode);
       setProxyBufferReady(false);
-      if (!forceLanIosProxy) {
+      if (!useHlsForProxy) {
         setVideoSrc(buildProxyUrl(originalUrl, track, start2, vcodec, channels, audioMode, night, transcode));
         return;
       }
       const prev = hlsSessionIdRef.current;
       void initHlsStream(originalUrl, track, start2, vcodec, channels, audioMode, night, transcode).then(({ sessionId, playlistUrl }) => {
-        console.log("[stream-src] HLS session ready", { sessionId, playlistUrl });
         if (prev && prev !== sessionId) endHlsSessionOnServer(prev);
         hlsSessionIdRef.current = sessionId;
         hlsTranscodeRef.current = transcode;
         setVideoSrc(playlistUrl);
       }).catch((err) => {
         console.error("[hls] init failed", err);
+        escalateBrowserFailureRef.current();
       });
-    }, [forceLanIosProxy, endHlsSessionOnServer]);
+    }, [useHlsForProxy, endHlsSessionOnServer]);
     useEffect(() => {
       return () => {
         endHlsSessionOnServer(hlsSessionIdRef.current);
@@ -173120,6 +173286,7 @@ ${cue.text}
       ].join("|");
     }, [playbackTraceId, mediaId, url, tmdbId, imdbId, mediaType, season, episode]);
     const [controlsVisible, setControlsVisible] = useState(true);
+    const [cssFullscreen, setCssFullscreen] = useState(false);
     const [desktopFullscreen, setDesktopFullscreen] = useState(false);
     const hideTimerRef = useRef(null);
     const [showStillWatchingPrompt, setShowStillWatchingPrompt] = useState(false);
@@ -173203,6 +173370,45 @@ ${cue.text}
     const [resolvedImdbId, setResolvedImdbId] = useState(imdbId ?? null);
     const [cues, setCues] = useState([]);
     const [subDelay, setSubDelay] = useState(0);
+    const subtitleTrackRef = useRef(null);
+    useEffect(() => {
+      const video = videoRef.current;
+      if (!video || useMpv) return;
+      video.querySelectorAll("track[data-lumio-subs]").forEach((t2) => t2.remove());
+      subtitleTrackRef.current = null;
+      if (cues.length === 0) return;
+      const vtt = cuesToVtt(cues, subDelay);
+      const track = document.createElement("track");
+      track.kind = "subtitles";
+      track.label = "Undertext";
+      track.srclang = "und";
+      track.setAttribute("data-lumio-subs", "1");
+      track.src = `data:text/vtt;charset=utf-8,${encodeURIComponent(vtt)}`;
+      video.appendChild(track);
+      subtitleTrackRef.current = track;
+      if (track.track) track.track.mode = "hidden";
+      return () => {
+        track.remove();
+      };
+    }, [cues, subDelay, useMpv, videoSrc]);
+    useEffect(() => {
+      const video = videoRef.current;
+      if (!video) return;
+      const onBegin = () => {
+        const el = subtitleTrackRef.current;
+        if (el?.track) el.track.mode = "showing";
+      };
+      const onEnd = () => {
+        const el = subtitleTrackRef.current;
+        if (el?.track) el.track.mode = "hidden";
+      };
+      video.addEventListener("webkitbeginfullscreen", onBegin);
+      video.addEventListener("webkitendfullscreen", onEnd);
+      return () => {
+        video.removeEventListener("webkitbeginfullscreen", onBegin);
+        video.removeEventListener("webkitendfullscreen", onEnd);
+      };
+    }, [videoSrc]);
     const [subDrift, setSubDrift] = useState(null);
     const subtitleDelayMediaKey = buildSubtitleDelayMediaKey(mediaType, tmdbId, imdbId ?? null);
     useEffect(() => {
@@ -173226,7 +173432,7 @@ ${cue.text}
     const [subBackgroundColor, setSubBackgroundColor] = useState(() => getSubtitleBackgroundColor());
     const [subOutlineColor, setSubOutlineColor] = useState(() => getSubtitleOutlineColor());
     const [audioOutputMode] = useState(() => getAudioOutputMode());
-    const effectiveProxyAudioMode = forceLanIosProxy ? "compatible" : audioOutputMode;
+    const effectiveProxyAudioMode = proxyTranscodeActive ? "compatible" : audioOutputMode;
     const [nightMode, setNightModeLive] = useState(() => getNightMode());
     useEffect(() => onPlaybackSettingsChanged(() => setNightModeLive(getNightMode())), []);
     const [autoSkipIntro] = useState(() => getAutoSkipIntro());
@@ -173238,6 +173444,7 @@ ${cue.text}
     const [showMoreMenu, setShowMoreMenu] = useState(false);
     const [copiedLink, setCopiedLink] = useState(false);
     const iosWebKitRef = useRef(false);
+    const autoMutedRef = useRef(false);
     const [downloadState, setDownloadState] = useState({ type: "idle" });
     const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
     const [introSegment, setIntroSegment] = useState(null);
@@ -173249,6 +173456,29 @@ ${cue.text}
     onOutroStartRef.current = onOutroStart;
     const onLoadFailedRef = useRef(onLoadFailed);
     onLoadFailedRef.current = onLoadFailed;
+    const escalateBrowserFailure = useCallback(() => {
+      if (useMpv) return;
+      if (startError) return;
+      if (browserFailAttemptsRef.current < BROWSER_MAX_FALLBACK_ATTEMPTS && onLoadFailedRef.current?.()) {
+        browserFailAttemptsRef.current += 1;
+        return;
+      }
+      setStartError(true);
+    }, [useMpv, startError]);
+    escalateBrowserFailureRef.current = escalateBrowserFailure;
+    useEffect(() => {
+      if (!clientOwnsSplash || startError) return;
+      if (hasStarted || hasEverStarted) return;
+      if (isDirectLocalFileSource) return;
+      const timer = window.setTimeout(() => {
+        void fetch(`/api/debug-log?msg=${encodeURIComponent(
+          `[browser-start-timeout] no first playable in ${BROWSER_START_TIMEOUT_MS}ms src=${(videoSrc || "(pending probe)").slice(0, 90)}`
+        )}`).catch(() => {
+        });
+        escalateBrowserFailureRef.current();
+      }, BROWSER_START_TIMEOUT_MS);
+      return () => window.clearTimeout(timer);
+    }, [clientOwnsSplash, startError, hasStarted, hasEverStarted, isDirectLocalFileSource, videoSrc]);
     const loadFailHandledTokenRef = useRef(0);
     const [subtitleClockOverride, setSubtitleClockOverride] = useState(null);
     const [defaultAudioLanguage, setDefaultAudioLanguage] = useState(() => getDefaultAudioLanguage() || null);
@@ -173504,29 +173734,13 @@ ${cue.text}
     }, [mpv.loadFailed, mpv.loadFailedToken, mpv.loadFailedError, mpv.firstFrameRendered, hasStarted, useMpv, url, onClose]);
     useEffect(() => {
       if (hasEverStarted) return;
-      if (hideStartSplash) {
+      if (hideStartSplash && !clientOwnsSplash) {
         setHasEverStarted(true);
         return;
       }
-      const splashLoading = useMpv ? !mpvStartupHoldReady || !mpvRevealPlaybackReady : !hasStarted || preparingProxySource || isServerStreamUrl(videoSrc) && !proxyBufferReady;
-      void fetch(`/api/debug-log?msg=${encodeURIComponent(
-        `${performance.now().toFixed(0)} fade-eval ` + JSON.stringify({
-          useMpv,
-          isTauriEnv,
-          hideStartSplash,
-          splashLoading,
-          splashFading,
-          mpvStartupHoldReady,
-          mpvRevealPlaybackReady,
-          firstFrameRendered: mpv.firstFrameRendered,
-          hasStarted
-        })
-      )}`);
+      const splashLoading = useMpv ? !mpvStartupHoldReady || !mpvRevealPlaybackReady : startError || !hasStarted || preparingProxySource || isServerStreamUrl(videoSrc) && !proxyBufferReady;
       if (splashLoading) return;
       if (splashFading) return;
-      void fetch(`/api/debug-log?msg=${encodeURIComponent(
-        `${performance.now().toFixed(0)} FADE TRIGGER ARMED`
-      )}`);
       const REVEAL_GUARD_MS = 60;
       const fadeStart = window.setTimeout(() => {
         setSplashFading(true);
@@ -173549,7 +173763,9 @@ ${cue.text}
       proxyBufferReady,
       splashFading,
       useMpv,
-      videoSrc
+      videoSrc,
+      clientOwnsSplash,
+      startError
     ]);
     useEffect(() => {
       if (!useMpv) return;
@@ -173828,6 +174044,7 @@ ${cue.text}
         if (iosWebKitRef.current && !userGesture && !hasStarted) {
           v.muted = true;
           setMuted(true);
+          autoMutedRef.current = true;
         }
         if (iosWebKitRef.current && userGesture && v.muted) {
           v.muted = false;
@@ -173844,6 +174061,25 @@ ${cue.text}
         }
       }
     }, [hasStarted, useMpv]);
+    useEffect(() => {
+      if (useMpv) return;
+      const restore = () => {
+        const v = videoRef.current;
+        if (v && autoMutedRef.current) {
+          v.muted = false;
+          setMuted(false);
+          autoMutedRef.current = false;
+        }
+        window.removeEventListener("pointerdown", restore);
+        window.removeEventListener("keydown", restore);
+      };
+      window.addEventListener("pointerdown", restore);
+      window.addEventListener("keydown", restore);
+      return () => {
+        window.removeEventListener("pointerdown", restore);
+        window.removeEventListener("keydown", restore);
+      };
+    }, [useMpv, videoSrc]);
     const seek = useCallback((delta) => {
       registerPlaybackInteraction();
       if (useMpv) {
@@ -173933,8 +174169,6 @@ ${cue.text}
     const toggleFullscreen = useCallback(() => {
       if (useMpv) {
         const wasPlaying = !mpv.paused;
-        void fetch(`/api/debug-log?msg=${encodeURIComponent(`toggleFullscreen click t=${performance.now().toFixed(0)}`)}`).catch(() => {
-        });
         void getWindowNativeFullscreen2().then((fullscreen) => setWindowNativeFullscreen2(!fullscreen)).then((fullscreen) => {
           setDesktopFullscreen(fullscreen);
           scheduleBoundsResync();
@@ -173956,7 +174190,20 @@ ${cue.text}
             onMouseActivity();
           }).catch(() => {
           });
+          return;
         }
+        setCssFullscreen((prev) => {
+          const next2 = !prev;
+          const orientation = window.screen.orientation;
+          try {
+            if (next2) void orientation?.lock?.("landscape")?.catch?.(() => {
+            });
+            else orientation?.unlock?.();
+          } catch {
+          }
+          return next2;
+        });
+        onMouseActivity();
         return;
       }
       if (document.fullscreenElement) void document.exitFullscreen();
@@ -173964,6 +174211,16 @@ ${cue.text}
       });
       onMouseActivity();
     }, [mpv.paused, scheduleBoundsResync, syncDesktopFullscreenState, useMpv]);
+    useEffect(() => {
+      if (useMpv) return;
+      if (typeof containerRef.current?.requestFullscreen === "function") return;
+      if (typeof window.matchMedia !== "function") return;
+      const mq = window.matchMedia("(orientation: landscape)");
+      const apply = () => setCssFullscreen(mq.matches);
+      apply();
+      mq.addEventListener("change", apply);
+      return () => mq.removeEventListener("change", apply);
+    }, [useMpv]);
     useEffect(() => {
       if (!autoFullscreen) return;
       if (useMpv || typeof containerRef.current?.requestFullscreen !== "function") {
@@ -174252,10 +174509,8 @@ ${cue.text}
       return () => window.clearInterval(interval);
     }, [handleClose, showStillWatchingPrompt, STILL_WATCHING_CLOSE_SECONDS]);
     const handleCopyStreamLink = useCallback(async () => {
-      try {
-        await navigator.clipboard.writeText(url);
-      } catch {
-      }
+      const direct = resolveDirectStreamUrl2(url) ?? url;
+      await writeTextToClipboard(direct);
       setCopiedLink(true);
       setShowMoreMenu(false);
       window.setTimeout(() => setCopiedLink(false), 1800);
@@ -174744,7 +174999,7 @@ ${cue.text}
         const startAt = initialTime ?? 0;
         setPreparingProxySource(false);
         streamStartRef.current = startAt;
-        applyStreamSrc(url, null, startAt, null, null, effectiveProxyAudioMode, nightMode, true);
+        setVideoSrc("");
       } else {
         setPreparingProxySource(false);
         setVideoSrc(resolveVideoUrl(url, filename, forceProxy));
@@ -174770,6 +175025,7 @@ ${cue.text}
       setRequiresUserStart(false);
       setProbedDuration(null);
       setVideoCodec(null);
+      setStartError(false);
       const contentChanged = prevResetUrlRef.current !== url;
       prevResetUrlRef.current = url;
       if (contentChanged) {
@@ -175440,6 +175696,7 @@ ${cue.text}
           };
         });
       }
+      if (!useMpv) return [];
       return embeddedSubtitleTracks.map((track) => ({
         language: toSubtitleLangGroup(track.language),
         lang3: toSubtitleLangGroup(track.language),
@@ -175802,7 +176059,7 @@ ${cue.text}
       setSubtitleAutoSyncState({ type: "idle" });
     }, []);
     const content = /* @__PURE__ */ jsxs("div", { "data-lumio-player-open": "1", className: `fixed inset-0 z-[60] flex flex-col !mt-0 ${useMpv ? "" : "bg-black"}`, children: [
-      !hasEverStarted && !hideStartSplash && /* @__PURE__ */ jsxs(
+      !hasEverStarted && (!hideStartSplash || clientOwnsSplash) && /* @__PURE__ */ jsxs(
         "div",
         {
           className: "absolute inset-0 z-50 flex flex-col items-center justify-center bg-slate-950",
@@ -175831,19 +176088,34 @@ ${cue.text}
                 /* @__PURE__ */ jsx("p", { className: "text-lg font-semibold text-white", children: title }),
                 year && /* @__PURE__ */ jsx("p", { className: "mt-0.5 text-sm text-slate-500", children: year })
               ] }),
-              /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-sm text-slate-400", children: [
+              startError ? /* @__PURE__ */ jsx("p", { className: "max-w-xs text-sm text-rose-300", children: t("sourceNotResponding") }) : /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-sm text-slate-400", children: [
                 /* @__PURE__ */ jsx("svg", { className: "h-4 w-4 animate-spin", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }),
                 mediaType === "tv" ? t("startingEpisode") : t("startingMovie")
               ] }),
-              /* @__PURE__ */ jsx(
-                "button",
-                {
-                  type: "button",
-                  onClick: handleClose,
-                  className: "text-xs text-slate-500 transition hover:text-slate-300",
-                  children: "Avbryt"
-                }
-              )
+              /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-3", children: [
+                clientOwnsSplash && resolveDirectStreamUrl2(url) && /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => {
+                      if (openInExternalPlayer(url)) {
+                        (onOpenedExternally ?? onClose)();
+                      }
+                    },
+                    className: "rounded-full border border-orange-400/50 bg-orange-500/15 px-4 py-2 text-xs font-medium uppercase tracking-[0.16em] text-orange-200 transition hover:border-orange-400 hover:text-orange-100",
+                    children: t("openInExternalPlayer")
+                  }
+                ),
+                /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: handleClose,
+                    className: "text-xs text-slate-500 transition hover:text-slate-300",
+                    children: startError ? t("close") : "Avbryt"
+                  }
+                )
+              ] })
             ] })
           ]
         }
@@ -175851,7 +176123,7 @@ ${cue.text}
       !(useMpv && desktopFullscreen) && /* @__PURE__ */ jsxs(
         "div",
         {
-          className: `absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-4 overflow-hidden transition-[height,padding,background-color] duration-300 ${collapseMpvTopBar ? "h-0 px-4 py-0" : "min-h-[44px] px-4 py-2.5"}`,
+          className: `absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-4 overflow-hidden transition-[height,padding,opacity,background-color] duration-300 ${collapseMpvTopBar || cssFullscreen && !controlsVisible ? "h-0 px-4 py-0 opacity-0" : "min-h-[44px] px-4 py-2.5"}`,
           style: {
             backgroundColor: useMpv ? "#000" : controlsVisible ? "rgba(0,0,0,0.8)" : "transparent",
             pointerEvents: controlsVisible ? "auto" : "none"
@@ -176072,15 +176344,19 @@ ${cue.text}
                     applyStreamSrc(url, null, currentReal, videoCodec, getTrackChannels(null), effectiveProxyAudioMode, nightMode, shouldForceProxyTranscode);
                     return;
                   }
-                  if (proxyRetryRef.current) return;
                   const proxyUrl = isProxyUrl(videoSrc) ? new URL(videoSrc, window.location.href) : null;
                   const alreadyTranscoding = proxyUrl ? proxyUrl.searchParams.get("transcode") === "1" : hlsTranscodeRef.current;
-                  if (alreadyTranscoding) return;
-                  proxyRetryRef.current = true;
-                  const origUrl = proxyUrl?.searchParams.get("url") ?? url;
-                  const trackRaw = proxyUrl?.searchParams.get("track") ?? null;
-                  const track = trackRaw !== null ? parseInt(trackRaw, 10) : activeAudioTrack;
-                  applyStreamSrc(origUrl, track, currentReal, videoCodec, getTrackChannels(track), effectiveProxyAudioMode, nightMode, true);
+                  if (!alreadyTranscoding && !proxyRetryRef.current) {
+                    proxyRetryRef.current = true;
+                    const origUrl = proxyUrl?.searchParams.get("url") ?? url;
+                    const trackRaw = proxyUrl?.searchParams.get("track") ?? null;
+                    const track = trackRaw !== null ? parseInt(trackRaw, 10) : activeAudioTrack;
+                    applyStreamSrc(origUrl, track, currentReal, videoCodec, getTrackChannels(track), effectiveProxyAudioMode, nightMode, true);
+                    return;
+                  }
+                  if (!hasStarted) {
+                    escalateBrowserFailure();
+                  }
                 }
               }
             ) }) }) : /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-black" }),
@@ -176292,11 +176568,11 @@ ${cue.text}
             /* @__PURE__ */ jsxs(
               "div",
               {
-                style: { ...getAnchoredMenuStyle(subTriggerRef.current), right: 16 },
-                className: "z-[70] flex rounded-xl border border-white/10 bg-slate-900/95 shadow-xl backdrop-blur-sm",
+                style: { ...getAnchoredMenuStyle(subTriggerRef.current), right: 16, left: "auto" },
+                className: "z-[70] flex max-h-[75vh] w-[min(calc(100vw-2rem),20rem)] flex-col overflow-y-auto rounded-xl border border-white/10 bg-slate-900/95 shadow-xl backdrop-blur-sm sm:max-h-none sm:w-auto sm:flex-row sm:overflow-visible",
                 onClick: (e) => e.stopPropagation(),
                 children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex w-40 flex-col border-r border-white/10 py-3", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex w-full flex-col border-b border-white/10 py-3 sm:w-40 sm:border-b-0 sm:border-r", children: [
                     /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleLanguages") }),
                     /* @__PURE__ */ jsxs("div", { className: "overflow-y-auto overscroll-contain", style: { maxHeight: "260px" }, children: [
                       /* @__PURE__ */ jsxs(
@@ -176337,7 +176613,7 @@ ${cue.text}
                       })
                     ] })
                   ] }),
-                  /* @__PURE__ */ jsxs("div", { className: "flex w-44 flex-col border-r border-white/10 py-3", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex w-full flex-col border-b border-white/10 py-3 sm:w-44 sm:border-b-0 sm:border-r", children: [
                     /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleVariants") }),
                     /* @__PURE__ */ jsx("div", { className: "overflow-y-auto overscroll-contain", style: { maxHeight: "260px" }, children: selectedLang ? subtitleGroups[selectedLang]?.map((sub) => {
                       const isActive = sub.id === activeSubId;
@@ -176359,7 +176635,7 @@ ${cue.text}
                       );
                     }) : /* @__PURE__ */ jsx("div", { className: "px-4 py-2 text-sm text-slate-600", children: t("selectLanguage") }) })
                   ] }),
-                  /* @__PURE__ */ jsxs("div", { className: "w-48 py-3", children: [
+                  /* @__PURE__ */ jsxs("div", { className: "w-full py-3 sm:w-48", children: [
                     /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleSettings") }),
                     subtitleLoadError && subtitleOptions.length === 0 && /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[11px] leading-5 text-rose-300", children: subtitleLoadError }),
                     /* @__PURE__ */ jsxs("div", { className: "px-4 pb-2", children: [
@@ -176502,7 +176778,7 @@ ${cue.text}
                         children: "CC"
                       }
                     ),
-                    /* @__PURE__ */ jsx(
+                    !isClientSession() && /* @__PURE__ */ jsx(
                       "button",
                       {
                         type: "button",
@@ -176659,7 +176935,7 @@ ${cue.text}
                               ]
                             }
                           ),
-                          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 rounded-[1.15rem] transition hover:bg-white/5", children: [
+                          !isClientSession() && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 rounded-[1.15rem] transition hover:bg-white/5", children: [
                             /* @__PURE__ */ jsxs(
                               "button",
                               {
@@ -176688,7 +176964,7 @@ ${cue.text}
                               }
                             )
                           ] }),
-                          /* @__PURE__ */ jsxs(
+                          !isClientSession() && /* @__PURE__ */ jsxs(
                             "button",
                             {
                               type: "button",
@@ -176708,7 +176984,7 @@ ${cue.text}
                         ]
                       }
                     ),
-                    (!isTauriEnv || isDesktopTauriEnv) && /* @__PURE__ */ jsx("button", { type: "button", onClick: toggleFullscreen, className: "shrink-0 text-slate-300 hover:text-white", children: /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" }) }) })
+                    (!isTauriEnv || isDesktopTauriEnv) && /* @__PURE__ */ jsx("button", { type: "button", onClick: toggleFullscreen, className: "shrink-0 text-slate-300 hover:text-white", children: cssFullscreen ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" }) }) })
                   ] }),
                   showAudioMenu && audioTracks.length > 0 && /* @__PURE__ */ jsxs(
                     "div",
@@ -178193,7 +178469,7 @@ ${cue.text}
     }
   }
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
+  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
   init_jsx_runtime_shim();
   var TORRENTIO_QUALITY_OPTIONS = [
     { id: "brremux", label: "BluRay REMUX" },
@@ -179178,7 +179454,7 @@ ${cue.text}
     ] });
   }
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
+  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
   init_react_shim();
   var import_react_dom2 = __toESM(require_react_dom());
   init_jsx_runtime_shim();
@@ -179389,11 +179665,16 @@ ${cue.text}
     }
     const btnBase = `flex h-9 items-center rounded-full border border-white/10 text-xs text-slate-300 transition hover:border-white/30 hover:text-white ${effectiveIconOnly ? "w-9 justify-center px-0" : "gap-1.5 px-3.5"} ${className ?? ""}`;
     if (state.type === "picking-stream") {
+      const vw2 = typeof window !== "undefined" ? window.innerWidth : 1024;
+      const isNarrow = vw2 < 480;
+      const ddWidth = Math.min(320, vw2 - 16);
+      const ddRight = Math.min(Math.max(posRef.current.right, 8), Math.max(8, vw2 - ddWidth - 8));
+      const dropdownStyle = isNarrow ? { left: 8, right: 8, bottom: 8, width: "auto", zIndex: 9999 } : { top: posRef.current.top, right: ddRight, width: ddWidth, zIndex: 9999 };
       const dropdown = /* @__PURE__ */ jsxs(
         "div",
         {
-          className: "fixed w-80 rounded-2xl border border-white/10 bg-[#0d1220] p-2 shadow-2xl",
-          style: { top: posRef.current.top, right: posRef.current.right, zIndex: 9999 },
+          className: "fixed rounded-2xl border border-white/10 bg-[#0d1220] p-2 shadow-2xl",
+          style: dropdownStyle,
           children: [
             /* @__PURE__ */ jsx("p", { className: "mb-2 px-2 text-[10px] uppercase tracking-[0.2em] text-slate-500", children: t("pickStreamToDownload") }),
             /* @__PURE__ */ jsx("div", { className: "max-h-72 overflow-y-auto space-y-1", children: state.streams.map((s, i) => /* @__PURE__ */ jsxs(
@@ -179503,7 +179784,7 @@ ${cue.text}
     );
   }
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/instant-play-provider.ts
+  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/instant-play-provider.ts
   var VIDEO_EXTS2 = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
   function toMediaItem(movie) {
     return {
@@ -179714,7 +179995,7 @@ ${cue.text}
     }
   };
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/stream-availability-provider.ts
+  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/stream-availability-provider.ts
   var movieInFlight = /* @__PURE__ */ new Map();
   var episodeInFlight = /* @__PURE__ */ new Map();
   function getMovieCacheKey(imdbId) {
@@ -179896,7 +180177,7 @@ ${cue.text}
     }
   };
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/playback-capability-provider.ts
+  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/playback-capability-provider.ts
   var streamsScraperPlaybackCapabilityProvider = {
     id: "streams-scraper-playback",
     pluginId: "com.lumio.streams-scraper",
@@ -179958,9 +180239,16 @@ ${cue.text}
     }
   };
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/streams-sidebar-section.tsx
+  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/streams-sidebar-section.tsx
   init_react_shim();
   var import_react_dom3 = __toESM(require_react_dom());
+
+  // lib/remote-session.ts
+  function isRemoteSession() {
+    if (typeof window === "undefined") return false;
+    const host = window.location.hostname;
+    return host.endsWith(".sslip.io") || window.__LUMIO_REMOTE__ === true;
+  }
 
   // lib/stream-provider-runtime/stream-provider-stream-utils.ts
   var VIDEO_EXTS3 = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i;
@@ -180077,6 +180365,12 @@ ${cue.text}
     const source = `${stream.name} ${stream.title}`.toLowerCase();
     return STREAM_LANGUAGE_PATTERNS.filter(({ pattern }) => pattern.test(source)).map(({ code }) => code);
   }
+  function browserCodecScore(stream) {
+    const haystack = `${stream.name ?? ""} ${stream.title ?? ""}`;
+    if (/\b(x265|h[.\s]?265|hevc)\b/i.test(haystack)) return 0;
+    if (/\b(x264|h[.\s]?264|avc)\b/i.test(haystack)) return 2;
+    return 1;
+  }
   function buildAutoplayCandidates(streamList, options) {
     const maxSizeBytes = options.maxSizeGb ? options.maxSizeGb * 1024 ** 3 : null;
     const preferredAudioLanguage = (options.preferredAudioLanguage ?? "").trim().toLowerCase();
@@ -180100,7 +180394,9 @@ ${cue.text}
     candidates = [...candidates].sort((a, b) => {
       const aCached = a.cached ? 1 : 0;
       const bCached = b.cached ? 1 : 0;
-      return bCached - aCached;
+      if (bCached !== aCached) return bCached - aCached;
+      if (options.preferH264) return browserCodecScore(b) - browserCodecScore(a);
+      return 0;
     });
     return candidates.slice(0, 3);
   }
@@ -180136,7 +180432,7 @@ ${cue.text}
     return [...pool].sort((a, b) => b.filesize - a.filesize)[0] ?? null;
   }
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/streams-sidebar-section.tsx
+  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/streams-sidebar-section.tsx
   init_jsx_runtime_shim();
   var LAST_PLAYED_KEY = "streams_last_played_v1";
   var LAST_PLAYED_MAX_ENTRIES = 120;
@@ -180252,6 +180548,7 @@ ${cue.text}
     playRequestInitialTime = null,
     onAutoPlayFallback,
     onAutoPlayPlayerClose,
+    onOpenedInVlc,
     onPlaybackStarted,
     onStreamsResult,
     posterUrl,
@@ -181304,6 +181601,11 @@ ${cue.text}
       setPendingPlayRequestToken(null);
       saveLastPlayedStream(playbackTargetKey, stream);
       resetNextEpisodeState();
+      if (isRemoteSession() && prefersVlc() && stream.directUrl && openInVlc(stream.directUrl)) {
+        setStep({ type: "idle" });
+        onOpenedInVlc?.();
+        return;
+      }
       setPlayerHideStartSplash(true);
       setPlayerSplashFading(false);
       setPlayerSkipHomeKitClose(false);
@@ -181430,6 +181732,30 @@ ${cue.text}
       const oversized = playable.filter((s) => !withinCap.includes(s));
       const remembered = getLastPlayedStream(playbackTargetKey);
       const ordered = [...withinCap, ...oversized];
+      if (isRemoteSession()) {
+        const browserPlayback = !(prefersVlc() && vlcSupported());
+        const rank = (name) => {
+          const n = (name ?? "").toLowerCase();
+          let score = 0;
+          if (n.includes("1080")) score += 30;
+          else if (n.includes("720")) score += 20;
+          else if (n.includes("2160") || n.includes("4k")) score += 0;
+          else score += 10;
+          if (browserPlayback) {
+            if (n.includes("x264") || n.includes("h264") || n.includes("avc")) score += 100;
+            if (n.includes("x265") || n.includes("hevc") || n.includes("h265") || n.includes("2160") || n.includes("4k")) score -= 100;
+            if (n.includes("atmos") || n.includes("truehd") || n.includes("dts") || n.includes("ddp") || n.includes("eac3") || n.includes("e-ac3")) score -= 50;
+            if (n.includes("aac")) score += 20;
+          }
+          return score;
+        };
+        ordered.sort((a, b) => {
+          if (a.cached !== b.cached) return a.cached ? -1 : 1;
+          const d = rank(b.name) - rank(a.name);
+          if (d !== 0) return d;
+          return (getStreamSizeBytes(a) ?? Number.POSITIVE_INFINITY) - (getStreamSizeBytes(b) ?? Number.POSITIVE_INFINITY);
+        });
+      }
       const rememberedIndex = ordered.findIndex((stream) => matchesLastPlayed(stream, remembered));
       if (rememberedIndex > 0) {
         const [hit] = ordered.splice(rememberedIndex, 1);
@@ -181442,8 +181768,16 @@ ${cue.text}
         targetKey: playbackTargetKey.slice(0, 80)
       });
       const pool = ordered.slice(0, 5);
+      if (isRemoteSession() && prefersVlc()) {
+        const directCandidate = pool.find((s) => Boolean(s.directUrl));
+        if (directCandidate?.directUrl && openInVlc(directCandidate.directUrl)) {
+          setStep({ type: "idle" });
+          onOpenedInVlc?.();
+          return true;
+        }
+      }
       sendTelemetry("playback.autoplay", "info", "autoplay resolve start", {
-        pluginVersion: "1.0.34",
+        pluginVersion: "1.0.96",
         streamCount: streamList.length,
         candidateCount: pool.length,
         withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
@@ -181732,6 +182066,11 @@ ${cue.text}
         setPlayerSplashFading(false);
         setStep({ type: "idle" });
         onAutoPlayFallback?.();
+        return;
+      }
+      if (isRemoteSession() && prefersVlc() && openInVlc(config.url)) {
+        setStep({ type: "idle" });
+        onOpenedInVlc?.();
         return;
       }
       nextEpTransitionRef.current = false;
@@ -182503,8 +182842,48 @@ ${cue.text}
       uncached.length > 0 && /* @__PURE__ */ jsx(Fragment2, { children: uncached.map((s, i) => /* @__PURE__ */ jsx(StreamRow, { stream: s, onPlay }, `${s.infoHash}-${i}`)) })
     ] });
   }
+  async function copyTextToClipboard(text) {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch {
+    }
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "0";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      const ok = document.execCommand("copy");
+      ta.remove();
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+  function streamHttpUrl(stream) {
+    const direct = resolveDirectStreamUrl(stream.directUrl);
+    if (direct) return direct;
+    const record2 = stream;
+    for (const [key, value] of Object.entries(record2)) {
+      if (key === "name" || key === "title" || key === "source") continue;
+      if (typeof value === "string") {
+        const resolved = resolveDirectStreamUrl(value);
+        if (resolved) return resolved;
+      }
+    }
+    return null;
+  }
   function StreamRow({ stream, onPlay }) {
     const { t } = useLang();
+    const [copied, setCopied] = useState(false);
+    const url = streamHttpUrl(stream);
     return /* @__PURE__ */ jsxs("div", { className: "rounded-xl border border-white/10 bg-slate-900 px-4 py-3 space-y-2", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-3", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 min-w-0", children: [
@@ -182512,6 +182891,37 @@ ${cue.text}
           stream.source ? /* @__PURE__ */ jsx("span", { className: "max-w-[120px] truncate rounded-full border border-white/10 bg-white/5 px-1.5 py-0.5 text-[8px] uppercase tracking-[0.14em] text-slate-300", children: stream.source }) : null,
           stream.cached ? /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400", children: t("streamAvailable") }) : /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400", children: t("streamDownload") })
         ] }),
+        isClientSession() && !vlcSupported() && url && /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            onClick: () => {
+              void copyTextToClipboard(url).then((ok) => {
+                if (!ok) return;
+                setCopied(true);
+                window.setTimeout(() => setCopied(false), 1800);
+              });
+            },
+            title: copied ? t("copied") : t("copyStreamUrl"),
+            "aria-label": t("copyStreamUrl"),
+            className: "flex-shrink-0 rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:border-white/30 hover:text-white",
+            children: copied ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4 text-green-400", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M20 6 9 17l-5-5", strokeLinecap: "round", strokeLinejoin: "round" }) }) : /* @__PURE__ */ jsxs("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
+              /* @__PURE__ */ jsx("rect", { x: "9", y: "9", width: "13", height: "13", rx: "2" }),
+              /* @__PURE__ */ jsx("path", { d: "M5 15V5a2 2 0 0 1 2-2h10", strokeLinecap: "round", strokeLinejoin: "round" })
+            ] })
+          }
+        ),
+        isClientSession() && vlcSupported() && url && /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            onClick: () => openInVlc(url),
+            title: "\xD6ppna i VLC",
+            "aria-label": "\xD6ppna i VLC",
+            className: "flex-shrink-0 rounded-full bg-orange-500/90 p-2 text-white transition hover:bg-orange-500",
+            children: /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M12 2.5c-.5 0-.9.3-1.1.8L9.6 7h4.8l-1.3-3.7c-.2-.5-.6-.8-1.1-.8zM8.9 8.8 6 18.2c-.3.9.4 1.8 1.3 1.8h9.4c.9 0 1.6-.9 1.3-1.8l-2.9-9.4H8.9z" }) })
+          }
+        ),
         /* @__PURE__ */ jsx(
           "button",
           {
@@ -182610,7 +183020,7 @@ ${cue.text}
     ] });
   }
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/index.ts
+  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/index.ts
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
@@ -182645,7 +183055,7 @@ ${cue.text}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-cfe4TC/wrapper-entry.ts
+  // ../../../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-iJNKKq/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");
