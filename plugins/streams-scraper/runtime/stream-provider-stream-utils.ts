@@ -1,4 +1,4 @@
-import type { StreamResult } from '@/app/api/streams/route'
+import type { StreamResult } from '@/types/api-responses'
 import type { RdTorrentInfo, RdUnrestrictedLink } from '@/lib/stream-provider-runtime/real-debrid/types'
 
 export const VIDEO_EXTS = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i
@@ -9,6 +9,18 @@ export function qualityRank(name: string): number {
   if (normalized.includes('1080p')) return 3
   if (normalized.includes('720p')) return 2
   return 1
+}
+
+/// Vertical resolution parsed from a release name, or null when the name
+/// doesn't say. Callers must treat null as "unknown", not "low".
+export function streamResolution(name: string): number | null {
+  const normalized = name.toLowerCase()
+  if (normalized.includes('2160p') || /\b4k\b|\buhd\b/.test(normalized)) return 2160
+  if (normalized.includes('1440p')) return 1440
+  if (normalized.includes('1080p')) return 1080
+  if (normalized.includes('720p')) return 720
+  if (normalized.includes('480p')) return 480
+  return null
 }
 
 function escapeRegExp(value: string): string {
@@ -57,6 +69,60 @@ export function cachedFromStreamLabel(name: string, title: string): boolean | nu
   return null
 }
 
+export type CachedStreamHint = {
+  title?: string | null
+  infoHash?: string | null
+  url?: string | null
+}
+
+export function normalizeStreamHash(value: string | null | undefined): string {
+  return (value ?? '').trim().toLowerCase()
+}
+
+export function normalizeStreamTitle(value: string | null | undefined): string {
+  return (value ?? '').trim().toLowerCase()
+}
+
+export function buildCachedStreamLookup(hints: CachedStreamHint[]): {
+  cachedHashes: Set<string>
+  cachedTitles: Set<string>
+} {
+  const cachedHashes = new Set<string>()
+  const cachedTitles = new Set<string>()
+
+  for (const hint of hints) {
+    const title = normalizeStreamTitle(hint.title)
+    if (title) cachedTitles.add(title)
+    const hash = normalizeStreamHash(
+      hint.infoHash
+      ?? hint.url?.match(/\/([a-f0-9]{40})\//i)?.[1]
+      ?? null,
+    )
+    if (hash) cachedHashes.add(hash)
+  }
+
+  return { cachedHashes, cachedTitles }
+}
+
+export function applyCachedStreamLookupToResults(
+  streams: StreamResult[],
+  lookup: { cachedHashes: Set<string>; cachedTitles: Set<string> },
+): StreamResult[] {
+  return streams.map((stream) => {
+    const hash = normalizeStreamHash(stream.infoHash)
+    const title = normalizeStreamTitle(stream.title)
+    const cached = Boolean(
+      (hash && lookup.cachedHashes.has(hash))
+      || (title && lookup.cachedTitles.has(title)),
+    )
+    return cached === stream.cached ? stream : { ...stream, cached }
+  })
+}
+
+export function isStreamAvailableForUi(stream: StreamResult): boolean {
+  return Boolean(stream.cached)
+}
+
 function streamKeyForLookup(infoHash: string, fileIdx: number | null | undefined): string | null {
   const hash = infoHash.trim().toLowerCase()
   if (!hash) return null
@@ -80,19 +146,26 @@ export function applyCachedLookup(
   if (!lookup) return streams
   return streams.map((stream) => {
     const hash = stream.infoHash.trim().toLowerCase()
+    const title = normalizeStreamTitle(stream.title || stream.name)
     const exactKey = streamKeyForLookup(hash, stream.fileIdx)
     const wildcardKey = hash ? `${hash}@*` : null
     const providerHasStreamInfo = Boolean(
       (exactKey && lookup.downloadableStreamKeys?.has(exactKey))
-      || (wildcardKey && lookup.downloadableStreamKeys?.has(wildcardKey)),
+      || (wildcardKey && lookup.downloadableStreamKeys?.has(wildcardKey))
+      || (hash && (lookup.downloadableHashes.has(hash) || lookup.cachedHashes.has(hash)))
+      || (title && (lookup.downloadableTitles.has(title) || lookup.cachedTitles.has(title))),
     )
     const lookupCachedByStream = Boolean(
       (exactKey && lookup.cachedStreamKeys?.has(exactKey))
-      || (wildcardKey && lookup.cachedStreamKeys?.has(wildcardKey)),
+      || (wildcardKey && lookup.cachedStreamKeys?.has(wildcardKey))
+      || (hash && lookup.cachedHashes.has(hash))
+      || (title && lookup.cachedTitles.has(title)),
     )
     const lookupDownloadableByStream = Boolean(
       (exactKey && lookup.downloadableStreamKeys?.has(exactKey))
-      || (wildcardKey && lookup.downloadableStreamKeys?.has(wildcardKey)),
+      || (wildcardKey && lookup.downloadableStreamKeys?.has(wildcardKey))
+      || (hash && lookup.downloadableHashes.has(hash))
+      || (title && lookup.downloadableTitles.has(title)),
     )
     return {
       ...stream,
@@ -167,11 +240,27 @@ export function getStreamAudioLanguages(stream: StreamResult): string[] {
     .map(({ code }) => code)
 }
 
+// Rough codec class from a stream's visible name/title. Browsers decode H.264
+// natively but not HEVC/H.265 (→ a home transcode or a hard decode failure),
+// so the browser engine should try H.264 releases first.
+function browserCodecScore(stream: StreamResult): number {
+  const haystack = `${stream.name ?? ''} ${stream.title ?? ''}`
+  if (/\b(x265|h[.\s]?265|hevc)\b/i.test(haystack)) return 0
+  if (/\b(x264|h[.\s]?264|avc)\b/i.test(haystack)) return 2
+  return 1
+}
+
 export function buildAutoplayCandidates(
   streamList: StreamResult[],
   options: {
     maxSizeGb: number | null
+    // Autoplay resolution cap (e.g. 1080). Streams with an unknown
+    // resolution pass through — only known overshoots are excluded.
+    maxResolution?: number | null
     preferredAudioLanguage: string | null
+    // Browser/client engine: promote H.264 candidates so playback starts
+    // without a home transcode where possible. Does not override cache order.
+    preferH264?: boolean
   },
 ): StreamResult[] {
   const maxSizeBytes = options.maxSizeGb ? options.maxSizeGb * 1024 ** 3 : null
@@ -186,6 +275,14 @@ export function buildAutoplayCandidates(
     })
   }
 
+  if (options.maxResolution) {
+    const cap = options.maxResolution
+    candidates = candidates.filter((stream) => {
+      const resolution = streamResolution(`${stream.name} ${stream.title}`)
+      return resolution == null || resolution <= cap
+    })
+  }
+
   if (preferredAudioLanguage) {
     const matches = candidates.filter((stream) => {
       const languages = getStreamAudioLanguages(stream)
@@ -197,23 +294,21 @@ export function buildAutoplayCandidates(
     }
   }
 
-  // The Android webview decodes H.264 and 8-bit HEVC but not 10-bit HEVC,
-  // and the bundled ffmpeg cannot transcode video — rank codecs the device
-  // can actually play first. Stable sort keeps quality order within tiers.
-  if (typeof navigator !== 'undefined' && /android/i.test(navigator.userAgent)) {
-    const codecTier = (stream: StreamResult): number => {
-      const text = `${stream.name ?? ''} ${stream.title ?? ''}`
-      if (/10.?bit|main.?10/i.test(text)) return 2
-      if (/x264|h\.?264|avc/i.test(text)) return 0
-      return 1
-    }
-    candidates = [...candidates].sort((a, b) => codecTier(a) - codecTier(b))
-  }
+  // Cached debrid candidates resolve in ~1 API round; uncached ones go through
+  // the full magnet-queue → poll-download path (8-15s). Promote cached to the
+  // front so autoplay tries them first and only falls back to uncached if
+  // every cached attempt fails.
+  candidates = [...candidates].sort((a, b) => {
+    const aCached = a.cached ? 1 : 0
+    const bCached = b.cached ? 1 : 0
+    if (bCached !== aCached) return bCached - aCached
+    // Secondary key (browser only): prefer H.264 so the browser can play it
+    // natively. Cache order still dominates for autoplay latency.
+    if (options.preferH264) return browserCodecScore(b) - browserCodecScore(a)
+    return 0
+  })
 
-  // Autoplay walks these top-down until one actually plays; 5 gives a dead
-  // first source (common on some scrapers) enough fallbacks without letting a
-  // fully-broken scraper hold the splash for minutes.
-  return candidates.slice(0, 5)
+  return candidates.slice(0, 3)
 }
 
 export function getPreferredTorrentFileIds(
@@ -229,18 +324,7 @@ export function getPreferredTorrentFileIds(
     const match = videoFiles.find((file) =>
       matchesEpisodeIdentifier(file.path, options.seasonNumber as number, options.episodeNumber as number),
     )
-    if (match) return [match.id]
-    // No filename matched the SxxExx pattern. If this torrent is a single-episode
-    // release whose filename just lacks a standard tag, use its one video file
-    // instead of failing (which would bounce the user back with no playback).
-    // For multi-file torrents (season packs) we must NOT guess a file, or we'd
-    // silently play the wrong episode — return none so the caller falls back.
-    const plausible = videoFiles.filter(
-      (file) => !looksLikeSampleOrExtra(file.path) && (file.bytes ?? 0) >= 200 * 1024 * 1024,
-    )
-    if (plausible.length === 1) return [plausible[0].id]
-    if (videoFiles.length === 1) return [videoFiles[0].id]
-    return []
+    return match ? [match.id] : []
   }
   const maxBytes = options.maxSizeGb && options.maxSizeGb > 0
     ? options.maxSizeGb * 1024 ** 3

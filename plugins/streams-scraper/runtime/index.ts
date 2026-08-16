@@ -9,9 +9,10 @@ import { streamsScraperInstantPlayProvider } from './instant-play-provider'
 import { streamsScraperPlaybackCapabilityProvider } from './playback-capability-provider'
 import { streamsScraperMediaStreamAvailabilityProvider } from './stream-availability-provider'
 import { StreamsSidebarSection } from './streams-sidebar-section'
-import { resolveFreshLinkFromHash } from '@/lib/stream-provider-runtime/resume-resolver'
-import { resolvePlayableStreamUrl } from '@/lib/stream-provider-runtime/playback/resolve-stream-url'
-import { DebridSettingsSection } from '@/lib/stream-provider-runtime/debrid-settings-section'
+import { resolveFreshLinkFromHash } from './resume-resolver'
+import { resolvePlayableStreamUrl } from './playback/resolve-stream-url'
+import { buildPlaybackProviderConfigSegment } from './playback/stream-provider-playback'
+import { DebridSettingsSection } from './debrid-settings-section'
 
 export const StreamsScraperPlugin: LumioPlugin = {
   id: 'com.lumio.streams-scraper',
@@ -21,7 +22,7 @@ export const StreamsScraperPlugin: LumioPlugin = {
     en: 'Adds streaming sources via multiple scrapers and plugin-managed playback.',
     sv: 'Lägger till strömningskällor via flera scrapers och pluginhanterad uppspelning.',
   },
-  preinstalled: true,
+  preinstalled: false,
 
   register(ctx) {
     ctx.registerStreamProvider({
@@ -52,6 +53,11 @@ export const StreamsScraperPlugin: LumioPlugin = {
         const rewritten = await resolvePlayableStreamUrl(url)
         return rewritten === url ? null : rewritten
       },
+    })
+    ctx.registerStreamRequestConfigProvider?.({
+      id: 'streams-scraper-request-config',
+      pluginId: 'com.lumio.streams-scraper',
+      buildConfigSegment: (qualityFilter) => buildPlaybackProviderConfigSegment(qualityFilter ?? ''),
     })
     ctx.registerMediaDownloadAction({
       id: 'streams-scraper-download',

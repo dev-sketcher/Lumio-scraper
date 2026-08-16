@@ -1,5 +1,6 @@
 'use client'
 
+import { lt } from '../local-strings'
 import { useEffect, useRef, useState } from 'react'
 import {
   getRdApiKey,
@@ -410,7 +411,7 @@ export function RdAudiobookSection({ title, mediaId, posterUrl, year, imdbId }: 
                   onClick={() => setShowManual(v => !v)}
                   className="text-[11px] text-slate-600 transition hover:text-slate-400"
                 >
-                  {showManual ? t('hideManual') : t('pasteManual')}
+                  {showManual ? t('hideManual') : lt('pasteManual')}
                 </button>
 
                 {showManual && (

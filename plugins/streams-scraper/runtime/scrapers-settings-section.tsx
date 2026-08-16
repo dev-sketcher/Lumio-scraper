@@ -1,5 +1,6 @@
 'use client'
 
+import { lt } from './local-strings'
 import { useEffect, useRef, useState } from 'react'
 import { Input, Switch } from '@heroui/react'
 import { useLang } from '@/lib/i18n'
@@ -16,11 +17,11 @@ import {
   type OrionOptions,
   type CustomOptions,
   type ScraperPresetId,
-} from '@/lib/stream-provider-runtime/stream-provider-settings'
+} from '@/lib/media-stream/config'
 import {
   getStreamProviderAccessKey,
   setStreamProviderAccessKey,
-} from '@/lib/stream-provider-runtime/stream-provider-storage'
+} from '@/lib/media-stream/storage'
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
@@ -859,7 +860,7 @@ function ScraperCard({
             const opts = config.options as AiostreamsOptions
             return (
               <>
-                <p className="text-[11px] text-slate-600">{t('aiostreamsHint')}</p>
+                <p className="text-[11px] text-slate-600">{lt('aiostreamsHint')}</p>
                 <button
                   type="button"
                   onClick={() => void openExternalUrl('https://aiostreams-nightly.fortheweak.cloud/stremio/configure')}
@@ -1100,9 +1101,9 @@ export function ScrapersSettingsSection() {
               className="rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs text-slate-500 transition hover:border-white/30 hover:text-slate-300"
             >
               {preset === 'torrentio'
-                ? t('streamProviderAddStandard')
+                ? lt('streamProviderAddStandard')
                 : preset === 'torrentsdb'
-                  ? t('streamProviderAddIndexed')
+                  ? lt('streamProviderAddIndexed')
                   : preset === 'comet'
                     ? t('streamProviderAddComet')
                     : preset === 'jackettio'

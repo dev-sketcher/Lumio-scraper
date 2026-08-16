@@ -1,6 +1,6 @@
-import { getStreamProviderConfigs, type StreamProviderConfig } from '@/lib/stream-provider-runtime/stream-provider-settings'
-import { buildStreamProviderCacheUrl, buildStreamProviderUrl, getStreamProviderTypeForApi } from '@/lib/stream-provider-runtime/stream-provider-url-builder'
-import { buildTorrentioQualityFilter, getStreamFilters } from '@/lib/stream-provider-runtime/stream-filters'
+import { getStreamProviderConfigs, type StreamProviderConfig } from '@/lib/media-stream/config'
+import { buildStreamProviderCacheUrl, buildStreamProviderUrl, getStreamProviderTypeForApi } from '@/lib/media-stream/url-builder'
+import { buildTorrentioQualityFilter, getStreamFilters } from '@/lib/media-stream/filters'
 import { buildPlaybackProviderConfigSegment } from '@/lib/stream-provider-runtime/playback/stream-provider-playback'
 
 export interface StreamProviderRequestContext {

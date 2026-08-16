@@ -1,5 +1,6 @@
 'use client'
 
+import { lt } from './local-strings'
 import React, { useEffect, useRef, useState, type MutableRefObject } from 'react'
 import { createPortal } from 'react-dom'
 import { mapWithConcurrency } from '@/lib/async-utils'
@@ -22,7 +23,7 @@ import { isRemoteSession } from '@/lib/remote-session'
 import { isClientSession } from '@/lib/session-host'
 import { isAndroidTauriEnv, openInExternalAndroidPlayer } from '@/lib/tauri-native-player'
 import { openInVlc, prefersVlc, resolveDirectStreamUrl, vlcSupported } from '@/lib/vlc-deep-link'
-import { applyStreamFilters, getStreamFilters, DEFAULT_FILTERS } from '@/lib/stream-provider-runtime/stream-filters'
+import { applyStreamFilters, getStreamFilters, DEFAULT_FILTERS } from '@/lib/media-stream/filters'
 import { useLang } from '@/lib/i18n'
 import {
   cancelDesktopPlaybackSessions,
@@ -37,18 +38,18 @@ import {
 import {
   getStreamProviderConfigs,
   type ScraperConfig,
-} from '@/lib/stream-provider-runtime/stream-provider-settings'
+} from '@/lib/media-stream/config'
 import {
   getScraperStreamProvider,
   getStreamProviderAccessKey,
-} from '@/lib/stream-provider-runtime/stream-provider-storage'
+} from '@/lib/media-stream/storage'
 import {
   buildStreamProviderCacheUrl,
   buildStreamProviderUrl,
   getStreamProviderDisplayName,
   getStreamProviderTypeForApi,
   resolveStreamProviderAccessKey,
-} from '@/lib/stream-provider-runtime/stream-provider-url-builder'
+} from '@/lib/media-stream/url-builder'
 import { getAutoPlayNextEpisode, getNextEpPopupSeconds, getNextEpPreloadLeadSeconds } from '@/lib/autoplay-settings'
 import { getAutoPlayMaxStreamSizeGb, getDefaultAudioLanguage, normalizeLanguageCode } from '@/lib/playback-settings'
 import { checkEpisodeHasStream } from '@/lib/series-watchlist-feed'
@@ -3030,7 +3031,7 @@ function scraperInCooldown(configId: string): boolean {
               onClick={() => setShowManual((v) => !v)}
               className="text-xs text-slate-500 hover:text-slate-300"
             >
-              {showManual ? t('hideManual') : t('addManually')}
+              {showManual ? t('hideManual') : lt('addManually')}
             </button>
             {showManual && (
               <form onSubmit={handleManualSubmit} className="mt-2 flex gap-2">
@@ -3038,7 +3039,7 @@ function scraperInCooldown(configId: string): boolean {
                   type="text"
                   value={manualInput}
                   onChange={(e) => setManualInput(e.target.value)}
-                  placeholder={t('manualPlaceholder')}
+                  placeholder={lt('manualPlaceholder')}
                   className="min-w-0 flex-1 rounded-xl border border-white/10 bg-slate-900 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-white/10"
                 />
                 <button
@@ -3338,7 +3339,7 @@ function TorrentProgress({
   const label =
     step.status === 'downloading' ? `${t('downloading')} ${safeProgress}%`
     : step.status === 'queued' ? t('queued')
-    : step.status === 'magnet_conversion' ? t('convertingMagnet')
+    : step.status === 'magnet_conversion' ? lt('convertingMagnet')
     : step.statusLabel ?? step.status
   return (
     <div className="space-y-2">

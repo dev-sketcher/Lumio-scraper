@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-fV7VRq/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-fV7VRq/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-fV7VRq/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-fV7VRq/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -39046,7 +39046,7 @@
         startObserver() {
           this.stopObserver?.();
           const { viewport = {} } = this.node.getProps();
-          const { root, margin: rootMargin, amount = "some", once: once2 } = viewport;
+          const { root, margin: rootMargin, amount = "some", once } = viewport;
           const options = {
             root: root ? root.current : void 0,
             rootMargin,
@@ -39057,7 +39057,7 @@
             if (this.isInView === isIntersecting)
               return;
             this.isInView = isIntersecting;
-            if (once2 && !isIntersecting && this.hasEnteredView) {
+            if (once && !isIntersecting && this.hasEnteredView) {
               return;
             } else if (isIntersecting) {
               this.hasEnteredView = true;
@@ -41115,14 +41115,14 @@
         );
         return [item, runCycle];
       }
-      function useInView2(ref, { root, margin, amount, once: once2 = false, initial = false } = {}) {
+      function useInView2(ref, { root, margin, amount, once = false, initial = false } = {}) {
         const [isInView, setInView] = React.useState(initial);
         React.useEffect(() => {
-          if (!ref.current || once2 && isInView)
+          if (!ref.current || once && isInView)
             return;
           const onEnter = () => {
             setInView(true);
-            return once2 ? void 0 : () => setInView(false);
+            return once ? void 0 : () => setInView(false);
           };
           const options = {
             root: root && root.current || void 0,
@@ -41130,7 +41130,7 @@
             amount
           };
           return inView2(ref.current, onEnter, options);
-        }, [root, ref, margin, once2, amount]);
+        }, [root, ref, margin, once, amount]);
         return isInView;
       }
       function useInstantTransition2() {
@@ -83982,7 +83982,7 @@
         startObserver() {
           this.stopObserver?.();
           const { viewport = {} } = this.node.getProps();
-          const { root, margin: rootMargin, amount = "some", once: once2 } = viewport;
+          const { root, margin: rootMargin, amount = "some", once } = viewport;
           const options = {
             root: root ? root.current : void 0,
             rootMargin,
@@ -83993,7 +83993,7 @@
             if (this.isInView === isIntersecting)
               return;
             this.isInView = isIntersecting;
-            if (once2 && !isIntersecting && this.hasEnteredView) {
+            if (once && !isIntersecting && this.hasEnteredView) {
               return;
             } else if (isIntersecting) {
               this.hasEnteredView = true;
@@ -86051,14 +86051,14 @@
   });
 
   // node_modules/framer-motion/dist/es/utils/use-in-view.mjs
-  function useInView(ref, { root, margin, amount, once: once2 = false, initial = false } = {}) {
+  function useInView(ref, { root, margin, amount, once = false, initial = false } = {}) {
     const [isInView, setInView] = useState(initial);
     useEffect(() => {
-      if (!ref.current || once2 && isInView)
+      if (!ref.current || once && isInView)
         return;
       const onEnter = () => {
         setInView(true);
-        return once2 ? void 0 : () => setInView(false);
+        return once ? void 0 : () => setInView(false);
       };
       const options = {
         root: root && root.current || void 0,
@@ -86066,7 +86066,7 @@
         amount
       };
       return inView(ref.current, onEnter, options);
-    }, [root, ref, margin, once2, amount]);
+    }, [root, ref, margin, once, amount]);
     return isInView;
   }
   var init_use_in_view = __esm({
@@ -120819,7 +120819,7 @@
         };
       }
       var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var Image3 = (0, import_system2.forwardRef)((props, ref) => {
+      var Image2 = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
           domRef,
@@ -120856,8 +120856,8 @@
         }
         return img;
       });
-      Image3.displayName = "HeroUI.Image";
-      var image_default = Image3;
+      Image2.displayName = "HeroUI.Image";
+      var image_default = Image2;
     }
   });
 
@@ -158810,10 +158810,10 @@
       jt = createContext2({});
       Lt = forwardRef2((A, B) => {
         var z = A, { value: r, onChange: s, maxLength: e, textAlign: u = "left", pattern: P, placeholder: D, inputMode: G = "numeric", onComplete: H, pushPasswordManagerStrategy: F = "increase-width", pasteTransformer: W, containerClassName: Z, noScriptCSSFallback: T = Nt, render: f, children: h } = z, a = Pt(z, ["value", "onChange", "maxLength", "textAlign", "pattern", "placeholder", "inputMode", "onComplete", "pushPasswordManagerStrategy", "pasteTransformer", "containerClassName", "noScriptCSSFallback", "render", "children"]);
-        var X, lt, ut, dt, ft;
+        var X, lt2, ut, dt, ft;
         let [q, nt] = useState(typeof a.defaultValue == "string" ? a.defaultValue : ""), i = r != null ? r : q, I = _t(i), x = useCallback((t) => {
           s == null || s(t), nt(t);
-        }, [s]), m2 = useMemo(() => P ? typeof P == "string" ? new RegExp(P) : P : null, [P]), l = useRef(null), K = useRef(null), J = useRef({ value: i, onChange: x, isIOS: typeof window != "undefined" && ((lt = (X = window == null ? void 0 : window.CSS) == null ? void 0 : X.supports) == null ? void 0 : lt.call(X, "-webkit-touch-callout", "none")) }), V = useRef({ prev: [(ut = l.current) == null ? void 0 : ut.selectionStart, (dt = l.current) == null ? void 0 : dt.selectionEnd, (ft = l.current) == null ? void 0 : ft.selectionDirection] });
+        }, [s]), m2 = useMemo(() => P ? typeof P == "string" ? new RegExp(P) : P : null, [P]), l = useRef(null), K = useRef(null), J = useRef({ value: i, onChange: x, isIOS: typeof window != "undefined" && ((lt2 = (X = window == null ? void 0 : window.CSS) == null ? void 0 : X.supports) == null ? void 0 : lt2.call(X, "-webkit-touch-callout", "none")) }), V = useRef({ prev: [(ut = l.current) == null ? void 0 : ut.selectionStart, (dt = l.current) == null ? void 0 : dt.selectionEnd, (ft = l.current) == null ? void 0 : ft.selectionDirection] });
         useImperativeHandle(B, () => l.current, []), useEffect(() => {
           let t = l.current, o = K.current;
           if (!t || !o) return;
@@ -163581,107 +163581,73 @@
     }
   });
 
-  // node_modules/@tauri-apps/api/external/tslib/tslib.es6.js
-  function __classPrivateFieldGet2(receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-  }
-  function __classPrivateFieldSet2(receiver, state, value, kind, f) {
-    if (kind === "m") throw new TypeError("Private method is not writable");
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
-    return kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
-  }
-  var init_tslib_es62 = __esm({
-    "node_modules/@tauri-apps/api/external/tslib/tslib.es6.js"() {
+  // node_modules/@tauri-apps/api/external/tslib/tslib.es6.cjs
+  var require_tslib_es6 = __commonJS({
+    "node_modules/@tauri-apps/api/external/tslib/tslib.es6.cjs"(exports) {
+      "use strict";
+      function __classPrivateFieldGet2(receiver, state, kind, f) {
+        if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+        if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+        return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+      }
+      function __classPrivateFieldSet2(receiver, state, value, kind, f) {
+        if (kind === "m") throw new TypeError("Private method is not writable");
+        if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+        if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+        return kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value), value;
+      }
+      exports.__classPrivateFieldGet = __classPrivateFieldGet2;
+      exports.__classPrivateFieldSet = __classPrivateFieldSet2;
     }
   });
 
-  // node_modules/@tauri-apps/api/core.js
-  var core_exports = {};
-  __export(core_exports, {
-    Channel: () => Channel,
-    PluginListener: () => PluginListener,
-    Resource: () => Resource,
-    SERIALIZE_TO_IPC_FN: () => SERIALIZE_TO_IPC_FN,
-    addPluginListener: () => addPluginListener,
-    checkPermissions: () => checkPermissions,
-    convertFileSrc: () => convertFileSrc,
-    invoke: () => invoke,
-    isTauri: () => isTauri,
-    requestPermissions: () => requestPermissions,
-    transformCallback: () => transformCallback
-  });
-  function transformCallback(callback, once2 = false) {
-    return window.__TAURI_INTERNALS__.transformCallback(callback, once2);
-  }
-  async function addPluginListener(plugin2, event, cb) {
-    const handler = new Channel(cb);
-    try {
-      await invoke(`plugin:${plugin2}|register_listener`, {
-        event,
-        handler
-      });
-      return new PluginListener(plugin2, event, handler.id);
-    } catch {
-      await invoke(`plugin:${plugin2}|registerListener`, { event, handler });
-      return new PluginListener(plugin2, event, handler.id);
-    }
-  }
-  async function checkPermissions(plugin2) {
-    return invoke(`plugin:${plugin2}|check_permissions`);
-  }
-  async function requestPermissions(plugin2) {
-    return invoke(`plugin:${plugin2}|request_permissions`);
-  }
-  async function invoke(cmd, args = {}, options) {
-    return window.__TAURI_INTERNALS__.invoke(cmd, args, options);
-  }
-  function convertFileSrc(filePath, protocol = "asset") {
-    return window.__TAURI_INTERNALS__.convertFileSrc(filePath, protocol);
-  }
-  function isTauri() {
-    return !!(globalThis || window).isTauri;
-  }
-  var _Channel_onmessage, _Channel_nextMessageIndex, _Channel_pendingMessages, _Channel_messageEndIndex, _Resource_rid, SERIALIZE_TO_IPC_FN, Channel, PluginListener, Resource;
-  var init_core = __esm({
-    "node_modules/@tauri-apps/api/core.js"() {
-      init_tslib_es62();
-      SERIALIZE_TO_IPC_FN = "__TAURI_TO_IPC_KEY__";
-      Channel = class {
+  // node_modules/@tauri-apps/api/core.cjs
+  var require_core2 = __commonJS({
+    "node_modules/@tauri-apps/api/core.cjs"(exports) {
+      "use strict";
+      var tslib_es6 = require_tslib_es6();
+      var _Channel_onmessage;
+      var _Channel_nextMessageIndex;
+      var _Channel_pendingMessages;
+      var _Channel_messageEndIndex;
+      var _Resource_rid;
+      var SERIALIZE_TO_IPC_FN = "__TAURI_TO_IPC_KEY__";
+      function transformCallback(callback, once = false) {
+        return window.__TAURI_INTERNALS__.transformCallback(callback, once);
+      }
+      var Channel = class {
         constructor(onmessage) {
           _Channel_onmessage.set(this, void 0);
           _Channel_nextMessageIndex.set(this, 0);
           _Channel_pendingMessages.set(this, []);
           _Channel_messageEndIndex.set(this, void 0);
-          __classPrivateFieldSet2(this, _Channel_onmessage, onmessage || (() => {
+          tslib_es6.__classPrivateFieldSet(this, _Channel_onmessage, onmessage || (() => {
           }), "f");
           this.id = transformCallback((rawMessage) => {
             const index3 = rawMessage.index;
             if ("end" in rawMessage) {
-              if (index3 == __classPrivateFieldGet2(this, _Channel_nextMessageIndex, "f")) {
+              if (index3 == tslib_es6.__classPrivateFieldGet(this, _Channel_nextMessageIndex, "f")) {
                 this.cleanupCallback();
               } else {
-                __classPrivateFieldSet2(this, _Channel_messageEndIndex, index3, "f");
+                tslib_es6.__classPrivateFieldSet(this, _Channel_messageEndIndex, index3, "f");
               }
               return;
             }
             const message = rawMessage.message;
-            if (index3 == __classPrivateFieldGet2(this, _Channel_nextMessageIndex, "f")) {
-              __classPrivateFieldGet2(this, _Channel_onmessage, "f").call(this, message);
-              __classPrivateFieldSet2(this, _Channel_nextMessageIndex, __classPrivateFieldGet2(this, _Channel_nextMessageIndex, "f") + 1, "f");
-              while (__classPrivateFieldGet2(this, _Channel_nextMessageIndex, "f") in __classPrivateFieldGet2(this, _Channel_pendingMessages, "f")) {
-                const message2 = __classPrivateFieldGet2(this, _Channel_pendingMessages, "f")[__classPrivateFieldGet2(this, _Channel_nextMessageIndex, "f")];
-                __classPrivateFieldGet2(this, _Channel_onmessage, "f").call(this, message2);
-                delete __classPrivateFieldGet2(this, _Channel_pendingMessages, "f")[__classPrivateFieldGet2(this, _Channel_nextMessageIndex, "f")];
-                __classPrivateFieldSet2(this, _Channel_nextMessageIndex, __classPrivateFieldGet2(this, _Channel_nextMessageIndex, "f") + 1, "f");
+            if (index3 == tslib_es6.__classPrivateFieldGet(this, _Channel_nextMessageIndex, "f")) {
+              tslib_es6.__classPrivateFieldGet(this, _Channel_onmessage, "f").call(this, message);
+              tslib_es6.__classPrivateFieldSet(this, _Channel_nextMessageIndex, tslib_es6.__classPrivateFieldGet(this, _Channel_nextMessageIndex, "f") + 1, "f");
+              while (tslib_es6.__classPrivateFieldGet(this, _Channel_nextMessageIndex, "f") in tslib_es6.__classPrivateFieldGet(this, _Channel_pendingMessages, "f")) {
+                const message2 = tslib_es6.__classPrivateFieldGet(this, _Channel_pendingMessages, "f")[tslib_es6.__classPrivateFieldGet(this, _Channel_nextMessageIndex, "f")];
+                tslib_es6.__classPrivateFieldGet(this, _Channel_onmessage, "f").call(this, message2);
+                delete tslib_es6.__classPrivateFieldGet(this, _Channel_pendingMessages, "f")[tslib_es6.__classPrivateFieldGet(this, _Channel_nextMessageIndex, "f")];
+                tslib_es6.__classPrivateFieldSet(this, _Channel_nextMessageIndex, tslib_es6.__classPrivateFieldGet(this, _Channel_nextMessageIndex, "f") + 1, "f");
               }
-              if (__classPrivateFieldGet2(this, _Channel_nextMessageIndex, "f") === __classPrivateFieldGet2(this, _Channel_messageEndIndex, "f")) {
+              if (tslib_es6.__classPrivateFieldGet(this, _Channel_nextMessageIndex, "f") === tslib_es6.__classPrivateFieldGet(this, _Channel_messageEndIndex, "f")) {
                 this.cleanupCallback();
               }
             } else {
-              __classPrivateFieldGet2(this, _Channel_pendingMessages, "f")[index3] = message;
+              tslib_es6.__classPrivateFieldGet(this, _Channel_pendingMessages, "f")[index3] = message;
             }
           });
         }
@@ -163689,10 +163655,10 @@
           window.__TAURI_INTERNALS__.unregisterCallback(this.id);
         }
         set onmessage(handler) {
-          __classPrivateFieldSet2(this, _Channel_onmessage, handler, "f");
+          tslib_es6.__classPrivateFieldSet(this, _Channel_onmessage, handler, "f");
         }
         get onmessage() {
-          return __classPrivateFieldGet2(this, _Channel_onmessage, "f");
+          return tslib_es6.__classPrivateFieldGet(this, _Channel_onmessage, "f");
         }
         [(_Channel_onmessage = /* @__PURE__ */ new WeakMap(), _Channel_nextMessageIndex = /* @__PURE__ */ new WeakMap(), _Channel_pendingMessages = /* @__PURE__ */ new WeakMap(), _Channel_messageEndIndex = /* @__PURE__ */ new WeakMap(), SERIALIZE_TO_IPC_FN)]() {
           return `__CHANNEL__:${this.id}`;
@@ -163701,100 +163667,144 @@
           return this[SERIALIZE_TO_IPC_FN]();
         }
       };
-      PluginListener = class {
+      var PluginListener = class {
         constructor(plugin2, event, channelId) {
           this.plugin = plugin2;
           this.event = event;
           this.channelId = channelId;
         }
         async unregister() {
-          return invoke(`plugin:${this.plugin}|remove_listener`, {
+          return invoke4(`plugin:${this.plugin}|remove_listener`, {
             event: this.event,
             channelId: this.channelId
           });
         }
       };
-      Resource = class {
+      async function addPluginListener(plugin2, event, cb) {
+        const handler = new Channel(cb);
+        try {
+          await invoke4(`plugin:${plugin2}|register_listener`, {
+            event,
+            handler
+          });
+          return new PluginListener(plugin2, event, handler.id);
+        } catch {
+          await invoke4(`plugin:${plugin2}|registerListener`, { event, handler });
+          return new PluginListener(plugin2, event, handler.id);
+        }
+      }
+      async function checkPermissions(plugin2) {
+        return invoke4(`plugin:${plugin2}|check_permissions`);
+      }
+      async function requestPermissions(plugin2) {
+        return invoke4(`plugin:${plugin2}|request_permissions`);
+      }
+      async function invoke4(cmd, args = {}, options) {
+        return window.__TAURI_INTERNALS__.invoke(cmd, args, options);
+      }
+      function convertFileSrc(filePath, protocol = "asset") {
+        return window.__TAURI_INTERNALS__.convertFileSrc(filePath, protocol);
+      }
+      var Resource = class {
         get rid() {
-          return __classPrivateFieldGet2(this, _Resource_rid, "f");
+          return tslib_es6.__classPrivateFieldGet(this, _Resource_rid, "f");
         }
         constructor(rid) {
           _Resource_rid.set(this, void 0);
-          __classPrivateFieldSet2(this, _Resource_rid, rid, "f");
+          tslib_es6.__classPrivateFieldSet(this, _Resource_rid, rid, "f");
         }
         /**
          * Destroys and cleans up this resource from memory.
          * **You should not call any method on this object anymore and should drop any reference to it.**
          */
         async close() {
-          return invoke("plugin:resources|close", {
+          return invoke4("plugin:resources|close", {
             rid: this.rid
           });
         }
       };
       _Resource_rid = /* @__PURE__ */ new WeakMap();
+      function isTauri() {
+        return !!(globalThis || window).isTauri;
+      }
+      exports.Channel = Channel;
+      exports.PluginListener = PluginListener;
+      exports.Resource = Resource;
+      exports.SERIALIZE_TO_IPC_FN = SERIALIZE_TO_IPC_FN;
+      exports.addPluginListener = addPluginListener;
+      exports.checkPermissions = checkPermissions;
+      exports.convertFileSrc = convertFileSrc;
+      exports.invoke = invoke4;
+      exports.isTauri = isTauri;
+      exports.requestPermissions = requestPermissions;
+      exports.transformCallback = transformCallback;
     }
   });
 
-  // node_modules/@tauri-apps/api/event.js
-  async function _unlisten(event, eventId) {
-    window.__TAURI_EVENT_PLUGIN_INTERNALS__.unregisterListener(event, eventId);
-    await invoke("plugin:event|unlisten", {
-      event,
-      eventId
-    });
-  }
-  async function listen(event, handler, options) {
-    var _a;
-    const target = typeof (options === null || options === void 0 ? void 0 : options.target) === "string" ? { kind: "AnyLabel", label: options.target } : (_a = options === null || options === void 0 ? void 0 : options.target) !== null && _a !== void 0 ? _a : { kind: "Any" };
-    return invoke("plugin:event|listen", {
-      event,
-      target,
-      handler: transformCallback(handler)
-    }).then((eventId) => {
-      return async () => _unlisten(event, eventId);
-    });
-  }
-  async function once(event, handler, options) {
-    return listen(event, (eventData) => {
-      void _unlisten(event, eventData.id);
-      handler(eventData);
-    }, options);
-  }
-  async function emit(event, payload) {
-    await invoke("plugin:event|emit", {
-      event,
-      payload
-    });
-  }
-  async function emitTo(target, event, payload) {
-    const eventTarget = typeof target === "string" ? { kind: "AnyLabel", label: target } : target;
-    await invoke("plugin:event|emit_to", {
-      target: eventTarget,
-      event,
-      payload
-    });
-  }
-  var TauriEvent;
-  var init_event = __esm({
-    "node_modules/@tauri-apps/api/event.js"() {
-      init_core();
-      (function(TauriEvent2) {
-        TauriEvent2["WINDOW_RESIZED"] = "tauri://resize";
-        TauriEvent2["WINDOW_MOVED"] = "tauri://move";
-        TauriEvent2["WINDOW_CLOSE_REQUESTED"] = "tauri://close-requested";
-        TauriEvent2["WINDOW_DESTROYED"] = "tauri://destroyed";
-        TauriEvent2["WINDOW_FOCUS"] = "tauri://focus";
-        TauriEvent2["WINDOW_BLUR"] = "tauri://blur";
-        TauriEvent2["WINDOW_SCALE_FACTOR_CHANGED"] = "tauri://scale-change";
-        TauriEvent2["WINDOW_THEME_CHANGED"] = "tauri://theme-changed";
-        TauriEvent2["WINDOW_CREATED"] = "tauri://window-created";
-        TauriEvent2["WEBVIEW_CREATED"] = "tauri://webview-created";
-        TauriEvent2["DRAG_ENTER"] = "tauri://drag-enter";
-        TauriEvent2["DRAG_OVER"] = "tauri://drag-over";
-        TauriEvent2["DRAG_DROP"] = "tauri://drag-drop";
-        TauriEvent2["DRAG_LEAVE"] = "tauri://drag-leave";
-      })(TauriEvent || (TauriEvent = {}));
+  // node_modules/@tauri-apps/api/event.cjs
+  var require_event = __commonJS({
+    "node_modules/@tauri-apps/api/event.cjs"(exports) {
+      "use strict";
+      var core = require_core2();
+      exports.TauriEvent = void 0;
+      (function(TauriEvent) {
+        TauriEvent["WINDOW_RESIZED"] = "tauri://resize";
+        TauriEvent["WINDOW_MOVED"] = "tauri://move";
+        TauriEvent["WINDOW_CLOSE_REQUESTED"] = "tauri://close-requested";
+        TauriEvent["WINDOW_DESTROYED"] = "tauri://destroyed";
+        TauriEvent["WINDOW_FOCUS"] = "tauri://focus";
+        TauriEvent["WINDOW_BLUR"] = "tauri://blur";
+        TauriEvent["WINDOW_SCALE_FACTOR_CHANGED"] = "tauri://scale-change";
+        TauriEvent["WINDOW_THEME_CHANGED"] = "tauri://theme-changed";
+        TauriEvent["WINDOW_CREATED"] = "tauri://window-created";
+        TauriEvent["WEBVIEW_CREATED"] = "tauri://webview-created";
+        TauriEvent["DRAG_ENTER"] = "tauri://drag-enter";
+        TauriEvent["DRAG_OVER"] = "tauri://drag-over";
+        TauriEvent["DRAG_DROP"] = "tauri://drag-drop";
+        TauriEvent["DRAG_LEAVE"] = "tauri://drag-leave";
+      })(exports.TauriEvent || (exports.TauriEvent = {}));
+      async function _unlisten(event, eventId) {
+        window.__TAURI_EVENT_PLUGIN_INTERNALS__.unregisterListener(event, eventId);
+        await core.invoke("plugin:event|unlisten", {
+          event,
+          eventId
+        });
+      }
+      async function listen2(event, handler, options) {
+        var _a;
+        const target = typeof (options === null || options === void 0 ? void 0 : options.target) === "string" ? { kind: "AnyLabel", label: options.target } : (_a = options === null || options === void 0 ? void 0 : options.target) !== null && _a !== void 0 ? _a : { kind: "Any" };
+        return core.invoke("plugin:event|listen", {
+          event,
+          target,
+          handler: core.transformCallback(handler)
+        }).then((eventId) => {
+          return async () => _unlisten(event, eventId);
+        });
+      }
+      async function once(event, handler, options) {
+        return listen2(event, (eventData) => {
+          void _unlisten(event, eventData.id);
+          handler(eventData);
+        }, options);
+      }
+      async function emit(event, payload) {
+        await core.invoke("plugin:event|emit", {
+          event,
+          payload
+        });
+      }
+      async function emitTo(target, event, payload) {
+        const eventTarget = typeof target === "string" ? { kind: "AnyLabel", label: target } : target;
+        await core.invoke("plugin:event|emit_to", {
+          target: eventTarget,
+          event,
+          payload
+        });
+      }
+      exports.emit = emit;
+      exports.emitTo = emitTo;
+      exports.listen = listen2;
+      exports.once = once;
     }
   });
 
@@ -163822,6 +163832,7 @@
     getResumeRefreshProviders: () => getResumeRefreshProviders,
     getSettingsSections: () => getSettingsSections,
     getStreamProviders: () => getStreamProviders,
+    getStreamRequestConfigProviders: () => getStreamRequestConfigProviders,
     getSyncIdentityProviders: () => getSyncIdentityProviders,
     getTopbarItems: () => getTopbarItems,
     hasStreamProviders: () => hasStreamProviders,
@@ -163863,6 +163874,10 @@
       registerPlayableUrlRewriter(rewriter) {
         if (playableUrlRewriters.find((entry) => entry.id === rewriter.id)) return;
         playableUrlRewriters.push(rewriter);
+      },
+      registerStreamRequestConfigProvider(provider) {
+        if (streamRequestConfigProviders.find((entry) => entry.id === provider.id)) return;
+        streamRequestConfigProviders.push(provider);
       },
       registerEpisodeSidebarProvider(provider) {
         if (episodeSidebarProviders.find((p) => p.id === provider.id)) return;
@@ -163960,6 +163975,9 @@
   function getPlayableUrlRewriters() {
     return [...playableUrlRewriters].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
   }
+  function getStreamRequestConfigProviders() {
+    return [...streamRequestConfigProviders].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+  }
   function getEpisodeSidebarProviders() {
     return episodeSidebarProviders;
   }
@@ -164020,7 +164038,7 @@
       registryListeners.delete(listener);
     };
   }
-  var streamProviders, mediaStreamCatalogProviders, mediaStreamAvailabilityProviders, instantPlayProviders, resumeRefreshProviders, playableUrlRewriters, episodeSidebarProviders, playbackCapabilityProviders, syncIdentityProviders, authCapabilityProviders, settingsSections, mediaDownloadActions, mediaDetailsActions, homeRows, homeSources, bootstraps, heroes, homeOverrides, browsePages, mainMenuItems, topbarItems, managedAuthConsumers, registeredPluginIds, registryRevision, registryListeners;
+  var streamProviders, mediaStreamCatalogProviders, mediaStreamAvailabilityProviders, instantPlayProviders, resumeRefreshProviders, playableUrlRewriters, streamRequestConfigProviders, episodeSidebarProviders, playbackCapabilityProviders, syncIdentityProviders, authCapabilityProviders, settingsSections, mediaDownloadActions, mediaDetailsActions, homeRows, homeSources, bootstraps, heroes, homeOverrides, browsePages, mainMenuItems, topbarItems, managedAuthConsumers, registeredPluginIds, registryRevision, registryListeners;
   var init_plugin_registry = __esm({
     "lib/plugin-registry.ts"() {
       streamProviders = [];
@@ -164029,6 +164047,7 @@
       instantPlayProviders = [];
       resumeRefreshProviders = [];
       playableUrlRewriters = [];
+      streamRequestConfigProviders = [];
       episodeSidebarProviders = [];
       playbackCapabilityProviders = [];
       syncIdentityProviders = [];
@@ -164051,11 +164070,2133 @@
     }
   });
 
+  // node_modules/@tauri-apps/api/dpi.cjs
+  var require_dpi = __commonJS({
+    "node_modules/@tauri-apps/api/dpi.cjs"(exports) {
+      "use strict";
+      var core = require_core2();
+      var LogicalSize = class {
+        constructor(...args) {
+          this.type = "Logical";
+          if (args.length === 1) {
+            if ("Logical" in args[0]) {
+              this.width = args[0].Logical.width;
+              this.height = args[0].Logical.height;
+            } else {
+              this.width = args[0].width;
+              this.height = args[0].height;
+            }
+          } else {
+            this.width = args[0];
+            this.height = args[1];
+          }
+        }
+        /**
+         * Converts the logical size to a physical one.
+         * @example
+         * ```typescript
+         * import { LogicalSize } from '@tauri-apps/api/dpi';
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         *
+         * const appWindow = getCurrentWindow();
+         * const factor = await appWindow.scaleFactor();
+         * const size = new LogicalSize(400, 500);
+         * const physical = size.toPhysical(factor);
+         * ```
+         *
+         * @since 2.0.0
+         */
+        toPhysical(scaleFactor) {
+          return new PhysicalSize(this.width * scaleFactor, this.height * scaleFactor);
+        }
+        [core.SERIALIZE_TO_IPC_FN]() {
+          return {
+            width: this.width,
+            height: this.height
+          };
+        }
+        toJSON() {
+          return this[core.SERIALIZE_TO_IPC_FN]();
+        }
+      };
+      var PhysicalSize = class {
+        constructor(...args) {
+          this.type = "Physical";
+          if (args.length === 1) {
+            if ("Physical" in args[0]) {
+              this.width = args[0].Physical.width;
+              this.height = args[0].Physical.height;
+            } else {
+              this.width = args[0].width;
+              this.height = args[0].height;
+            }
+          } else {
+            this.width = args[0];
+            this.height = args[1];
+          }
+        }
+        /**
+         * Converts the physical size to a logical one.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const appWindow = getCurrentWindow();
+         * const factor = await appWindow.scaleFactor();
+         * const size = await appWindow.innerSize(); // PhysicalSize
+         * const logical = size.toLogical(factor);
+         * ```
+         */
+        toLogical(scaleFactor) {
+          return new LogicalSize(this.width / scaleFactor, this.height / scaleFactor);
+        }
+        [core.SERIALIZE_TO_IPC_FN]() {
+          return {
+            width: this.width,
+            height: this.height
+          };
+        }
+        toJSON() {
+          return this[core.SERIALIZE_TO_IPC_FN]();
+        }
+      };
+      var Size = class {
+        constructor(size) {
+          this.size = size;
+        }
+        toLogical(scaleFactor) {
+          return this.size instanceof LogicalSize ? this.size : this.size.toLogical(scaleFactor);
+        }
+        toPhysical(scaleFactor) {
+          return this.size instanceof PhysicalSize ? this.size : this.size.toPhysical(scaleFactor);
+        }
+        [core.SERIALIZE_TO_IPC_FN]() {
+          return {
+            [`${this.size.type}`]: {
+              width: this.size.width,
+              height: this.size.height
+            }
+          };
+        }
+        toJSON() {
+          return this[core.SERIALIZE_TO_IPC_FN]();
+        }
+      };
+      var LogicalPosition = class {
+        constructor(...args) {
+          this.type = "Logical";
+          if (args.length === 1) {
+            if ("Logical" in args[0]) {
+              this.x = args[0].Logical.x;
+              this.y = args[0].Logical.y;
+            } else {
+              this.x = args[0].x;
+              this.y = args[0].y;
+            }
+          } else {
+            this.x = args[0];
+            this.y = args[1];
+          }
+        }
+        /**
+         * Converts the logical position to a physical one.
+         * @example
+         * ```typescript
+         * import { LogicalPosition } from '@tauri-apps/api/dpi';
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         *
+         * const appWindow = getCurrentWindow();
+         * const factor = await appWindow.scaleFactor();
+         * const position = new LogicalPosition(400, 500);
+         * const physical = position.toPhysical(factor);
+         * ```
+         *
+         * @since 2.0.0
+         */
+        toPhysical(scaleFactor) {
+          return new PhysicalPosition(this.x * scaleFactor, this.y * scaleFactor);
+        }
+        [core.SERIALIZE_TO_IPC_FN]() {
+          return {
+            x: this.x,
+            y: this.y
+          };
+        }
+        toJSON() {
+          return this[core.SERIALIZE_TO_IPC_FN]();
+        }
+      };
+      var PhysicalPosition = class {
+        constructor(...args) {
+          this.type = "Physical";
+          if (args.length === 1) {
+            if ("Physical" in args[0]) {
+              this.x = args[0].Physical.x;
+              this.y = args[0].Physical.y;
+            } else {
+              this.x = args[0].x;
+              this.y = args[0].y;
+            }
+          } else {
+            this.x = args[0];
+            this.y = args[1];
+          }
+        }
+        /**
+         * Converts the physical position to a logical one.
+         * @example
+         * ```typescript
+         * import { PhysicalPosition } from '@tauri-apps/api/dpi';
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         *
+         * const appWindow = getCurrentWindow();
+         * const factor = await appWindow.scaleFactor();
+         * const position = new PhysicalPosition(400, 500);
+         * const physical = position.toLogical(factor);
+         * ```
+         *
+         * @since 2.0.0
+         */
+        toLogical(scaleFactor) {
+          return new LogicalPosition(this.x / scaleFactor, this.y / scaleFactor);
+        }
+        [core.SERIALIZE_TO_IPC_FN]() {
+          return {
+            x: this.x,
+            y: this.y
+          };
+        }
+        toJSON() {
+          return this[core.SERIALIZE_TO_IPC_FN]();
+        }
+      };
+      var Position = class {
+        constructor(position) {
+          this.position = position;
+        }
+        toLogical(scaleFactor) {
+          return this.position instanceof LogicalPosition ? this.position : this.position.toLogical(scaleFactor);
+        }
+        toPhysical(scaleFactor) {
+          return this.position instanceof PhysicalPosition ? this.position : this.position.toPhysical(scaleFactor);
+        }
+        [core.SERIALIZE_TO_IPC_FN]() {
+          return {
+            [`${this.position.type}`]: {
+              x: this.position.x,
+              y: this.position.y
+            }
+          };
+        }
+        toJSON() {
+          return this[core.SERIALIZE_TO_IPC_FN]();
+        }
+      };
+      exports.LogicalPosition = LogicalPosition;
+      exports.LogicalSize = LogicalSize;
+      exports.PhysicalPosition = PhysicalPosition;
+      exports.PhysicalSize = PhysicalSize;
+      exports.Position = Position;
+      exports.Size = Size;
+    }
+  });
+
+  // node_modules/@tauri-apps/api/image.cjs
+  var require_image = __commonJS({
+    "node_modules/@tauri-apps/api/image.cjs"(exports) {
+      "use strict";
+      var core = require_core2();
+      var Image2 = class _Image extends core.Resource {
+        /**
+         * Creates an Image from a resource ID. For internal use only.
+         *
+         * @ignore
+         */
+        constructor(rid) {
+          super(rid);
+        }
+        /** Creates a new Image using RGBA data, in row-major order from top to bottom, and with specified width and height. */
+        static async new(rgba2, width, height) {
+          return core.invoke("plugin:image|new", {
+            rgba: transformImage(rgba2),
+            width,
+            height
+          }).then((rid) => new _Image(rid));
+        }
+        /**
+         * Creates a new image using the provided bytes by inferring the file format.
+         * If the format is known, prefer [@link Image.fromPngBytes] or [@link Image.fromIcoBytes].
+         *
+         * Only `ico` and `png` are supported (based on activated feature flag).
+         *
+         * Note that you need the `image-ico` or `image-png` Cargo features to use this API.
+         * To enable it, change your Cargo.toml file:
+         * ```toml
+         * [dependencies]
+         * tauri = { version = "...", features = ["...", "image-png"] }
+         * ```
+         */
+        static async fromBytes(bytes) {
+          return core.invoke("plugin:image|from_bytes", {
+            bytes: transformImage(bytes)
+          }).then((rid) => new _Image(rid));
+        }
+        /**
+         * Creates a new image using the provided path.
+         *
+         * Only `ico` and `png` are supported (based on activated feature flag).
+         *
+         * Note that you need the `image-ico` or `image-png` Cargo features to use this API.
+         * To enable it, change your Cargo.toml file:
+         * ```toml
+         * [dependencies]
+         * tauri = { version = "...", features = ["...", "image-png"] }
+         * ```
+         */
+        static async fromPath(path) {
+          return core.invoke("plugin:image|from_path", { path }).then((rid) => new _Image(rid));
+        }
+        /** Returns the RGBA data for this image, in row-major order from top to bottom.  */
+        async rgba() {
+          return core.invoke("plugin:image|rgba", {
+            rid: this.rid
+          }).then((buffer) => new Uint8Array(buffer));
+        }
+        /** Returns the size of this image.  */
+        async size() {
+          return core.invoke("plugin:image|size", { rid: this.rid });
+        }
+      };
+      function transformImage(image) {
+        const ret = image == null ? null : typeof image === "string" ? image : image instanceof Image2 ? image.rid : image;
+        return ret;
+      }
+      exports.Image = Image2;
+      exports.transformImage = transformImage;
+    }
+  });
+
+  // node_modules/@tauri-apps/api/window.cjs
+  var require_window = __commonJS({
+    "node_modules/@tauri-apps/api/window.cjs"(exports) {
+      "use strict";
+      var dpi = require_dpi();
+      var event = require_event();
+      var core = require_core2();
+      var image = require_image();
+      exports.UserAttentionType = void 0;
+      (function(UserAttentionType) {
+        UserAttentionType[UserAttentionType["Critical"] = 1] = "Critical";
+        UserAttentionType[UserAttentionType["Informational"] = 2] = "Informational";
+      })(exports.UserAttentionType || (exports.UserAttentionType = {}));
+      var CloseRequestedEvent = class {
+        constructor(event2) {
+          this._preventDefault = false;
+          this.event = event2.event;
+          this.id = event2.id;
+        }
+        preventDefault() {
+          this._preventDefault = true;
+        }
+        isPreventDefault() {
+          return this._preventDefault;
+        }
+      };
+      exports.ProgressBarStatus = void 0;
+      (function(ProgressBarStatus) {
+        ProgressBarStatus["None"] = "none";
+        ProgressBarStatus["Normal"] = "normal";
+        ProgressBarStatus["Indeterminate"] = "indeterminate";
+        ProgressBarStatus["Paused"] = "paused";
+        ProgressBarStatus["Error"] = "error";
+      })(exports.ProgressBarStatus || (exports.ProgressBarStatus = {}));
+      function getCurrentWindow2() {
+        return new Window(window.__TAURI_INTERNALS__.metadata.currentWindow.label, {
+          // @ts-expect-error `skip` is not defined in the public API but it is handled by the constructor
+          skip: true
+        });
+      }
+      async function getAllWindows() {
+        return core.invoke("plugin:window|get_all_windows").then((windows) => windows.map((w) => new Window(w, {
+          // @ts-expect-error `skip` is not defined in the public API but it is handled by the constructor
+          skip: true
+        })));
+      }
+      var localTauriEvents = ["tauri://created", "tauri://error"];
+      var Window = class {
+        /**
+         * Creates a new Window.
+         * @example
+         * ```typescript
+         * import { Window } from '@tauri-apps/api/window';
+         * const appWindow = new Window('my-label');
+         * appWindow.once('tauri://created', function () {
+         *  // window successfully created
+         * });
+         * appWindow.once('tauri://error', function (e) {
+         *  // an error happened creating the window
+         * });
+         * ```
+         *
+         * @param label The unique window label. Must be alphanumeric: `a-zA-Z-/:_`.
+         * @returns The {@link Window} instance to communicate with the window.
+         */
+        constructor(label, options = {}) {
+          var _a;
+          this.label = label;
+          this.listeners = /* @__PURE__ */ Object.create(null);
+          if (!(options === null || options === void 0 ? void 0 : options.skip)) {
+            core.invoke("plugin:window|create", {
+              options: {
+                ...options,
+                parent: typeof options.parent === "string" ? options.parent : (_a = options.parent) === null || _a === void 0 ? void 0 : _a.label,
+                label
+              }
+            }).then(async () => this.emit("tauri://created")).catch(async (e) => this.emit("tauri://error", e));
+          }
+        }
+        /**
+         * Gets the Window associated with the given label.
+         * @example
+         * ```typescript
+         * import { Window } from '@tauri-apps/api/window';
+         * const mainWindow = Window.getByLabel('main');
+         * ```
+         *
+         * @param label The window label.
+         * @returns The Window instance to communicate with the window or null if the window doesn't exist.
+         */
+        static async getByLabel(label) {
+          var _a;
+          return (_a = (await getAllWindows()).find((w) => w.label === label)) !== null && _a !== void 0 ? _a : null;
+        }
+        /**
+         * Get an instance of `Window` for the current window.
+         */
+        static getCurrent() {
+          return getCurrentWindow2();
+        }
+        /**
+         * Gets a list of instances of `Window` for all available windows.
+         */
+        static async getAll() {
+          return getAllWindows();
+        }
+        /**
+         *  Gets the focused window.
+         * @example
+         * ```typescript
+         * import { Window } from '@tauri-apps/api/window';
+         * const focusedWindow = Window.getFocusedWindow();
+         * ```
+         *
+         * @returns The Window instance or `undefined` if there is not any focused window.
+         */
+        static async getFocusedWindow() {
+          for (const w of await getAllWindows()) {
+            if (await w.isFocused()) {
+              return w;
+            }
+          }
+          return null;
+        }
+        /**
+         * Listen to an emitted event on this window.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const unlisten = await getCurrentWindow().listen<string>('state-changed', (event) => {
+         *   console.log(`Got error: ${payload}`);
+         * });
+         *
+         * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
+         * unlisten();
+         * ```
+         *
+         * @param event Event name. Must include only alphanumeric characters, `-`, `/`, `:` and `_`.
+         * @param handler Event handler.
+         * @returns A promise resolving to a function to unlisten to the event.
+         * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
+         */
+        async listen(event$1, handler) {
+          if (this._handleTauriEvent(event$1, handler)) {
+            return () => {
+              const listeners = this.listeners[event$1];
+              listeners.splice(listeners.indexOf(handler), 1);
+            };
+          }
+          return event.listen(event$1, handler, {
+            target: { kind: "Window", label: this.label }
+          });
+        }
+        /**
+         * Listen to an emitted event on this window only once.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const unlisten = await getCurrentWindow().once<null>('initialized', (event) => {
+         *   console.log(`Window initialized!`);
+         * });
+         *
+         * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
+         * unlisten();
+         * ```
+         *
+         * @param event Event name. Must include only alphanumeric characters, `-`, `/`, `:` and `_`.
+         * @param handler Event handler.
+         * @returns A promise resolving to a function to unlisten to the event.
+         * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
+         */
+        async once(event$1, handler) {
+          if (this._handleTauriEvent(event$1, handler)) {
+            return () => {
+              const listeners = this.listeners[event$1];
+              listeners.splice(listeners.indexOf(handler), 1);
+            };
+          }
+          return event.once(event$1, handler, {
+            target: { kind: "Window", label: this.label }
+          });
+        }
+        /**
+         * Emits an event to all {@link EventTarget|targets}.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().emit('window-loaded', { loggedIn: true, token: 'authToken' });
+         * ```
+         *
+         * @param event Event name. Must include only alphanumeric characters, `-`, `/`, `:` and `_`.
+         * @param payload Event payload.
+         */
+        async emit(event$1, payload) {
+          if (localTauriEvents.includes(event$1)) {
+            for (const handler of this.listeners[event$1] || []) {
+              handler({
+                event: event$1,
+                id: -1,
+                payload
+              });
+            }
+            return;
+          }
+          return event.emit(event$1, payload);
+        }
+        /**
+         * Emits an event to all {@link EventTarget|targets} matching the given target.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().emit('main', 'window-loaded', { loggedIn: true, token: 'authToken' });
+         * ```
+         * @param target Label of the target Window/Webview/WebviewWindow or raw {@link EventTarget} object.
+         * @param event Event name. Must include only alphanumeric characters, `-`, `/`, `:` and `_`.
+         * @param payload Event payload.
+         */
+        async emitTo(target, event$1, payload) {
+          if (localTauriEvents.includes(event$1)) {
+            for (const handler of this.listeners[event$1] || []) {
+              handler({
+                event: event$1,
+                id: -1,
+                payload
+              });
+            }
+            return;
+          }
+          return event.emitTo(target, event$1, payload);
+        }
+        /** @ignore */
+        _handleTauriEvent(event2, handler) {
+          if (localTauriEvents.includes(event2)) {
+            if (!(event2 in this.listeners)) {
+              this.listeners[event2] = [handler];
+            } else {
+              this.listeners[event2].push(handler);
+            }
+            return true;
+          }
+          return false;
+        }
+        // Getters
+        /**
+         * The scale factor that can be used to map physical pixels to logical pixels.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const factor = await getCurrentWindow().scaleFactor();
+         * ```
+         *
+         * @returns The window's monitor scale factor.
+         */
+        async scaleFactor() {
+          return core.invoke("plugin:window|scale_factor", {
+            label: this.label
+          });
+        }
+        /**
+         * The position of the top-left hand corner of the window's client area relative to the top-left hand corner of the desktop.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const position = await getCurrentWindow().innerPosition();
+         * ```
+         *
+         * @returns The window's inner position.
+         */
+        async innerPosition() {
+          return core.invoke("plugin:window|inner_position", {
+            label: this.label
+          }).then((p) => new dpi.PhysicalPosition(p));
+        }
+        /**
+         * The position of the top-left hand corner of the window relative to the top-left hand corner of the desktop.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const position = await getCurrentWindow().outerPosition();
+         * ```
+         *
+         * @returns The window's outer position.
+         */
+        async outerPosition() {
+          return core.invoke("plugin:window|outer_position", {
+            label: this.label
+          }).then((p) => new dpi.PhysicalPosition(p));
+        }
+        /**
+         * The physical size of the window's client area.
+         * The client area is the content of the window, excluding the title bar and borders.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const size = await getCurrentWindow().innerSize();
+         * ```
+         *
+         * @returns The window's inner size.
+         */
+        async innerSize() {
+          return core.invoke("plugin:window|inner_size", {
+            label: this.label
+          }).then((s) => new dpi.PhysicalSize(s));
+        }
+        /**
+         * The physical size of the entire window.
+         * These dimensions include the title bar and borders. If you don't want that (and you usually don't), use inner_size instead.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const size = await getCurrentWindow().outerSize();
+         * ```
+         *
+         * @returns The window's outer size.
+         */
+        async outerSize() {
+          return core.invoke("plugin:window|outer_size", {
+            label: this.label
+          }).then((s) => new dpi.PhysicalSize(s));
+        }
+        /**
+         * Gets the window's current fullscreen state.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const fullscreen = await getCurrentWindow().isFullscreen();
+         * ```
+         *
+         * @returns Whether the window is in fullscreen mode or not.
+         */
+        async isFullscreen() {
+          return core.invoke("plugin:window|is_fullscreen", {
+            label: this.label
+          });
+        }
+        /**
+         * Gets the window's current minimized state.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const minimized = await getCurrentWindow().isMinimized();
+         * ```
+         */
+        async isMinimized() {
+          return core.invoke("plugin:window|is_minimized", {
+            label: this.label
+          });
+        }
+        /**
+         * Gets the window's current maximized state.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const maximized = await getCurrentWindow().isMaximized();
+         * ```
+         *
+         * @returns Whether the window is maximized or not.
+         */
+        async isMaximized() {
+          return core.invoke("plugin:window|is_maximized", {
+            label: this.label
+          });
+        }
+        /**
+         * Gets the window's current focus state.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const focused = await getCurrentWindow().isFocused();
+         * ```
+         *
+         * @returns Whether the window is focused or not.
+         */
+        async isFocused() {
+          return core.invoke("plugin:window|is_focused", {
+            label: this.label
+          });
+        }
+        /**
+         * Gets the window's current decorated state.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const decorated = await getCurrentWindow().isDecorated();
+         * ```
+         *
+         * @returns Whether the window is decorated or not.
+         */
+        async isDecorated() {
+          return core.invoke("plugin:window|is_decorated", {
+            label: this.label
+          });
+        }
+        /**
+         * Gets the window's current resizable state.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const resizable = await getCurrentWindow().isResizable();
+         * ```
+         *
+         * @returns Whether the window is resizable or not.
+         */
+        async isResizable() {
+          return core.invoke("plugin:window|is_resizable", {
+            label: this.label
+          });
+        }
+        /**
+         * Gets the window's native maximize button state.
+         *
+         * #### Platform-specific
+         *
+         * - **Linux / iOS / Android:** Unsupported.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const maximizable = await getCurrentWindow().isMaximizable();
+         * ```
+         *
+         * @returns Whether the window's native maximize button is enabled or not.
+         */
+        async isMaximizable() {
+          return core.invoke("plugin:window|is_maximizable", {
+            label: this.label
+          });
+        }
+        /**
+         * Gets the window's native minimize button state.
+         *
+         * #### Platform-specific
+         *
+         * - **Linux / iOS / Android:** Unsupported.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const minimizable = await getCurrentWindow().isMinimizable();
+         * ```
+         *
+         * @returns Whether the window's native minimize button is enabled or not.
+         */
+        async isMinimizable() {
+          return core.invoke("plugin:window|is_minimizable", {
+            label: this.label
+          });
+        }
+        /**
+         * Gets the window's native close button state.
+         *
+         * #### Platform-specific
+         *
+         * - **iOS / Android:** Unsupported.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const closable = await getCurrentWindow().isClosable();
+         * ```
+         *
+         * @returns Whether the window's native close button is enabled or not.
+         */
+        async isClosable() {
+          return core.invoke("plugin:window|is_closable", {
+            label: this.label
+          });
+        }
+        /**
+         * Gets the window's current visible state.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const visible = await getCurrentWindow().isVisible();
+         * ```
+         *
+         * @returns Whether the window is visible or not.
+         */
+        async isVisible() {
+          return core.invoke("plugin:window|is_visible", {
+            label: this.label
+          });
+        }
+        /**
+         * Gets the window's current title.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const title = await getCurrentWindow().title();
+         * ```
+         */
+        async title() {
+          return core.invoke("plugin:window|title", {
+            label: this.label
+          });
+        }
+        /**
+         * Gets the window's current theme.
+         *
+         * #### Platform-specific
+         *
+         * - **macOS:** Theme was introduced on macOS 10.14. Returns `light` on macOS 10.13 and below.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const theme = await getCurrentWindow().theme();
+         * ```
+         *
+         * @returns The window theme.
+         */
+        async theme() {
+          return core.invoke("plugin:window|theme", {
+            label: this.label
+          });
+        }
+        /**
+         * Whether the window is configured to be always on top of other windows or not.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * const alwaysOnTop = await getCurrentWindow().isAlwaysOnTop();
+         * ```
+         *
+         * @returns Whether the window is visible or not.
+         */
+        async isAlwaysOnTop() {
+          return core.invoke("plugin:window|is_always_on_top", {
+            label: this.label
+          });
+        }
+        // Setters
+        /**
+         * Centers the window.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().center();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async center() {
+          return core.invoke("plugin:window|center", {
+            label: this.label
+          });
+        }
+        /**
+         *  Requests user attention to the window, this has no effect if the application
+         * is already focused. How requesting for user attention manifests is platform dependent,
+         * see `UserAttentionType` for details.
+         *
+         * Providing `null` will unset the request for user attention. Unsetting the request for
+         * user attention might not be done automatically by the WM when the window receives input.
+         *
+         * #### Platform-specific
+         *
+         * - **macOS:** `null` has no effect.
+         * - **Linux:** Urgency levels have the same effect.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().requestUserAttention();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async requestUserAttention(requestType) {
+          let requestType_ = null;
+          if (requestType) {
+            if (requestType === exports.UserAttentionType.Critical) {
+              requestType_ = { type: "Critical" };
+            } else {
+              requestType_ = { type: "Informational" };
+            }
+          }
+          return core.invoke("plugin:window|request_user_attention", {
+            label: this.label,
+            value: requestType_
+          });
+        }
+        /**
+         * Updates the window resizable flag.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setResizable(false);
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setResizable(resizable) {
+          return core.invoke("plugin:window|set_resizable", {
+            label: this.label,
+            value: resizable
+          });
+        }
+        /**
+         * Enable or disable the window.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setEnabled(false);
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         *
+         * @since 2.0.0
+         */
+        async setEnabled(enabled) {
+          return core.invoke("plugin:window|set_enabled", {
+            label: this.label,
+            value: enabled
+          });
+        }
+        /**
+         * Whether the window is enabled or disabled.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setEnabled(false);
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         *
+         * @since 2.0.0
+         */
+        async isEnabled() {
+          return core.invoke("plugin:window|is_enabled", {
+            label: this.label
+          });
+        }
+        /**
+         * Sets whether the window's native maximize button is enabled or not.
+         * If resizable is set to false, this setting is ignored.
+         *
+         * #### Platform-specific
+         *
+         * - **macOS:** Disables the "zoom" button in the window titlebar, which is also used to enter fullscreen mode.
+         * - **Linux / iOS / Android:** Unsupported.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setMaximizable(false);
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setMaximizable(maximizable) {
+          return core.invoke("plugin:window|set_maximizable", {
+            label: this.label,
+            value: maximizable
+          });
+        }
+        /**
+         * Sets whether the window's native minimize button is enabled or not.
+         *
+         * #### Platform-specific
+         *
+         * - **Linux / iOS / Android:** Unsupported.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setMinimizable(false);
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setMinimizable(minimizable) {
+          return core.invoke("plugin:window|set_minimizable", {
+            label: this.label,
+            value: minimizable
+          });
+        }
+        /**
+         * Sets whether the window's native close button is enabled or not.
+         *
+         * #### Platform-specific
+         *
+         * - **Linux:** GTK+ will do its best to convince the window manager not to show a close button. Depending on the system, this function may not have any effect when called on a window that is already visible
+         * - **iOS / Android:** Unsupported.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setClosable(false);
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setClosable(closable) {
+          return core.invoke("plugin:window|set_closable", {
+            label: this.label,
+            value: closable
+          });
+        }
+        /**
+         * Sets the window title.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setTitle('Tauri');
+         * ```
+         *
+         * @param title The new title
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setTitle(title) {
+          return core.invoke("plugin:window|set_title", {
+            label: this.label,
+            value: title
+          });
+        }
+        /**
+         * Maximizes the window.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().maximize();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async maximize() {
+          return core.invoke("plugin:window|maximize", {
+            label: this.label
+          });
+        }
+        /**
+         * Unmaximizes the window.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().unmaximize();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async unmaximize() {
+          return core.invoke("plugin:window|unmaximize", {
+            label: this.label
+          });
+        }
+        /**
+         * Toggles the window maximized state.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().toggleMaximize();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async toggleMaximize() {
+          return core.invoke("plugin:window|toggle_maximize", {
+            label: this.label
+          });
+        }
+        /**
+         * Minimizes the window.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().minimize();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async minimize() {
+          return core.invoke("plugin:window|minimize", {
+            label: this.label
+          });
+        }
+        /**
+         * Unminimizes the window.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().unminimize();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async unminimize() {
+          return core.invoke("plugin:window|unminimize", {
+            label: this.label
+          });
+        }
+        /**
+         * Sets the window visibility to true.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().show();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async show() {
+          return core.invoke("plugin:window|show", {
+            label: this.label
+          });
+        }
+        /**
+         * Sets the window visibility to false.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().hide();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async hide() {
+          return core.invoke("plugin:window|hide", {
+            label: this.label
+          });
+        }
+        /**
+         * Closes the window.
+         *
+         * Note this emits a closeRequested event so you can intercept it. To force window close, use {@link Window.destroy}.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().close();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async close() {
+          return core.invoke("plugin:window|close", {
+            label: this.label
+          });
+        }
+        /**
+         * Destroys the window. Behaves like {@link Window.close} but forces the window close instead of emitting a closeRequested event.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().destroy();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async destroy() {
+          return core.invoke("plugin:window|destroy", {
+            label: this.label
+          });
+        }
+        /**
+         * Whether the window should have borders and bars.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setDecorations(false);
+         * ```
+         *
+         * @param decorations Whether the window should have borders and bars.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setDecorations(decorations) {
+          return core.invoke("plugin:window|set_decorations", {
+            label: this.label,
+            value: decorations
+          });
+        }
+        /**
+         * Whether or not the window should have shadow.
+         *
+         * #### Platform-specific
+         *
+         * - **Windows:**
+         *   - `false` has no effect on decorated window, shadows are always ON.
+         *   - `true` will make undecorated window have a 1px white border,
+         * and on Windows 11, it will have a rounded corners.
+         * - **Linux:** Unsupported.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setShadow(false);
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setShadow(enable) {
+          return core.invoke("plugin:window|set_shadow", {
+            label: this.label,
+            value: enable
+          });
+        }
+        /**
+         * Set window effects.
+         */
+        async setEffects(effects) {
+          return core.invoke("plugin:window|set_effects", {
+            label: this.label,
+            value: effects
+          });
+        }
+        /**
+         * Clear any applied effects if possible.
+         */
+        async clearEffects() {
+          return core.invoke("plugin:window|set_effects", {
+            label: this.label,
+            value: null
+          });
+        }
+        /**
+         * Whether the window should always be on top of other windows.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setAlwaysOnTop(true);
+         * ```
+         *
+         * @param alwaysOnTop Whether the window should always be on top of other windows or not.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setAlwaysOnTop(alwaysOnTop) {
+          return core.invoke("plugin:window|set_always_on_top", {
+            label: this.label,
+            value: alwaysOnTop
+          });
+        }
+        /**
+         * Whether the window should always be below other windows.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setAlwaysOnBottom(true);
+         * ```
+         *
+         * @param alwaysOnBottom Whether the window should always be below other windows or not.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setAlwaysOnBottom(alwaysOnBottom) {
+          return core.invoke("plugin:window|set_always_on_bottom", {
+            label: this.label,
+            value: alwaysOnBottom
+          });
+        }
+        /**
+         * Prevents the window contents from being captured by other apps.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setContentProtected(true);
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setContentProtected(protected_) {
+          return core.invoke("plugin:window|set_content_protected", {
+            label: this.label,
+            value: protected_
+          });
+        }
+        /**
+         * Resizes the window with a new inner size.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setSize(new LogicalSize(600, 500));
+         * ```
+         *
+         * @param size The logical or physical inner size.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setSize(size) {
+          return core.invoke("plugin:window|set_size", {
+            label: this.label,
+            value: size instanceof dpi.Size ? size : new dpi.Size(size)
+          });
+        }
+        /**
+         * Sets the window minimum inner size. If the `size` argument is not provided, the constraint is unset.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow, PhysicalSize } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setMinSize(new PhysicalSize(600, 500));
+         * ```
+         *
+         * @param size The logical or physical inner size, or `null` to unset the constraint.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setMinSize(size) {
+          return core.invoke("plugin:window|set_min_size", {
+            label: this.label,
+            value: size instanceof dpi.Size ? size : size ? new dpi.Size(size) : null
+          });
+        }
+        /**
+         * Sets the window maximum inner size. If the `size` argument is undefined, the constraint is unset.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setMaxSize(new LogicalSize(600, 500));
+         * ```
+         *
+         * @param size The logical or physical inner size, or `null` to unset the constraint.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setMaxSize(size) {
+          return core.invoke("plugin:window|set_max_size", {
+            label: this.label,
+            value: size instanceof dpi.Size ? size : size ? new dpi.Size(size) : null
+          });
+        }
+        /**
+         * Sets the window inner size constraints.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setSizeConstraints({ minWidth: 300 });
+         * ```
+         *
+         * @param constraints The logical or physical inner size, or `null` to unset the constraint.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setSizeConstraints(constraints) {
+          function logical(pixel) {
+            return pixel ? { Logical: pixel } : null;
+          }
+          return core.invoke("plugin:window|set_size_constraints", {
+            label: this.label,
+            value: {
+              minWidth: logical(constraints === null || constraints === void 0 ? void 0 : constraints.minWidth),
+              minHeight: logical(constraints === null || constraints === void 0 ? void 0 : constraints.minHeight),
+              maxWidth: logical(constraints === null || constraints === void 0 ? void 0 : constraints.maxWidth),
+              maxHeight: logical(constraints === null || constraints === void 0 ? void 0 : constraints.maxHeight)
+            }
+          });
+        }
+        /**
+         * Sets the window outer position.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow, LogicalPosition } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setPosition(new LogicalPosition(600, 500));
+         * ```
+         *
+         * @param position The new position, in logical or physical pixels.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setPosition(position) {
+          return core.invoke("plugin:window|set_position", {
+            label: this.label,
+            value: position instanceof dpi.Position ? position : new dpi.Position(position)
+          });
+        }
+        /**
+         * Sets the window fullscreen state.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setFullscreen(true);
+         * ```
+         *
+         * @param fullscreen Whether the window should go to fullscreen or not.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setFullscreen(fullscreen) {
+          return core.invoke("plugin:window|set_fullscreen", {
+            label: this.label,
+            value: fullscreen
+          });
+        }
+        /**
+         * On macOS, Toggles a fullscreen mode that doesn’t require a new macOS space. Returns a boolean indicating whether the transition was successful (this won’t work if the window was already in the native fullscreen).
+         * This is how fullscreen used to work on macOS in versions before Lion. And allows the user to have a fullscreen window without using another space or taking control over the entire monitor.
+         *
+         * On other platforms, this is the same as {@link Window.setFullscreen}.
+         *
+         * @param fullscreen Whether the window should go to simple fullscreen or not.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setSimpleFullscreen(fullscreen) {
+          return core.invoke("plugin:window|set_simple_fullscreen", {
+            label: this.label,
+            value: fullscreen
+          });
+        }
+        /**
+         * Bring the window to front and focus.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setFocus();
+         * ```
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setFocus() {
+          return core.invoke("plugin:window|set_focus", {
+            label: this.label
+          });
+        }
+        /**
+         * Sets whether the window can be focused.
+         *
+         * #### Platform-specific
+         *
+         * - **macOS**: If the window is already focused, it is not possible to unfocus it after calling `set_focusable(false)`.
+         *   In this case, you might consider calling {@link Window.setFocus} but it will move the window to the back i.e. at the bottom in terms of z-order.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setFocusable(true);
+         * ```
+         *
+         * @param focusable Whether the window can be focused.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setFocusable(focusable) {
+          return core.invoke("plugin:window|set_focusable", {
+            label: this.label,
+            value: focusable
+          });
+        }
+        /**
+         * Sets the window icon.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setIcon('/tauri/awesome.png');
+         * ```
+         *
+         * Note that you may need the `image-ico` or `image-png` Cargo features to use this API.
+         * To enable it, change your Cargo.toml file:
+         * ```toml
+         * [dependencies]
+         * tauri = { version = "...", features = ["...", "image-png"] }
+         * ```
+         *
+         * @param icon Icon bytes or path to the icon file.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setIcon(icon) {
+          return core.invoke("plugin:window|set_icon", {
+            label: this.label,
+            value: image.transformImage(icon)
+          });
+        }
+        /**
+         * Whether the window icon should be hidden from the taskbar or not.
+         *
+         * #### Platform-specific
+         *
+         * - **macOS:** Unsupported.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setSkipTaskbar(true);
+         * ```
+         *
+         * @param skip true to hide window icon, false to show it.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setSkipTaskbar(skip) {
+          return core.invoke("plugin:window|set_skip_taskbar", {
+            label: this.label,
+            value: skip
+          });
+        }
+        /**
+         * Grabs the cursor, preventing it from leaving the window.
+         *
+         * There's no guarantee that the cursor will be hidden. You should
+         * hide it by yourself if you want so.
+         *
+         * #### Platform-specific
+         *
+         * - **Linux:** Unsupported.
+         * - **macOS:** This locks the cursor in a fixed location, which looks visually awkward.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setCursorGrab(true);
+         * ```
+         *
+         * @param grab `true` to grab the cursor icon, `false` to release it.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setCursorGrab(grab) {
+          return core.invoke("plugin:window|set_cursor_grab", {
+            label: this.label,
+            value: grab
+          });
+        }
+        /**
+         * Modifies the cursor's visibility.
+         *
+         * #### Platform-specific
+         *
+         * - **Windows:** The cursor is only hidden within the confines of the window.
+         * - **macOS:** The cursor is hidden as long as the window has input focus, even if the cursor is
+         *   outside of the window.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setCursorVisible(false);
+         * ```
+         *
+         * @param visible If `false`, this will hide the cursor. If `true`, this will show the cursor.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setCursorVisible(visible) {
+          return core.invoke("plugin:window|set_cursor_visible", {
+            label: this.label,
+            value: visible
+          });
+        }
+        /**
+         * Modifies the cursor icon of the window.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setCursorIcon('help');
+         * ```
+         *
+         * @param icon The new cursor icon.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setCursorIcon(icon) {
+          return core.invoke("plugin:window|set_cursor_icon", {
+            label: this.label,
+            value: icon
+          });
+        }
+        /**
+         * Sets the window background color.
+         *
+         * #### Platform-specific:
+         *
+         * - **Windows:** alpha channel is ignored.
+         * - **iOS / Android:** Unsupported.
+         *
+         * @returns A promise indicating the success or failure of the operation.
+         *
+         * @since 2.1.0
+         */
+        async setBackgroundColor(color2) {
+          return core.invoke("plugin:window|set_background_color", { color: color2 });
+        }
+        /**
+         * Changes the position of the cursor in window coordinates.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow, LogicalPosition } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setCursorPosition(new LogicalPosition(600, 300));
+         * ```
+         *
+         * @param position The new cursor position.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setCursorPosition(position) {
+          return core.invoke("plugin:window|set_cursor_position", {
+            label: this.label,
+            value: position instanceof dpi.Position ? position : new dpi.Position(position)
+          });
+        }
+        /**
+         * Changes the cursor events behavior.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setIgnoreCursorEvents(true);
+         * ```
+         *
+         * @param ignore `true` to ignore the cursor events; `false` to process them as usual.
+         * @returns A promise indicating the success or failure of the operation.
+         */
+        async setIgnoreCursorEvents(ignore) {
+          return core.invoke("plugin:window|set_ignore_cursor_events", {
+            label: this.label,
+            value: ignore
+          });
+        }
+        /**
+         * Starts dragging the window.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().startDragging();
+         * ```
+         *
+         * @return A promise indicating the success or failure of the operation.
+         */
+        async startDragging() {
+          return core.invoke("plugin:window|start_dragging", {
+            label: this.label
+          });
+        }
+        /**
+         * Starts resize-dragging the window.
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().startResizeDragging();
+         * ```
+         *
+         * @return A promise indicating the success or failure of the operation.
+         */
+        async startResizeDragging(direction) {
+          return core.invoke("plugin:window|start_resize_dragging", {
+            label: this.label,
+            value: direction
+          });
+        }
+        /**
+         * Sets the badge count. It is app wide and not specific to this window.
+         *
+         * #### Platform-specific
+         *
+         * - **Windows**: Unsupported. Use @{linkcode Window.setOverlayIcon} instead.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setBadgeCount(5);
+         * ```
+         *
+         * @param count The badge count. Use `undefined` to remove the badge.
+         * @return A promise indicating the success or failure of the operation.
+         */
+        async setBadgeCount(count) {
+          return core.invoke("plugin:window|set_badge_count", {
+            label: this.label,
+            value: count
+          });
+        }
+        /**
+         * Sets the badge cont **macOS only**.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setBadgeLabel("Hello");
+         * ```
+         *
+         * @param label The badge label. Use `undefined` to remove the badge.
+         * @return A promise indicating the success or failure of the operation.
+         */
+        async setBadgeLabel(label) {
+          return core.invoke("plugin:window|set_badge_label", {
+            label: this.label,
+            value: label
+          });
+        }
+        /**
+         * Sets the overlay icon. **Windows only**
+         * The overlay icon can be set for every window.
+         *
+         *
+         * Note that you may need the `image-ico` or `image-png` Cargo features to use this API.
+         * To enable it, change your Cargo.toml file:
+         *
+         * ```toml
+         * [dependencies]
+         * tauri = { version = "...", features = ["...", "image-png"] }
+         * ```
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setOverlayIcon("/tauri/awesome.png");
+         * ```
+         *
+         * @param icon Icon bytes or path to the icon file. Use `undefined` to remove the overlay icon.
+         * @return A promise indicating the success or failure of the operation.
+         */
+        async setOverlayIcon(icon) {
+          return core.invoke("plugin:window|set_overlay_icon", {
+            label: this.label,
+            value: icon ? image.transformImage(icon) : void 0
+          });
+        }
+        /**
+         * Sets the taskbar progress state.
+         *
+         * #### Platform-specific
+         *
+         * - **Linux / macOS**: Progress bar is app-wide and not specific to this window.
+         * - **Linux**: Only supported desktop environments with `libunity` (e.g. GNOME).
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow, ProgressBarStatus } from '@tauri-apps/api/window';
+         * await getCurrentWindow().setProgressBar({
+         *   status: ProgressBarStatus.Normal,
+         *   progress: 50,
+         * });
+         * ```
+         *
+         * @return A promise indicating the success or failure of the operation.
+         */
+        async setProgressBar(state) {
+          return core.invoke("plugin:window|set_progress_bar", {
+            label: this.label,
+            value: state
+          });
+        }
+        /**
+         * Sets whether the window should be visible on all workspaces or virtual desktops.
+         *
+         * #### Platform-specific
+         *
+         * - **Windows / iOS / Android:** Unsupported.
+         *
+         * @since 2.0.0
+         */
+        async setVisibleOnAllWorkspaces(visible) {
+          return core.invoke("plugin:window|set_visible_on_all_workspaces", {
+            label: this.label,
+            value: visible
+          });
+        }
+        /**
+         * Sets the title bar style. **macOS only**.
+         *
+         * @since 2.0.0
+         */
+        async setTitleBarStyle(style2) {
+          return core.invoke("plugin:window|set_title_bar_style", {
+            label: this.label,
+            value: style2
+          });
+        }
+        /**
+         * Set window theme, pass in `null` or `undefined` to follow system theme
+         *
+         * #### Platform-specific
+         *
+         * - **Linux / macOS**: Theme is app-wide and not specific to this window.
+         * - **iOS / Android:** Unsupported.
+         *
+         * @since 2.0.0
+         */
+        async setTheme(theme) {
+          return core.invoke("plugin:window|set_theme", {
+            label: this.label,
+            value: theme
+          });
+        }
+        // Listeners
+        /**
+         * Listen to window resize.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from "@tauri-apps/api/window";
+         * const unlisten = await getCurrentWindow().onResized(({ payload: size }) => {
+         *  console.log('Window resized', size);
+         * });
+         *
+         * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
+         * unlisten();
+         * ```
+         *
+         * @returns A promise resolving to a function to unlisten to the event.
+         * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
+         */
+        async onResized(handler) {
+          return this.listen(event.TauriEvent.WINDOW_RESIZED, (e) => {
+            e.payload = new dpi.PhysicalSize(e.payload);
+            handler(e);
+          });
+        }
+        /**
+         * Listen to window move.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from "@tauri-apps/api/window";
+         * const unlisten = await getCurrentWindow().onMoved(({ payload: position }) => {
+         *  console.log('Window moved', position);
+         * });
+         *
+         * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
+         * unlisten();
+         * ```
+         *
+         * @returns A promise resolving to a function to unlisten to the event.
+         * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
+         */
+        async onMoved(handler) {
+          return this.listen(event.TauriEvent.WINDOW_MOVED, (e) => {
+            e.payload = new dpi.PhysicalPosition(e.payload);
+            handler(e);
+          });
+        }
+        /**
+         * Listen to window close requested. Emitted when the user requests to closes the window.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from "@tauri-apps/api/window";
+         * import { confirm } from '@tauri-apps/api/dialog';
+         * const unlisten = await getCurrentWindow().onCloseRequested(async (event) => {
+         *   const confirmed = await confirm('Are you sure?');
+         *   if (!confirmed) {
+         *     // user did not confirm closing the window; let's prevent it
+         *     event.preventDefault();
+         *   }
+         * });
+         *
+         * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
+         * unlisten();
+         * ```
+         *
+         * @returns A promise resolving to a function to unlisten to the event.
+         * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
+         */
+        async onCloseRequested(handler) {
+          return this.listen(event.TauriEvent.WINDOW_CLOSE_REQUESTED, async (event2) => {
+            const evt = new CloseRequestedEvent(event2);
+            await handler(evt);
+            if (!evt.isPreventDefault()) {
+              await this.destroy();
+            }
+          });
+        }
+        /**
+         * Listen to a file drop event.
+         * The listener is triggered when the user hovers the selected files on the webview,
+         * drops the files or cancels the operation.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from "@tauri-apps/api/webview";
+         * const unlisten = await getCurrentWindow().onDragDropEvent((event) => {
+         *  if (event.payload.type === 'over') {
+         *    console.log('User hovering', event.payload.position);
+         *  } else if (event.payload.type === 'drop') {
+         *    console.log('User dropped', event.payload.paths);
+         *  } else {
+         *    console.log('File drop cancelled');
+         *  }
+         * });
+         *
+         * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
+         * unlisten();
+         * ```
+         *
+         * @returns A promise resolving to a function to unlisten to the event.
+         * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
+         */
+        async onDragDropEvent(handler) {
+          const unlistenDrag = await this.listen(event.TauriEvent.DRAG_ENTER, (event2) => {
+            handler({
+              ...event2,
+              payload: {
+                type: "enter",
+                paths: event2.payload.paths,
+                position: new dpi.PhysicalPosition(event2.payload.position)
+              }
+            });
+          });
+          const unlistenDragOver = await this.listen(event.TauriEvent.DRAG_OVER, (event2) => {
+            handler({
+              ...event2,
+              payload: {
+                type: "over",
+                position: new dpi.PhysicalPosition(event2.payload.position)
+              }
+            });
+          });
+          const unlistenDrop = await this.listen(event.TauriEvent.DRAG_DROP, (event2) => {
+            handler({
+              ...event2,
+              payload: {
+                type: "drop",
+                paths: event2.payload.paths,
+                position: new dpi.PhysicalPosition(event2.payload.position)
+              }
+            });
+          });
+          const unlistenCancel = await this.listen(event.TauriEvent.DRAG_LEAVE, (event2) => {
+            handler({ ...event2, payload: { type: "leave" } });
+          });
+          return () => {
+            unlistenDrag();
+            unlistenDrop();
+            unlistenDragOver();
+            unlistenCancel();
+          };
+        }
+        /**
+         * Listen to window focus change.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from "@tauri-apps/api/window";
+         * const unlisten = await getCurrentWindow().onFocusChanged(({ payload: focused }) => {
+         *  console.log('Focus changed, window is focused? ' + focused);
+         * });
+         *
+         * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
+         * unlisten();
+         * ```
+         *
+         * @returns A promise resolving to a function to unlisten to the event.
+         * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
+         */
+        async onFocusChanged(handler) {
+          const unlistenFocus = await this.listen(event.TauriEvent.WINDOW_FOCUS, (event2) => {
+            handler({ ...event2, payload: true });
+          });
+          const unlistenBlur = await this.listen(event.TauriEvent.WINDOW_BLUR, (event2) => {
+            handler({ ...event2, payload: false });
+          });
+          return () => {
+            unlistenFocus();
+            unlistenBlur();
+          };
+        }
+        /**
+         * Listen to window scale change. Emitted when the window's scale factor has changed.
+         * The following user actions can cause DPI changes:
+         * - Changing the display's resolution.
+         * - Changing the display's scale factor (e.g. in Control Panel on Windows).
+         * - Moving the window to a display with a different scale factor.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from "@tauri-apps/api/window";
+         * const unlisten = await getCurrentWindow().onScaleChanged(({ payload }) => {
+         *  console.log('Scale changed', payload.scaleFactor, payload.size);
+         * });
+         *
+         * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
+         * unlisten();
+         * ```
+         *
+         * @returns A promise resolving to a function to unlisten to the event.
+         * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
+         */
+        async onScaleChanged(handler) {
+          return this.listen(event.TauriEvent.WINDOW_SCALE_FACTOR_CHANGED, handler);
+        }
+        /**
+         * Listen to the system theme change.
+         *
+         * @example
+         * ```typescript
+         * import { getCurrentWindow } from "@tauri-apps/api/window";
+         * const unlisten = await getCurrentWindow().onThemeChanged(({ payload: theme }) => {
+         *  console.log('New theme: ' + theme);
+         * });
+         *
+         * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
+         * unlisten();
+         * ```
+         *
+         * @returns A promise resolving to a function to unlisten to the event.
+         * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
+         */
+        async onThemeChanged(handler) {
+          return this.listen(event.TauriEvent.WINDOW_THEME_CHANGED, handler);
+        }
+      };
+      var BackgroundThrottlingPolicy;
+      (function(BackgroundThrottlingPolicy2) {
+        BackgroundThrottlingPolicy2["Disabled"] = "disabled";
+        BackgroundThrottlingPolicy2["Throttle"] = "throttle";
+        BackgroundThrottlingPolicy2["Suspend"] = "suspend";
+      })(BackgroundThrottlingPolicy || (BackgroundThrottlingPolicy = {}));
+      var ScrollBarStyle;
+      (function(ScrollBarStyle2) {
+        ScrollBarStyle2["Default"] = "default";
+        ScrollBarStyle2["FluentOverlay"] = "fluentOverlay";
+      })(ScrollBarStyle || (ScrollBarStyle = {}));
+      exports.Effect = void 0;
+      (function(Effect) {
+        Effect["AppearanceBased"] = "appearanceBased";
+        Effect["Light"] = "light";
+        Effect["Dark"] = "dark";
+        Effect["MediumLight"] = "mediumLight";
+        Effect["UltraDark"] = "ultraDark";
+        Effect["Titlebar"] = "titlebar";
+        Effect["Selection"] = "selection";
+        Effect["Menu"] = "menu";
+        Effect["Popover"] = "popover";
+        Effect["Sidebar"] = "sidebar";
+        Effect["HeaderView"] = "headerView";
+        Effect["Sheet"] = "sheet";
+        Effect["WindowBackground"] = "windowBackground";
+        Effect["HudWindow"] = "hudWindow";
+        Effect["FullScreenUI"] = "fullScreenUI";
+        Effect["Tooltip"] = "tooltip";
+        Effect["ContentBackground"] = "contentBackground";
+        Effect["UnderWindowBackground"] = "underWindowBackground";
+        Effect["UnderPageBackground"] = "underPageBackground";
+        Effect["Mica"] = "mica";
+        Effect["Blur"] = "blur";
+        Effect["Acrylic"] = "acrylic";
+        Effect["Tabbed"] = "tabbed";
+        Effect["TabbedDark"] = "tabbedDark";
+        Effect["TabbedLight"] = "tabbedLight";
+      })(exports.Effect || (exports.Effect = {}));
+      exports.EffectState = void 0;
+      (function(EffectState) {
+        EffectState["FollowsWindowActiveState"] = "followsWindowActiveState";
+        EffectState["Active"] = "active";
+        EffectState["Inactive"] = "inactive";
+      })(exports.EffectState || (exports.EffectState = {}));
+      function mapMonitor(m2) {
+        return m2 === null ? null : {
+          name: m2.name,
+          scaleFactor: m2.scaleFactor,
+          position: new dpi.PhysicalPosition(m2.position),
+          size: new dpi.PhysicalSize(m2.size),
+          workArea: {
+            position: new dpi.PhysicalPosition(m2.workArea.position),
+            size: new dpi.PhysicalSize(m2.workArea.size)
+          }
+        };
+      }
+      async function currentMonitor() {
+        return core.invoke("plugin:window|current_monitor").then(mapMonitor);
+      }
+      async function primaryMonitor() {
+        return core.invoke("plugin:window|primary_monitor").then(mapMonitor);
+      }
+      async function monitorFromPoint(x, y) {
+        return core.invoke("plugin:window|monitor_from_point", {
+          x,
+          y
+        }).then(mapMonitor);
+      }
+      async function availableMonitors() {
+        return core.invoke("plugin:window|available_monitors").then((ms) => ms.map(mapMonitor));
+      }
+      async function cursorPosition() {
+        return core.invoke("plugin:window|cursor_position").then((v) => new dpi.PhysicalPosition(v));
+      }
+      exports.LogicalPosition = dpi.LogicalPosition;
+      exports.LogicalSize = dpi.LogicalSize;
+      exports.PhysicalPosition = dpi.PhysicalPosition;
+      exports.PhysicalSize = dpi.PhysicalSize;
+      exports.CloseRequestedEvent = CloseRequestedEvent;
+      exports.Window = Window;
+      exports.availableMonitors = availableMonitors;
+      exports.currentMonitor = currentMonitor;
+      exports.cursorPosition = cursorPosition;
+      exports.getAllWindows = getAllWindows;
+      exports.getCurrentWindow = getCurrentWindow2;
+      exports.monitorFromPoint = monitorFromPoint;
+      exports.primaryMonitor = primaryMonitor;
+    }
+  });
+
   // ../Lumio-scraper/plugins/streams-scraper/runtime/index.ts
   var runtime_exports = {};
   __export(runtime_exports, {
     StreamsScraperPlugin: () => StreamsScraperPlugin
   });
+
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-fV7VRq/profile-storage-shim.ts
+  var sdk = globalThis.__lumioPluginRuntime?.sdk;
+  var getActiveProfileId = () => sdk.getActiveProfileId();
+  var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
+  var setScopedStorageItem = (baseKey, value) => sdk.setScopedStorageItem(baseKey, value);
+  var removeScopedStorageItem = (baseKey) => sdk.removeScopedStorageItem(baseKey);
+  var onProfileChanged = (listener) => sdk.onProfileChanged(listener);
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/local-strings.ts
+  var STRINGS = {
+    en: {
+      convertingMagnet: "Converting magnet\u2026",
+      addManually: "Add magnet / direct link manually",
+      pasteManual: "Paste magnet link manually",
+      manualPlaceholder: "magnet:? or https://\u2026",
+      debridSectionDesc: "API keys are shared across every scraper. Which service a scraper resolves through is set on that scraper under Scrapers.",
+      debridKeySaved: "Key saved",
+      debridNoKeyBadge: "No key",
+      debridKeyPlaceholder: "Paste API key",
+      debridPerScraperHint: "A key entered here is used by every scraper configured for that service.",
+      torrentFailed: "The torrent failed: {status}",
+      debridKeyMissing: "Debrid key missing",
+      streamProviderAddIndexed: "+ TorrentsDB",
+      streamProviderAddStandard: "+ Torrentio",
+      aiostreamsHint: "AIOStreams is configured on its own site (UUID + password, debrid keys and filters live there). Configure once, then paste the manifest URL from the Save & Install page here."
+    },
+    sv: {
+      convertingMagnet: "Konverterar magnet\u2026",
+      addManually: "L\xE4gg till magnet / direktl\xE4nk manuellt",
+      pasteManual: "Klistra in magnet-l\xE4nk manuellt",
+      manualPlaceholder: "magnet:? eller https://\u2026",
+      debridSectionDesc: "API-nycklarna delas mellan alla scrapers. Vilken tj\xE4nst en scraper anv\xE4nder st\xE4lls p\xE5 den scrapern under Scrapers.",
+      debridKeySaved: "Nyckel sparad",
+      debridNoKeyBadge: "Ingen nyckel",
+      debridKeyPlaceholder: "Klistra in API-nyckel",
+      debridPerScraperHint: "En nyckel h\xE4r anv\xE4nds av alla scrapers som \xE4r konfigurerade f\xF6r den tj\xE4nsten.",
+      torrentFailed: "Torrenten misslyckades: {status}",
+      debridKeyMissing: "Debrid-nyckel saknas",
+      streamProviderAddIndexed: "+ TorrentsDB",
+      streamProviderAddStandard: "+ Torrentio",
+      aiostreamsHint: "AIOStreams konfigureras p\xE5 sin egen sida (UUID + l\xF6senord \u2014 debrid-nycklar och filter bor d\xE4r). Konfigurera en g\xE5ng, klistra sedan in manifest-URL:en fr\xE5n Save & Install-sidan h\xE4r."
+    }
+  };
+  function currentLang() {
+    if (typeof window === "undefined") return "en";
+    try {
+      return getScopedStorageItem("app_lang") === "sv" ? "sv" : "en";
+    } catch {
+      return "en";
+    }
+  }
+  function lt(key) {
+    return STRINGS[currentLang()][key] ?? STRINGS.en[key];
+  }
 
   // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
   init_react_shim();
@@ -164119,16 +166260,6 @@
 
   // lib/i18n.tsx
   init_react_shim();
-
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/profile-storage-shim.ts
-  var sdk = globalThis.__lumioPluginRuntime?.sdk;
-  var getActiveProfileId = () => sdk.getActiveProfileId();
-  var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
-  var setScopedStorageItem = (baseKey, value) => sdk.setScopedStorageItem(baseKey, value);
-  var removeScopedStorageItem = (baseKey) => sdk.removeScopedStorageItem(baseKey);
-  var onProfileChanged = (listener) => sdk.onProfileChanged(listener);
-
-  // lib/i18n.tsx
   init_jsx_runtime_shim();
   var strings = {
     en: {
@@ -164238,12 +166369,9 @@
       streamProviderManifestUrl: "Manifest URL (stremio:// or https://)",
       streamProviderCustomUrl: "Custom URL",
       streamProviderNoUrl: "No URL set",
-      streamProviderAddIndexed: "+ TorrentsDB",
-      streamProviderAddStandard: "+ Torrentio",
       streamProviderAddComet: "+ Comet",
       streamProviderAddJackettio: "+ Jackettio",
       streamProviderAddAiostreams: "+ AIOStreams",
-      aiostreamsHint: "AIOStreams is configured on its own site (UUID + password, debrid keys and filters live there). Configure once, then paste the manifest URL from the Save & Install page here.",
       aiostreamsOpenConfig: "Open the configurator",
       aiostreamsManifestLabel: "Manifest URL",
       streamProviderAddCustom: "+ Custom URL",
@@ -164318,7 +166446,6 @@
       downloading: "Downloading\u2026",
       downloadingFile: "Downloading file...",
       queued: "Queued on stream provider\u2026",
-      convertingMagnet: "Converting magnet\u2026",
       selectingFiles: "Selecting files\u2026",
       addingToRd: "Adding to stream provider\u2026",
       unrestrictingLinks: "Unrestricting links\u2026",
@@ -164329,10 +166456,7 @@
       watched: "\u2713 Watched",
       watchedQ: "Watched?",
       markAllWatched: "Mark all as watched",
-      addManually: "Add magnet / direct link manually",
       hideManual: "Hide manual input",
-      pasteManual: "Paste magnet link manually",
-      manualPlaceholder: "magnet:? or https://\u2026",
       go: "Go",
       tryAgain: "Try again",
       cancel: "Cancel",
@@ -164673,7 +166797,7 @@
       advAboutHint: "Version and platform \u2014 handy when reporting a bug.",
       advAboutVersion: "Version",
       advLegalEyebrow: "Legal",
-      advLegalP1: 'Lumio is an independent media client. It is not affiliated with, endorsed by, sponsored by, or in any way associated with any streaming service, addon author, debrid provider, or trademark holder referenced inside the app. "TMDb", "Trakt", "IMDb", "Real-Debrid", "TorBox", "OpenSubtitles", "Plex", "Netflix", "Disney+" and all other names, logos and brand references are property of their respective owners and are used only for compatibility and identification.',
+      advLegalP1: "Lumio is an independent media client. It is not affiliated with, endorsed by, sponsored by, or in any way associated with any streaming service, plugin or addon author, or trademark holder referenced inside the app. All names, logos and brand references are property of their respective owners and are used only for compatibility and identification.",
       advLegalP2: "Lumio itself does not host, distribute, or index any media. All streams come from third-party sources, addons, or services that you configure yourself. You are responsible for what you choose to play and for complying with the laws of your jurisdiction.",
       advAboutPlatform: "Platform",
       subStyleEyebrow: "Subtitle style",
@@ -164810,9 +166934,7 @@
       settingsTabApiKeys: "API keys",
       settingsTabAddons: "Addons",
       settingsTabSourcesMain: "Sources & addons",
-      settingsTabScrapersDebrid: "Scrapers & debrid",
       settingsTabScrapers: "Scrapers",
-      settingsTabDebrid: "Debrid",
       cardTagNew: "New",
       showCardTags: "Show tags on cards",
       showCardTagsDesc: "Marks titles released in the last 30 days. Needs a known release date, so older catalogue items are never tagged.",
@@ -164832,11 +166954,6 @@
       traktConflictTrakt: "Trakt wins",
       traktConflictLocal: "This device wins",
       showTraktCommentsDesc: "Public Trakt comments under movies and series. Spoiler-marked ones stay hidden until you click them.",
-      debridSectionDesc: "API keys are shared across every scraper. Which service a scraper resolves through is set on that scraper under Scrapers.",
-      debridKeySaved: "Key saved",
-      debridNoKeyBadge: "No key",
-      debridKeyPlaceholder: "Paste API key",
-      debridPerScraperHint: "A key entered here is used by every scraper configured for that service.",
       shortcutsBindableTitle: "KEYS (CLICK TO CHANGE)",
       shortcutsTracks: "Tracks",
       shortcutsGlobal: "Global",
@@ -165874,8 +167991,6 @@
       downloadFailedRetry: "Download failed, try again",
       noPlayableStream: "No playable stream found",
       resolveLinkFailed: "Could not resolve the download link",
-      torrentFailed: "The torrent failed: {status}",
-      debridKeyMissing: "Debrid key missing",
       fetchStreamsFailed: "Could not fetch streams",
       noStreamsFound: "No streams found",
       startDownloadFailed: "Could not start the download",
@@ -166117,12 +168232,9 @@
       streamProviderManifestUrl: "Manifest-URL (stremio:// eller https://)",
       streamProviderCustomUrl: "Egen URL",
       streamProviderNoUrl: "Ingen URL angiven",
-      streamProviderAddIndexed: "+ TorrentsDB",
-      streamProviderAddStandard: "+ Torrentio",
       streamProviderAddComet: "+ Comet",
       streamProviderAddJackettio: "+ Jackettio",
       streamProviderAddAiostreams: "+ AIOStreams",
-      aiostreamsHint: "AIOStreams konfigureras p\xE5 sin egen sida (UUID + l\xF6senord \u2014 debrid-nycklar och filter bor d\xE4r). Konfigurera en g\xE5ng, klistra sedan in manifest-URL:en fr\xE5n Save & Install-sidan h\xE4r.",
       aiostreamsOpenConfig: "\xD6ppna konfiguratorn",
       aiostreamsManifestLabel: "Manifest-URL",
       streamProviderAddCustom: "+ Egen URL",
@@ -166197,7 +168309,6 @@
       downloading: "Laddar ned\u2026",
       downloadingFile: "Laddar ner fil...",
       queued: "I k\xF6 hos stream provider\u2026",
-      convertingMagnet: "Konverterar magnet\u2026",
       selectingFiles: "V\xE4ljer filer\u2026",
       addingToRd: "L\xE4gger till hos stream provider\u2026",
       unrestrictingLinks: "Avbegr\xE4nsar l\xE4nkar\u2026",
@@ -166208,10 +168319,7 @@
       watched: "\u2713 Sedd",
       watchedQ: "Sedd?",
       markAllWatched: "Markera alla som sedda",
-      addManually: "L\xE4gg till magnet / direktl\xE4nk manuellt",
       hideManual: "D\xF6lj manuell inmatning",
-      pasteManual: "Klistra in magnet-l\xE4nk manuellt",
-      manualPlaceholder: "magnet:? eller https://\u2026",
       go: "K\xF6r",
       tryAgain: "F\xF6rs\xF6k igen",
       cancel: "Avbryt",
@@ -166552,7 +168660,7 @@
       advAboutHint: "Version och plattform \u2014 bra att ha vid buggrapport.",
       advAboutVersion: "Version",
       advLegalEyebrow: "Juridiskt",
-      advLegalP1: 'Lumio \xE4r en frist\xE5ende mediaklient. Den \xE4r inte ansluten till, godk\xE4nd av, sponsrad av eller p\xE5 n\xE5got s\xE4tt associerad med n\xE5gon streamingtj\xE4nst, addon-utvecklare, debrid-leverant\xF6r eller varum\xE4rkesinnehavare som refereras i appen. "TMDb", "Trakt", "IMDb", "Real-Debrid", "TorBox", "OpenSubtitles", "Plex", "Netflix", "Disney+" och alla andra namn, logotyper och varum\xE4rken tillh\xF6r sina respektive \xE4gare och anv\xE4nds enbart f\xF6r kompatibilitet och identifiering.',
+      advLegalP1: "Lumio \xE4r en frist\xE5ende mediaklient. Den \xE4r inte ansluten till, godk\xE4nd av, sponsrad av eller p\xE5 n\xE5got s\xE4tt associerad med n\xE5gon streamingtj\xE4nst, plugin- eller addon-utvecklare eller varum\xE4rkesinnehavare som refereras i appen. Alla namn, logotyper och varum\xE4rken tillh\xF6r sina respektive \xE4gare och anv\xE4nds enbart f\xF6r kompatibilitet och identifiering.",
       advLegalP2: "Lumio varken lagrar, distribuerar eller indexerar n\xE5got medieinneh\xE5ll. Alla str\xF6mmar kommer fr\xE5n tredjepartsk\xE4llor, addons eller tj\xE4nster som du sj\xE4lv konfigurerar. Du ansvarar f\xF6r vad du v\xE4ljer att spela upp och f\xF6r att f\xF6lja lagarna i din jurisdiktion.",
       advAboutPlatform: "Plattform",
       subStyleEyebrow: "Undertextstil",
@@ -166689,9 +168797,7 @@
       settingsTabApiKeys: "API-nycklar",
       settingsTabAddons: "Addons",
       settingsTabSourcesMain: "K\xE4llor & addons",
-      settingsTabScrapersDebrid: "Scrapers & debrid",
       settingsTabScrapers: "Scrapers",
-      settingsTabDebrid: "Debrid",
       cardTagNew: "Nyhet",
       showCardTags: "Visa taggar p\xE5 kort",
       showCardTagsDesc: "M\xE4rker titlar som sl\xE4ppts de senaste 30 dagarna. Kr\xE4ver k\xE4nt releasedatum, s\xE5 \xE4ldre katalogtitlar taggas aldrig.",
@@ -166711,11 +168817,6 @@
       traktConflictTrakt: "Trakt vinner",
       traktConflictLocal: "Den h\xE4r enheten vinner",
       showTraktCommentsDesc: "Publika Trakt-kommentarer under filmer och serier. Spoilerm\xE4rkta d\xF6ljs tills du klickar p\xE5 dem.",
-      debridSectionDesc: "API-nycklarna delas mellan alla scrapers. Vilken tj\xE4nst en scraper anv\xE4nder st\xE4lls p\xE5 den scrapern under Scrapers.",
-      debridKeySaved: "Nyckel sparad",
-      debridNoKeyBadge: "Ingen nyckel",
-      debridKeyPlaceholder: "Klistra in API-nyckel",
-      debridPerScraperHint: "En nyckel h\xE4r anv\xE4nds av alla scrapers som \xE4r konfigurerade f\xF6r den tj\xE4nsten.",
       shortcutsBindableTitle: "TANGENTER (KLICKA F\xD6R ATT \xC4NDRA)",
       shortcutsTracks: "Sp\xE5r",
       shortcutsGlobal: "Globalt",
@@ -167753,8 +169854,6 @@
       downloadFailedRetry: "Nedladdningen misslyckades, f\xF6rs\xF6k igen",
       noPlayableStream: "Ingen spelbar stream hittades",
       resolveLinkFailed: "Kunde inte l\xF6sa nedladdningsl\xE4nk",
-      torrentFailed: "Torrenten misslyckades: {status}",
-      debridKeyMissing: "Debrid-nyckel saknas",
       fetchStreamsFailed: "Kunde inte h\xE4mta streams",
       noStreamsFound: "Inga streams hittades",
       startDownloadFailed: "Kunde inte starta nedladdning",
@@ -167941,8 +170040,8 @@
   }
 
   // lib/tauri-mpv.ts
-  init_core();
-  init_event();
+  var import_core = __toESM(require_core2());
+  var import_event = __toESM(require_event());
   init_react_shim();
 
   // lib/session-host.ts
@@ -168023,7 +170122,7 @@
     const cached = sourceCacheUrl(args.url);
     if (cached) {
       if (args.shouldAbort?.()) return;
-      return invoke("mpv_open", { args: { ...rest, url: cached } });
+      return (0, import_core.invoke)("mpv_open", { args: { ...rest, url: cached } });
     }
     let url = args.url;
     for (const rewriter of getPlayableUrlRewriters()) {
@@ -168037,20 +170136,20 @@
       }
     }
     if (args.shouldAbort?.()) return;
-    return invoke("mpv_open", { args: { ...rest, url } });
+    return (0, import_core.invoke)("mpv_open", { args: { ...rest, url } });
   }
   async function closeMpvPlayer() {
-    return invoke("mpv_close");
+    return (0, import_core.invoke)("mpv_close");
   }
   async function setMpvPause(paused) {
-    return invoke("mpv_set_pause", { paused });
+    return (0, import_core.invoke)("mpv_set_pause", { paused });
   }
   async function setMpvAudioTrack(aid) {
-    return invoke("mpv_set_audio_track", { aid });
+    return (0, import_core.invoke)("mpv_set_audio_track", { aid });
   }
   async function setMpvVideoGeometry(args) {
     try {
-      return await invoke("mpv_set_video_geometry", {
+      return await (0, import_core.invoke)("mpv_set_video_geometry", {
         aspectOverride: args.aspectOverride ?? null,
         panscan: args.panscan,
         videoZoom: args.videoZoom
@@ -168063,35 +170162,35 @@
     }
   }
   async function setMpvSubtitleTrack(sid) {
-    return invoke("mpv_set_subtitle_track", { sid });
+    return (0, import_core.invoke)("mpv_set_subtitle_track", { sid });
   }
   async function getMpvSid() {
-    return invoke("mpv_get_sid");
+    return (0, import_core.invoke)("mpv_get_sid");
   }
   async function getMpvSubtitleTracks() {
-    return invoke("mpv_get_subtitle_tracks");
+    return (0, import_core.invoke)("mpv_get_subtitle_tracks");
   }
   async function getMpvAudioTracks() {
-    return invoke("mpv_get_audio_tracks");
+    return (0, import_core.invoke)("mpv_get_audio_tracks");
   }
   async function toggleWindowFullscreen() {
-    return invoke("toggle_window_fullscreen");
+    return (0, import_core.invoke)("toggle_window_fullscreen");
   }
   async function getWindowFullscreen() {
-    return invoke("get_window_fullscreen");
+    return (0, import_core.invoke)("get_window_fullscreen");
   }
   async function getWindowNativeFullscreen() {
-    return invoke("get_window_native_fullscreen");
+    return (0, import_core.invoke)("get_window_native_fullscreen");
   }
   async function setWindowFullscreen(fullscreen) {
-    return invoke("set_window_fullscreen", { fullscreen });
+    return (0, import_core.invoke)("set_window_fullscreen", { fullscreen });
   }
   async function setWindowNativeFullscreen(fullscreen) {
-    return invoke("set_window_native_fullscreen", { fullscreen });
+    return (0, import_core.invoke)("set_window_native_fullscreen", { fullscreen });
   }
   async function mpvGetAudioFilterChain() {
     try {
-      return await invoke("mpv_get_af") || "(tom)";
+      return await (0, import_core.invoke)("mpv_get_af") || "(tom)";
     } catch (e) {
       return `(ol\xE4sbar: ${String(e)})`;
     }
@@ -168100,33 +170199,33 @@
     try {
       if (args[0] === "set_property" && args.length >= 3) {
         const value = typeof args[2] === "boolean" ? args[2] ? "yes" : "no" : String(args[2]);
-        return await invoke("mpv_set_property_strings", { props: [{ name: String(args[1]), value }] });
+        return await (0, import_core.invoke)("mpv_set_property_strings", { props: [{ name: String(args[1]), value }] });
       }
       if (args[0] === "get_property" && args.length >= 2) {
-        return await invoke("mpv_get_property_ts", { name: String(args[1]) });
+        return await (0, import_core.invoke)("mpv_get_property_ts", { name: String(args[1]) });
       }
-      return await invoke("mpv_command_ts", { args });
+      return await (0, import_core.invoke)("mpv_command_ts", { args });
     } catch (e) {
       console.warn("[mpv] command error:", args, e);
     }
   }
   async function mpvSetPropertyStrings(props) {
     try {
-      return await invoke("mpv_set_property_strings", { props });
+      return await (0, import_core.invoke)("mpv_set_property_strings", { props });
     } catch (e) {
       console.warn("[mpv] set property error:", props, e);
     }
   }
   async function mpvApplySubtitleStyle(args) {
     try {
-      return await invoke("mpv_apply_subtitle_style", { args });
+      return await (0, import_core.invoke)("mpv_apply_subtitle_style", { args });
     } catch (e) {
       console.warn("[mpv] apply subtitle style error:", args, e);
     }
   }
   function mpvSetBounds(rect) {
     if (rect.width <= 0 || rect.height <= 0) return;
-    void invoke("mpv_set_bounds", {
+    void (0, import_core.invoke)("mpv_set_bounds", {
       x: rect.left,
       y: rect.top,
       w: rect.width,
@@ -168154,26 +170253,26 @@
     useEffect(() => {
       if (!isTauriEnv || !enabled) return;
       const cleanups = [];
-      void listen("mpv://time-pos", (e) => setTimePos(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://duration", (e) => setDuration(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://paused", (e) => setPaused(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://ended", () => setEnded(true)).then((u) => cleanups.push(u));
-      void listen("mpv://sid", (e) => setSid(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://file-loaded", () => {
+      void (0, import_event.listen)("mpv://time-pos", (e) => setTimePos(e.payload)).then((u) => cleanups.push(u));
+      void (0, import_event.listen)("mpv://duration", (e) => setDuration(e.payload)).then((u) => cleanups.push(u));
+      void (0, import_event.listen)("mpv://paused", (e) => setPaused(e.payload)).then((u) => cleanups.push(u));
+      void (0, import_event.listen)("mpv://ended", () => setEnded(true)).then((u) => cleanups.push(u));
+      void (0, import_event.listen)("mpv://sid", (e) => setSid(e.payload)).then((u) => cleanups.push(u));
+      void (0, import_event.listen)("mpv://file-loaded", () => {
         setFileLoaded(true);
         setFileLoadedToken((t) => t + 1);
       }).then((u) => cleanups.push(u));
-      void listen("mpv://playback-restart", () => {
+      void (0, import_event.listen)("mpv://playback-restart", () => {
         setPlaybackRestarted(true);
         setPlaybackRestartedToken((t) => t + 1);
       }).then((u) => cleanups.push(u));
-      void listen("mpv://paused-for-cache", (e) => setPausedForCache(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://core-idle", (e) => setCoreIdle(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://first-frame-rendered", () => {
+      void (0, import_event.listen)("mpv://paused-for-cache", (e) => setPausedForCache(e.payload)).then((u) => cleanups.push(u));
+      void (0, import_event.listen)("mpv://core-idle", (e) => setCoreIdle(e.payload)).then((u) => cleanups.push(u));
+      void (0, import_event.listen)("mpv://first-frame-rendered", () => {
         void fetch(`/api/debug-log?msg=${encodeURIComponent(`${performance.now().toFixed(0)} first-frame-rendered received`)}`);
         setFirstFrameRendered(true);
       }).then((u) => cleanups.push(u));
-      void listen("mpv://load-failed", (e) => {
+      void (0, import_event.listen)("mpv://load-failed", (e) => {
         setLoadFailedError(typeof e.payload === "number" ? e.payload : null);
         setLoadFailed(true);
         setLoadFailedToken((t) => t + 1);
@@ -168249,8 +170348,8 @@
     if (!url) return;
     if (isTauriEnv) {
       try {
-        const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
-        await invoke2("open_external_url", { url });
+        const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
+        await invoke4("open_external_url", { url });
         return;
       } catch {
       }
@@ -168260,7 +170359,7 @@
     }
   }
 
-  // lib/stream-provider-runtime/stream-provider-settings.ts
+  // lib/media-stream/config.ts
   var SCRAPER_PRESETS = [
     {
       id: "torrentio",
@@ -168556,7 +170655,7 @@
     setScraperConfigs(configs);
   }
 
-  // lib/stream-provider-runtime/stream-provider-storage.ts
+  // lib/media-stream/storage.ts
   function getActiveStreamProvider() {
     return getActiveStreamProviderId();
   }
@@ -169340,7 +171439,7 @@
         config.preset === "aiostreams" && (() => {
           const opts = config.options;
           return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: t("aiostreamsHint") }),
+            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: lt("aiostreamsHint") }),
             /* @__PURE__ */ jsx(
               "button",
               {
@@ -169548,7 +171647,7 @@
           type: "button",
           onClick: () => handleAddPreset(preset),
           className: "rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs text-slate-500 transition hover:border-white/30 hover:text-slate-300",
-          children: preset === "torrentio" ? t("streamProviderAddStandard") : preset === "torrentsdb" ? t("streamProviderAddIndexed") : preset === "comet" ? t("streamProviderAddComet") : preset === "jackettio" ? t("streamProviderAddJackettio") : preset === "aiostreams" ? t("streamProviderAddAiostreams") : preset === "orion" ? "+ Orion" : t("streamProviderAddCustom")
+          children: preset === "torrentio" ? lt("streamProviderAddStandard") : preset === "torrentsdb" ? lt("streamProviderAddIndexed") : preset === "comet" ? t("streamProviderAddComet") : preset === "jackettio" ? t("streamProviderAddJackettio") : preset === "aiostreams" ? t("streamProviderAddAiostreams") : preset === "orion" ? "+ Orion" : t("streamProviderAddCustom")
         },
         preset
       )) })
@@ -170157,7 +172256,7 @@
     return Boolean(state.installed && state.active);
   }
 
-  // lib/stream-provider-runtime/stream-filters.ts
+  // lib/media-stream/filters.ts
   var FILTER_KEY = "stream_provider_filters";
   var LEGACY_FILTER_KEY = "rd_stream_filters";
   var LEVEL_KEY = "stream_filter_level";
@@ -170251,7 +172350,7 @@
     return Boolean(text && (/rate.?limit/i.test(text) || /\b429\b/.test(text)));
   }
 
-  // lib/stream-provider-runtime/stream-provider-url-builder.ts
+  // lib/media-stream/url-builder.ts
   function buildScraperUrl(config) {
     switch (config.preset) {
       case "torrentio":
@@ -170477,1404 +172576,8 @@
     return getScraperDisplayName(config);
   }
 
-  // lib/stream-provider-runtime/playback/providers/alldebrid-playback-provider.ts
-  var ALLDEBRID_PROXY = "/api/stream-providers/alldebrid";
-  function normalizeMagnets(value) {
-    if (Array.isArray(value)) return value;
-    if (value && typeof value === "object") return Object.values(value);
-    return [];
-  }
-  function pickMagnetById(magnets, id4) {
-    const normalized = normalizeMagnets(magnets);
-    if (normalized.length === 0) return null;
-    return normalized.find((entry) => String(entry.id) === id4) ?? normalized[0] ?? null;
-  }
-  function asRecord(value) {
-    return value && typeof value === "object" ? value : null;
-  }
-  function toNumber(value) {
-    if (typeof value === "number" && Number.isFinite(value)) return value;
-    if (typeof value === "string" && value.trim()) {
-      const parsed = Number(value);
-      if (Number.isFinite(parsed)) return parsed;
-    }
-    return void 0;
-  }
-  function toStringValue(value) {
-    return typeof value === "string" && value.trim() ? value : void 0;
-  }
-  function asFileNodeArray(value) {
-    if (!Array.isArray(value)) return null;
-    if (value.every((entry) => {
-      const record2 = asRecord(entry);
-      return Boolean(record2 && typeof record2.n === "string");
-    })) {
-      return value;
-    }
-    return null;
-  }
-  function normalizeStatusMagnet(raw, requestedId) {
-    const directFiles = asFileNodeArray(raw);
-    if (directFiles) {
-      const flattened = flattenFiles(directFiles);
-      const totalBytes = flattened.reduce((sum, file) => sum + file.bytes, 0);
-      const primary = flattened[0];
-      return {
-        id: Number(requestedId) || 0,
-        filename: primary?.path ?? `magnet-${requestedId}`,
-        size: totalBytes,
-        status: "Ready",
-        statusCode: 4,
-        downloaded: totalBytes,
-        uploadDate: void 0
-      };
-    }
-    const record2 = asRecord(raw);
-    if (!record2) return null;
-    const nestedMagnet = asRecord(record2.magnet);
-    const source = nestedMagnet ?? record2;
-    const id4 = toNumber(source.id) ?? toNumber(record2.id) ?? Number(requestedId);
-    const filename = toStringValue(source.filename) ?? toStringValue(source.name) ?? toStringValue(record2.filename) ?? toStringValue(record2.name) ?? `magnet-${requestedId}`;
-    const size = toNumber(source.size) ?? toNumber(record2.size) ?? 0;
-    const status = toStringValue(source.status) ?? toStringValue(source.state) ?? toStringValue(record2.status) ?? toStringValue(record2.state) ?? "";
-    const statusCode = toNumber(source.statusCode) ?? toNumber(source.status_code) ?? toNumber(record2.statusCode) ?? toNumber(record2.status_code) ?? -1;
-    const hash = toStringValue(source.hash) ?? toStringValue(source.magnet) ?? toStringValue(record2.hash) ?? toStringValue(record2.magnet);
-    const downloaded = toNumber(source.downloaded) ?? toNumber(source.downloadedSize) ?? toNumber(record2.downloaded) ?? toNumber(record2.downloadedSize);
-    const uploadDate = toNumber(source.uploadDate) ?? toNumber(source.uploadedAt) ?? toNumber(record2.uploadDate) ?? toNumber(record2.uploadedAt);
-    return {
-      id: id4,
-      filename,
-      size,
-      status,
-      statusCode,
-      hash,
-      downloaded,
-      uploadDate
-    };
-  }
-  function parseMagnetLookupId(id4) {
-    const [remoteId, hash] = id4.split("|");
-    return {
-      remoteId: remoteId || id4,
-      hash: hash?.trim() || void 0
-    };
-  }
-  async function adJson(path, body) {
-    const token = getStreamProviderAccessKey("alldebrid").trim();
-    if (!token) throw new Error("Missing AllDebrid API key");
-    const res = await fetch(`${ALLDEBRID_PROXY}${path}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-        "x-ad-token": token
-      },
-      body: body?.toString() ?? ""
-    });
-    const data = await res.json();
-    if (!res.ok || data.status !== "success" || !data.data) {
-      const message = data.error?.message ?? data.error?.code ?? `HTTP ${res.status}`;
-      throw new Error(message);
-    }
-    return data.data;
-  }
-  function flattenFiles(nodes, parentPath = "") {
-    const flattened = [];
-    for (const node of nodes) {
-      const nextPath = parentPath ? `${parentPath}/${node.n}` : node.n;
-      if (node.e?.length) {
-        flattened.push(...flattenFiles(node.e, nextPath));
-        continue;
-      }
-      if (node.l) {
-        flattened.push({
-          path: nextPath,
-          bytes: node.s ?? 0,
-          link: node.l
-        });
-      }
-    }
-    return flattened;
-  }
-  function mapStatusCode(statusCode) {
-    if (statusCode === 0) return "queued";
-    if (statusCode === 1) return "downloading";
-    if (statusCode === 2) return "compressing";
-    if (statusCode === 3) return "uploading";
-    if (statusCode === 4) return "downloaded";
-    if (statusCode === 15) return "dead";
-    return "error";
-  }
-  function describeStatusCode(statusCode) {
-    switch (statusCode) {
-      case 0:
-        return "In queue";
-      case 1:
-        return "Downloading";
-      case 2:
-        return "Compressing / moving";
-      case 3:
-        return "Uploading";
-      case 4:
-        return "Ready";
-      case 5:
-        return "Upload fail";
-      case 6:
-        return "Internal error on unpacking";
-      case 7:
-        return "Not downloaded in 20 min";
-      case 8:
-        return "File too big";
-      case 9:
-        return "Internal error";
-      case 10:
-        return "Download took more than 72h";
-      case 11:
-        return "Deleted on the hoster website";
-      case 12:
-        return "Processing failed";
-      case 13:
-        return "Processing failed";
-      case 14:
-        return "Error while contacting tracker";
-      case 15:
-        return "File not available - no peer";
-      default:
-        return null;
-    }
-  }
-  function toIsoDate(timestamp) {
-    if (!timestamp) return (/* @__PURE__ */ new Date(0)).toISOString();
-    return new Date(timestamp * 1e3).toISOString();
-  }
-  function buildStatusLabel(status, statusCode) {
-    const description = describeStatusCode(statusCode);
-    if (description) return `${description} (code ${statusCode})`;
-    if (status) return `${status} (code ${statusCode})`;
-    return `Status code ${statusCode}`;
-  }
-  async function getMagnetFiles(id4) {
-    const body = new URLSearchParams();
-    body.append("id[]", id4);
-    const data = await adJson("/v4.1/magnet/files", body);
-    const magnet = pickMagnetById(data.magnets, id4);
-    if (!magnet) return [];
-    if (magnet.error) throw new Error(magnet.error.message ?? magnet.error.code ?? "Magnet files lookup failed");
-    return flattenFiles(magnet.files ?? []);
-  }
-  async function getMagnetStatus(id4) {
-    const lookup = parseMagnetLookupId(id4);
-    for (let attempt = 0; attempt < 6; attempt += 1) {
-      const targetedData = await adJson("/v4.1/magnet/status", new URLSearchParams({ id: lookup.remoteId }));
-      let normalized = normalizeMagnets(targetedData.magnets).map((entry) => normalizeStatusMagnet(entry, lookup.remoteId)).filter((entry) => Boolean(entry));
-      if (normalized.length === 0) {
-        const fullData = await adJson("/v4.1/magnet/status");
-        normalized = normalizeMagnets(fullData.magnets).map((entry) => normalizeStatusMagnet(entry, lookup.remoteId)).filter((entry) => Boolean(entry));
-      }
-      const magnet = normalized.find((entry) => String(entry.id) === lookup.remoteId) ?? (lookup.hash ? normalized.find((entry) => entry.hash?.toLowerCase() === lookup.hash?.toLowerCase()) : null) ?? normalized[0];
-      if (magnet) return magnet;
-      await new Promise((resolve) => setTimeout(resolve, 1e3));
-    }
-    return null;
-  }
-  async function pollDelayedLink(id4) {
-    for (let attempt = 0; attempt < 12; attempt += 1) {
-      const data = await adJson("/v4/link/delayed", new URLSearchParams({ id: String(id4) }));
-      if (data.status === 2 && data.link) return data.link;
-      if (data.status === 3) throw new Error("AllDebrid delayed link failed");
-      await new Promise((resolve) => setTimeout(resolve, 5e3));
-    }
-    throw new Error("AllDebrid delayed link timed out");
-  }
-  async function deleteMagnet(id4) {
-    const body = new URLSearchParams();
-    body.append("id", String(id4));
-    await adJson("/v4/magnet/delete", body);
-  }
-  async function lookupCachedStreams(candidates) {
-    const cachedHashes = /* @__PURE__ */ new Set();
-    const cachedTitles = /* @__PURE__ */ new Set();
-    const downloadableHashes = /* @__PURE__ */ new Set();
-    const downloadableTitles = /* @__PURE__ */ new Set();
-    await mapWithConcurrency(candidates, 2, async (candidate) => {
-      const body = new URLSearchParams();
-      body.append("magnets[]", candidate.infoHash);
-      let uploadedId = null;
-      try {
-        const data = await adJson("/v4/magnet/upload", body);
-        const uploaded = normalizeMagnets(data.magnets)[0];
-        if (!uploaded?.id) return;
-        uploadedId = Number(uploaded.id);
-        if (uploaded.ready) {
-          cachedHashes.add(candidate.infoHash);
-          downloadableHashes.add(candidate.infoHash);
-          if (candidate.title.trim()) {
-            cachedTitles.add(candidate.title.trim());
-            downloadableTitles.add(candidate.title.trim());
-          }
-          return;
-        }
-        const status = await getMagnetStatus(String(uploaded.id));
-        if (!status) return;
-        const mapped = mapStatusCode(status.statusCode);
-        if (mapped === "downloaded") {
-          cachedHashes.add(candidate.infoHash);
-          downloadableHashes.add(candidate.infoHash);
-          if (candidate.title.trim()) {
-            cachedTitles.add(candidate.title.trim());
-            downloadableTitles.add(candidate.title.trim());
-          }
-          return;
-        }
-        if (["queued", "downloading", "compressing", "uploading", "waiting_files_selection"].includes(mapped)) {
-          downloadableHashes.add(candidate.infoHash);
-          if (candidate.title.trim()) downloadableTitles.add(candidate.title.trim());
-        }
-      } catch {
-      } finally {
-        if (uploadedId && Number.isFinite(uploadedId)) {
-          await deleteMagnet(uploadedId).catch(() => void 0);
-        }
-      }
-    });
-    return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
-  }
-  async function unlockStreamSelection(unlockId, streams) {
-    const best = [...streams].sort((a, b) => (b.filesize ?? 0) - (a.filesize ?? 0))[0];
-    if (!best) throw new Error("No AllDebrid stream choices available");
-    return adJson(
-      "/v4/link/streaming",
-      new URLSearchParams({ id: unlockId, stream: best.id })
-    );
-  }
-  async function unlockLink(link) {
-    let data = await adJson("/v4/link/unlock", new URLSearchParams({ link }));
-    if (!data.link && data.streams?.length && data.id) {
-      data = await unlockStreamSelection(data.id, data.streams);
-    }
-    const finalLink = data.link ?? (data.delayed ? await pollDelayedLink(data.delayed) : null);
-    if (!finalLink) throw new Error("AllDebrid did not return a playable link");
-    return {
-      id: data.id ?? finalLink,
-      filename: data.filename ?? finalLink.split("/").pop()?.split("?")[0] ?? "video",
-      mimeType: "video/mp4",
-      filesize: data.filesize ?? 0,
-      link,
-      host: "alldebrid",
-      chunks: 1,
-      crc: 0,
-      download: finalLink,
-      streamable: 1
-    };
-  }
-  var alldebridPlaybackProvider = {
-    id: "alldebrid",
-    label: "AllDebrid",
-    getAccessKey() {
-      const token = getStreamProviderAccessKey("alldebrid").trim();
-      return token || null;
-    },
-    buildConfigSegment(accessKey, qualityFilter = "") {
-      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
-      segments.push(`alldebrid=${accessKey}`);
-      return segments.join("|");
-    },
-    lookupCachedStreams,
-    hideUnknownStreamsFromList() {
-      return true;
-    },
-    isMagnetSource(input) {
-      return input.trim().toLowerCase().startsWith("magnet:");
-    },
-    async addMagnet(magnet) {
-      const body = new URLSearchParams();
-      body.append("magnets[]", magnet);
-      const data = await adJson("/v4/magnet/upload", body);
-      const uploaded = normalizeMagnets(data.magnets)[0];
-      if (!uploaded?.id) {
-        throw new Error(uploaded?.error?.message ?? uploaded?.error?.code ?? "AllDebrid magnet upload failed");
-      }
-      return {
-        id: uploaded.hash ? `${String(uploaded.id)}|${uploaded.hash}` : String(uploaded.id),
-        uri: uploaded.magnet ?? magnet,
-        hash: uploaded.hash
-      };
-    },
-    async getSourceInfo(id4) {
-      const magnet = await getMagnetStatus(id4);
-      if (!magnet) throw new Error("AllDebrid magnet not found");
-      const files = await getMagnetFiles(String(magnet.id));
-      const mappedFiles = files.map((file, index3) => ({
-        id: index3 + 1,
-        path: file.path,
-        bytes: file.bytes,
-        selected: 1
-      }));
-      return {
-        id: id4,
-        filename: magnet.filename,
-        hash: "",
-        bytes: magnet.size,
-        host: "alldebrid",
-        split: 0,
-        progress: magnet.size > 0 && magnet.downloaded ? Math.round(magnet.downloaded / magnet.size * 100) : 0,
-        status: mapStatusCode(magnet.statusCode),
-        statusLabel: buildStatusLabel(magnet.status, magnet.statusCode),
-        added: toIsoDate(magnet.uploadDate),
-        links: files.map((file) => file.link),
-        original_filename: magnet.filename,
-        original_bytes: magnet.size,
-        files: mappedFiles,
-        seeders: 0
-      };
-    },
-    async selectFiles() {
-    },
-    async resolveLink(link) {
-      return unlockLink(link);
-    }
-  };
-
-  // lib/stream-provider-runtime/playback/providers/easydebrid-playback-provider.ts
-  var EASYDEBRID_PROXY = "/api/stream-providers/easydebrid";
-  var sourceState = /* @__PURE__ */ new Map();
-  var generatedFileCache = /* @__PURE__ */ new Map();
-  var directLinkCache = /* @__PURE__ */ new Map();
-  function getAccessKey() {
-    const key = getStreamProviderAccessKey("easydebrid").trim();
-    return key || null;
-  }
-  async function easyDebridJson(path, init = {}) {
-    const token = getAccessKey();
-    if (!token) throw new Error("EasyDebrid key missing");
-    const headers = new Headers(init.headers);
-    headers.set("x-ed-token", token);
-    headers.set("Accept", "application/json");
-    if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
-    const response = await fetch(`${EASYDEBRID_PROXY}${path}`, {
-      ...init,
-      headers
-    });
-    const data = await response.json().catch(() => null);
-    if (!response.ok) {
-      const message = data && typeof data === "object" && "error" in data && typeof data.error === "string" && data.error || data && typeof data === "object" && "message" in data && typeof data.message === "string" && data.message || `EasyDebrid request failed (${response.status})`;
-      throw new Error(message);
-    }
-    return data;
-  }
-  function extractInfoHash(input) {
-    const match = input.match(/btih:([a-f0-9]+)/i);
-    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
-  }
-  function buildSourceId(magnet) {
-    return `ed-${extractInfoHash(magnet)}`;
-  }
-  function normalizeLookupPath(file) {
-    const name = file.name?.trim() || "file";
-    const folder = file.folder?.trim();
-    return folder ? `${folder}/${name}` : name;
-  }
-  function normalizeGeneratedPath(file) {
-    const name = file.filename?.trim() || "file";
-    const directory = (file.directory ?? []).map((part) => part.trim()).filter(Boolean);
-    return directory.length > 0 ? `${directory.join("/")}/${name}` : name;
-  }
-  function toTorrentFiles(files, isSelected) {
-    return files.map((file, index3) => ({
-      id: index3 + 1,
-      path: "filename" in file ? normalizeGeneratedPath(file) : normalizeLookupPath(file),
-      bytes: file.size ?? 0,
-      selected: isSelected(index3 + 1) ? 1 : 0
-    }));
-  }
-  async function lookupSourceDetails(magnet) {
-    const data = await easyDebridJson("/link/lookupdetails", {
-      method: "POST",
-      body: JSON.stringify({ urls: [magnet] })
-    });
-    return data.result?.[0] ?? {};
-  }
-  async function lookupCachedStreams2(candidates) {
-    const magnets = candidates.map((candidate) => `magnet:?xt=urn:btih:${candidate.infoHash}`);
-    const data = await easyDebridJson("/link/lookupdetails", {
-      method: "POST",
-      body: JSON.stringify({ urls: magnets })
-    });
-    const cachedHashes = /* @__PURE__ */ new Set();
-    const cachedTitles = /* @__PURE__ */ new Set();
-    const downloadableHashes = /* @__PURE__ */ new Set();
-    const downloadableTitles = /* @__PURE__ */ new Set();
-    const results = data.result ?? [];
-    for (const [index3, result] of results.entries()) {
-      if (!result?.cached) continue;
-      const candidate = candidates[index3];
-      if (!candidate) continue;
-      cachedHashes.add(candidate.infoHash);
-      if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
-    }
-    return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
-  }
-  async function generateSourceFiles(magnet) {
-    const cached = generatedFileCache.get(magnet);
-    if (cached) return cached;
-    const data = await easyDebridJson("/link/generate", {
-      method: "POST",
-      body: JSON.stringify({ url: magnet })
-    });
-    const files = data.files ?? [];
-    generatedFileCache.set(magnet, files);
-    for (const file of files) {
-      if (!file.url) continue;
-      directLinkCache.set(file.url, {
-        filename: file.filename?.trim() || "download",
-        filesize: file.size ?? 0
-      });
-    }
-    return files;
-  }
-  function getSourceState(id4) {
-    const state = sourceState.get(id4);
-    if (!state) throw new Error("EasyDebrid source not found");
-    return state;
-  }
-  function buildTorrentInfo(state, files, status, statusLabel, links = []) {
-    const totalBytes = files.reduce((sum, file) => sum + file.bytes, 0);
-    const selectedFiles = files.filter((file) => file.selected === 1);
-    return {
-      id: buildSourceId(state.magnet),
-      filename: selectedFiles[0]?.path ?? files[0]?.path ?? state.hash,
-      hash: state.hash,
-      bytes: totalBytes,
-      host: "easydebrid",
-      split: 0,
-      progress: status === "downloaded" ? 100 : 0,
-      status,
-      statusLabel,
-      added: state.addedAt,
-      links,
-      original_filename: files[0]?.path ?? state.hash,
-      original_bytes: totalBytes,
-      files
-    };
-  }
-  var easyDebridPlaybackProvider = {
-    id: "easydebrid",
-    label: "EasyDebrid playback provider",
-    getAccessKey,
-    buildConfigSegment(accessKey, qualityFilter = "") {
-      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
-      segments.push(`easydebrid=${accessKey}`);
-      return segments.join("|");
-    },
-    lookupCachedStreams: lookupCachedStreams2,
-    hideUncachedStreamsFromList() {
-      return true;
-    },
-    hideUnknownStreamsFromList() {
-      return true;
-    },
-    isMagnetSource(input) {
-      return input.trim().toLowerCase().startsWith("magnet:");
-    },
-    async addMagnet(magnet) {
-      const id4 = buildSourceId(magnet);
-      const hash = extractInfoHash(magnet);
-      sourceState.set(id4, {
-        magnet,
-        hash,
-        addedAt: (/* @__PURE__ */ new Date()).toISOString(),
-        selectedFileIds: null
-      });
-      return {
-        id: id4,
-        uri: magnet,
-        hash
-      };
-    },
-    async getSourceInfo(id4) {
-      const state = getSourceState(id4);
-      const details = await lookupSourceDetails(state.magnet);
-      const lookupFiles = details.files ?? [];
-      const isSelected = (fileId) => state.selectedFileIds === "all" || state.selectedFileIds instanceof Set && state.selectedFileIds.has(fileId);
-      if (!details.cached) {
-        return buildTorrentInfo(
-          state,
-          toTorrentFiles(lookupFiles, () => false),
-          "dead",
-          "Not cached on EasyDebrid"
-        );
-      }
-      if (state.selectedFileIds === null) {
-        return buildTorrentInfo(
-          state,
-          toTorrentFiles(lookupFiles, () => false),
-          "waiting_files_selection",
-          "Select files"
-        );
-      }
-      const generatedFiles = await generateSourceFiles(state.magnet);
-      const torrentFiles = toTorrentFiles(
-        generatedFiles.length > 0 ? generatedFiles : lookupFiles,
-        isSelected
-      );
-      const links = generatedFiles.map((file, index3) => ({ file, id: index3 + 1 })).filter(({ file, id: id5 }) => Boolean(file.url) && isSelected(id5)).map(({ file }) => file.url);
-      return buildTorrentInfo(state, torrentFiles, "downloaded", "Ready", links);
-    },
-    async selectFiles(id4, files = "all") {
-      const state = getSourceState(id4);
-      state.selectedFileIds = files === "all" ? "all" : new Set(
-        files.split(",").map((value) => Number.parseInt(value.trim(), 10)).filter((value) => Number.isFinite(value))
-      );
-    },
-    async resolveLink(link) {
-      const cached = directLinkCache.get(link);
-      return {
-        id: link,
-        filename: cached?.filename ?? link.split("/").pop()?.split("?")[0] ?? "download",
-        mimeType: "application/octet-stream",
-        filesize: cached?.filesize ?? 0,
-        link,
-        host: "easydebrid",
-        chunks: 1,
-        crc: 0,
-        download: link,
-        streamable: 0
-      };
-    }
-  };
-
-  // lib/stream-provider-runtime/real-debrid/rd-client.ts
-  var RD_PROXY = "/api/stream-providers/realdebrid";
-  var RD_API_BASE_URL = "https://api.real-debrid.com/rest/1.0";
-  function getRdApiKey() {
-    if (typeof window === "undefined") return null;
-    const key = getGlobalStreamProviderAccessKey("realdebrid").trim();
-    return key || null;
-  }
-  async function rdFetch(path, options = {}) {
-    const key = getRdApiKey();
-    const headers = {
-      ...options.headers
-    };
-    if (key) headers["x-stream-provider-token"] = key;
-    return fetch(`${RD_PROXY}${path}`, { ...options, headers });
-  }
-  async function rdDesktopJson(path, method = "GET", body) {
-    const token = getRdApiKey();
-    if (!token) throw new Error("No Real-Debrid API key configured");
-    const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
-    const headers = [`Authorization: Bearer ${token}`];
-    if (body && body.trim().length > 0) {
-      headers.push("Content-Type: application/x-www-form-urlencoded");
-    }
-    return invoke2("desktop_external_api_request", {
-      baseUrl: RD_API_BASE_URL,
-      path,
-      method,
-      headers,
-      body: body ?? null,
-      timeoutMs: 12e3
-    });
-  }
-  function isTransientDesktopRdError(error) {
-    const message = error instanceof Error ? error.message : String(error);
-    const normalized = message.toLowerCase();
-    return normalized.includes("timeout") || normalized.includes("timed out") || normalized.includes("failed to fetch") || normalized.includes("connection") || normalized.includes("network") || normalized.includes("reset by peer") || normalized.includes("could not resolve host") || normalized.includes("empty reply");
-  }
-  async function rdDesktopJsonWithRetry(path, method = "GET", body, attempts = 3) {
-    let lastError = null;
-    for (let attempt = 1; attempt <= attempts; attempt += 1) {
-      try {
-        return await rdDesktopJson(path, method, body);
-      } catch (error) {
-        lastError = error;
-        if (attempt >= attempts || !isTransientDesktopRdError(error)) break;
-        await new Promise((resolve) => setTimeout(resolve, 350 * attempt));
-      }
-    }
-    throw lastError instanceof Error ? lastError : new Error(String(lastError));
-  }
-  async function rdJson(path, options) {
-    if (isPluginDesktopHost()) {
-      const method = (options?.method ?? "GET").toUpperCase();
-      const rawBody = options?.body;
-      const body = typeof rawBody === "string" ? rawBody : rawBody instanceof URLSearchParams ? rawBody.toString() : void 0;
-      return rdDesktopJsonWithRetry(path, method, body, 3);
-    }
-    const res = await rdFetch(path, options);
-    const data = await res.json();
-    if (!res.ok) {
-      const msg = data.error ?? `HTTP ${res.status}`;
-      throw new Error(msg);
-    }
-    return data;
-  }
-  async function rdUnrestrictLink(link) {
-    return rdJson("/unrestrict/link", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ link }).toString()
-    });
-  }
-  async function rdAddMagnet(magnet) {
-    return rdJson("/torrents/addMagnet", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ magnet }).toString()
-    });
-  }
-  async function rdGetTorrentInfo(id4) {
-    return rdJson(`/torrents/info/${id4}`);
-  }
-  async function rdGetInstantAvailability(hashes) {
-    const cleaned = hashes.map((hash) => hash.trim().toLowerCase()).filter(Boolean);
-    if (cleaned.length === 0) return {};
-    return rdJson(
-      `/torrents/instantAvailability/${cleaned.join("/")}`
-    );
-  }
-  async function rdSelectFiles(id4, files = "all") {
-    if (isPluginDesktopHost()) {
-      await rdDesktopJsonWithRetry(
-        `/torrents/selectFiles/${id4}`,
-        "POST",
-        new URLSearchParams({ files }).toString(),
-        3
-      );
-      return;
-    }
-    const res = await rdFetch(`/torrents/selectFiles/${id4}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ files }).toString()
-    });
-    if (!res.ok && res.status !== 204) {
-      const data = await res.json();
-      throw new Error(data.error ?? `HTTP ${res.status}`);
-    }
-  }
-  function isMagnetLink(input) {
-    return input.trim().toLowerCase().startsWith("magnet:");
-  }
-
-  // lib/stream-provider-runtime/playback/providers/legacy-playback-provider.ts
-  function chunk(items, size) {
-    const result = [];
-    for (let index3 = 0; index3 < items.length; index3 += size) {
-      result.push(items.slice(index3, index3 + size));
-    }
-    return result;
-  }
-  async function lookupCachedStreams3(candidates) {
-    const cachedHashes = /* @__PURE__ */ new Set();
-    const cachedTitles = /* @__PURE__ */ new Set();
-    const downloadableHashes = /* @__PURE__ */ new Set();
-    const downloadableTitles = /* @__PURE__ */ new Set();
-    const cachedStreamKeys = /* @__PURE__ */ new Set();
-    const downloadableStreamKeys = /* @__PURE__ */ new Set();
-    const byHash = /* @__PURE__ */ new Map();
-    for (const candidate of candidates) {
-      const hash = candidate.infoHash.trim().toLowerCase();
-      if (!hash) continue;
-      const bucket = byHash.get(hash);
-      if (bucket) {
-        bucket.push(candidate);
-      } else {
-        byHash.set(hash, [candidate]);
-      }
-    }
-    const chunks = chunk([...byHash.keys()], 40);
-    const chunkResults = await Promise.all(
-      chunks.map(async (hashes) => {
-        try {
-          return await rdGetInstantAvailability(hashes);
-        } catch {
-          return {};
-        }
-      })
-    );
-    for (let i = 0; i < chunks.length; i++) {
-      const hashes = chunks[i];
-      const availability = chunkResults[i];
-      for (const hash of hashes) {
-        const relatedCandidates = byHash.get(hash) ?? [];
-        const availabilityEntry = availability[hash];
-        const rdEntries = Array.isArray(availabilityEntry) ? availabilityEntry : availabilityEntry?.rd;
-        const cachedFileIds = /* @__PURE__ */ new Set();
-        for (const rdVariant of rdEntries ?? []) {
-          if (!rdVariant || typeof rdVariant !== "object") continue;
-          for (const fileIdRaw of Object.keys(rdVariant)) {
-            const fileId = Number.parseInt(fileIdRaw, 10);
-            if (!Number.isNaN(fileId) && fileId >= 0) cachedFileIds.add(fileId);
-          }
-        }
-        const hasPerFileAvailability = cachedFileIds.size > 0;
-        const isCached = hasPerFileAvailability || (rdEntries?.length ?? 0) > 0;
-        downloadableHashes.add(hash);
-        downloadableStreamKeys.add(`${hash}@*`);
-        if (isCached) cachedHashes.add(hash);
-        if (isCached && !hasPerFileAvailability) cachedStreamKeys.add(`${hash}@*`);
-        for (const candidate of relatedCandidates) {
-          const title = candidate.title.trim();
-          const fileIdx = Number.isFinite(candidate.fileIdx) ? Math.trunc(candidate.fileIdx) : null;
-          const streamKey = `${hash}@${fileIdx != null ? fileIdx : "*"}`;
-          downloadableStreamKeys.add(streamKey);
-          if (title) downloadableTitles.add(title);
-          const candidateCached = hasPerFileAvailability ? fileIdx != null ? cachedFileIds.has(fileIdx) || cachedFileIds.has(fileIdx + 1) : true : isCached;
-          if (candidateCached) {
-            cachedStreamKeys.add(streamKey);
-            if (title) cachedTitles.add(title);
-          }
-        }
-      }
-    }
-    return {
-      cachedHashes,
-      cachedTitles,
-      downloadableHashes,
-      downloadableTitles,
-      cachedStreamKeys,
-      downloadableStreamKeys
-    };
-  }
-  var legacyPlaybackProvider = {
-    id: "legacy",
-    label: "Legacy playback provider",
-    getAccessKey() {
-      return getRdApiKey();
-    },
-    buildConfigSegment(accessKey, qualityFilter = "") {
-      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
-      segments.push(`realdebrid=${accessKey}`);
-      return segments.join("|");
-    },
-    lookupCachedStreams: lookupCachedStreams3,
-    hideUnknownStreamsFromList() {
-      return false;
-    },
-    isMagnetSource(input) {
-      return isMagnetLink(input);
-    },
-    addMagnet(magnet) {
-      return rdAddMagnet(magnet);
-    },
-    getSourceInfo(id4) {
-      return rdGetTorrentInfo(id4);
-    },
-    selectFiles(id4, files = "all") {
-      return rdSelectFiles(id4, files);
-    },
-    resolveLink(link) {
-      return rdUnrestrictLink(link);
-    }
-  };
-
-  // lib/stream-provider-runtime/playback/providers/offcloud-playback-provider.ts
-  var OFFCLOUD_PROXY = "/api/stream-providers/offcloud";
-  var sourceState2 = /* @__PURE__ */ new Map();
-  var linkCache = /* @__PURE__ */ new Map();
-  function getAccessKey2() {
-    const key = getStreamProviderAccessKey("offcloud").trim();
-    return key || null;
-  }
-  async function offcloudJson(path, init = {}) {
-    const token = getAccessKey2();
-    if (!token) throw new Error("Offcloud API key missing");
-    const headers = new Headers(init.headers);
-    headers.set("x-offcloud-key", token);
-    headers.set("Accept", "application/json");
-    if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
-    const response = await fetch(`${OFFCLOUD_PROXY}${path}`, {
-      ...init,
-      headers
-    });
-    const data = await response.json().catch(() => null);
-    if (!response.ok) {
-      const message = data?.error || data?.not_available || `Offcloud request failed (${response.status})`;
-      throw new Error(message);
-    }
-    if (data && typeof data === "object" && ("error" in data || "not_available" in data)) {
-      const message = data.error || data.not_available;
-      if (message) throw new Error(message);
-    }
-    return data;
-  }
-  function extractInfoHash2(input) {
-    const match = input.match(/btih:([a-f0-9]+)/i);
-    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
-  }
-  function buildSourceId2(requestId) {
-    return `oc-${requestId}`;
-  }
-  function getSourceState2(id4) {
-    const state = sourceState2.get(id4);
-    if (!state) throw new Error("Offcloud source not found");
-    return state;
-  }
-  function parseFilenameFromUrl(link) {
-    try {
-      const url = new URL(link);
-      const lastSegment = url.pathname.split("/").filter(Boolean).pop();
-      return decodeURIComponent(lastSegment || "download");
-    } catch {
-      return link.split("/").pop()?.split("?")[0] ?? "download";
-    }
-  }
-  function toTrimmedString(value) {
-    if (typeof value === "string") return value.trim();
-    if (typeof value === "number" || typeof value === "boolean") return String(value).trim();
-    return "";
-  }
-  function toTorrentFile(link, index3, path, bytes = 0) {
-    return {
-      id: index3 + 1,
-      path: path || parseFilenameFromUrl(link),
-      bytes,
-      selected: 1
-    };
-  }
-  function mapStatus(status) {
-    switch (toTrimmedString(status).toLowerCase()) {
-      case "downloaded":
-        return "downloaded";
-      case "downloading":
-        return "downloading";
-      case "error":
-      case "canceled":
-        return "error";
-      case "queued":
-      case "created":
-      default:
-        return "queued";
-    }
-  }
-  async function getCloudStatus(requestId) {
-    return offcloudJson("/cloud/status", {
-      method: "POST",
-      body: JSON.stringify({ requestId })
-    });
-  }
-  async function getCacheEntry(magnet) {
-    const data = await offcloudJson("/cache", {
-      method: "POST",
-      body: JSON.stringify({
-        urls: [magnet],
-        includeFiles: true
-      })
-    });
-    if (!Array.isArray(data)) return null;
-    const entry = data[0];
-    if (!entry || typeof entry !== "object") return null;
-    return entry;
-  }
-  async function lookupCachedStreams4(candidates) {
-    const data = await offcloudJson("/cache", {
-      method: "POST",
-      body: JSON.stringify({
-        urls: candidates.map((candidate) => `magnet:?xt=urn:btih:${candidate.infoHash}`),
-        includeFiles: false
-      })
-    });
-    const cachedHashes = /* @__PURE__ */ new Set();
-    const cachedTitles = /* @__PURE__ */ new Set();
-    const downloadableHashes = /* @__PURE__ */ new Set();
-    const downloadableTitles = /* @__PURE__ */ new Set();
-    if (!Array.isArray(data)) {
-      return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
-    }
-    for (const [index3, entry] of data.entries()) {
-      if (!entry || typeof entry !== "object") continue;
-      if (!entry.cached) continue;
-      const candidate = candidates[index3];
-      if (!candidate) continue;
-      cachedHashes.add(candidate.infoHash);
-      if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
-    }
-    return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
-  }
-  async function getExploreFiles(requestId) {
-    const data = await offcloudJson(`/cloud/explore/${encodeURIComponent(requestId)}`);
-    return Array.isArray(data.files) ? data.files : [];
-  }
-  async function buildTorrentInfo2(id4) {
-    const state = getSourceState2(id4);
-    const status = await getCloudStatus(state.requestId);
-    const normalizedStatus = mapStatus(status.status);
-    const statusLabel = toTrimmedString(status.status) || normalizedStatus;
-    const fileName = toTrimmedString(status.fileName);
-    const createdOn = toTrimmedString(status.createdOn);
-    const directUrl = toTrimmedString(status.url);
-    const exploreFiles = normalizedStatus === "downloaded" ? await getExploreFiles(state.requestId) : [];
-    const directLinks = exploreFiles.map((file) => toTrimmedString(file.url)).filter(Boolean);
-    if (normalizedStatus === "downloaded" && directLinks.length === 0 && directUrl) {
-      directLinks.push(directUrl);
-    }
-    for (const file of exploreFiles) {
-      const link = toTrimmedString(file.url);
-      if (link && !linkCache.has(link)) {
-        linkCache.set(link, {
-          filename: toTrimmedString(file.path) || toTrimmedString(file.name) || parseFilenameFromUrl(link),
-          filesize: typeof file.size === "number" ? file.size : 0
-        });
-      }
-    }
-    if (normalizedStatus === "downloaded" && directUrl && !linkCache.has(directUrl)) {
-      linkCache.set(directUrl, {
-        filename: fileName || parseFilenameFromUrl(directUrl),
-        filesize: 0
-      });
-    }
-    const files = directLinks.map((link, index3) => {
-      const cached = linkCache.get(link);
-      return toTorrentFile(link, index3, cached?.filename, cached?.filesize ?? 0);
-    });
-    const totalBytes = files.reduce((sum, file) => sum + file.bytes, 0);
-    return {
-      id: id4,
-      filename: fileName || files[0]?.path || state.hash,
-      hash: state.hash,
-      bytes: totalBytes,
-      host: "offcloud",
-      split: 0,
-      progress: normalizedStatus === "downloaded" ? 100 : normalizedStatus === "downloading" ? 50 : 0,
-      status: normalizedStatus,
-      statusLabel,
-      added: createdOn || state.addedAt,
-      links: directLinks,
-      original_filename: fileName || state.hash,
-      original_bytes: totalBytes,
-      files
-    };
-  }
-  var offcloudPlaybackProvider = {
-    id: "offcloud",
-    label: "Offcloud playback provider",
-    getAccessKey: getAccessKey2,
-    buildConfigSegment(accessKey, qualityFilter = "") {
-      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
-      segments.push(`offcloud=${accessKey}`);
-      return segments.join("|");
-    },
-    lookupCachedStreams: lookupCachedStreams4,
-    hideUncachedStreamsFromList() {
-      return true;
-    },
-    hideUnknownStreamsFromList() {
-      return true;
-    },
-    isMagnetSource(input) {
-      return input.trim().toLowerCase().startsWith("magnet:");
-    },
-    async addMagnet(magnet) {
-      const cacheEntry = await getCacheEntry(magnet);
-      if (!cacheEntry?.cached) {
-        throw new Error("Not cached on Offcloud");
-      }
-      const data = await offcloudJson("/cloud", {
-        method: "POST",
-        body: JSON.stringify({ url: magnet })
-      });
-      const requestId = toTrimmedString(data.requestId);
-      if (!requestId) throw new Error("Offcloud did not return a request ID");
-      const id4 = buildSourceId2(requestId);
-      sourceState2.set(id4, {
-        requestId,
-        magnet,
-        hash: extractInfoHash2(magnet),
-        addedAt: toTrimmedString(data.createdOn) || (/* @__PURE__ */ new Date()).toISOString()
-      });
-      return {
-        id: id4,
-        uri: magnet,
-        hash: extractInfoHash2(magnet)
-      };
-    },
-    async getSourceInfo(id4) {
-      return buildTorrentInfo2(id4);
-    },
-    async selectFiles() {
-    },
-    async resolveLink(link) {
-      const cached = linkCache.get(link);
-      return {
-        id: link,
-        filename: cached?.filename ?? parseFilenameFromUrl(link),
-        mimeType: "application/octet-stream",
-        filesize: cached?.filesize ?? 0,
-        link,
-        host: "offcloud",
-        chunks: 1,
-        crc: 0,
-        download: link,
-        streamable: 0
-      };
-    }
-  };
-
-  // lib/stream-provider-runtime/playback/providers/torbox-playback-provider.ts
-  var TORBOX_PROXY = "/api/stream-providers/torbox";
-  var INFO_CACHE_TTL_MS = 1500;
-  var VIDEO_EXT_RE = /\.(mkv|mp4|avi|m4v|mov|webm|ts|m2ts|wmv|flv)$/i;
-  var sourceState3 = /* @__PURE__ */ new Map();
-  var directLinkCache2 = /* @__PURE__ */ new Map();
-  function getAccessKey3() {
-    const key = getStreamProviderAccessKey("torbox").trim();
-    return key || null;
-  }
-  function extractInfoHash3(input) {
-    const match = input.match(/btih:([a-f0-9]+)/i);
-    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
-  }
-  function buildSourceId3(magnet) {
-    return `tb-${extractInfoHash3(magnet)}`;
-  }
-  function getSourceState3(id4) {
-    const state = sourceState3.get(id4);
-    if (!state) throw new Error("TorBox source not found");
-    return state;
-  }
-  async function torboxJson(path, init = {}) {
-    const token = getAccessKey3();
-    if (!token) throw new Error("TorBox key missing");
-    const headers = new Headers(init.headers);
-    headers.set("x-tb-token", token);
-    headers.set("Accept", "application/json");
-    const response = await fetch(`${TORBOX_PROXY}${path}`, { ...init, headers });
-    const data = await response.json().catch(() => null);
-    if (!response.ok) {
-      const message = data && typeof data === "object" && "error" in data && typeof data.error === "string" && data.error || data && typeof data === "object" && "detail" in data && typeof data.detail === "string" && data.detail || `TorBox request failed (${response.status})`;
-      throw new Error(message);
-    }
-    return data;
-  }
-  async function torboxCreateTorrent(magnet) {
-    const formData = new FormData();
-    formData.append("magnet", magnet);
-    formData.append("seed", "3");
-    formData.append("allow_zip", "false");
-    const data = await torboxJson(
-      "/torrents/createtorrent",
-      { method: "POST", body: formData }
-    );
-    if (!data.success || typeof data.data?.torrent_id !== "number") {
-      throw new Error(data.detail || data.error || "TorBox createtorrent failed");
-    }
-    return {
-      torrent_id: data.data.torrent_id,
-      hash: (data.data.hash ?? "").toLowerCase()
-    };
-  }
-  async function torboxGetInfo(torrentId) {
-    const data = await torboxJson(
-      `/torrents/mylist?bypass_cache=true&id=${torrentId}`
-    );
-    if (!data.success || !data.data) return null;
-    if (Array.isArray(data.data)) return data.data[0] ?? null;
-    return data.data;
-  }
-  async function prefetchVideoFileUrls(state) {
-    if (state.torrentId == null || !state.pendingInfo) return;
-    const info = await state.pendingInfo;
-    if (!info?.files || state.torrentId == null) return;
-    for (const file of info.files) {
-      const name = file.short_name?.trim() || file.name.trim();
-      if (!VIDEO_EXT_RE.test(name)) continue;
-      if (state.pendingDlUrls.has(file.id)) continue;
-      state.pendingDlUrls.set(file.id, torboxRequestDl(state.torrentId, file.id).catch(() => null));
-    }
-  }
-  async function torboxRequestDl(torrentId, fileId) {
-    const token = getAccessKey3();
-    if (!token) return null;
-    const data = await torboxJson(
-      `/torrents/requestdl?token=${encodeURIComponent(token)}&torrent_id=${torrentId}&file_id=${fileId}&redirect=false`
-    );
-    if (!data.success || typeof data.data !== "string") return null;
-    return data.data;
-  }
-  async function torboxCheckCached(hashes) {
-    const result = /* @__PURE__ */ new Set();
-    if (hashes.length === 0) return result;
-    const params = new URLSearchParams();
-    for (const h of hashes) params.append("hash", h);
-    params.set("format", "list");
-    params.set("list_files", "false");
-    try {
-      const data = await torboxJson(
-        `/torrents/checkcached?${params}`
-      );
-      if (!data.success || !data.data) return result;
-      if (Array.isArray(data.data)) {
-        for (const entry of data.data) {
-          if (typeof entry?.hash === "string") result.add(entry.hash.toLowerCase());
-        }
-      } else if (typeof data.data === "object") {
-        for (const [hash, value] of Object.entries(data.data)) {
-          if (value) result.add(hash.toLowerCase());
-        }
-      }
-    } catch {
-    }
-    return result;
-  }
-  function toTorrentFiles2(files, isSelected) {
-    return files.map((file) => ({
-      id: file.id,
-      path: file.short_name?.trim() || file.name.trim(),
-      bytes: file.size,
-      selected: isSelected(file.id) ? 1 : 0
-    }));
-  }
-  function mapStatus2(info) {
-    if (info.download_finished) return "downloaded";
-    const state = info.download_state?.toLowerCase() ?? "";
-    if (state.includes("cached")) return "downloaded";
-    if (state.includes("error") || state.includes("failed") || state.includes("dead")) return "error";
-    if (state.includes("queue")) return "queued";
-    if (state.includes("upload")) return "uploading";
-    if (state.includes("processing")) return "magnet_conversion";
-    return "downloading";
-  }
-  function buildTorrentInfo3(state, info, status, files, links = [], statusLabel) {
-    const totalBytes = info?.size ?? files.reduce((sum, file) => sum + file.bytes, 0);
-    const selectedFiles = files.filter((file) => file.selected === 1);
-    return {
-      id: buildSourceId3(state.magnet),
-      filename: selectedFiles[0]?.path ?? files[0]?.path ?? info?.name ?? state.hash,
-      hash: state.hash,
-      bytes: totalBytes,
-      host: "torbox",
-      split: 0,
-      progress: status === "downloaded" ? 100 : 0,
-      status,
-      statusLabel,
-      added: state.addedAt,
-      links,
-      original_filename: info?.name ?? files[0]?.path ?? state.hash,
-      original_bytes: totalBytes,
-      files
-    };
-  }
-  var torboxPlaybackProvider = {
-    id: "torbox",
-    label: "TorBox playback provider",
-    getAccessKey: getAccessKey3,
-    // Torrentio's config segment for TorBox addons is `torbox=<api_key>`,
-    // analogous to `realdebrid=<api_key>` / `easydebrid=<api_key>` etc.
-    buildConfigSegment(accessKey, qualityFilter = "") {
-      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
-      segments.push(`torbox=${accessKey}`);
-      return segments.join("|");
-    },
-    async lookupCachedStreams(candidates) {
-      const hashes = candidates.map((candidate) => candidate.infoHash?.toLowerCase()).filter((hash) => Boolean(hash));
-      if (hashes.length === 0) {
-        return {
-          cachedHashes: /* @__PURE__ */ new Set(),
-          cachedTitles: /* @__PURE__ */ new Set(),
-          downloadableHashes: /* @__PURE__ */ new Set(),
-          downloadableTitles: /* @__PURE__ */ new Set()
-        };
-      }
-      const cached = await torboxCheckCached(hashes);
-      const cachedHashes = /* @__PURE__ */ new Set();
-      const cachedTitles = /* @__PURE__ */ new Set();
-      for (const candidate of candidates) {
-        const hash = candidate.infoHash?.toLowerCase();
-        if (hash && cached.has(hash)) {
-          cachedHashes.add(candidate.infoHash);
-          if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
-        }
-      }
-      return {
-        cachedHashes,
-        cachedTitles,
-        downloadableHashes: /* @__PURE__ */ new Set(),
-        downloadableTitles: /* @__PURE__ */ new Set()
-      };
-    },
-    hideUncachedStreamsFromList() {
-      return false;
-    },
-    hideUnknownStreamsFromList() {
-      return false;
-    },
-    isMagnetSource(input) {
-      return input.trim().toLowerCase().startsWith("magnet:");
-    },
-    async addMagnet(magnet) {
-      const id4 = buildSourceId3(magnet);
-      const hash = extractInfoHash3(magnet);
-      const existing = sourceState3.get(id4);
-      if (existing && existing.torrentId != null) {
-        existing.pendingInfo = torboxGetInfo(existing.torrentId).catch(() => null);
-        existing.pendingDlUrls = /* @__PURE__ */ new Map();
-        void prefetchVideoFileUrls(existing);
-        return { id: id4, uri: magnet, hash: existing.hash };
-      }
-      const created = await torboxCreateTorrent(magnet);
-      const pendingInfo = torboxGetInfo(created.torrent_id).catch(() => null);
-      const state = {
-        magnet,
-        hash: created.hash || hash,
-        addedAt: (/* @__PURE__ */ new Date()).toISOString(),
-        torrentId: created.torrent_id,
-        selectedFileIds: null,
-        pendingInfo,
-        lastInfo: null,
-        lastInfoAt: 0,
-        pendingDlUrls: /* @__PURE__ */ new Map()
-      };
-      sourceState3.set(id4, state);
-      void prefetchVideoFileUrls(state);
-      return { id: id4, uri: magnet, hash: created.hash || hash };
-    },
-    async getSourceInfo(id4) {
-      const state = getSourceState3(id4);
-      if (state.torrentId == null) {
-        throw new Error("TorBox torrent id not yet known");
-      }
-      let info;
-      if (state.pendingInfo) {
-        info = await state.pendingInfo;
-        state.pendingInfo = null;
-        state.lastInfo = info;
-        state.lastInfoAt = Date.now();
-      } else if (state.lastInfo && Date.now() - state.lastInfoAt < INFO_CACHE_TTL_MS) {
-        info = state.lastInfo;
-      } else {
-        info = await torboxGetInfo(state.torrentId);
-        state.lastInfo = info;
-        state.lastInfoAt = Date.now();
-      }
-      if (!info) {
-        return buildTorrentInfo3(state, null, "magnet_conversion", [], [], "Looking up on TorBox\u2026");
-      }
-      const isSelected = (fileId) => state.selectedFileIds === "all" || state.selectedFileIds instanceof Set && state.selectedFileIds.has(fileId);
-      const status = mapStatus2(info);
-      const files = toTorrentFiles2(info.files ?? [], isSelected);
-      if (status !== "downloaded") {
-        return buildTorrentInfo3(state, info, status, files, [], info.download_state);
-      }
-      if (state.selectedFileIds === null) {
-        return buildTorrentInfo3(state, info, "waiting_files_selection", files, [], "Select files");
-      }
-      const selectedFiles = files.filter((file) => file.selected === 1);
-      const resolvedLinks = await Promise.all(
-        selectedFiles.map(async (file) => {
-          const pending = state.pendingDlUrls.get(file.id);
-          const url = pending != null ? await pending : await torboxRequestDl(state.torrentId, file.id);
-          return url ? { url, file } : null;
-        })
-      );
-      const links = [];
-      for (const entry of resolvedLinks) {
-        if (!entry) continue;
-        links.push(entry.url);
-        directLinkCache2.set(entry.url, { filename: entry.file.path, filesize: entry.file.bytes });
-      }
-      if (links.length === 0) {
-        return buildTorrentInfo3(state, info, "error", files, [], "No playable links from TorBox");
-      }
-      return buildTorrentInfo3(state, info, "downloaded", files, links, "Ready");
-    },
-    async selectFiles(id4, files = "all") {
-      const state = getSourceState3(id4);
-      state.selectedFileIds = files === "all" ? "all" : new Set(
-        files.split(",").map((value) => Number.parseInt(value.trim(), 10)).filter((value) => Number.isFinite(value))
-      );
-    },
-    async resolveLink(link) {
-      const cached = directLinkCache2.get(link);
-      return {
-        id: link,
-        filename: cached?.filename ?? link.split("/").pop()?.split("?")[0] ?? "download",
-        mimeType: "application/octet-stream",
-        filesize: cached?.filesize ?? 0,
-        link,
-        host: "torbox",
-        chunks: 1,
-        crc: 0,
-        download: link,
-        streamable: 1
-      };
-    }
-  };
-
-  // lib/stream-provider-runtime/playback/stream-provider-playback.ts
-  var playbackProviders = /* @__PURE__ */ new Map([
-    ["alldebrid", alldebridPlaybackProvider],
-    ["easydebrid", easyDebridPlaybackProvider],
-    ["offcloud", offcloudPlaybackProvider],
-    ["realdebrid", legacyPlaybackProvider],
-    ["torbox", torboxPlaybackProvider]
-  ]);
-  function getPlaybackProviderOverride() {
-    if (typeof window === "undefined") return null;
-    return window.__lumioPluginRuntime?.playbackProviderOverride ?? null;
-  }
-  function resolveActiveProviderId() {
-    return getPlaybackProviderOverride() ?? getActiveStreamProvider().trim().toLowerCase();
-  }
-  function getActivePlaybackProvider() {
-    const providerId = resolveActiveProviderId();
-    const provider = playbackProviders.get(providerId);
-    if (!provider) throw new Error(`Playback provider "${providerId}" is not supported`);
-    return provider;
-  }
-  function findActivePlaybackProvider() {
-    const providerId = resolveActiveProviderId();
-    return playbackProviders.get(providerId) ?? null;
-  }
-  function getPlaybackAccessKey() {
-    return findActivePlaybackProvider()?.getAccessKey() ?? null;
-  }
-  function buildPlaybackProviderConfigSegment(qualityFilter = "") {
-    const accessKey = getPlaybackAccessKey();
-    if (!accessKey) return null;
-    const provider = findActivePlaybackProvider();
-    if (!provider) return null;
-    return provider.buildConfigSegment(accessKey, qualityFilter);
-  }
-  var cacheProbeTtlMs = 6e4;
-  var cacheProbeMemo = /* @__PURE__ */ new Map();
-  function buildCacheProbeKey(providerId, candidates) {
-    const hashes = candidates.map((c) => c.infoHash?.toLowerCase() ?? "").filter(Boolean).sort().join(",");
-    return `${providerId}|${hashes}`;
-  }
-  async function lookupPlaybackCachedStreams(candidates) {
-    const provider = findActivePlaybackProvider();
-    if (!provider?.lookupCachedStreams) return null;
-    const key = buildCacheProbeKey(provider.id, candidates);
-    const now3 = Date.now();
-    const cached = cacheProbeMemo.get(key);
-    if (cached && cached.expiresAt > now3) return cached.result;
-    const result = await provider.lookupCachedStreams(candidates);
-    cacheProbeMemo.set(key, { expiresAt: now3 + cacheProbeTtlMs, result });
-    return result;
-  }
-  function hideUncachedPlaybackStreamsFromList() {
-    return findActivePlaybackProvider()?.hideUncachedStreamsFromList?.() ?? false;
-  }
-  function hideUnknownPlaybackStreamsFromList() {
-    return findActivePlaybackProvider()?.hideUnknownStreamsFromList?.() ?? false;
-  }
-  function isMagnetPlaybackSource(input) {
-    return getActivePlaybackProvider().isMagnetSource(input);
-  }
-  async function queueMagnetForPlayback(magnet) {
-    return getActivePlaybackProvider().addMagnet(magnet);
-  }
-  async function getPlaybackSourceInfo(id4) {
-    return getActivePlaybackProvider().getSourceInfo(id4);
-  }
-  async function selectPlaybackFiles(id4, files = "all") {
-    return getActivePlaybackProvider().selectFiles(id4, files);
-  }
-  async function resolvePlaybackLink(link) {
-    return getActivePlaybackProvider().resolveLink(link);
-  }
-
-  // lib/stream-provider-runtime/stream-provider-request-context.ts
+  // lib/media-stream/request-context.ts
+  init_plugin_registry();
   var DEFAULT_STREAM_PROVIDER_URL = "https://torrentio.strem.fun";
   function getPrimaryStreamProviderConfig() {
     const configs = getStreamProviderConfigs().filter((config) => config.enabled);
@@ -171896,7 +172599,7 @@
       },
       browserStreamUrl: ({ imdbId, mediaType, season, episode }) => {
         if (streamProviderType !== "torrentio") return null;
-        const configSegment = buildPlaybackProviderConfigSegment(qualityFilter);
+        const configSegment = getStreamRequestConfigProviders()[0]?.buildConfigSegment(qualityFilter) ?? null;
         if (!configSegment) return null;
         const streamPath = mediaType === "series" && season && episode ? `stream/series/${imdbId}:${season}:${episode}.json` : `stream/movie/${imdbId}.json`;
         return `${streamProviderUrl}/${configSegment}/${streamPath}`;
@@ -172120,7 +172823,7 @@
   var import_react58 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-fV7VRq/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/utils/scroll-lock.ts
@@ -172190,2014 +172893,14 @@
     return FIXED_NEXT_EP_PRELOAD_LEAD_SECONDS;
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/video-player-modal-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-fV7VRq/video-player-modal-shim.ts
   init_react_shim();
 
   // components/player/video-player-modal.tsx
   init_react_shim();
   var import_react_dom = __toESM(require_react_dom());
-  init_core();
-
-  // node_modules/@tauri-apps/api/dpi.js
-  init_core();
-  var LogicalSize = class {
-    constructor(...args) {
-      this.type = "Logical";
-      if (args.length === 1) {
-        if ("Logical" in args[0]) {
-          this.width = args[0].Logical.width;
-          this.height = args[0].Logical.height;
-        } else {
-          this.width = args[0].width;
-          this.height = args[0].height;
-        }
-      } else {
-        this.width = args[0];
-        this.height = args[1];
-      }
-    }
-    /**
-     * Converts the logical size to a physical one.
-     * @example
-     * ```typescript
-     * import { LogicalSize } from '@tauri-apps/api/dpi';
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     *
-     * const appWindow = getCurrentWindow();
-     * const factor = await appWindow.scaleFactor();
-     * const size = new LogicalSize(400, 500);
-     * const physical = size.toPhysical(factor);
-     * ```
-     *
-     * @since 2.0.0
-     */
-    toPhysical(scaleFactor) {
-      return new PhysicalSize(this.width * scaleFactor, this.height * scaleFactor);
-    }
-    [SERIALIZE_TO_IPC_FN]() {
-      return {
-        width: this.width,
-        height: this.height
-      };
-    }
-    toJSON() {
-      return this[SERIALIZE_TO_IPC_FN]();
-    }
-  };
-  var PhysicalSize = class {
-    constructor(...args) {
-      this.type = "Physical";
-      if (args.length === 1) {
-        if ("Physical" in args[0]) {
-          this.width = args[0].Physical.width;
-          this.height = args[0].Physical.height;
-        } else {
-          this.width = args[0].width;
-          this.height = args[0].height;
-        }
-      } else {
-        this.width = args[0];
-        this.height = args[1];
-      }
-    }
-    /**
-     * Converts the physical size to a logical one.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const appWindow = getCurrentWindow();
-     * const factor = await appWindow.scaleFactor();
-     * const size = await appWindow.innerSize(); // PhysicalSize
-     * const logical = size.toLogical(factor);
-     * ```
-     */
-    toLogical(scaleFactor) {
-      return new LogicalSize(this.width / scaleFactor, this.height / scaleFactor);
-    }
-    [SERIALIZE_TO_IPC_FN]() {
-      return {
-        width: this.width,
-        height: this.height
-      };
-    }
-    toJSON() {
-      return this[SERIALIZE_TO_IPC_FN]();
-    }
-  };
-  var Size = class {
-    constructor(size) {
-      this.size = size;
-    }
-    toLogical(scaleFactor) {
-      return this.size instanceof LogicalSize ? this.size : this.size.toLogical(scaleFactor);
-    }
-    toPhysical(scaleFactor) {
-      return this.size instanceof PhysicalSize ? this.size : this.size.toPhysical(scaleFactor);
-    }
-    [SERIALIZE_TO_IPC_FN]() {
-      return {
-        [`${this.size.type}`]: {
-          width: this.size.width,
-          height: this.size.height
-        }
-      };
-    }
-    toJSON() {
-      return this[SERIALIZE_TO_IPC_FN]();
-    }
-  };
-  var LogicalPosition = class {
-    constructor(...args) {
-      this.type = "Logical";
-      if (args.length === 1) {
-        if ("Logical" in args[0]) {
-          this.x = args[0].Logical.x;
-          this.y = args[0].Logical.y;
-        } else {
-          this.x = args[0].x;
-          this.y = args[0].y;
-        }
-      } else {
-        this.x = args[0];
-        this.y = args[1];
-      }
-    }
-    /**
-     * Converts the logical position to a physical one.
-     * @example
-     * ```typescript
-     * import { LogicalPosition } from '@tauri-apps/api/dpi';
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     *
-     * const appWindow = getCurrentWindow();
-     * const factor = await appWindow.scaleFactor();
-     * const position = new LogicalPosition(400, 500);
-     * const physical = position.toPhysical(factor);
-     * ```
-     *
-     * @since 2.0.0
-     */
-    toPhysical(scaleFactor) {
-      return new PhysicalPosition(this.x * scaleFactor, this.y * scaleFactor);
-    }
-    [SERIALIZE_TO_IPC_FN]() {
-      return {
-        x: this.x,
-        y: this.y
-      };
-    }
-    toJSON() {
-      return this[SERIALIZE_TO_IPC_FN]();
-    }
-  };
-  var PhysicalPosition = class {
-    constructor(...args) {
-      this.type = "Physical";
-      if (args.length === 1) {
-        if ("Physical" in args[0]) {
-          this.x = args[0].Physical.x;
-          this.y = args[0].Physical.y;
-        } else {
-          this.x = args[0].x;
-          this.y = args[0].y;
-        }
-      } else {
-        this.x = args[0];
-        this.y = args[1];
-      }
-    }
-    /**
-     * Converts the physical position to a logical one.
-     * @example
-     * ```typescript
-     * import { PhysicalPosition } from '@tauri-apps/api/dpi';
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     *
-     * const appWindow = getCurrentWindow();
-     * const factor = await appWindow.scaleFactor();
-     * const position = new PhysicalPosition(400, 500);
-     * const physical = position.toLogical(factor);
-     * ```
-     *
-     * @since 2.0.0
-     */
-    toLogical(scaleFactor) {
-      return new LogicalPosition(this.x / scaleFactor, this.y / scaleFactor);
-    }
-    [SERIALIZE_TO_IPC_FN]() {
-      return {
-        x: this.x,
-        y: this.y
-      };
-    }
-    toJSON() {
-      return this[SERIALIZE_TO_IPC_FN]();
-    }
-  };
-  var Position = class {
-    constructor(position) {
-      this.position = position;
-    }
-    toLogical(scaleFactor) {
-      return this.position instanceof LogicalPosition ? this.position : this.position.toLogical(scaleFactor);
-    }
-    toPhysical(scaleFactor) {
-      return this.position instanceof PhysicalPosition ? this.position : this.position.toPhysical(scaleFactor);
-    }
-    [SERIALIZE_TO_IPC_FN]() {
-      return {
-        [`${this.position.type}`]: {
-          x: this.position.x,
-          y: this.position.y
-        }
-      };
-    }
-    toJSON() {
-      return this[SERIALIZE_TO_IPC_FN]();
-    }
-  };
-
-  // node_modules/@tauri-apps/api/window.js
-  init_event();
-  init_core();
-
-  // node_modules/@tauri-apps/api/image.js
-  init_core();
-  var Image2 = class _Image extends Resource {
-    /**
-     * Creates an Image from a resource ID. For internal use only.
-     *
-     * @ignore
-     */
-    constructor(rid) {
-      super(rid);
-    }
-    /** Creates a new Image using RGBA data, in row-major order from top to bottom, and with specified width and height. */
-    static async new(rgba2, width, height) {
-      return invoke("plugin:image|new", {
-        rgba: transformImage(rgba2),
-        width,
-        height
-      }).then((rid) => new _Image(rid));
-    }
-    /**
-     * Creates a new image using the provided bytes by inferring the file format.
-     * If the format is known, prefer [@link Image.fromPngBytes] or [@link Image.fromIcoBytes].
-     *
-     * Only `ico` and `png` are supported (based on activated feature flag).
-     *
-     * Note that you need the `image-ico` or `image-png` Cargo features to use this API.
-     * To enable it, change your Cargo.toml file:
-     * ```toml
-     * [dependencies]
-     * tauri = { version = "...", features = ["...", "image-png"] }
-     * ```
-     */
-    static async fromBytes(bytes) {
-      return invoke("plugin:image|from_bytes", {
-        bytes: transformImage(bytes)
-      }).then((rid) => new _Image(rid));
-    }
-    /**
-     * Creates a new image using the provided path.
-     *
-     * Only `ico` and `png` are supported (based on activated feature flag).
-     *
-     * Note that you need the `image-ico` or `image-png` Cargo features to use this API.
-     * To enable it, change your Cargo.toml file:
-     * ```toml
-     * [dependencies]
-     * tauri = { version = "...", features = ["...", "image-png"] }
-     * ```
-     */
-    static async fromPath(path) {
-      return invoke("plugin:image|from_path", { path }).then((rid) => new _Image(rid));
-    }
-    /** Returns the RGBA data for this image, in row-major order from top to bottom.  */
-    async rgba() {
-      return invoke("plugin:image|rgba", {
-        rid: this.rid
-      }).then((buffer) => new Uint8Array(buffer));
-    }
-    /** Returns the size of this image.  */
-    async size() {
-      return invoke("plugin:image|size", { rid: this.rid });
-    }
-  };
-  function transformImage(image) {
-    const ret = image == null ? null : typeof image === "string" ? image : image instanceof Image2 ? image.rid : image;
-    return ret;
-  }
-
-  // node_modules/@tauri-apps/api/window.js
-  var UserAttentionType;
-  (function(UserAttentionType2) {
-    UserAttentionType2[UserAttentionType2["Critical"] = 1] = "Critical";
-    UserAttentionType2[UserAttentionType2["Informational"] = 2] = "Informational";
-  })(UserAttentionType || (UserAttentionType = {}));
-  var CloseRequestedEvent = class {
-    constructor(event) {
-      this._preventDefault = false;
-      this.event = event.event;
-      this.id = event.id;
-    }
-    preventDefault() {
-      this._preventDefault = true;
-    }
-    isPreventDefault() {
-      return this._preventDefault;
-    }
-  };
-  var ProgressBarStatus;
-  (function(ProgressBarStatus2) {
-    ProgressBarStatus2["None"] = "none";
-    ProgressBarStatus2["Normal"] = "normal";
-    ProgressBarStatus2["Indeterminate"] = "indeterminate";
-    ProgressBarStatus2["Paused"] = "paused";
-    ProgressBarStatus2["Error"] = "error";
-  })(ProgressBarStatus || (ProgressBarStatus = {}));
-  function getCurrentWindow() {
-    return new Window(window.__TAURI_INTERNALS__.metadata.currentWindow.label, {
-      // @ts-expect-error `skip` is not defined in the public API but it is handled by the constructor
-      skip: true
-    });
-  }
-  async function getAllWindows() {
-    return invoke("plugin:window|get_all_windows").then((windows) => windows.map((w) => new Window(w, {
-      // @ts-expect-error `skip` is not defined in the public API but it is handled by the constructor
-      skip: true
-    })));
-  }
-  var localTauriEvents = ["tauri://created", "tauri://error"];
-  var Window = class {
-    /**
-     * Creates a new Window.
-     * @example
-     * ```typescript
-     * import { Window } from '@tauri-apps/api/window';
-     * const appWindow = new Window('my-label');
-     * appWindow.once('tauri://created', function () {
-     *  // window successfully created
-     * });
-     * appWindow.once('tauri://error', function (e) {
-     *  // an error happened creating the window
-     * });
-     * ```
-     *
-     * @param label The unique window label. Must be alphanumeric: `a-zA-Z-/:_`.
-     * @returns The {@link Window} instance to communicate with the window.
-     */
-    constructor(label, options = {}) {
-      var _a;
-      this.label = label;
-      this.listeners = /* @__PURE__ */ Object.create(null);
-      if (!(options === null || options === void 0 ? void 0 : options.skip)) {
-        invoke("plugin:window|create", {
-          options: {
-            ...options,
-            parent: typeof options.parent === "string" ? options.parent : (_a = options.parent) === null || _a === void 0 ? void 0 : _a.label,
-            label
-          }
-        }).then(async () => this.emit("tauri://created")).catch(async (e) => this.emit("tauri://error", e));
-      }
-    }
-    /**
-     * Gets the Window associated with the given label.
-     * @example
-     * ```typescript
-     * import { Window } from '@tauri-apps/api/window';
-     * const mainWindow = Window.getByLabel('main');
-     * ```
-     *
-     * @param label The window label.
-     * @returns The Window instance to communicate with the window or null if the window doesn't exist.
-     */
-    static async getByLabel(label) {
-      var _a;
-      return (_a = (await getAllWindows()).find((w) => w.label === label)) !== null && _a !== void 0 ? _a : null;
-    }
-    /**
-     * Get an instance of `Window` for the current window.
-     */
-    static getCurrent() {
-      return getCurrentWindow();
-    }
-    /**
-     * Gets a list of instances of `Window` for all available windows.
-     */
-    static async getAll() {
-      return getAllWindows();
-    }
-    /**
-     *  Gets the focused window.
-     * @example
-     * ```typescript
-     * import { Window } from '@tauri-apps/api/window';
-     * const focusedWindow = Window.getFocusedWindow();
-     * ```
-     *
-     * @returns The Window instance or `undefined` if there is not any focused window.
-     */
-    static async getFocusedWindow() {
-      for (const w of await getAllWindows()) {
-        if (await w.isFocused()) {
-          return w;
-        }
-      }
-      return null;
-    }
-    /**
-     * Listen to an emitted event on this window.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const unlisten = await getCurrentWindow().listen<string>('state-changed', (event) => {
-     *   console.log(`Got error: ${payload}`);
-     * });
-     *
-     * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-     * unlisten();
-     * ```
-     *
-     * @param event Event name. Must include only alphanumeric characters, `-`, `/`, `:` and `_`.
-     * @param handler Event handler.
-     * @returns A promise resolving to a function to unlisten to the event.
-     * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
-     */
-    async listen(event, handler) {
-      if (this._handleTauriEvent(event, handler)) {
-        return () => {
-          const listeners = this.listeners[event];
-          listeners.splice(listeners.indexOf(handler), 1);
-        };
-      }
-      return listen(event, handler, {
-        target: { kind: "Window", label: this.label }
-      });
-    }
-    /**
-     * Listen to an emitted event on this window only once.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const unlisten = await getCurrentWindow().once<null>('initialized', (event) => {
-     *   console.log(`Window initialized!`);
-     * });
-     *
-     * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-     * unlisten();
-     * ```
-     *
-     * @param event Event name. Must include only alphanumeric characters, `-`, `/`, `:` and `_`.
-     * @param handler Event handler.
-     * @returns A promise resolving to a function to unlisten to the event.
-     * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
-     */
-    async once(event, handler) {
-      if (this._handleTauriEvent(event, handler)) {
-        return () => {
-          const listeners = this.listeners[event];
-          listeners.splice(listeners.indexOf(handler), 1);
-        };
-      }
-      return once(event, handler, {
-        target: { kind: "Window", label: this.label }
-      });
-    }
-    /**
-     * Emits an event to all {@link EventTarget|targets}.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().emit('window-loaded', { loggedIn: true, token: 'authToken' });
-     * ```
-     *
-     * @param event Event name. Must include only alphanumeric characters, `-`, `/`, `:` and `_`.
-     * @param payload Event payload.
-     */
-    async emit(event, payload) {
-      if (localTauriEvents.includes(event)) {
-        for (const handler of this.listeners[event] || []) {
-          handler({
-            event,
-            id: -1,
-            payload
-          });
-        }
-        return;
-      }
-      return emit(event, payload);
-    }
-    /**
-     * Emits an event to all {@link EventTarget|targets} matching the given target.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().emit('main', 'window-loaded', { loggedIn: true, token: 'authToken' });
-     * ```
-     * @param target Label of the target Window/Webview/WebviewWindow or raw {@link EventTarget} object.
-     * @param event Event name. Must include only alphanumeric characters, `-`, `/`, `:` and `_`.
-     * @param payload Event payload.
-     */
-    async emitTo(target, event, payload) {
-      if (localTauriEvents.includes(event)) {
-        for (const handler of this.listeners[event] || []) {
-          handler({
-            event,
-            id: -1,
-            payload
-          });
-        }
-        return;
-      }
-      return emitTo(target, event, payload);
-    }
-    /** @ignore */
-    _handleTauriEvent(event, handler) {
-      if (localTauriEvents.includes(event)) {
-        if (!(event in this.listeners)) {
-          this.listeners[event] = [handler];
-        } else {
-          this.listeners[event].push(handler);
-        }
-        return true;
-      }
-      return false;
-    }
-    // Getters
-    /**
-     * The scale factor that can be used to map physical pixels to logical pixels.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const factor = await getCurrentWindow().scaleFactor();
-     * ```
-     *
-     * @returns The window's monitor scale factor.
-     */
-    async scaleFactor() {
-      return invoke("plugin:window|scale_factor", {
-        label: this.label
-      });
-    }
-    /**
-     * The position of the top-left hand corner of the window's client area relative to the top-left hand corner of the desktop.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const position = await getCurrentWindow().innerPosition();
-     * ```
-     *
-     * @returns The window's inner position.
-     */
-    async innerPosition() {
-      return invoke("plugin:window|inner_position", {
-        label: this.label
-      }).then((p) => new PhysicalPosition(p));
-    }
-    /**
-     * The position of the top-left hand corner of the window relative to the top-left hand corner of the desktop.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const position = await getCurrentWindow().outerPosition();
-     * ```
-     *
-     * @returns The window's outer position.
-     */
-    async outerPosition() {
-      return invoke("plugin:window|outer_position", {
-        label: this.label
-      }).then((p) => new PhysicalPosition(p));
-    }
-    /**
-     * The physical size of the window's client area.
-     * The client area is the content of the window, excluding the title bar and borders.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const size = await getCurrentWindow().innerSize();
-     * ```
-     *
-     * @returns The window's inner size.
-     */
-    async innerSize() {
-      return invoke("plugin:window|inner_size", {
-        label: this.label
-      }).then((s) => new PhysicalSize(s));
-    }
-    /**
-     * The physical size of the entire window.
-     * These dimensions include the title bar and borders. If you don't want that (and you usually don't), use inner_size instead.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const size = await getCurrentWindow().outerSize();
-     * ```
-     *
-     * @returns The window's outer size.
-     */
-    async outerSize() {
-      return invoke("plugin:window|outer_size", {
-        label: this.label
-      }).then((s) => new PhysicalSize(s));
-    }
-    /**
-     * Gets the window's current fullscreen state.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const fullscreen = await getCurrentWindow().isFullscreen();
-     * ```
-     *
-     * @returns Whether the window is in fullscreen mode or not.
-     */
-    async isFullscreen() {
-      return invoke("plugin:window|is_fullscreen", {
-        label: this.label
-      });
-    }
-    /**
-     * Gets the window's current minimized state.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const minimized = await getCurrentWindow().isMinimized();
-     * ```
-     */
-    async isMinimized() {
-      return invoke("plugin:window|is_minimized", {
-        label: this.label
-      });
-    }
-    /**
-     * Gets the window's current maximized state.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const maximized = await getCurrentWindow().isMaximized();
-     * ```
-     *
-     * @returns Whether the window is maximized or not.
-     */
-    async isMaximized() {
-      return invoke("plugin:window|is_maximized", {
-        label: this.label
-      });
-    }
-    /**
-     * Gets the window's current focus state.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const focused = await getCurrentWindow().isFocused();
-     * ```
-     *
-     * @returns Whether the window is focused or not.
-     */
-    async isFocused() {
-      return invoke("plugin:window|is_focused", {
-        label: this.label
-      });
-    }
-    /**
-     * Gets the window's current decorated state.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const decorated = await getCurrentWindow().isDecorated();
-     * ```
-     *
-     * @returns Whether the window is decorated or not.
-     */
-    async isDecorated() {
-      return invoke("plugin:window|is_decorated", {
-        label: this.label
-      });
-    }
-    /**
-     * Gets the window's current resizable state.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const resizable = await getCurrentWindow().isResizable();
-     * ```
-     *
-     * @returns Whether the window is resizable or not.
-     */
-    async isResizable() {
-      return invoke("plugin:window|is_resizable", {
-        label: this.label
-      });
-    }
-    /**
-     * Gets the window's native maximize button state.
-     *
-     * #### Platform-specific
-     *
-     * - **Linux / iOS / Android:** Unsupported.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const maximizable = await getCurrentWindow().isMaximizable();
-     * ```
-     *
-     * @returns Whether the window's native maximize button is enabled or not.
-     */
-    async isMaximizable() {
-      return invoke("plugin:window|is_maximizable", {
-        label: this.label
-      });
-    }
-    /**
-     * Gets the window's native minimize button state.
-     *
-     * #### Platform-specific
-     *
-     * - **Linux / iOS / Android:** Unsupported.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const minimizable = await getCurrentWindow().isMinimizable();
-     * ```
-     *
-     * @returns Whether the window's native minimize button is enabled or not.
-     */
-    async isMinimizable() {
-      return invoke("plugin:window|is_minimizable", {
-        label: this.label
-      });
-    }
-    /**
-     * Gets the window's native close button state.
-     *
-     * #### Platform-specific
-     *
-     * - **iOS / Android:** Unsupported.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const closable = await getCurrentWindow().isClosable();
-     * ```
-     *
-     * @returns Whether the window's native close button is enabled or not.
-     */
-    async isClosable() {
-      return invoke("plugin:window|is_closable", {
-        label: this.label
-      });
-    }
-    /**
-     * Gets the window's current visible state.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const visible = await getCurrentWindow().isVisible();
-     * ```
-     *
-     * @returns Whether the window is visible or not.
-     */
-    async isVisible() {
-      return invoke("plugin:window|is_visible", {
-        label: this.label
-      });
-    }
-    /**
-     * Gets the window's current title.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const title = await getCurrentWindow().title();
-     * ```
-     */
-    async title() {
-      return invoke("plugin:window|title", {
-        label: this.label
-      });
-    }
-    /**
-     * Gets the window's current theme.
-     *
-     * #### Platform-specific
-     *
-     * - **macOS:** Theme was introduced on macOS 10.14. Returns `light` on macOS 10.13 and below.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const theme = await getCurrentWindow().theme();
-     * ```
-     *
-     * @returns The window theme.
-     */
-    async theme() {
-      return invoke("plugin:window|theme", {
-        label: this.label
-      });
-    }
-    /**
-     * Whether the window is configured to be always on top of other windows or not.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * const alwaysOnTop = await getCurrentWindow().isAlwaysOnTop();
-     * ```
-     *
-     * @returns Whether the window is visible or not.
-     */
-    async isAlwaysOnTop() {
-      return invoke("plugin:window|is_always_on_top", {
-        label: this.label
-      });
-    }
-    // Setters
-    /**
-     * Centers the window.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().center();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async center() {
-      return invoke("plugin:window|center", {
-        label: this.label
-      });
-    }
-    /**
-     *  Requests user attention to the window, this has no effect if the application
-     * is already focused. How requesting for user attention manifests is platform dependent,
-     * see `UserAttentionType` for details.
-     *
-     * Providing `null` will unset the request for user attention. Unsetting the request for
-     * user attention might not be done automatically by the WM when the window receives input.
-     *
-     * #### Platform-specific
-     *
-     * - **macOS:** `null` has no effect.
-     * - **Linux:** Urgency levels have the same effect.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().requestUserAttention();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async requestUserAttention(requestType) {
-      let requestType_ = null;
-      if (requestType) {
-        if (requestType === UserAttentionType.Critical) {
-          requestType_ = { type: "Critical" };
-        } else {
-          requestType_ = { type: "Informational" };
-        }
-      }
-      return invoke("plugin:window|request_user_attention", {
-        label: this.label,
-        value: requestType_
-      });
-    }
-    /**
-     * Updates the window resizable flag.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setResizable(false);
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setResizable(resizable) {
-      return invoke("plugin:window|set_resizable", {
-        label: this.label,
-        value: resizable
-      });
-    }
-    /**
-     * Enable or disable the window.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setEnabled(false);
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     *
-     * @since 2.0.0
-     */
-    async setEnabled(enabled) {
-      return invoke("plugin:window|set_enabled", {
-        label: this.label,
-        value: enabled
-      });
-    }
-    /**
-     * Whether the window is enabled or disabled.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setEnabled(false);
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     *
-     * @since 2.0.0
-     */
-    async isEnabled() {
-      return invoke("plugin:window|is_enabled", {
-        label: this.label
-      });
-    }
-    /**
-     * Sets whether the window's native maximize button is enabled or not.
-     * If resizable is set to false, this setting is ignored.
-     *
-     * #### Platform-specific
-     *
-     * - **macOS:** Disables the "zoom" button in the window titlebar, which is also used to enter fullscreen mode.
-     * - **Linux / iOS / Android:** Unsupported.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setMaximizable(false);
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setMaximizable(maximizable) {
-      return invoke("plugin:window|set_maximizable", {
-        label: this.label,
-        value: maximizable
-      });
-    }
-    /**
-     * Sets whether the window's native minimize button is enabled or not.
-     *
-     * #### Platform-specific
-     *
-     * - **Linux / iOS / Android:** Unsupported.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setMinimizable(false);
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setMinimizable(minimizable) {
-      return invoke("plugin:window|set_minimizable", {
-        label: this.label,
-        value: minimizable
-      });
-    }
-    /**
-     * Sets whether the window's native close button is enabled or not.
-     *
-     * #### Platform-specific
-     *
-     * - **Linux:** GTK+ will do its best to convince the window manager not to show a close button. Depending on the system, this function may not have any effect when called on a window that is already visible
-     * - **iOS / Android:** Unsupported.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setClosable(false);
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setClosable(closable) {
-      return invoke("plugin:window|set_closable", {
-        label: this.label,
-        value: closable
-      });
-    }
-    /**
-     * Sets the window title.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setTitle('Tauri');
-     * ```
-     *
-     * @param title The new title
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setTitle(title) {
-      return invoke("plugin:window|set_title", {
-        label: this.label,
-        value: title
-      });
-    }
-    /**
-     * Maximizes the window.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().maximize();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async maximize() {
-      return invoke("plugin:window|maximize", {
-        label: this.label
-      });
-    }
-    /**
-     * Unmaximizes the window.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().unmaximize();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async unmaximize() {
-      return invoke("plugin:window|unmaximize", {
-        label: this.label
-      });
-    }
-    /**
-     * Toggles the window maximized state.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().toggleMaximize();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async toggleMaximize() {
-      return invoke("plugin:window|toggle_maximize", {
-        label: this.label
-      });
-    }
-    /**
-     * Minimizes the window.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().minimize();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async minimize() {
-      return invoke("plugin:window|minimize", {
-        label: this.label
-      });
-    }
-    /**
-     * Unminimizes the window.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().unminimize();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async unminimize() {
-      return invoke("plugin:window|unminimize", {
-        label: this.label
-      });
-    }
-    /**
-     * Sets the window visibility to true.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().show();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async show() {
-      return invoke("plugin:window|show", {
-        label: this.label
-      });
-    }
-    /**
-     * Sets the window visibility to false.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().hide();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async hide() {
-      return invoke("plugin:window|hide", {
-        label: this.label
-      });
-    }
-    /**
-     * Closes the window.
-     *
-     * Note this emits a closeRequested event so you can intercept it. To force window close, use {@link Window.destroy}.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().close();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async close() {
-      return invoke("plugin:window|close", {
-        label: this.label
-      });
-    }
-    /**
-     * Destroys the window. Behaves like {@link Window.close} but forces the window close instead of emitting a closeRequested event.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().destroy();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async destroy() {
-      return invoke("plugin:window|destroy", {
-        label: this.label
-      });
-    }
-    /**
-     * Whether the window should have borders and bars.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setDecorations(false);
-     * ```
-     *
-     * @param decorations Whether the window should have borders and bars.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setDecorations(decorations) {
-      return invoke("plugin:window|set_decorations", {
-        label: this.label,
-        value: decorations
-      });
-    }
-    /**
-     * Whether or not the window should have shadow.
-     *
-     * #### Platform-specific
-     *
-     * - **Windows:**
-     *   - `false` has no effect on decorated window, shadows are always ON.
-     *   - `true` will make undecorated window have a 1px white border,
-     * and on Windows 11, it will have a rounded corners.
-     * - **Linux:** Unsupported.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setShadow(false);
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setShadow(enable) {
-      return invoke("plugin:window|set_shadow", {
-        label: this.label,
-        value: enable
-      });
-    }
-    /**
-     * Set window effects.
-     */
-    async setEffects(effects) {
-      return invoke("plugin:window|set_effects", {
-        label: this.label,
-        value: effects
-      });
-    }
-    /**
-     * Clear any applied effects if possible.
-     */
-    async clearEffects() {
-      return invoke("plugin:window|set_effects", {
-        label: this.label,
-        value: null
-      });
-    }
-    /**
-     * Whether the window should always be on top of other windows.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setAlwaysOnTop(true);
-     * ```
-     *
-     * @param alwaysOnTop Whether the window should always be on top of other windows or not.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setAlwaysOnTop(alwaysOnTop) {
-      return invoke("plugin:window|set_always_on_top", {
-        label: this.label,
-        value: alwaysOnTop
-      });
-    }
-    /**
-     * Whether the window should always be below other windows.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setAlwaysOnBottom(true);
-     * ```
-     *
-     * @param alwaysOnBottom Whether the window should always be below other windows or not.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setAlwaysOnBottom(alwaysOnBottom) {
-      return invoke("plugin:window|set_always_on_bottom", {
-        label: this.label,
-        value: alwaysOnBottom
-      });
-    }
-    /**
-     * Prevents the window contents from being captured by other apps.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setContentProtected(true);
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setContentProtected(protected_) {
-      return invoke("plugin:window|set_content_protected", {
-        label: this.label,
-        value: protected_
-      });
-    }
-    /**
-     * Resizes the window with a new inner size.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setSize(new LogicalSize(600, 500));
-     * ```
-     *
-     * @param size The logical or physical inner size.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setSize(size) {
-      return invoke("plugin:window|set_size", {
-        label: this.label,
-        value: size instanceof Size ? size : new Size(size)
-      });
-    }
-    /**
-     * Sets the window minimum inner size. If the `size` argument is not provided, the constraint is unset.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow, PhysicalSize } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setMinSize(new PhysicalSize(600, 500));
-     * ```
-     *
-     * @param size The logical or physical inner size, or `null` to unset the constraint.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setMinSize(size) {
-      return invoke("plugin:window|set_min_size", {
-        label: this.label,
-        value: size instanceof Size ? size : size ? new Size(size) : null
-      });
-    }
-    /**
-     * Sets the window maximum inner size. If the `size` argument is undefined, the constraint is unset.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setMaxSize(new LogicalSize(600, 500));
-     * ```
-     *
-     * @param size The logical or physical inner size, or `null` to unset the constraint.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setMaxSize(size) {
-      return invoke("plugin:window|set_max_size", {
-        label: this.label,
-        value: size instanceof Size ? size : size ? new Size(size) : null
-      });
-    }
-    /**
-     * Sets the window inner size constraints.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setSizeConstraints({ minWidth: 300 });
-     * ```
-     *
-     * @param constraints The logical or physical inner size, or `null` to unset the constraint.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setSizeConstraints(constraints) {
-      function logical(pixel) {
-        return pixel ? { Logical: pixel } : null;
-      }
-      return invoke("plugin:window|set_size_constraints", {
-        label: this.label,
-        value: {
-          minWidth: logical(constraints === null || constraints === void 0 ? void 0 : constraints.minWidth),
-          minHeight: logical(constraints === null || constraints === void 0 ? void 0 : constraints.minHeight),
-          maxWidth: logical(constraints === null || constraints === void 0 ? void 0 : constraints.maxWidth),
-          maxHeight: logical(constraints === null || constraints === void 0 ? void 0 : constraints.maxHeight)
-        }
-      });
-    }
-    /**
-     * Sets the window outer position.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow, LogicalPosition } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setPosition(new LogicalPosition(600, 500));
-     * ```
-     *
-     * @param position The new position, in logical or physical pixels.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setPosition(position) {
-      return invoke("plugin:window|set_position", {
-        label: this.label,
-        value: position instanceof Position ? position : new Position(position)
-      });
-    }
-    /**
-     * Sets the window fullscreen state.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setFullscreen(true);
-     * ```
-     *
-     * @param fullscreen Whether the window should go to fullscreen or not.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setFullscreen(fullscreen) {
-      return invoke("plugin:window|set_fullscreen", {
-        label: this.label,
-        value: fullscreen
-      });
-    }
-    /**
-     * On macOS, Toggles a fullscreen mode that doesn’t require a new macOS space. Returns a boolean indicating whether the transition was successful (this won’t work if the window was already in the native fullscreen).
-     * This is how fullscreen used to work on macOS in versions before Lion. And allows the user to have a fullscreen window without using another space or taking control over the entire monitor.
-     *
-     * On other platforms, this is the same as {@link Window.setFullscreen}.
-     *
-     * @param fullscreen Whether the window should go to simple fullscreen or not.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setSimpleFullscreen(fullscreen) {
-      return invoke("plugin:window|set_simple_fullscreen", {
-        label: this.label,
-        value: fullscreen
-      });
-    }
-    /**
-     * Bring the window to front and focus.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setFocus();
-     * ```
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setFocus() {
-      return invoke("plugin:window|set_focus", {
-        label: this.label
-      });
-    }
-    /**
-     * Sets whether the window can be focused.
-     *
-     * #### Platform-specific
-     *
-     * - **macOS**: If the window is already focused, it is not possible to unfocus it after calling `set_focusable(false)`.
-     *   In this case, you might consider calling {@link Window.setFocus} but it will move the window to the back i.e. at the bottom in terms of z-order.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setFocusable(true);
-     * ```
-     *
-     * @param focusable Whether the window can be focused.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setFocusable(focusable) {
-      return invoke("plugin:window|set_focusable", {
-        label: this.label,
-        value: focusable
-      });
-    }
-    /**
-     * Sets the window icon.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setIcon('/tauri/awesome.png');
-     * ```
-     *
-     * Note that you may need the `image-ico` or `image-png` Cargo features to use this API.
-     * To enable it, change your Cargo.toml file:
-     * ```toml
-     * [dependencies]
-     * tauri = { version = "...", features = ["...", "image-png"] }
-     * ```
-     *
-     * @param icon Icon bytes or path to the icon file.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setIcon(icon) {
-      return invoke("plugin:window|set_icon", {
-        label: this.label,
-        value: transformImage(icon)
-      });
-    }
-    /**
-     * Whether the window icon should be hidden from the taskbar or not.
-     *
-     * #### Platform-specific
-     *
-     * - **macOS:** Unsupported.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setSkipTaskbar(true);
-     * ```
-     *
-     * @param skip true to hide window icon, false to show it.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setSkipTaskbar(skip) {
-      return invoke("plugin:window|set_skip_taskbar", {
-        label: this.label,
-        value: skip
-      });
-    }
-    /**
-     * Grabs the cursor, preventing it from leaving the window.
-     *
-     * There's no guarantee that the cursor will be hidden. You should
-     * hide it by yourself if you want so.
-     *
-     * #### Platform-specific
-     *
-     * - **Linux:** Unsupported.
-     * - **macOS:** This locks the cursor in a fixed location, which looks visually awkward.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setCursorGrab(true);
-     * ```
-     *
-     * @param grab `true` to grab the cursor icon, `false` to release it.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setCursorGrab(grab) {
-      return invoke("plugin:window|set_cursor_grab", {
-        label: this.label,
-        value: grab
-      });
-    }
-    /**
-     * Modifies the cursor's visibility.
-     *
-     * #### Platform-specific
-     *
-     * - **Windows:** The cursor is only hidden within the confines of the window.
-     * - **macOS:** The cursor is hidden as long as the window has input focus, even if the cursor is
-     *   outside of the window.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setCursorVisible(false);
-     * ```
-     *
-     * @param visible If `false`, this will hide the cursor. If `true`, this will show the cursor.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setCursorVisible(visible) {
-      return invoke("plugin:window|set_cursor_visible", {
-        label: this.label,
-        value: visible
-      });
-    }
-    /**
-     * Modifies the cursor icon of the window.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setCursorIcon('help');
-     * ```
-     *
-     * @param icon The new cursor icon.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setCursorIcon(icon) {
-      return invoke("plugin:window|set_cursor_icon", {
-        label: this.label,
-        value: icon
-      });
-    }
-    /**
-     * Sets the window background color.
-     *
-     * #### Platform-specific:
-     *
-     * - **Windows:** alpha channel is ignored.
-     * - **iOS / Android:** Unsupported.
-     *
-     * @returns A promise indicating the success or failure of the operation.
-     *
-     * @since 2.1.0
-     */
-    async setBackgroundColor(color2) {
-      return invoke("plugin:window|set_background_color", { color: color2 });
-    }
-    /**
-     * Changes the position of the cursor in window coordinates.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow, LogicalPosition } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setCursorPosition(new LogicalPosition(600, 300));
-     * ```
-     *
-     * @param position The new cursor position.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setCursorPosition(position) {
-      return invoke("plugin:window|set_cursor_position", {
-        label: this.label,
-        value: position instanceof Position ? position : new Position(position)
-      });
-    }
-    /**
-     * Changes the cursor events behavior.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setIgnoreCursorEvents(true);
-     * ```
-     *
-     * @param ignore `true` to ignore the cursor events; `false` to process them as usual.
-     * @returns A promise indicating the success or failure of the operation.
-     */
-    async setIgnoreCursorEvents(ignore) {
-      return invoke("plugin:window|set_ignore_cursor_events", {
-        label: this.label,
-        value: ignore
-      });
-    }
-    /**
-     * Starts dragging the window.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().startDragging();
-     * ```
-     *
-     * @return A promise indicating the success or failure of the operation.
-     */
-    async startDragging() {
-      return invoke("plugin:window|start_dragging", {
-        label: this.label
-      });
-    }
-    /**
-     * Starts resize-dragging the window.
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().startResizeDragging();
-     * ```
-     *
-     * @return A promise indicating the success or failure of the operation.
-     */
-    async startResizeDragging(direction) {
-      return invoke("plugin:window|start_resize_dragging", {
-        label: this.label,
-        value: direction
-      });
-    }
-    /**
-     * Sets the badge count. It is app wide and not specific to this window.
-     *
-     * #### Platform-specific
-     *
-     * - **Windows**: Unsupported. Use @{linkcode Window.setOverlayIcon} instead.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setBadgeCount(5);
-     * ```
-     *
-     * @param count The badge count. Use `undefined` to remove the badge.
-     * @return A promise indicating the success or failure of the operation.
-     */
-    async setBadgeCount(count) {
-      return invoke("plugin:window|set_badge_count", {
-        label: this.label,
-        value: count
-      });
-    }
-    /**
-     * Sets the badge cont **macOS only**.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setBadgeLabel("Hello");
-     * ```
-     *
-     * @param label The badge label. Use `undefined` to remove the badge.
-     * @return A promise indicating the success or failure of the operation.
-     */
-    async setBadgeLabel(label) {
-      return invoke("plugin:window|set_badge_label", {
-        label: this.label,
-        value: label
-      });
-    }
-    /**
-     * Sets the overlay icon. **Windows only**
-     * The overlay icon can be set for every window.
-     *
-     *
-     * Note that you may need the `image-ico` or `image-png` Cargo features to use this API.
-     * To enable it, change your Cargo.toml file:
-     *
-     * ```toml
-     * [dependencies]
-     * tauri = { version = "...", features = ["...", "image-png"] }
-     * ```
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setOverlayIcon("/tauri/awesome.png");
-     * ```
-     *
-     * @param icon Icon bytes or path to the icon file. Use `undefined` to remove the overlay icon.
-     * @return A promise indicating the success or failure of the operation.
-     */
-    async setOverlayIcon(icon) {
-      return invoke("plugin:window|set_overlay_icon", {
-        label: this.label,
-        value: icon ? transformImage(icon) : void 0
-      });
-    }
-    /**
-     * Sets the taskbar progress state.
-     *
-     * #### Platform-specific
-     *
-     * - **Linux / macOS**: Progress bar is app-wide and not specific to this window.
-     * - **Linux**: Only supported desktop environments with `libunity` (e.g. GNOME).
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow, ProgressBarStatus } from '@tauri-apps/api/window';
-     * await getCurrentWindow().setProgressBar({
-     *   status: ProgressBarStatus.Normal,
-     *   progress: 50,
-     * });
-     * ```
-     *
-     * @return A promise indicating the success or failure of the operation.
-     */
-    async setProgressBar(state) {
-      return invoke("plugin:window|set_progress_bar", {
-        label: this.label,
-        value: state
-      });
-    }
-    /**
-     * Sets whether the window should be visible on all workspaces or virtual desktops.
-     *
-     * #### Platform-specific
-     *
-     * - **Windows / iOS / Android:** Unsupported.
-     *
-     * @since 2.0.0
-     */
-    async setVisibleOnAllWorkspaces(visible) {
-      return invoke("plugin:window|set_visible_on_all_workspaces", {
-        label: this.label,
-        value: visible
-      });
-    }
-    /**
-     * Sets the title bar style. **macOS only**.
-     *
-     * @since 2.0.0
-     */
-    async setTitleBarStyle(style2) {
-      return invoke("plugin:window|set_title_bar_style", {
-        label: this.label,
-        value: style2
-      });
-    }
-    /**
-     * Set window theme, pass in `null` or `undefined` to follow system theme
-     *
-     * #### Platform-specific
-     *
-     * - **Linux / macOS**: Theme is app-wide and not specific to this window.
-     * - **iOS / Android:** Unsupported.
-     *
-     * @since 2.0.0
-     */
-    async setTheme(theme) {
-      return invoke("plugin:window|set_theme", {
-        label: this.label,
-        value: theme
-      });
-    }
-    // Listeners
-    /**
-     * Listen to window resize.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from "@tauri-apps/api/window";
-     * const unlisten = await getCurrentWindow().onResized(({ payload: size }) => {
-     *  console.log('Window resized', size);
-     * });
-     *
-     * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-     * unlisten();
-     * ```
-     *
-     * @returns A promise resolving to a function to unlisten to the event.
-     * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
-     */
-    async onResized(handler) {
-      return this.listen(TauriEvent.WINDOW_RESIZED, (e) => {
-        e.payload = new PhysicalSize(e.payload);
-        handler(e);
-      });
-    }
-    /**
-     * Listen to window move.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from "@tauri-apps/api/window";
-     * const unlisten = await getCurrentWindow().onMoved(({ payload: position }) => {
-     *  console.log('Window moved', position);
-     * });
-     *
-     * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-     * unlisten();
-     * ```
-     *
-     * @returns A promise resolving to a function to unlisten to the event.
-     * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
-     */
-    async onMoved(handler) {
-      return this.listen(TauriEvent.WINDOW_MOVED, (e) => {
-        e.payload = new PhysicalPosition(e.payload);
-        handler(e);
-      });
-    }
-    /**
-     * Listen to window close requested. Emitted when the user requests to closes the window.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from "@tauri-apps/api/window";
-     * import { confirm } from '@tauri-apps/api/dialog';
-     * const unlisten = await getCurrentWindow().onCloseRequested(async (event) => {
-     *   const confirmed = await confirm('Are you sure?');
-     *   if (!confirmed) {
-     *     // user did not confirm closing the window; let's prevent it
-     *     event.preventDefault();
-     *   }
-     * });
-     *
-     * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-     * unlisten();
-     * ```
-     *
-     * @returns A promise resolving to a function to unlisten to the event.
-     * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
-     */
-    async onCloseRequested(handler) {
-      return this.listen(TauriEvent.WINDOW_CLOSE_REQUESTED, async (event) => {
-        const evt = new CloseRequestedEvent(event);
-        await handler(evt);
-        if (!evt.isPreventDefault()) {
-          await this.destroy();
-        }
-      });
-    }
-    /**
-     * Listen to a file drop event.
-     * The listener is triggered when the user hovers the selected files on the webview,
-     * drops the files or cancels the operation.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from "@tauri-apps/api/webview";
-     * const unlisten = await getCurrentWindow().onDragDropEvent((event) => {
-     *  if (event.payload.type === 'over') {
-     *    console.log('User hovering', event.payload.position);
-     *  } else if (event.payload.type === 'drop') {
-     *    console.log('User dropped', event.payload.paths);
-     *  } else {
-     *    console.log('File drop cancelled');
-     *  }
-     * });
-     *
-     * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-     * unlisten();
-     * ```
-     *
-     * @returns A promise resolving to a function to unlisten to the event.
-     * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
-     */
-    async onDragDropEvent(handler) {
-      const unlistenDrag = await this.listen(TauriEvent.DRAG_ENTER, (event) => {
-        handler({
-          ...event,
-          payload: {
-            type: "enter",
-            paths: event.payload.paths,
-            position: new PhysicalPosition(event.payload.position)
-          }
-        });
-      });
-      const unlistenDragOver = await this.listen(TauriEvent.DRAG_OVER, (event) => {
-        handler({
-          ...event,
-          payload: {
-            type: "over",
-            position: new PhysicalPosition(event.payload.position)
-          }
-        });
-      });
-      const unlistenDrop = await this.listen(TauriEvent.DRAG_DROP, (event) => {
-        handler({
-          ...event,
-          payload: {
-            type: "drop",
-            paths: event.payload.paths,
-            position: new PhysicalPosition(event.payload.position)
-          }
-        });
-      });
-      const unlistenCancel = await this.listen(TauriEvent.DRAG_LEAVE, (event) => {
-        handler({ ...event, payload: { type: "leave" } });
-      });
-      return () => {
-        unlistenDrag();
-        unlistenDrop();
-        unlistenDragOver();
-        unlistenCancel();
-      };
-    }
-    /**
-     * Listen to window focus change.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from "@tauri-apps/api/window";
-     * const unlisten = await getCurrentWindow().onFocusChanged(({ payload: focused }) => {
-     *  console.log('Focus changed, window is focused? ' + focused);
-     * });
-     *
-     * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-     * unlisten();
-     * ```
-     *
-     * @returns A promise resolving to a function to unlisten to the event.
-     * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
-     */
-    async onFocusChanged(handler) {
-      const unlistenFocus = await this.listen(TauriEvent.WINDOW_FOCUS, (event) => {
-        handler({ ...event, payload: true });
-      });
-      const unlistenBlur = await this.listen(TauriEvent.WINDOW_BLUR, (event) => {
-        handler({ ...event, payload: false });
-      });
-      return () => {
-        unlistenFocus();
-        unlistenBlur();
-      };
-    }
-    /**
-     * Listen to window scale change. Emitted when the window's scale factor has changed.
-     * The following user actions can cause DPI changes:
-     * - Changing the display's resolution.
-     * - Changing the display's scale factor (e.g. in Control Panel on Windows).
-     * - Moving the window to a display with a different scale factor.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from "@tauri-apps/api/window";
-     * const unlisten = await getCurrentWindow().onScaleChanged(({ payload }) => {
-     *  console.log('Scale changed', payload.scaleFactor, payload.size);
-     * });
-     *
-     * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-     * unlisten();
-     * ```
-     *
-     * @returns A promise resolving to a function to unlisten to the event.
-     * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
-     */
-    async onScaleChanged(handler) {
-      return this.listen(TauriEvent.WINDOW_SCALE_FACTOR_CHANGED, handler);
-    }
-    /**
-     * Listen to the system theme change.
-     *
-     * @example
-     * ```typescript
-     * import { getCurrentWindow } from "@tauri-apps/api/window";
-     * const unlisten = await getCurrentWindow().onThemeChanged(({ payload: theme }) => {
-     *  console.log('New theme: ' + theme);
-     * });
-     *
-     * // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-     * unlisten();
-     * ```
-     *
-     * @returns A promise resolving to a function to unlisten to the event.
-     * Note that removing the listener is required if your listener goes out of scope e.g. the component is unmounted.
-     */
-    async onThemeChanged(handler) {
-      return this.listen(TauriEvent.WINDOW_THEME_CHANGED, handler);
-    }
-  };
-  var BackgroundThrottlingPolicy;
-  (function(BackgroundThrottlingPolicy2) {
-    BackgroundThrottlingPolicy2["Disabled"] = "disabled";
-    BackgroundThrottlingPolicy2["Throttle"] = "throttle";
-    BackgroundThrottlingPolicy2["Suspend"] = "suspend";
-  })(BackgroundThrottlingPolicy || (BackgroundThrottlingPolicy = {}));
-  var ScrollBarStyle;
-  (function(ScrollBarStyle2) {
-    ScrollBarStyle2["Default"] = "default";
-    ScrollBarStyle2["FluentOverlay"] = "fluentOverlay";
-  })(ScrollBarStyle || (ScrollBarStyle = {}));
-  var Effect;
-  (function(Effect2) {
-    Effect2["AppearanceBased"] = "appearanceBased";
-    Effect2["Light"] = "light";
-    Effect2["Dark"] = "dark";
-    Effect2["MediumLight"] = "mediumLight";
-    Effect2["UltraDark"] = "ultraDark";
-    Effect2["Titlebar"] = "titlebar";
-    Effect2["Selection"] = "selection";
-    Effect2["Menu"] = "menu";
-    Effect2["Popover"] = "popover";
-    Effect2["Sidebar"] = "sidebar";
-    Effect2["HeaderView"] = "headerView";
-    Effect2["Sheet"] = "sheet";
-    Effect2["WindowBackground"] = "windowBackground";
-    Effect2["HudWindow"] = "hudWindow";
-    Effect2["FullScreenUI"] = "fullScreenUI";
-    Effect2["Tooltip"] = "tooltip";
-    Effect2["ContentBackground"] = "contentBackground";
-    Effect2["UnderWindowBackground"] = "underWindowBackground";
-    Effect2["UnderPageBackground"] = "underPageBackground";
-    Effect2["Mica"] = "mica";
-    Effect2["Blur"] = "blur";
-    Effect2["Acrylic"] = "acrylic";
-    Effect2["Tabbed"] = "tabbed";
-    Effect2["TabbedDark"] = "tabbedDark";
-    Effect2["TabbedLight"] = "tabbedLight";
-  })(Effect || (Effect = {}));
-  var EffectState;
-  (function(EffectState2) {
-    EffectState2["FollowsWindowActiveState"] = "followsWindowActiveState";
-    EffectState2["Active"] = "active";
-    EffectState2["Inactive"] = "inactive";
-  })(EffectState || (EffectState = {}));
+  var import_core3 = __toESM(require_core2());
+  var import_window = __toESM(require_window());
 
   // lib/playback-availability.ts
   init_plugin_registry();
@@ -176256,10 +174959,10 @@
   // lib/playback/playback-session-client.ts
   async function invokeDesktop(command, payload) {
     if (!isPluginDesktopHost()) return null;
-    const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
+    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
     try {
-      if (payload) return await invoke2(command, payload);
-      return await invoke2(command);
+      if (payload) return await invoke4(command, payload);
+      return await invoke4(command);
     } catch {
       return null;
     }
@@ -176566,10 +175269,10 @@
   }
 
   // lib/tauri-avplayer.ts
-  init_core();
+  var import_core2 = __toESM(require_core2());
   async function avplayerPrepare(url, start2, sub) {
     if (!isTauriEnv) return { streamUrl: url, offset: 0 };
-    return invoke("avplayer_prepare", {
+    return (0, import_core2.invoke)("avplayer_prepare", {
       url,
       start: start2 ?? null,
       subContent: sub?.subContent ?? null,
@@ -176580,11 +175283,11 @@
   }
   async function avplayerTeardown() {
     if (!isTauriEnv) return;
-    await invoke("avplayer_teardown");
+    await (0, import_core2.invoke)("avplayer_teardown");
   }
   function airplayLog(msg) {
     if (!isTauriEnv) return;
-    void invoke("lumio_debug_log", { msg: `airplay: ${msg}` }).catch(() => {
+    void (0, import_core2.invoke)("lumio_debug_log", { msg: `airplay: ${msg}` }).catch(() => {
     });
   }
 
@@ -178490,7 +177193,7 @@ ${cue.text}`).join("\n\n")}
           }
           setPlaying(false);
           setControlsPaused(true);
-          await invoke("open_in_vlc", { url, app: getExternalPlayerApp() });
+          await (0, import_core3.invoke)("open_in_vlc", { url, app: getExternalPlayerApp() });
         } else {
           if (useMpv) {
             void setMpvPause2(true);
@@ -178516,7 +177219,7 @@ ${cue.text}`).join("\n\n")}
       setDownloadState({ type: "picking-folder" });
       try {
         const presetDir = getDownloadDir();
-        const folderPath = presetDir ? presetDir : isTauriEnv ? await invoke("pick_folder") : await (async () => {
+        const folderPath = presetDir ? presetDir : isTauriEnv ? await (0, import_core3.invoke)("pick_folder") : await (async () => {
           const folderRes = await fetch("/api/pick-folder", { method: "POST" });
           if (!folderRes.ok) throw new Error("Folder picker failed");
           const folderData = await folderRes.json();
@@ -178615,7 +177318,7 @@ ${cue.text}`).join("\n\n")}
       const container = containerRef.current;
       if (!container) return;
       scheduleBoundsResync();
-      const appWindow = isMpvEngine ? getCurrentWindow() : null;
+      const appWindow = isMpvEngine ? (0, import_window.getCurrentWindow)() : null;
       let unlistenWindowResize = null;
       let unlistenWindowMove = null;
       if (appWindow) {
@@ -178840,7 +177543,7 @@ ${cue.text}`).join("\n\n")}
         if (isMpvEngine) {
           try {
             const subtitlePath = await withTimeout(
-              invoke("download_subtitle_to_temp", { url: sub.url }),
+              (0, import_core3.invoke)("download_subtitle_to_temp", { url: sub.url }),
               5e3,
               "subtitle_temp_download_timeout"
             );
@@ -181290,13 +179993,13 @@ ${cue.text}`).join("\n\n")}
     return portalEl ? (0, import_react_dom.createPortal)(content, portalEl) : content;
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/video-player-modal-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-fV7VRq/video-player-modal-shim.ts
   function VideoPlayerModal2(props) {
     const hostComponent = globalThis.__lumioPluginRuntime?.components?.VideoPlayerModal;
     return createElement(hostComponent ?? VideoPlayerModal, props);
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/next-episode-card-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-fV7VRq/next-episode-card-shim.ts
   init_react_shim();
 
   // components/player/next-episode-card.tsx
@@ -181519,7 +180222,7 @@ ${cue.text}`).join("\n\n")}
     );
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/next-episode-card-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-fV7VRq/next-episode-card-shim.ts
   function NextEpisodeCard2(props) {
     const hostComponent = globalThis.__lumioPluginRuntime?.components?.NextEpisodeCard;
     return createElement(hostComponent ?? NextEpisodeCard, props);
@@ -181537,8 +180240,8 @@ ${cue.text}`).join("\n\n")}
   }
   async function lookupPluginStreams(url, streamProviderName, timeoutMs) {
     if (!isPluginDesktopHost()) return null;
-    const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
-    const payload = await invoke2("desktop_stream_lookup", {
+    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
+    const payload = await invoke4("desktop_stream_lookup", {
       url,
       streamProviderName: streamProviderName ?? null,
       timeoutMs: timeoutMs ?? null
@@ -181548,8 +180251,8 @@ ${cue.text}`).join("\n\n")}
   async function lookupPluginStreamsBatchRanked(requests, mediaType, season, episode) {
     if (!isPluginDesktopHost()) return null;
     if (requests.length === 0) return { streams: [], failures: [] };
-    const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
-    return invoke2("desktop_stream_lookup_batch_ranked", {
+    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
+    return invoke4("desktop_stream_lookup_batch_ranked", {
       requests: requests.map((request) => ({
         url: request.url,
         streamProviderName: request.streamProviderName ?? null,
@@ -181565,9 +180268,9 @@ ${cue.text}`).join("\n\n")}
     if (!isPluginDesktopHost()) return false;
     const stage = payload.stage.trim();
     if (!stage) return false;
-    const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
+    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
     try {
-      return await invoke2("playback_session_telemetry", {
+      return await invoke4("playback_session_telemetry", {
         payload: {
           sessionId: payload.sessionId ?? null,
           stage,
@@ -181582,8 +180285,8 @@ ${cue.text}`).join("\n\n")}
   }
   async function cancelDesktopPlaybackSessions(reason) {
     if (!isPluginDesktopHost()) return;
-    const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
-    await invoke2("playback_session_cancel_all", {
+    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
+    await invoke4("playback_session_cancel_all", {
       reason: reason?.trim() || null
     });
   }
@@ -181592,14 +180295,1441 @@ ${cue.text}`).join("\n\n")}
     const normalized = pathAndQuery.trim();
     if (!normalized.startsWith("/api/")) return null;
     try {
-      const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
-      return await invoke2("desktop_api_query", {
+      const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
+      return await invoke4("desktop_api_query", {
         pathAndQuery: normalized,
         timeoutMs: timeoutMs ?? null
       });
     } catch {
       return null;
     }
+  }
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/playback/providers/alldebrid-playback-provider.ts
+  var ALLDEBRID_PROXY = "/api/stream-providers/alldebrid";
+  function normalizeMagnets(value) {
+    if (Array.isArray(value)) return value;
+    if (value && typeof value === "object") return Object.values(value);
+    return [];
+  }
+  function pickMagnetById(magnets, id4) {
+    const normalized = normalizeMagnets(magnets);
+    if (normalized.length === 0) return null;
+    return normalized.find((entry) => String(entry.id) === id4) ?? normalized[0] ?? null;
+  }
+  function asRecord(value) {
+    return value && typeof value === "object" ? value : null;
+  }
+  function toNumber(value) {
+    if (typeof value === "number" && Number.isFinite(value)) return value;
+    if (typeof value === "string" && value.trim()) {
+      const parsed = Number(value);
+      if (Number.isFinite(parsed)) return parsed;
+    }
+    return void 0;
+  }
+  function toStringValue(value) {
+    return typeof value === "string" && value.trim() ? value : void 0;
+  }
+  function asFileNodeArray(value) {
+    if (!Array.isArray(value)) return null;
+    if (value.every((entry) => {
+      const record2 = asRecord(entry);
+      return Boolean(record2 && typeof record2.n === "string");
+    })) {
+      return value;
+    }
+    return null;
+  }
+  function normalizeStatusMagnet(raw, requestedId) {
+    const directFiles = asFileNodeArray(raw);
+    if (directFiles) {
+      const flattened = flattenFiles(directFiles);
+      const totalBytes = flattened.reduce((sum, file) => sum + file.bytes, 0);
+      const primary = flattened[0];
+      return {
+        id: Number(requestedId) || 0,
+        filename: primary?.path ?? `magnet-${requestedId}`,
+        size: totalBytes,
+        status: "Ready",
+        statusCode: 4,
+        downloaded: totalBytes,
+        uploadDate: void 0
+      };
+    }
+    const record2 = asRecord(raw);
+    if (!record2) return null;
+    const nestedMagnet = asRecord(record2.magnet);
+    const source = nestedMagnet ?? record2;
+    const id4 = toNumber(source.id) ?? toNumber(record2.id) ?? Number(requestedId);
+    const filename = toStringValue(source.filename) ?? toStringValue(source.name) ?? toStringValue(record2.filename) ?? toStringValue(record2.name) ?? `magnet-${requestedId}`;
+    const size = toNumber(source.size) ?? toNumber(record2.size) ?? 0;
+    const status = toStringValue(source.status) ?? toStringValue(source.state) ?? toStringValue(record2.status) ?? toStringValue(record2.state) ?? "";
+    const statusCode = toNumber(source.statusCode) ?? toNumber(source.status_code) ?? toNumber(record2.statusCode) ?? toNumber(record2.status_code) ?? -1;
+    const hash = toStringValue(source.hash) ?? toStringValue(source.magnet) ?? toStringValue(record2.hash) ?? toStringValue(record2.magnet);
+    const downloaded = toNumber(source.downloaded) ?? toNumber(source.downloadedSize) ?? toNumber(record2.downloaded) ?? toNumber(record2.downloadedSize);
+    const uploadDate = toNumber(source.uploadDate) ?? toNumber(source.uploadedAt) ?? toNumber(record2.uploadDate) ?? toNumber(record2.uploadedAt);
+    return {
+      id: id4,
+      filename,
+      size,
+      status,
+      statusCode,
+      hash,
+      downloaded,
+      uploadDate
+    };
+  }
+  function parseMagnetLookupId(id4) {
+    const [remoteId, hash] = id4.split("|");
+    return {
+      remoteId: remoteId || id4,
+      hash: hash?.trim() || void 0
+    };
+  }
+  async function adJson(path, body) {
+    const token = getStreamProviderAccessKey("alldebrid").trim();
+    if (!token) throw new Error("Missing AllDebrid API key");
+    const res = await fetch(`${ALLDEBRID_PROXY}${path}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        "x-ad-token": token
+      },
+      body: body?.toString() ?? ""
+    });
+    const data = await res.json();
+    if (!res.ok || data.status !== "success" || !data.data) {
+      const message = data.error?.message ?? data.error?.code ?? `HTTP ${res.status}`;
+      throw new Error(message);
+    }
+    return data.data;
+  }
+  function flattenFiles(nodes, parentPath = "") {
+    const flattened = [];
+    for (const node of nodes) {
+      const nextPath = parentPath ? `${parentPath}/${node.n}` : node.n;
+      if (node.e?.length) {
+        flattened.push(...flattenFiles(node.e, nextPath));
+        continue;
+      }
+      if (node.l) {
+        flattened.push({
+          path: nextPath,
+          bytes: node.s ?? 0,
+          link: node.l
+        });
+      }
+    }
+    return flattened;
+  }
+  function mapStatusCode(statusCode) {
+    if (statusCode === 0) return "queued";
+    if (statusCode === 1) return "downloading";
+    if (statusCode === 2) return "compressing";
+    if (statusCode === 3) return "uploading";
+    if (statusCode === 4) return "downloaded";
+    if (statusCode === 15) return "dead";
+    return "error";
+  }
+  function describeStatusCode(statusCode) {
+    switch (statusCode) {
+      case 0:
+        return "In queue";
+      case 1:
+        return "Downloading";
+      case 2:
+        return "Compressing / moving";
+      case 3:
+        return "Uploading";
+      case 4:
+        return "Ready";
+      case 5:
+        return "Upload fail";
+      case 6:
+        return "Internal error on unpacking";
+      case 7:
+        return "Not downloaded in 20 min";
+      case 8:
+        return "File too big";
+      case 9:
+        return "Internal error";
+      case 10:
+        return "Download took more than 72h";
+      case 11:
+        return "Deleted on the hoster website";
+      case 12:
+        return "Processing failed";
+      case 13:
+        return "Processing failed";
+      case 14:
+        return "Error while contacting tracker";
+      case 15:
+        return "File not available - no peer";
+      default:
+        return null;
+    }
+  }
+  function toIsoDate(timestamp) {
+    if (!timestamp) return (/* @__PURE__ */ new Date(0)).toISOString();
+    return new Date(timestamp * 1e3).toISOString();
+  }
+  function buildStatusLabel(status, statusCode) {
+    const description = describeStatusCode(statusCode);
+    if (description) return `${description} (code ${statusCode})`;
+    if (status) return `${status} (code ${statusCode})`;
+    return `Status code ${statusCode}`;
+  }
+  async function getMagnetFiles(id4) {
+    const body = new URLSearchParams();
+    body.append("id[]", id4);
+    const data = await adJson("/v4.1/magnet/files", body);
+    const magnet = pickMagnetById(data.magnets, id4);
+    if (!magnet) return [];
+    if (magnet.error) throw new Error(magnet.error.message ?? magnet.error.code ?? "Magnet files lookup failed");
+    return flattenFiles(magnet.files ?? []);
+  }
+  async function getMagnetStatus(id4) {
+    const lookup = parseMagnetLookupId(id4);
+    for (let attempt = 0; attempt < 6; attempt += 1) {
+      const targetedData = await adJson("/v4.1/magnet/status", new URLSearchParams({ id: lookup.remoteId }));
+      let normalized = normalizeMagnets(targetedData.magnets).map((entry) => normalizeStatusMagnet(entry, lookup.remoteId)).filter((entry) => Boolean(entry));
+      if (normalized.length === 0) {
+        const fullData = await adJson("/v4.1/magnet/status");
+        normalized = normalizeMagnets(fullData.magnets).map((entry) => normalizeStatusMagnet(entry, lookup.remoteId)).filter((entry) => Boolean(entry));
+      }
+      const magnet = normalized.find((entry) => String(entry.id) === lookup.remoteId) ?? (lookup.hash ? normalized.find((entry) => entry.hash?.toLowerCase() === lookup.hash?.toLowerCase()) : null) ?? normalized[0];
+      if (magnet) return magnet;
+      await new Promise((resolve) => setTimeout(resolve, 1e3));
+    }
+    return null;
+  }
+  async function pollDelayedLink(id4) {
+    for (let attempt = 0; attempt < 12; attempt += 1) {
+      const data = await adJson("/v4/link/delayed", new URLSearchParams({ id: String(id4) }));
+      if (data.status === 2 && data.link) return data.link;
+      if (data.status === 3) throw new Error("AllDebrid delayed link failed");
+      await new Promise((resolve) => setTimeout(resolve, 5e3));
+    }
+    throw new Error("AllDebrid delayed link timed out");
+  }
+  async function deleteMagnet(id4) {
+    const body = new URLSearchParams();
+    body.append("id", String(id4));
+    await adJson("/v4/magnet/delete", body);
+  }
+  async function lookupCachedStreams(candidates) {
+    const cachedHashes = /* @__PURE__ */ new Set();
+    const cachedTitles = /* @__PURE__ */ new Set();
+    const downloadableHashes = /* @__PURE__ */ new Set();
+    const downloadableTitles = /* @__PURE__ */ new Set();
+    await mapWithConcurrency(candidates, 2, async (candidate) => {
+      const body = new URLSearchParams();
+      body.append("magnets[]", candidate.infoHash);
+      let uploadedId = null;
+      try {
+        const data = await adJson("/v4/magnet/upload", body);
+        const uploaded = normalizeMagnets(data.magnets)[0];
+        if (!uploaded?.id) return;
+        uploadedId = Number(uploaded.id);
+        if (uploaded.ready) {
+          cachedHashes.add(candidate.infoHash);
+          downloadableHashes.add(candidate.infoHash);
+          if (candidate.title.trim()) {
+            cachedTitles.add(candidate.title.trim());
+            downloadableTitles.add(candidate.title.trim());
+          }
+          return;
+        }
+        const status = await getMagnetStatus(String(uploaded.id));
+        if (!status) return;
+        const mapped = mapStatusCode(status.statusCode);
+        if (mapped === "downloaded") {
+          cachedHashes.add(candidate.infoHash);
+          downloadableHashes.add(candidate.infoHash);
+          if (candidate.title.trim()) {
+            cachedTitles.add(candidate.title.trim());
+            downloadableTitles.add(candidate.title.trim());
+          }
+          return;
+        }
+        if (["queued", "downloading", "compressing", "uploading", "waiting_files_selection"].includes(mapped)) {
+          downloadableHashes.add(candidate.infoHash);
+          if (candidate.title.trim()) downloadableTitles.add(candidate.title.trim());
+        }
+      } catch {
+      } finally {
+        if (uploadedId && Number.isFinite(uploadedId)) {
+          await deleteMagnet(uploadedId).catch(() => void 0);
+        }
+      }
+    });
+    return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
+  }
+  async function unlockStreamSelection(unlockId, streams) {
+    const best = [...streams].sort((a, b) => (b.filesize ?? 0) - (a.filesize ?? 0))[0];
+    if (!best) throw new Error("No AllDebrid stream choices available");
+    return adJson(
+      "/v4/link/streaming",
+      new URLSearchParams({ id: unlockId, stream: best.id })
+    );
+  }
+  async function unlockLink(link) {
+    let data = await adJson("/v4/link/unlock", new URLSearchParams({ link }));
+    if (!data.link && data.streams?.length && data.id) {
+      data = await unlockStreamSelection(data.id, data.streams);
+    }
+    const finalLink = data.link ?? (data.delayed ? await pollDelayedLink(data.delayed) : null);
+    if (!finalLink) throw new Error("AllDebrid did not return a playable link");
+    return {
+      id: data.id ?? finalLink,
+      filename: data.filename ?? finalLink.split("/").pop()?.split("?")[0] ?? "video",
+      mimeType: "video/mp4",
+      filesize: data.filesize ?? 0,
+      link,
+      host: "alldebrid",
+      chunks: 1,
+      crc: 0,
+      download: finalLink,
+      streamable: 1
+    };
+  }
+  var alldebridPlaybackProvider = {
+    id: "alldebrid",
+    label: "AllDebrid",
+    getAccessKey() {
+      const token = getStreamProviderAccessKey("alldebrid").trim();
+      return token || null;
+    },
+    buildConfigSegment(accessKey, qualityFilter = "") {
+      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
+      segments.push(`alldebrid=${accessKey}`);
+      return segments.join("|");
+    },
+    lookupCachedStreams,
+    hideUnknownStreamsFromList() {
+      return true;
+    },
+    isMagnetSource(input) {
+      return input.trim().toLowerCase().startsWith("magnet:");
+    },
+    async addMagnet(magnet) {
+      const body = new URLSearchParams();
+      body.append("magnets[]", magnet);
+      const data = await adJson("/v4/magnet/upload", body);
+      const uploaded = normalizeMagnets(data.magnets)[0];
+      if (!uploaded?.id) {
+        throw new Error(uploaded?.error?.message ?? uploaded?.error?.code ?? "AllDebrid magnet upload failed");
+      }
+      return {
+        id: uploaded.hash ? `${String(uploaded.id)}|${uploaded.hash}` : String(uploaded.id),
+        uri: uploaded.magnet ?? magnet,
+        hash: uploaded.hash
+      };
+    },
+    async getSourceInfo(id4) {
+      const magnet = await getMagnetStatus(id4);
+      if (!magnet) throw new Error("AllDebrid magnet not found");
+      const files = await getMagnetFiles(String(magnet.id));
+      const mappedFiles = files.map((file, index3) => ({
+        id: index3 + 1,
+        path: file.path,
+        bytes: file.bytes,
+        selected: 1
+      }));
+      return {
+        id: id4,
+        filename: magnet.filename,
+        hash: "",
+        bytes: magnet.size,
+        host: "alldebrid",
+        split: 0,
+        progress: magnet.size > 0 && magnet.downloaded ? Math.round(magnet.downloaded / magnet.size * 100) : 0,
+        status: mapStatusCode(magnet.statusCode),
+        statusLabel: buildStatusLabel(magnet.status, magnet.statusCode),
+        added: toIsoDate(magnet.uploadDate),
+        links: files.map((file) => file.link),
+        original_filename: magnet.filename,
+        original_bytes: magnet.size,
+        files: mappedFiles,
+        seeders: 0
+      };
+    },
+    async selectFiles() {
+    },
+    async resolveLink(link) {
+      return unlockLink(link);
+    }
+  };
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/playback/providers/easydebrid-playback-provider.ts
+  var EASYDEBRID_PROXY = "/api/stream-providers/easydebrid";
+  var sourceState = /* @__PURE__ */ new Map();
+  var generatedFileCache = /* @__PURE__ */ new Map();
+  var directLinkCache = /* @__PURE__ */ new Map();
+  function getAccessKey() {
+    const key = getStreamProviderAccessKey("easydebrid").trim();
+    return key || null;
+  }
+  async function easyDebridJson(path, init = {}) {
+    const token = getAccessKey();
+    if (!token) throw new Error("EasyDebrid key missing");
+    const headers = new Headers(init.headers);
+    headers.set("x-ed-token", token);
+    headers.set("Accept", "application/json");
+    if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+    const response = await fetch(`${EASYDEBRID_PROXY}${path}`, {
+      ...init,
+      headers
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = data && typeof data === "object" && "error" in data && typeof data.error === "string" && data.error || data && typeof data === "object" && "message" in data && typeof data.message === "string" && data.message || `EasyDebrid request failed (${response.status})`;
+      throw new Error(message);
+    }
+    return data;
+  }
+  function extractInfoHash(input) {
+    const match = input.match(/btih:([a-f0-9]+)/i);
+    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
+  }
+  function buildSourceId(magnet) {
+    return `ed-${extractInfoHash(magnet)}`;
+  }
+  function normalizeLookupPath(file) {
+    const name = file.name?.trim() || "file";
+    const folder = file.folder?.trim();
+    return folder ? `${folder}/${name}` : name;
+  }
+  function normalizeGeneratedPath(file) {
+    const name = file.filename?.trim() || "file";
+    const directory = (file.directory ?? []).map((part) => part.trim()).filter(Boolean);
+    return directory.length > 0 ? `${directory.join("/")}/${name}` : name;
+  }
+  function toTorrentFiles(files, isSelected) {
+    return files.map((file, index3) => ({
+      id: index3 + 1,
+      path: "filename" in file ? normalizeGeneratedPath(file) : normalizeLookupPath(file),
+      bytes: file.size ?? 0,
+      selected: isSelected(index3 + 1) ? 1 : 0
+    }));
+  }
+  async function lookupSourceDetails(magnet) {
+    const data = await easyDebridJson("/link/lookupdetails", {
+      method: "POST",
+      body: JSON.stringify({ urls: [magnet] })
+    });
+    return data.result?.[0] ?? {};
+  }
+  async function lookupCachedStreams2(candidates) {
+    const magnets = candidates.map((candidate) => `magnet:?xt=urn:btih:${candidate.infoHash}`);
+    const data = await easyDebridJson("/link/lookupdetails", {
+      method: "POST",
+      body: JSON.stringify({ urls: magnets })
+    });
+    const cachedHashes = /* @__PURE__ */ new Set();
+    const cachedTitles = /* @__PURE__ */ new Set();
+    const downloadableHashes = /* @__PURE__ */ new Set();
+    const downloadableTitles = /* @__PURE__ */ new Set();
+    const results = data.result ?? [];
+    for (const [index3, result] of results.entries()) {
+      if (!result?.cached) continue;
+      const candidate = candidates[index3];
+      if (!candidate) continue;
+      cachedHashes.add(candidate.infoHash);
+      if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
+    }
+    return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
+  }
+  async function generateSourceFiles(magnet) {
+    const cached = generatedFileCache.get(magnet);
+    if (cached) return cached;
+    const data = await easyDebridJson("/link/generate", {
+      method: "POST",
+      body: JSON.stringify({ url: magnet })
+    });
+    const files = data.files ?? [];
+    generatedFileCache.set(magnet, files);
+    for (const file of files) {
+      if (!file.url) continue;
+      directLinkCache.set(file.url, {
+        filename: file.filename?.trim() || "download",
+        filesize: file.size ?? 0
+      });
+    }
+    return files;
+  }
+  function getSourceState(id4) {
+    const state = sourceState.get(id4);
+    if (!state) throw new Error("EasyDebrid source not found");
+    return state;
+  }
+  function buildTorrentInfo(state, files, status, statusLabel, links = []) {
+    const totalBytes = files.reduce((sum, file) => sum + file.bytes, 0);
+    const selectedFiles = files.filter((file) => file.selected === 1);
+    return {
+      id: buildSourceId(state.magnet),
+      filename: selectedFiles[0]?.path ?? files[0]?.path ?? state.hash,
+      hash: state.hash,
+      bytes: totalBytes,
+      host: "easydebrid",
+      split: 0,
+      progress: status === "downloaded" ? 100 : 0,
+      status,
+      statusLabel,
+      added: state.addedAt,
+      links,
+      original_filename: files[0]?.path ?? state.hash,
+      original_bytes: totalBytes,
+      files
+    };
+  }
+  var easyDebridPlaybackProvider = {
+    id: "easydebrid",
+    label: "EasyDebrid playback provider",
+    getAccessKey,
+    buildConfigSegment(accessKey, qualityFilter = "") {
+      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
+      segments.push(`easydebrid=${accessKey}`);
+      return segments.join("|");
+    },
+    lookupCachedStreams: lookupCachedStreams2,
+    hideUncachedStreamsFromList() {
+      return true;
+    },
+    hideUnknownStreamsFromList() {
+      return true;
+    },
+    isMagnetSource(input) {
+      return input.trim().toLowerCase().startsWith("magnet:");
+    },
+    async addMagnet(magnet) {
+      const id4 = buildSourceId(magnet);
+      const hash = extractInfoHash(magnet);
+      sourceState.set(id4, {
+        magnet,
+        hash,
+        addedAt: (/* @__PURE__ */ new Date()).toISOString(),
+        selectedFileIds: null
+      });
+      return {
+        id: id4,
+        uri: magnet,
+        hash
+      };
+    },
+    async getSourceInfo(id4) {
+      const state = getSourceState(id4);
+      const details = await lookupSourceDetails(state.magnet);
+      const lookupFiles = details.files ?? [];
+      const isSelected = (fileId) => state.selectedFileIds === "all" || state.selectedFileIds instanceof Set && state.selectedFileIds.has(fileId);
+      if (!details.cached) {
+        return buildTorrentInfo(
+          state,
+          toTorrentFiles(lookupFiles, () => false),
+          "dead",
+          "Not cached on EasyDebrid"
+        );
+      }
+      if (state.selectedFileIds === null) {
+        return buildTorrentInfo(
+          state,
+          toTorrentFiles(lookupFiles, () => false),
+          "waiting_files_selection",
+          "Select files"
+        );
+      }
+      const generatedFiles = await generateSourceFiles(state.magnet);
+      const torrentFiles = toTorrentFiles(
+        generatedFiles.length > 0 ? generatedFiles : lookupFiles,
+        isSelected
+      );
+      const links = generatedFiles.map((file, index3) => ({ file, id: index3 + 1 })).filter(({ file, id: id5 }) => Boolean(file.url) && isSelected(id5)).map(({ file }) => file.url);
+      return buildTorrentInfo(state, torrentFiles, "downloaded", "Ready", links);
+    },
+    async selectFiles(id4, files = "all") {
+      const state = getSourceState(id4);
+      state.selectedFileIds = files === "all" ? "all" : new Set(
+        files.split(",").map((value) => Number.parseInt(value.trim(), 10)).filter((value) => Number.isFinite(value))
+      );
+    },
+    async resolveLink(link) {
+      const cached = directLinkCache.get(link);
+      return {
+        id: link,
+        filename: cached?.filename ?? link.split("/").pop()?.split("?")[0] ?? "download",
+        mimeType: "application/octet-stream",
+        filesize: cached?.filesize ?? 0,
+        link,
+        host: "easydebrid",
+        chunks: 1,
+        crc: 0,
+        download: link,
+        streamable: 0
+      };
+    }
+  };
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/real-debrid/rd-client.ts
+  var RD_PROXY = "/api/stream-providers/realdebrid";
+  var RD_API_BASE_URL = "https://api.real-debrid.com/rest/1.0";
+  function getRdApiKey() {
+    if (typeof window === "undefined") return null;
+    const key = getGlobalStreamProviderAccessKey("realdebrid").trim();
+    return key || null;
+  }
+  async function rdFetch(path, options = {}) {
+    const key = getRdApiKey();
+    const headers = {
+      ...options.headers
+    };
+    if (key) headers["x-stream-provider-token"] = key;
+    return fetch(`${RD_PROXY}${path}`, { ...options, headers });
+  }
+  async function rdDesktopJson(path, method = "GET", body) {
+    const token = getRdApiKey();
+    if (!token) throw new Error("No Real-Debrid API key configured");
+    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
+    const headers = [`Authorization: Bearer ${token}`];
+    if (body && body.trim().length > 0) {
+      headers.push("Content-Type: application/x-www-form-urlencoded");
+    }
+    return invoke4("desktop_external_api_request", {
+      baseUrl: RD_API_BASE_URL,
+      path,
+      method,
+      headers,
+      body: body ?? null,
+      timeoutMs: 12e3
+    });
+  }
+  function isTransientDesktopRdError(error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const normalized = message.toLowerCase();
+    return normalized.includes("timeout") || normalized.includes("timed out") || normalized.includes("failed to fetch") || normalized.includes("connection") || normalized.includes("network") || normalized.includes("reset by peer") || normalized.includes("could not resolve host") || normalized.includes("empty reply");
+  }
+  async function rdDesktopJsonWithRetry(path, method = "GET", body, attempts = 3) {
+    let lastError = null;
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+      try {
+        return await rdDesktopJson(path, method, body);
+      } catch (error) {
+        lastError = error;
+        if (attempt >= attempts || !isTransientDesktopRdError(error)) break;
+        await new Promise((resolve) => setTimeout(resolve, 350 * attempt));
+      }
+    }
+    throw lastError instanceof Error ? lastError : new Error(String(lastError));
+  }
+  async function rdJson(path, options) {
+    if (isPluginDesktopHost()) {
+      const method = (options?.method ?? "GET").toUpperCase();
+      const rawBody = options?.body;
+      const body = typeof rawBody === "string" ? rawBody : rawBody instanceof URLSearchParams ? rawBody.toString() : void 0;
+      return rdDesktopJsonWithRetry(path, method, body, 3);
+    }
+    const res = await rdFetch(path, options);
+    const data = await res.json();
+    if (!res.ok) {
+      const msg = data.error ?? `HTTP ${res.status}`;
+      throw new Error(msg);
+    }
+    return data;
+  }
+  async function rdUnrestrictLink(link) {
+    return rdJson("/unrestrict/link", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ link }).toString()
+    });
+  }
+  async function rdAddMagnet(magnet) {
+    return rdJson("/torrents/addMagnet", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ magnet }).toString()
+    });
+  }
+  async function rdGetTorrentInfo(id4) {
+    return rdJson(`/torrents/info/${id4}`);
+  }
+  async function rdGetInstantAvailability(hashes) {
+    const cleaned = hashes.map((hash) => hash.trim().toLowerCase()).filter(Boolean);
+    if (cleaned.length === 0) return {};
+    return rdJson(
+      `/torrents/instantAvailability/${cleaned.join("/")}`
+    );
+  }
+  async function rdSelectFiles(id4, files = "all") {
+    if (isPluginDesktopHost()) {
+      await rdDesktopJsonWithRetry(
+        `/torrents/selectFiles/${id4}`,
+        "POST",
+        new URLSearchParams({ files }).toString(),
+        3
+      );
+      return;
+    }
+    const res = await rdFetch(`/torrents/selectFiles/${id4}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ files }).toString()
+    });
+    if (!res.ok && res.status !== 204) {
+      const data = await res.json();
+      throw new Error(data.error ?? `HTTP ${res.status}`);
+    }
+  }
+  function isMagnetLink(input) {
+    return input.trim().toLowerCase().startsWith("magnet:");
+  }
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/playback/providers/legacy-playback-provider.ts
+  function chunk(items, size) {
+    const result = [];
+    for (let index3 = 0; index3 < items.length; index3 += size) {
+      result.push(items.slice(index3, index3 + size));
+    }
+    return result;
+  }
+  async function lookupCachedStreams3(candidates) {
+    const cachedHashes = /* @__PURE__ */ new Set();
+    const cachedTitles = /* @__PURE__ */ new Set();
+    const downloadableHashes = /* @__PURE__ */ new Set();
+    const downloadableTitles = /* @__PURE__ */ new Set();
+    const cachedStreamKeys = /* @__PURE__ */ new Set();
+    const downloadableStreamKeys = /* @__PURE__ */ new Set();
+    const byHash = /* @__PURE__ */ new Map();
+    for (const candidate of candidates) {
+      const hash = candidate.infoHash.trim().toLowerCase();
+      if (!hash) continue;
+      const bucket = byHash.get(hash);
+      if (bucket) {
+        bucket.push(candidate);
+      } else {
+        byHash.set(hash, [candidate]);
+      }
+    }
+    const chunks = chunk([...byHash.keys()], 40);
+    const chunkResults = await Promise.all(
+      chunks.map(async (hashes) => {
+        try {
+          return await rdGetInstantAvailability(hashes);
+        } catch {
+          return {};
+        }
+      })
+    );
+    for (let i = 0; i < chunks.length; i++) {
+      const hashes = chunks[i];
+      const availability = chunkResults[i];
+      for (const hash of hashes) {
+        const relatedCandidates = byHash.get(hash) ?? [];
+        const availabilityEntry = availability[hash];
+        const rdEntries = Array.isArray(availabilityEntry) ? availabilityEntry : availabilityEntry?.rd;
+        const cachedFileIds = /* @__PURE__ */ new Set();
+        for (const rdVariant of rdEntries ?? []) {
+          if (!rdVariant || typeof rdVariant !== "object") continue;
+          for (const fileIdRaw of Object.keys(rdVariant)) {
+            const fileId = Number.parseInt(fileIdRaw, 10);
+            if (!Number.isNaN(fileId) && fileId >= 0) cachedFileIds.add(fileId);
+          }
+        }
+        const hasPerFileAvailability = cachedFileIds.size > 0;
+        const isCached = hasPerFileAvailability || (rdEntries?.length ?? 0) > 0;
+        downloadableHashes.add(hash);
+        downloadableStreamKeys.add(`${hash}@*`);
+        if (isCached) cachedHashes.add(hash);
+        if (isCached && !hasPerFileAvailability) cachedStreamKeys.add(`${hash}@*`);
+        for (const candidate of relatedCandidates) {
+          const title = candidate.title.trim();
+          const fileIdx = Number.isFinite(candidate.fileIdx) ? Math.trunc(candidate.fileIdx) : null;
+          const streamKey = `${hash}@${fileIdx != null ? fileIdx : "*"}`;
+          downloadableStreamKeys.add(streamKey);
+          if (title) downloadableTitles.add(title);
+          const candidateCached = hasPerFileAvailability ? fileIdx != null ? cachedFileIds.has(fileIdx) || cachedFileIds.has(fileIdx + 1) : true : isCached;
+          if (candidateCached) {
+            cachedStreamKeys.add(streamKey);
+            if (title) cachedTitles.add(title);
+          }
+        }
+      }
+    }
+    return {
+      cachedHashes,
+      cachedTitles,
+      downloadableHashes,
+      downloadableTitles,
+      cachedStreamKeys,
+      downloadableStreamKeys
+    };
+  }
+  var legacyPlaybackProvider = {
+    id: "legacy",
+    label: "Legacy playback provider",
+    getAccessKey() {
+      return getRdApiKey();
+    },
+    buildConfigSegment(accessKey, qualityFilter = "") {
+      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
+      segments.push(`realdebrid=${accessKey}`);
+      return segments.join("|");
+    },
+    lookupCachedStreams: lookupCachedStreams3,
+    hideUnknownStreamsFromList() {
+      return false;
+    },
+    isMagnetSource(input) {
+      return isMagnetLink(input);
+    },
+    addMagnet(magnet) {
+      return rdAddMagnet(magnet);
+    },
+    getSourceInfo(id4) {
+      return rdGetTorrentInfo(id4);
+    },
+    selectFiles(id4, files = "all") {
+      return rdSelectFiles(id4, files);
+    },
+    resolveLink(link) {
+      return rdUnrestrictLink(link);
+    }
+  };
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/playback/providers/offcloud-playback-provider.ts
+  var OFFCLOUD_PROXY = "/api/stream-providers/offcloud";
+  var sourceState2 = /* @__PURE__ */ new Map();
+  var linkCache = /* @__PURE__ */ new Map();
+  function getAccessKey2() {
+    const key = getStreamProviderAccessKey("offcloud").trim();
+    return key || null;
+  }
+  async function offcloudJson(path, init = {}) {
+    const token = getAccessKey2();
+    if (!token) throw new Error("Offcloud API key missing");
+    const headers = new Headers(init.headers);
+    headers.set("x-offcloud-key", token);
+    headers.set("Accept", "application/json");
+    if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+    const response = await fetch(`${OFFCLOUD_PROXY}${path}`, {
+      ...init,
+      headers
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = data?.error || data?.not_available || `Offcloud request failed (${response.status})`;
+      throw new Error(message);
+    }
+    if (data && typeof data === "object" && ("error" in data || "not_available" in data)) {
+      const message = data.error || data.not_available;
+      if (message) throw new Error(message);
+    }
+    return data;
+  }
+  function extractInfoHash2(input) {
+    const match = input.match(/btih:([a-f0-9]+)/i);
+    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
+  }
+  function buildSourceId2(requestId) {
+    return `oc-${requestId}`;
+  }
+  function getSourceState2(id4) {
+    const state = sourceState2.get(id4);
+    if (!state) throw new Error("Offcloud source not found");
+    return state;
+  }
+  function parseFilenameFromUrl(link) {
+    try {
+      const url = new URL(link);
+      const lastSegment = url.pathname.split("/").filter(Boolean).pop();
+      return decodeURIComponent(lastSegment || "download");
+    } catch {
+      return link.split("/").pop()?.split("?")[0] ?? "download";
+    }
+  }
+  function toTrimmedString(value) {
+    if (typeof value === "string") return value.trim();
+    if (typeof value === "number" || typeof value === "boolean") return String(value).trim();
+    return "";
+  }
+  function toTorrentFile(link, index3, path, bytes = 0) {
+    return {
+      id: index3 + 1,
+      path: path || parseFilenameFromUrl(link),
+      bytes,
+      selected: 1
+    };
+  }
+  function mapStatus(status) {
+    switch (toTrimmedString(status).toLowerCase()) {
+      case "downloaded":
+        return "downloaded";
+      case "downloading":
+        return "downloading";
+      case "error":
+      case "canceled":
+        return "error";
+      case "queued":
+      case "created":
+      default:
+        return "queued";
+    }
+  }
+  async function getCloudStatus(requestId) {
+    return offcloudJson("/cloud/status", {
+      method: "POST",
+      body: JSON.stringify({ requestId })
+    });
+  }
+  async function getCacheEntry(magnet) {
+    const data = await offcloudJson("/cache", {
+      method: "POST",
+      body: JSON.stringify({
+        urls: [magnet],
+        includeFiles: true
+      })
+    });
+    if (!Array.isArray(data)) return null;
+    const entry = data[0];
+    if (!entry || typeof entry !== "object") return null;
+    return entry;
+  }
+  async function lookupCachedStreams4(candidates) {
+    const data = await offcloudJson("/cache", {
+      method: "POST",
+      body: JSON.stringify({
+        urls: candidates.map((candidate) => `magnet:?xt=urn:btih:${candidate.infoHash}`),
+        includeFiles: false
+      })
+    });
+    const cachedHashes = /* @__PURE__ */ new Set();
+    const cachedTitles = /* @__PURE__ */ new Set();
+    const downloadableHashes = /* @__PURE__ */ new Set();
+    const downloadableTitles = /* @__PURE__ */ new Set();
+    if (!Array.isArray(data)) {
+      return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
+    }
+    for (const [index3, entry] of data.entries()) {
+      if (!entry || typeof entry !== "object") continue;
+      if (!entry.cached) continue;
+      const candidate = candidates[index3];
+      if (!candidate) continue;
+      cachedHashes.add(candidate.infoHash);
+      if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
+    }
+    return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
+  }
+  async function getExploreFiles(requestId) {
+    const data = await offcloudJson(`/cloud/explore/${encodeURIComponent(requestId)}`);
+    return Array.isArray(data.files) ? data.files : [];
+  }
+  async function buildTorrentInfo2(id4) {
+    const state = getSourceState2(id4);
+    const status = await getCloudStatus(state.requestId);
+    const normalizedStatus = mapStatus(status.status);
+    const statusLabel = toTrimmedString(status.status) || normalizedStatus;
+    const fileName = toTrimmedString(status.fileName);
+    const createdOn = toTrimmedString(status.createdOn);
+    const directUrl = toTrimmedString(status.url);
+    const exploreFiles = normalizedStatus === "downloaded" ? await getExploreFiles(state.requestId) : [];
+    const directLinks = exploreFiles.map((file) => toTrimmedString(file.url)).filter(Boolean);
+    if (normalizedStatus === "downloaded" && directLinks.length === 0 && directUrl) {
+      directLinks.push(directUrl);
+    }
+    for (const file of exploreFiles) {
+      const link = toTrimmedString(file.url);
+      if (link && !linkCache.has(link)) {
+        linkCache.set(link, {
+          filename: toTrimmedString(file.path) || toTrimmedString(file.name) || parseFilenameFromUrl(link),
+          filesize: typeof file.size === "number" ? file.size : 0
+        });
+      }
+    }
+    if (normalizedStatus === "downloaded" && directUrl && !linkCache.has(directUrl)) {
+      linkCache.set(directUrl, {
+        filename: fileName || parseFilenameFromUrl(directUrl),
+        filesize: 0
+      });
+    }
+    const files = directLinks.map((link, index3) => {
+      const cached = linkCache.get(link);
+      return toTorrentFile(link, index3, cached?.filename, cached?.filesize ?? 0);
+    });
+    const totalBytes = files.reduce((sum, file) => sum + file.bytes, 0);
+    return {
+      id: id4,
+      filename: fileName || files[0]?.path || state.hash,
+      hash: state.hash,
+      bytes: totalBytes,
+      host: "offcloud",
+      split: 0,
+      progress: normalizedStatus === "downloaded" ? 100 : normalizedStatus === "downloading" ? 50 : 0,
+      status: normalizedStatus,
+      statusLabel,
+      added: createdOn || state.addedAt,
+      links: directLinks,
+      original_filename: fileName || state.hash,
+      original_bytes: totalBytes,
+      files
+    };
+  }
+  var offcloudPlaybackProvider = {
+    id: "offcloud",
+    label: "Offcloud playback provider",
+    getAccessKey: getAccessKey2,
+    buildConfigSegment(accessKey, qualityFilter = "") {
+      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
+      segments.push(`offcloud=${accessKey}`);
+      return segments.join("|");
+    },
+    lookupCachedStreams: lookupCachedStreams4,
+    hideUncachedStreamsFromList() {
+      return true;
+    },
+    hideUnknownStreamsFromList() {
+      return true;
+    },
+    isMagnetSource(input) {
+      return input.trim().toLowerCase().startsWith("magnet:");
+    },
+    async addMagnet(magnet) {
+      const cacheEntry = await getCacheEntry(magnet);
+      if (!cacheEntry?.cached) {
+        throw new Error("Not cached on Offcloud");
+      }
+      const data = await offcloudJson("/cloud", {
+        method: "POST",
+        body: JSON.stringify({ url: magnet })
+      });
+      const requestId = toTrimmedString(data.requestId);
+      if (!requestId) throw new Error("Offcloud did not return a request ID");
+      const id4 = buildSourceId2(requestId);
+      sourceState2.set(id4, {
+        requestId,
+        magnet,
+        hash: extractInfoHash2(magnet),
+        addedAt: toTrimmedString(data.createdOn) || (/* @__PURE__ */ new Date()).toISOString()
+      });
+      return {
+        id: id4,
+        uri: magnet,
+        hash: extractInfoHash2(magnet)
+      };
+    },
+    async getSourceInfo(id4) {
+      return buildTorrentInfo2(id4);
+    },
+    async selectFiles() {
+    },
+    async resolveLink(link) {
+      const cached = linkCache.get(link);
+      return {
+        id: link,
+        filename: cached?.filename ?? parseFilenameFromUrl(link),
+        mimeType: "application/octet-stream",
+        filesize: cached?.filesize ?? 0,
+        link,
+        host: "offcloud",
+        chunks: 1,
+        crc: 0,
+        download: link,
+        streamable: 0
+      };
+    }
+  };
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/playback/providers/torbox-playback-provider.ts
+  var TORBOX_PROXY = "/api/stream-providers/torbox";
+  var INFO_CACHE_TTL_MS = 1500;
+  var VIDEO_EXT_RE = /\.(mkv|mp4|avi|m4v|mov|webm|ts|m2ts|wmv|flv)$/i;
+  var sourceState3 = /* @__PURE__ */ new Map();
+  var directLinkCache2 = /* @__PURE__ */ new Map();
+  function getAccessKey3() {
+    const key = getStreamProviderAccessKey("torbox").trim();
+    return key || null;
+  }
+  function extractInfoHash3(input) {
+    const match = input.match(/btih:([a-f0-9]+)/i);
+    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
+  }
+  function buildSourceId3(magnet) {
+    return `tb-${extractInfoHash3(magnet)}`;
+  }
+  function getSourceState3(id4) {
+    const state = sourceState3.get(id4);
+    if (!state) throw new Error("TorBox source not found");
+    return state;
+  }
+  async function torboxJson(path, init = {}) {
+    const token = getAccessKey3();
+    if (!token) throw new Error("TorBox key missing");
+    const headers = new Headers(init.headers);
+    headers.set("x-tb-token", token);
+    headers.set("Accept", "application/json");
+    const response = await fetch(`${TORBOX_PROXY}${path}`, { ...init, headers });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = data && typeof data === "object" && "error" in data && typeof data.error === "string" && data.error || data && typeof data === "object" && "detail" in data && typeof data.detail === "string" && data.detail || `TorBox request failed (${response.status})`;
+      throw new Error(message);
+    }
+    return data;
+  }
+  async function torboxCreateTorrent(magnet) {
+    const formData = new FormData();
+    formData.append("magnet", magnet);
+    formData.append("seed", "3");
+    formData.append("allow_zip", "false");
+    const data = await torboxJson(
+      "/torrents/createtorrent",
+      { method: "POST", body: formData }
+    );
+    if (!data.success || typeof data.data?.torrent_id !== "number") {
+      throw new Error(data.detail || data.error || "TorBox createtorrent failed");
+    }
+    return {
+      torrent_id: data.data.torrent_id,
+      hash: (data.data.hash ?? "").toLowerCase()
+    };
+  }
+  async function torboxGetInfo(torrentId) {
+    const data = await torboxJson(
+      `/torrents/mylist?bypass_cache=true&id=${torrentId}`
+    );
+    if (!data.success || !data.data) return null;
+    if (Array.isArray(data.data)) return data.data[0] ?? null;
+    return data.data;
+  }
+  async function prefetchVideoFileUrls(state) {
+    if (state.torrentId == null || !state.pendingInfo) return;
+    const info = await state.pendingInfo;
+    if (!info?.files || state.torrentId == null) return;
+    for (const file of info.files) {
+      const name = file.short_name?.trim() || file.name.trim();
+      if (!VIDEO_EXT_RE.test(name)) continue;
+      if (state.pendingDlUrls.has(file.id)) continue;
+      state.pendingDlUrls.set(file.id, torboxRequestDl(state.torrentId, file.id).catch(() => null));
+    }
+  }
+  async function torboxRequestDl(torrentId, fileId) {
+    const token = getAccessKey3();
+    if (!token) return null;
+    const data = await torboxJson(
+      `/torrents/requestdl?token=${encodeURIComponent(token)}&torrent_id=${torrentId}&file_id=${fileId}&redirect=false`
+    );
+    if (!data.success || typeof data.data !== "string") return null;
+    return data.data;
+  }
+  async function torboxCheckCached(hashes) {
+    const result = /* @__PURE__ */ new Set();
+    if (hashes.length === 0) return result;
+    const params = new URLSearchParams();
+    for (const h of hashes) params.append("hash", h);
+    params.set("format", "list");
+    params.set("list_files", "false");
+    try {
+      const data = await torboxJson(
+        `/torrents/checkcached?${params}`
+      );
+      if (!data.success || !data.data) return result;
+      if (Array.isArray(data.data)) {
+        for (const entry of data.data) {
+          if (typeof entry?.hash === "string") result.add(entry.hash.toLowerCase());
+        }
+      } else if (typeof data.data === "object") {
+        for (const [hash, value] of Object.entries(data.data)) {
+          if (value) result.add(hash.toLowerCase());
+        }
+      }
+    } catch {
+    }
+    return result;
+  }
+  function toTorrentFiles2(files, isSelected) {
+    return files.map((file) => ({
+      id: file.id,
+      path: file.short_name?.trim() || file.name.trim(),
+      bytes: file.size,
+      selected: isSelected(file.id) ? 1 : 0
+    }));
+  }
+  function mapStatus2(info) {
+    if (info.download_finished) return "downloaded";
+    const state = info.download_state?.toLowerCase() ?? "";
+    if (state.includes("cached")) return "downloaded";
+    if (state.includes("error") || state.includes("failed") || state.includes("dead")) return "error";
+    if (state.includes("queue")) return "queued";
+    if (state.includes("upload")) return "uploading";
+    if (state.includes("processing")) return "magnet_conversion";
+    return "downloading";
+  }
+  function buildTorrentInfo3(state, info, status, files, links = [], statusLabel) {
+    const totalBytes = info?.size ?? files.reduce((sum, file) => sum + file.bytes, 0);
+    const selectedFiles = files.filter((file) => file.selected === 1);
+    return {
+      id: buildSourceId3(state.magnet),
+      filename: selectedFiles[0]?.path ?? files[0]?.path ?? info?.name ?? state.hash,
+      hash: state.hash,
+      bytes: totalBytes,
+      host: "torbox",
+      split: 0,
+      progress: status === "downloaded" ? 100 : 0,
+      status,
+      statusLabel,
+      added: state.addedAt,
+      links,
+      original_filename: info?.name ?? files[0]?.path ?? state.hash,
+      original_bytes: totalBytes,
+      files
+    };
+  }
+  var torboxPlaybackProvider = {
+    id: "torbox",
+    label: "TorBox playback provider",
+    getAccessKey: getAccessKey3,
+    // Torrentio's config segment for TorBox addons is `torbox=<api_key>`,
+    // analogous to `realdebrid=<api_key>` / `easydebrid=<api_key>` etc.
+    buildConfigSegment(accessKey, qualityFilter = "") {
+      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
+      segments.push(`torbox=${accessKey}`);
+      return segments.join("|");
+    },
+    async lookupCachedStreams(candidates) {
+      const hashes = candidates.map((candidate) => candidate.infoHash?.toLowerCase()).filter((hash) => Boolean(hash));
+      if (hashes.length === 0) {
+        return {
+          cachedHashes: /* @__PURE__ */ new Set(),
+          cachedTitles: /* @__PURE__ */ new Set(),
+          downloadableHashes: /* @__PURE__ */ new Set(),
+          downloadableTitles: /* @__PURE__ */ new Set()
+        };
+      }
+      const cached = await torboxCheckCached(hashes);
+      const cachedHashes = /* @__PURE__ */ new Set();
+      const cachedTitles = /* @__PURE__ */ new Set();
+      for (const candidate of candidates) {
+        const hash = candidate.infoHash?.toLowerCase();
+        if (hash && cached.has(hash)) {
+          cachedHashes.add(candidate.infoHash);
+          if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
+        }
+      }
+      return {
+        cachedHashes,
+        cachedTitles,
+        downloadableHashes: /* @__PURE__ */ new Set(),
+        downloadableTitles: /* @__PURE__ */ new Set()
+      };
+    },
+    hideUncachedStreamsFromList() {
+      return false;
+    },
+    hideUnknownStreamsFromList() {
+      return false;
+    },
+    isMagnetSource(input) {
+      return input.trim().toLowerCase().startsWith("magnet:");
+    },
+    async addMagnet(magnet) {
+      const id4 = buildSourceId3(magnet);
+      const hash = extractInfoHash3(magnet);
+      const existing = sourceState3.get(id4);
+      if (existing && existing.torrentId != null) {
+        existing.pendingInfo = torboxGetInfo(existing.torrentId).catch(() => null);
+        existing.pendingDlUrls = /* @__PURE__ */ new Map();
+        void prefetchVideoFileUrls(existing);
+        return { id: id4, uri: magnet, hash: existing.hash };
+      }
+      const created = await torboxCreateTorrent(magnet);
+      const pendingInfo = torboxGetInfo(created.torrent_id).catch(() => null);
+      const state = {
+        magnet,
+        hash: created.hash || hash,
+        addedAt: (/* @__PURE__ */ new Date()).toISOString(),
+        torrentId: created.torrent_id,
+        selectedFileIds: null,
+        pendingInfo,
+        lastInfo: null,
+        lastInfoAt: 0,
+        pendingDlUrls: /* @__PURE__ */ new Map()
+      };
+      sourceState3.set(id4, state);
+      void prefetchVideoFileUrls(state);
+      return { id: id4, uri: magnet, hash: created.hash || hash };
+    },
+    async getSourceInfo(id4) {
+      const state = getSourceState3(id4);
+      if (state.torrentId == null) {
+        throw new Error("TorBox torrent id not yet known");
+      }
+      let info;
+      if (state.pendingInfo) {
+        info = await state.pendingInfo;
+        state.pendingInfo = null;
+        state.lastInfo = info;
+        state.lastInfoAt = Date.now();
+      } else if (state.lastInfo && Date.now() - state.lastInfoAt < INFO_CACHE_TTL_MS) {
+        info = state.lastInfo;
+      } else {
+        info = await torboxGetInfo(state.torrentId);
+        state.lastInfo = info;
+        state.lastInfoAt = Date.now();
+      }
+      if (!info) {
+        return buildTorrentInfo3(state, null, "magnet_conversion", [], [], "Looking up on TorBox\u2026");
+      }
+      const isSelected = (fileId) => state.selectedFileIds === "all" || state.selectedFileIds instanceof Set && state.selectedFileIds.has(fileId);
+      const status = mapStatus2(info);
+      const files = toTorrentFiles2(info.files ?? [], isSelected);
+      if (status !== "downloaded") {
+        return buildTorrentInfo3(state, info, status, files, [], info.download_state);
+      }
+      if (state.selectedFileIds === null) {
+        return buildTorrentInfo3(state, info, "waiting_files_selection", files, [], "Select files");
+      }
+      const selectedFiles = files.filter((file) => file.selected === 1);
+      const resolvedLinks = await Promise.all(
+        selectedFiles.map(async (file) => {
+          const pending = state.pendingDlUrls.get(file.id);
+          const url = pending != null ? await pending : await torboxRequestDl(state.torrentId, file.id);
+          return url ? { url, file } : null;
+        })
+      );
+      const links = [];
+      for (const entry of resolvedLinks) {
+        if (!entry) continue;
+        links.push(entry.url);
+        directLinkCache2.set(entry.url, { filename: entry.file.path, filesize: entry.file.bytes });
+      }
+      if (links.length === 0) {
+        return buildTorrentInfo3(state, info, "error", files, [], "No playable links from TorBox");
+      }
+      return buildTorrentInfo3(state, info, "downloaded", files, links, "Ready");
+    },
+    async selectFiles(id4, files = "all") {
+      const state = getSourceState3(id4);
+      state.selectedFileIds = files === "all" ? "all" : new Set(
+        files.split(",").map((value) => Number.parseInt(value.trim(), 10)).filter((value) => Number.isFinite(value))
+      );
+    },
+    async resolveLink(link) {
+      const cached = directLinkCache2.get(link);
+      return {
+        id: link,
+        filename: cached?.filename ?? link.split("/").pop()?.split("?")[0] ?? "download",
+        mimeType: "application/octet-stream",
+        filesize: cached?.filesize ?? 0,
+        link,
+        host: "torbox",
+        chunks: 1,
+        crc: 0,
+        download: link,
+        streamable: 1
+      };
+    }
+  };
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/playback/stream-provider-playback.ts
+  var playbackProviders = /* @__PURE__ */ new Map([
+    ["alldebrid", alldebridPlaybackProvider],
+    ["easydebrid", easyDebridPlaybackProvider],
+    ["offcloud", offcloudPlaybackProvider],
+    ["realdebrid", legacyPlaybackProvider],
+    ["torbox", torboxPlaybackProvider]
+  ]);
+  function getPlaybackProviderOverride() {
+    if (typeof window === "undefined") return null;
+    return window.__lumioPluginRuntime?.playbackProviderOverride ?? null;
+  }
+  function resolveActiveProviderId() {
+    return getPlaybackProviderOverride() ?? getActiveStreamProvider().trim().toLowerCase();
+  }
+  function getActivePlaybackProvider() {
+    const providerId = resolveActiveProviderId();
+    const provider = playbackProviders.get(providerId);
+    if (!provider) throw new Error(`Playback provider "${providerId}" is not supported`);
+    return provider;
+  }
+  function findActivePlaybackProvider() {
+    const providerId = resolveActiveProviderId();
+    return playbackProviders.get(providerId) ?? null;
+  }
+  function getPlaybackAccessKey() {
+    return findActivePlaybackProvider()?.getAccessKey() ?? null;
+  }
+  function buildPlaybackProviderConfigSegment(qualityFilter = "") {
+    const accessKey = getPlaybackAccessKey();
+    if (!accessKey) return null;
+    const provider = findActivePlaybackProvider();
+    if (!provider) return null;
+    return provider.buildConfigSegment(accessKey, qualityFilter);
+  }
+  var cacheProbeTtlMs = 6e4;
+  var cacheProbeMemo = /* @__PURE__ */ new Map();
+  function buildCacheProbeKey(providerId, candidates) {
+    const hashes = candidates.map((c) => c.infoHash?.toLowerCase() ?? "").filter(Boolean).sort().join(",");
+    return `${providerId}|${hashes}`;
+  }
+  async function lookupPlaybackCachedStreams(candidates) {
+    const provider = findActivePlaybackProvider();
+    if (!provider?.lookupCachedStreams) return null;
+    const key = buildCacheProbeKey(provider.id, candidates);
+    const now3 = Date.now();
+    const cached = cacheProbeMemo.get(key);
+    if (cached && cached.expiresAt > now3) return cached.result;
+    const result = await provider.lookupCachedStreams(candidates);
+    cacheProbeMemo.set(key, { expiresAt: now3 + cacheProbeTtlMs, result });
+    return result;
+  }
+  function hideUncachedPlaybackStreamsFromList() {
+    return findActivePlaybackProvider()?.hideUncachedStreamsFromList?.() ?? false;
+  }
+  function hideUnknownPlaybackStreamsFromList() {
+    return findActivePlaybackProvider()?.hideUnknownStreamsFromList?.() ?? false;
+  }
+  function isMagnetPlaybackSource(input) {
+    return getActivePlaybackProvider().isMagnetSource(input);
+  }
+  async function queueMagnetForPlayback(magnet) {
+    return getActivePlaybackProvider().addMagnet(magnet);
+  }
+  async function getPlaybackSourceInfo(id4) {
+    return getActivePlaybackProvider().getSourceInfo(id4);
+  }
+  async function selectPlaybackFiles(id4, files = "all") {
+    return getActivePlaybackProvider().selectFiles(id4, files);
+  }
+  async function resolvePlaybackLink(link) {
+    return getActivePlaybackProvider().resolveLink(link);
+  }
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/stream-provider-request-context.ts
+  var DEFAULT_STREAM_PROVIDER_URL3 = "https://torrentio.strem.fun";
+  function getPrimaryStreamProviderConfig2() {
+    const configs = getStreamProviderConfigs().filter((config) => config.enabled);
+    return configs.find((config) => config.preset === "torrentio") ?? configs[0] ?? null;
+  }
+  function getPrimaryStreamProviderRequestContext2() {
+    const primary = getPrimaryStreamProviderConfig2();
+    const qualityFilter = buildTorrentioQualityFilter(getStreamFilters());
+    const streamProviderUrl = primary ? buildStreamProviderUrl(primary) || DEFAULT_STREAM_PROVIDER_URL3 : DEFAULT_STREAM_PROVIDER_URL3;
+    const streamProviderType = primary ? getStreamProviderTypeForApi(primary) : "torrentio";
+    return {
+      streamProviderUrl,
+      streamProviderType,
+      qualityFilter,
+      streamHeaders: {
+        "x-stream-provider-url": streamProviderUrl,
+        "x-stream-provider-type": streamProviderType,
+        "x-quality-filter": qualityFilter
+      },
+      browserStreamUrl: ({ imdbId, mediaType, season, episode }) => {
+        if (streamProviderType !== "torrentio") return null;
+        const configSegment = buildPlaybackProviderConfigSegment(qualityFilter);
+        if (!configSegment) return null;
+        const streamPath = mediaType === "series" && season && episode ? `stream/series/${imdbId}:${season}:${episode}.json` : `stream/movie/${imdbId}.json`;
+        return `${streamProviderUrl}/${configSegment}/${streamPath}`;
+      }
+    };
   }
 
   // ../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
@@ -181661,7 +181791,7 @@ ${cue.text}`).join("\n\n")}
         return { url: best.download, filename: best.filename };
       }
       if (["error", "magnet_error", "dead", "virus"].includes(info.status)) {
-        throw new Error(t("torrentFailed").replace("{status}", String(info.status)));
+        throw new Error(lt("torrentFailed").replace("{status}", String(info.status)));
       }
     }
     throw new Error("Timeout: torrenten blev inte klar i tid");
@@ -181691,9 +181821,9 @@ ${cue.text}`).join("\n\n")}
       setState({ type: "loading-streams" });
       try {
         const targetImdbId = imdbId;
-        const requestContext = getPrimaryStreamProviderRequestContext();
+        const requestContext = getPrimaryStreamProviderRequestContext2();
         const accessKey = getPlaybackAccessKey() ?? "";
-        if (!accessKey) throw new Error(t("debridKeyMissing"));
+        if (!accessKey) throw new Error(lt("debridKeyMissing"));
         const tType = mediaType === "tv" ? "series" : "movie";
         const browserStreamUrl = requestContext.browserStreamUrl({
           imdbId: targetImdbId,
@@ -181988,7 +182118,7 @@ ${cue.text}`).join("\n\n")}
     }
   }
   async function tryResolveDirectOrHash(imdbId) {
-    const streamProviderRequestContext = getPrimaryStreamProviderRequestContext();
+    const streamProviderRequestContext = getPrimaryStreamProviderRequestContext2();
     const cachedStreamUrl = streamProviderRequestContext.browserStreamUrl({
       imdbId,
       mediaType: "movie"
@@ -182398,7 +182528,7 @@ ${cue.text}`).join("\n\n")}
     return host.endsWith(".sslip.io") || window.__LUMIO_REMOTE__ === true;
   }
 
-  // lib/stream-provider-runtime/stream-provider-stream-utils.ts
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/stream-provider-stream-utils.ts
   var VIDEO_EXTS3 = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i;
   function qualityRank3(name) {
     const normalized = name.toLowerCase();
@@ -182723,7 +182853,7 @@ ${cue.text}`).join("\n\n")}
     const [hasPlaybackAccess, setHasPlaybackAccess] = useState(() => getEnabledScraperAccessState().hasPlaybackAccess);
     const [missingProviderLabels, setMissingProviderLabels] = useState(() => getEnabledScraperAccessState().missingProviderLabels);
     const [primaryProviderLabel, setPrimaryProviderLabel] = useState(() => getEnabledScraperAccessState().primaryProviderLabel);
-    const [streamFilters, setStreamFilters2] = useState(DEFAULT_FILTERS);
+    const [streamFilters, setStreamFilters] = useState(DEFAULT_FILTERS);
     const [resolvedImdbId, setResolvedImdbId] = useState(imdbId ?? null);
     const [seasons, setSeasons] = useState(null);
     const [loadingSeasons, setLoadingSeasons] = useState(false);
@@ -182807,7 +182937,7 @@ ${cue.text}`).join("\n\n")}
     const playAttemptRef = useRef(0);
     const [pendingPlayRequestToken, setPendingPlayRequestToken] = useState(null);
     useEffect(() => {
-      setStreamFilters2(getStreamFilters());
+      setStreamFilters(getStreamFilters());
     }, []);
     useEffect(() => {
       setResolvedImdbId(imdbId ?? null);
@@ -184893,7 +185023,7 @@ ${cue.text}`).join("\n\n")}
               type: "button",
               onClick: () => setShowManual((v) => !v),
               className: "text-xs text-slate-500 hover:text-slate-300",
-              children: showManual ? t("hideManual") : t("addManually")
+              children: showManual ? t("hideManual") : lt("addManually")
             }
           ),
           showManual && /* @__PURE__ */ jsxs("form", { onSubmit: handleManualSubmit, className: "mt-2 flex gap-2", children: [
@@ -184903,7 +185033,7 @@ ${cue.text}`).join("\n\n")}
                 type: "text",
                 value: manualInput,
                 onChange: (e) => setManualInput(e.target.value),
-                placeholder: t("manualPlaceholder"),
+                placeholder: lt("manualPlaceholder"),
                 className: "min-w-0 flex-1 rounded-xl border border-white/10 bg-slate-900 px-4 py-2 text-sm text-white placeholder-slate-500 outline-none focus:border-white/10"
               }
             ),
@@ -185119,7 +185249,7 @@ ${cue.text}`).join("\n\n")}
   }) {
     const { t } = useLang();
     const safeProgress = Math.max(0, Math.min(100, Number(step.progress) || 0));
-    const label = step.status === "downloading" ? `${t("downloading")} ${safeProgress}%` : step.status === "queued" ? t("queued") : step.status === "magnet_conversion" ? t("convertingMagnet") : step.statusLabel ?? step.status;
+    const label = step.status === "downloading" ? `${t("downloading")} ${safeProgress}%` : step.status === "queued" ? t("queued") : step.status === "magnet_conversion" ? lt("convertingMagnet") : step.statusLabel ?? step.status;
     return /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between text-sm", children: [
         /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: label }),
@@ -185198,7 +185328,7 @@ ${cue.text}`).join("\n\n")}
     ] });
   }
 
-  // lib/stream-provider-runtime/resume-resolver.ts
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/resume-resolver.ts
   var VIDEO_EXTS4 = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
   function isLikelySamplePath2(path) {
     const value = path.toLowerCase();
@@ -185252,7 +185382,7 @@ ${cue.text}`).join("\n\n")}
     return null;
   }
 
-  // lib/stream-provider-runtime/playback/resolve-stream-url.ts
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/playback/resolve-stream-url.ts
   var RESOLVE_URL_RE = /\/resolve\/(torbox|realdebrid|alldebrid|easydebrid|offcloud)\/[^/]+\/([a-f0-9]{40})\//i;
   var VIDEO_EXT_RE2 = /\.(mkv|mp4|avi|m4v|mov|webm|ts|m2ts|wmv|flv)$/i;
   function sleep4(ms) {
@@ -185290,7 +185420,7 @@ ${cue.text}`).join("\n\n")}
     return url;
   }
 
-  // lib/stream-provider-runtime/debrid-settings-section.tsx
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/debrid-settings-section.tsx
   init_react_shim();
   var import_react69 = __toESM(require_dist89());
   init_jsx_runtime_shim();
@@ -185317,7 +185447,7 @@ ${cue.text}`).join("\n\n")}
             "span",
             {
               className: `rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${hasKey ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-300" : "border-amber-400/40 bg-amber-400/10 text-amber-300"}`,
-              children: hasKey ? t("debridKeySaved") : t("debridNoKeyBadge")
+              children: hasKey ? lt("debridKeySaved") : lt("debridNoKeyBadge")
             }
           )
         ] }),
@@ -185332,7 +185462,7 @@ ${cue.text}`).join("\n\n")}
             setValue(next2);
             setStreamProviderAccessKey(service.id, next2.trim());
           },
-          placeholder: t("debridKeyPlaceholder"),
+          placeholder: lt("debridKeyPlaceholder"),
           radius: "lg",
           autoComplete: "off",
           classNames: {
@@ -185347,7 +185477,7 @@ ${cue.text}`).join("\n\n")}
   function DebridSettingsSection() {
     const { t } = useLang();
     return /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
-      /* @__PURE__ */ jsx("p", { className: "px-1 text-sm leading-relaxed text-slate-400", children: t("debridSectionDesc") }),
+      /* @__PURE__ */ jsx("p", { className: "px-1 text-sm leading-relaxed text-slate-400", children: lt("debridSectionDesc") }),
       /* @__PURE__ */ jsx("div", { className: "overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.025]", children: DEBRID_SERVICES.map((service, index3) => /* @__PURE__ */ jsx(
         DebridServiceRow,
         {
@@ -185356,7 +185486,7 @@ ${cue.text}`).join("\n\n")}
         },
         service.id
       )) }),
-      /* @__PURE__ */ jsx("p", { className: "px-1 text-[12.5px] leading-relaxed text-slate-500", children: t("debridPerScraperHint") })
+      /* @__PURE__ */ jsx("p", { className: "px-1 text-[12.5px] leading-relaxed text-slate-500", children: lt("debridPerScraperHint") })
     ] });
   }
 
@@ -185369,7 +185499,7 @@ ${cue.text}`).join("\n\n")}
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
     },
-    preinstalled: true,
+    preinstalled: false,
     register(ctx) {
       ctx.registerStreamProvider({
         id: "streams-scraper",
@@ -185394,6 +185524,11 @@ ${cue.text}`).join("\n\n")}
           return rewritten === url ? null : rewritten;
         }
       });
+      ctx.registerStreamRequestConfigProvider?.({
+        id: "streams-scraper-request-config",
+        pluginId: "com.lumio.streams-scraper",
+        buildConfigSegment: (qualityFilter) => buildPlaybackProviderConfigSegment(qualityFilter ?? "")
+      });
       ctx.registerMediaDownloadAction({
         id: "streams-scraper-download",
         pluginId: "com.lumio.streams-scraper",
@@ -185413,7 +185548,7 @@ ${cue.text}`).join("\n\n")}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-fV7VRq/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

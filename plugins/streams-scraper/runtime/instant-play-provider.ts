@@ -1,7 +1,7 @@
 import type { ZappMovie, ZappResult } from '@/app/api/zapp/route'
 import type { StreamResult } from '@/app/api/streams/route'
 import type { InstantPlayProvider, InstantPlayResult, MediaItem } from '@/lib/plugin-sdk'
-import { getPrimaryStreamProviderRequestContext } from '@/lib/plugin-sdk'
+import { getPrimaryStreamProviderRequestContext } from './stream-provider-request-context'
 import {
   getPlaybackAccessKey,
   getPlaybackSourceInfo,

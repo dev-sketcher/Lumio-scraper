@@ -1,4 +1,4 @@
-import { getStreamProviderAccessKey } from '@/lib/stream-provider-runtime/stream-provider-storage'
+import { getStreamProviderAccessKey } from '@/lib/media-stream/storage'
 import { mapWithConcurrency } from '@/lib/async-utils'
 import type {
   PlaybackCacheCandidate,

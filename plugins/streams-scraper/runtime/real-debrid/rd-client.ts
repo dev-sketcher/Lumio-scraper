@@ -8,7 +8,7 @@ import {
   clearGlobalStreamProviderAccessKey,
   getGlobalStreamProviderAccessKey,
   setGlobalStreamProviderAccessKey,
-} from '@/lib/stream-provider-runtime/stream-provider-settings'
+} from '@/lib/media-stream/config'
 import { isPluginDesktopHost } from '@/lib/plugin-sdk'
 
 const RD_PROXY = '/api/stream-providers/realdebrid'
@@ -55,7 +55,7 @@ async function rdDesktopJson<T>(
     method,
     headers,
     body: body ?? null,
-    timeoutMs: 5000,
+    timeoutMs: 12000,
   })
 }
 
@@ -78,7 +78,7 @@ async function rdDesktopJsonWithRetry<T>(
   path: string,
   method = 'GET',
   body?: string,
-  attempts = 2,
+  attempts = 3,
 ): Promise<T> {
   let lastError: unknown = null
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
@@ -87,7 +87,7 @@ async function rdDesktopJsonWithRetry<T>(
     } catch (error) {
       lastError = error
       if (attempt >= attempts || !isTransientDesktopRdError(error)) break
-      await new Promise((resolve) => setTimeout(resolve, 200 * attempt))
+      await new Promise((resolve) => setTimeout(resolve, 350 * attempt))
     }
   }
   throw lastError instanceof Error ? lastError : new Error(String(lastError))
@@ -102,7 +102,7 @@ async function rdJson<T>(path: string, options?: RequestInit): Promise<T> {
       : rawBody instanceof URLSearchParams
         ? rawBody.toString()
         : undefined
-    return rdDesktopJsonWithRetry<T>(path, method, body, 2)
+    return rdDesktopJsonWithRetry<T>(path, method, body, 3)
   }
 
   const res = await rdFetch(path, options)
@@ -154,10 +154,11 @@ export async function rdGetInstantAvailability(
 
 export async function rdSelectFiles(id: string, files = 'all'): Promise<void> {
   if (isPluginDesktopHost()) {
-    await rdDesktopJson<unknown>(
+    await rdDesktopJsonWithRetry<unknown>(
       `/torrents/selectFiles/${id}`,
       'POST',
       new URLSearchParams({ files }).toString(),
+      3,
     )
     return
   }

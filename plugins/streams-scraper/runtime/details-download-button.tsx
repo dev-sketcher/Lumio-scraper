@@ -1,12 +1,14 @@
 'use client'
 
+import { lt } from './local-strings'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import type { StreamResult } from '@/app/api/streams/route'
 import type { DownloadJob } from '@/lib/download-manager'
 import type { MediaDownloadActionProps } from '@/lib/plugin-sdk'
 import type { StringKey } from '@/lib/i18n'
-import { getPrimaryStreamProviderRequestContext, isPluginDesktopHost, useLang } from '@/lib/plugin-sdk'
+import { isPluginDesktopHost, useLang } from '@/lib/plugin-sdk'
+import { getPrimaryStreamProviderRequestContext } from './stream-provider-request-context'
 import {
   getPlaybackAccessKey,
   getPlaybackSourceInfo,
@@ -93,7 +95,7 @@ async function resolveDownloadFromStream(
     }
 
     if (['error', 'magnet_error', 'dead', 'virus'].includes(info.status)) {
-      throw new Error(t('torrentFailed').replace('{status}', String(info.status)))
+      throw new Error(lt('torrentFailed').replace('{status}', String(info.status)))
     }
   }
 
@@ -139,7 +141,7 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
       const targetImdbId = imdbId as string
       const requestContext = getPrimaryStreamProviderRequestContext()
       const accessKey = getPlaybackAccessKey() ?? ''
-      if (!accessKey) throw new Error(t('debridKeyMissing'))
+      if (!accessKey) throw new Error(lt('debridKeyMissing'))
       const tType = mediaType === 'tv' ? 'series' : 'movie'
 
       const browserStreamUrl = requestContext.browserStreamUrl({
