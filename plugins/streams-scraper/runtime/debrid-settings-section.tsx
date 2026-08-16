@@ -24,10 +24,8 @@ const DEBRID_SERVICES: Array<{ id: string; label: string; signupUrl: string }> =
 
 function DebridServiceRow({
   service,
-  isLast,
 }: {
   service: (typeof DEBRID_SERVICES)[number]
-  isLast: boolean
 }) {
   const { t } = useLang()
   // Write-through on change: the panel autosaves and this store persists
@@ -35,8 +33,10 @@ function DebridServiceRow({
   const [value, setValue] = useState(() => getStreamProviderAccessKey(service.id))
   const hasKey = value.trim().length > 0
 
+  // Same card chrome as the scraper cards above — separate rounded cards
+  // with the standard border, not one flush block.
   return (
-    <div className="flex flex-col gap-3 rounded-[14px] border border-[var(--tk-border)] bg-[var(--tk-surface1)] px-5 py-4 sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-3 rounded-xl border border-white/10 bg-slate-900/60 px-5 py-4 sm:flex-row sm:items-center">
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <p className="text-[15px] font-medium leading-tight text-white">{service.label}</p>
@@ -79,13 +79,9 @@ export function DebridSettingsSection() {
   return (
     <div className="space-y-3">
       <p className="px-1 text-sm leading-relaxed text-slate-400">{lt('debridSectionDesc')}</p>
-      <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.025]">
-        {DEBRID_SERVICES.map((service, index) => (
-          <DebridServiceRow
-            key={service.id}
-            service={service}
-            isLast={index === DEBRID_SERVICES.length - 1}
-          />
+      <div className="space-y-4">
+        {DEBRID_SERVICES.map((service) => (
+          <DebridServiceRow key={service.id} service={service} />
         ))}
       </div>
       <p className="px-1 text-[12.5px] leading-relaxed text-slate-500">{lt('debridPerScraperHint')}</p>
