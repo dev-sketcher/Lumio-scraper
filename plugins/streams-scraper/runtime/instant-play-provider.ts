@@ -1,14 +1,14 @@
 import type { ZappMovie, ZappResult } from '@/app/api/zapp/route'
 import type { StreamResult } from '@/app/api/streams/route'
 import type { InstantPlayProvider, InstantPlayResult, MediaItem } from '@/lib/plugin-sdk'
+import { getPrimaryStreamProviderRequestContext } from '@/lib/plugin-sdk'
 import {
   getPlaybackAccessKey,
   getPlaybackSourceInfo,
-  getPrimaryStreamProviderRequestContext,
   queueMagnetForPlayback,
   resolvePlaybackLink,
   selectPlaybackFiles,
-} from '@/lib/plugin-sdk'
+} from '@/lib/stream-provider-runtime/playback/stream-provider-playback'
 
 const VIDEO_EXTS = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i
 

@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -6199,7 +6199,7 @@
         dateInput: () => dateInput,
         datePicker: () => datePicker,
         dateRangePicker: () => dateRangePicker,
-        defaultLayout: () => defaultLayout,
+        defaultLayout: () => defaultLayout2,
         divider: () => divider,
         drawer: () => drawer,
         drip: () => drip,
@@ -18376,7 +18376,7 @@
         }
       };
       var isBaseTheme = (theme) => theme === "light" || theme === "dark";
-      var defaultLayout = {
+      var defaultLayout2 = {
         dividerWeight: "1px",
         disabledOpacity: ".5",
         fontSize: {
@@ -18573,7 +18573,7 @@
         } = config;
         const userLightColors = ((_a = themeObject == null ? void 0 : themeObject.light) == null ? void 0 : _a.colors) || {};
         const userDarkColors = ((_b = themeObject == null ? void 0 : themeObject.dark) == null ? void 0 : _b.colors) || {};
-        const defaultLayoutObj = userLayout && typeof userLayout === "object" ? (0, import_deepmerge.default)(defaultLayout, userLayout) : defaultLayout;
+        const defaultLayoutObj = userLayout && typeof userLayout === "object" ? (0, import_deepmerge.default)(defaultLayout2, userLayout) : defaultLayout2;
         const baseLayouts = {
           light: {
             ...defaultLayoutObj,
@@ -18651,9 +18651,9 @@
         toIterator: () => toIterator2
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function forwardRef3(component) {
-        return (0, import_react67.forwardRef)(component);
+        return (0, import_react70.forwardRef)(component);
       }
       var toIterator2 = (obj) => {
         return {
@@ -18705,7 +18705,7 @@
         var _a, _b, _c;
         return !!((_c = (_b = (_a = component.type) == null ? void 0 : _a.render) == null ? void 0 : _b.displayName) == null ? void 0 : _c.includes("HeroUI"));
       };
-      var React2 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
+      var React = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
       var import_theme = require_dist3();
       function getSlots(variants) {
         if (!variants || typeof variants !== "object") return {};
@@ -18798,8 +18798,8 @@
         const inferredSlots = getSlots(mergedVariants);
         const slots = directSlots ? { ...inferredSlots, ...directSlots } : inferredSlots;
         const hasSlots = typeof slots === "object" && Object.keys(slots).length !== 0;
-        const ForwardedComponent = React2.forwardRef((originalProps = {}, ref) => {
-          const newProps = React2.useMemo(
+        const ForwardedComponent = React.forwardRef((originalProps = {}, ref) => {
+          const newProps = React.useMemo(
             () => getClassNamesWithProps(
               {
                 slots,
@@ -18813,7 +18813,7 @@
               [originalProps]
             )
           );
-          return React2.createElement(BaseComponent, { ...originalProps, ...newProps, ref });
+          return React.createElement(BaseComponent, { ...originalProps, ...newProps, ref });
         });
         if (BaseComponent.getCollectionNode) {
           ForwardedComponent.getCollectionNode = (itemProps) => {
@@ -28514,7 +28514,7 @@
   var require_react_dom_production = __commonJS({
     "node_modules/react-dom/cjs/react-dom.production.js"(exports) {
       "use strict";
-      var React2 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var React = (init_react_shim(), __toCommonJS(react_shim_exports));
       function formatProdErrorMessage(code) {
         var url = "https://react.dev/errors/" + code;
         if (1 < arguments.length) {
@@ -28554,7 +28554,7 @@
           implementation
         };
       }
-      var ReactSharedInternals = React2.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      var ReactSharedInternals = React.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       function getCrossOriginStringAs(as, input) {
         if ("font" === as) return "";
         if ("string" === typeof input)
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -37395,46 +37395,46 @@
     "node_modules/framer-motion/dist/cjs/feature-bundle-BieBX2Jn.js"(exports) {
       "use strict";
       var motionDom = require_cjs3();
-      var React2 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var React = (init_react_shim(), __toCommonJS(react_shim_exports));
       var jsxRuntime = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var motionUtils = require_cjs2();
-      var LayoutGroupContext2 = React2.createContext({});
+      var LayoutGroupContext2 = React.createContext({});
       function useConstant2(init) {
-        const ref = React2.useRef(null);
+        const ref = React.useRef(null);
         if (ref.current === null) {
           ref.current = init();
         }
         return ref.current;
       }
       var isBrowser3 = typeof window !== "undefined";
-      var useIsomorphicLayoutEffect2 = isBrowser3 ? React2.useLayoutEffect : React2.useEffect;
-      var PresenceContext2 = /* @__PURE__ */ React2.createContext(null);
-      var MotionConfigContext2 = React2.createContext({
+      var useIsomorphicLayoutEffect2 = isBrowser3 ? React.useLayoutEffect : React.useEffect;
+      var PresenceContext2 = /* @__PURE__ */ React.createContext(null);
+      var MotionConfigContext2 = React.createContext({
         transformPagePoint: (p) => p,
         isStatic: false,
         reducedMotion: "never"
       });
       function usePresence2(subscribe = true) {
-        const context = React2.useContext(PresenceContext2);
+        const context = React.useContext(PresenceContext2);
         if (context === null)
           return [true, null];
         const { isPresent: isPresent3, onExitComplete, register } = context;
-        const id5 = React2.useId();
-        React2.useEffect(() => {
+        const id5 = React.useId();
+        React.useEffect(() => {
           if (subscribe) {
             return register(id5);
           }
         }, [subscribe]);
-        const safeToRemove = React2.useCallback(() => subscribe && onExitComplete && onExitComplete(id5), [id5, onExitComplete, subscribe]);
+        const safeToRemove = React.useCallback(() => subscribe && onExitComplete && onExitComplete(id5), [id5, onExitComplete, subscribe]);
         return !isPresent3 && onExitComplete ? [false, safeToRemove] : [true];
       }
       function useIsPresent2() {
-        return isPresent2(React2.useContext(PresenceContext2));
+        return isPresent2(React.useContext(PresenceContext2));
       }
       function isPresent2(context) {
         return context === null ? true : context.isPresent;
       }
-      var LazyContext2 = React2.createContext({ strict: false });
+      var LazyContext2 = React.createContext({ strict: false });
       var featureProps2 = {
         animation: [
           "animate",
@@ -37598,10 +37598,10 @@
       var createDomVisualElement2 = (Component2, options) => {
         const isSVG = options.isSVG ?? isSVGComponent2(Component2);
         return isSVG ? new motionDom.SVGVisualElement(options) : new motionDom.HTMLVisualElement(options, {
-          allowProjection: Component2 !== React2.Fragment
+          allowProjection: Component2 !== React.Fragment
         });
       };
-      var MotionContext2 = /* @__PURE__ */ React2.createContext({});
+      var MotionContext2 = /* @__PURE__ */ React.createContext({});
       function getCurrentTreeVariants2(props, context) {
         if (motionDom.isControllingVariants(props)) {
           const { initial, animate: animate2 } = props;
@@ -37613,8 +37613,8 @@
         return props.inherit !== false ? context : {};
       }
       function useCreateMotionContext2(props) {
-        const { initial, animate: animate2 } = getCurrentTreeVariants2(props, React2.useContext(MotionContext2));
-        return React2.useMemo(() => ({ initial, animate: animate2 }), [variantLabelsAsDependency2(initial), variantLabelsAsDependency2(animate2)]);
+        const { initial, animate: animate2 } = getCurrentTreeVariants2(props, React.useContext(MotionContext2));
+        return React.useMemo(() => ({ initial, animate: animate2 }), [variantLabelsAsDependency2(initial), variantLabelsAsDependency2(animate2)]);
       }
       function variantLabelsAsDependency2(prop) {
         return Array.isArray(prop) ? prop.join(" ") : prop;
@@ -37633,7 +37633,7 @@
         }
       }
       function useInitialMotionValues2({ transformTemplate }, visualState) {
-        return React2.useMemo(() => {
+        return React.useMemo(() => {
           const state = createHtmlRenderState2();
           motionDom.buildHTMLStyles(state, visualState, transformTemplate);
           return Object.assign({}, state.vars, state.style);
@@ -37665,7 +37665,7 @@
         attrs: {}
       });
       function useSVGProps2(props, visualState, _isStatic, Component2) {
-        const visualProps = React2.useMemo(() => {
+        const visualProps = React.useMemo(() => {
           const state = createSvgRenderState2();
           motionDom.buildSVGAttrs(state, visualState, motionDom.isSVGTag(Component2), props.transformTemplate, props.style);
           return {
@@ -37684,10 +37684,10 @@
         const useVisualProps = isSVG ?? isSVGComponent2(Component2) ? useSVGProps2 : useHTMLProps2;
         const visualProps = useVisualProps(props, latestValues, isStatic, Component2);
         const filteredProps = filterProps2(props, typeof Component2 === "string", forwardMotionProps);
-        const elementProps = Component2 !== React2.Fragment ? { ...filteredProps, ...visualProps, ref } : {};
+        const elementProps = Component2 !== React.Fragment ? { ...filteredProps, ...visualProps, ref } : {};
         const { children } = props;
-        const renderedChildren = React2.useMemo(() => motionDom.isMotionValue(children) ? children.get() : children, [children]);
-        return React2.createElement(Component2, {
+        const renderedChildren = React.useMemo(() => motionDom.isMotionValue(children) ? children.get() : children, [children]);
+        return React.createElement(Component2, {
           ...elementProps,
           children: renderedChildren
         });
@@ -37742,8 +37742,8 @@
         return values;
       }
       var makeUseVisualState2 = (config) => (props, isStatic) => {
-        const context = React2.useContext(MotionContext2);
-        const presenceContext = React2.useContext(PresenceContext2);
+        const context = React.useContext(MotionContext2);
+        const presenceContext = React.useContext(PresenceContext2);
         const make = () => makeState2(config, props, context, presenceContext);
         return isStatic ? make() : useConstant2(make);
       };
@@ -37757,12 +37757,12 @@
       });
       var motionComponentSymbol2 = /* @__PURE__ */ Symbol.for("motionComponentSymbol");
       function useMotionRef2(visualState, visualElement, externalRef) {
-        const externalRefContainer = React2.useRef(externalRef);
-        React2.useInsertionEffect(() => {
+        const externalRefContainer = React.useRef(externalRef);
+        React.useInsertionEffect(() => {
           externalRefContainer.current = externalRef;
         });
-        const refCleanup = React2.useRef(null);
-        return React2.useCallback((instance) => {
+        const refCleanup = React.useRef(null);
+        return React.useCallback((instance) => {
           if (instance) {
             visualState.onMount?.(instance);
           }
@@ -37787,19 +37787,19 @@
           }
         }, [visualElement]);
       }
-      var SwitchLayoutGroupContext2 = React2.createContext({});
+      var SwitchLayoutGroupContext2 = React.createContext({});
       function isRefObject2(ref) {
         return ref && typeof ref === "object" && Object.prototype.hasOwnProperty.call(ref, "current");
       }
       function useVisualElement2(Component2, visualState, props, createVisualElement, ProjectionNodeConstructor, isSVG) {
-        const { visualElement: parent } = React2.useContext(MotionContext2);
-        const lazyContext = React2.useContext(LazyContext2);
-        const presenceContext = React2.useContext(PresenceContext2);
-        const motionConfig = React2.useContext(MotionConfigContext2);
+        const { visualElement: parent } = React.useContext(MotionContext2);
+        const lazyContext = React.useContext(LazyContext2);
+        const presenceContext = React.useContext(PresenceContext2);
+        const motionConfig = React.useContext(MotionConfigContext2);
         const reducedMotionConfig = motionConfig.reducedMotion;
         const skipAnimations = motionConfig.skipAnimations;
-        const visualElementRef = React2.useRef(null);
-        const hasMountedOnce = React2.useRef(false);
+        const visualElementRef = React.useRef(null);
+        const hasMountedOnce = React.useRef(false);
         createVisualElement = createVisualElement || lazyContext.renderer;
         if (!visualElementRef.current && createVisualElement) {
           visualElementRef.current = createVisualElement(Component2, {
@@ -37817,18 +37817,18 @@
           }
         }
         const visualElement = visualElementRef.current;
-        const initialLayoutGroupConfig = React2.useContext(SwitchLayoutGroupContext2);
+        const initialLayoutGroupConfig = React.useContext(SwitchLayoutGroupContext2);
         if (visualElement && !visualElement.projection && ProjectionNodeConstructor && (visualElement.type === "html" || visualElement.type === "svg")) {
           createProjectionNode3(visualElementRef.current, props, ProjectionNodeConstructor, initialLayoutGroupConfig);
         }
-        const isMounted = React2.useRef(false);
-        React2.useInsertionEffect(() => {
+        const isMounted = React.useRef(false);
+        React.useInsertionEffect(() => {
           if (visualElement && isMounted.current) {
             visualElement.update(props, presenceContext);
           }
         });
         const optimisedAppearId = props[motionDom.optimizedAppearDataAttribute];
-        const wantsHandoff = React2.useRef(Boolean(optimisedAppearId) && typeof window !== "undefined" && !window.MotionHandoffIsComplete?.(optimisedAppearId) && window.MotionHasOptimisedAnimation?.(optimisedAppearId));
+        const wantsHandoff = React.useRef(Boolean(optimisedAppearId) && typeof window !== "undefined" && !window.MotionHandoffIsComplete?.(optimisedAppearId) && window.MotionHasOptimisedAnimation?.(optimisedAppearId));
         useIsomorphicLayoutEffect2(() => {
           hasMountedOnce.current = true;
           if (!visualElement)
@@ -37841,7 +37841,7 @@
             visualElement.animationState.animateChanges();
           }
         });
-        React2.useEffect(() => {
+        React.useEffect(() => {
           if (!visualElement)
             return;
           if (!wantsHandoff.current && visualElement.animationState) {
@@ -37892,7 +37892,7 @@
         function MotionDOMComponent(props, externalRef) {
           let MeasureLayout3;
           const configAndProps = {
-            ...React2.useContext(MotionConfigContext2),
+            ...React.useContext(MotionConfigContext2),
             ...props,
             layoutId: useLayoutId2(props)
           };
@@ -37908,16 +37908,16 @@
           return jsxRuntime.jsxs(MotionContext2.Provider, { value: context, children: [MeasureLayout3 && context.visualElement ? jsxRuntime.jsx(MeasureLayout3, { visualElement: context.visualElement, ...configAndProps }) : null, useRender2(Component2, props, useMotionRef2(visualState, context.visualElement, externalRef), visualState, isStatic, forwardMotionProps, isSVG)] });
         }
         MotionDOMComponent.displayName = `motion.${typeof Component2 === "string" ? Component2 : `create(${Component2.displayName ?? Component2.name ?? ""})`}`;
-        const ForwardRefMotionComponent = React2.forwardRef(MotionDOMComponent);
+        const ForwardRefMotionComponent = React.forwardRef(MotionDOMComponent);
         ForwardRefMotionComponent[motionComponentSymbol2] = Component2;
         return ForwardRefMotionComponent;
       }
       function useLayoutId2({ layoutId }) {
-        const layoutGroupId = React2.useContext(LayoutGroupContext2).id;
+        const layoutGroupId = React.useContext(LayoutGroupContext2).id;
         return layoutGroupId && layoutId !== void 0 ? layoutGroupId + "-" + layoutId : layoutId;
       }
       function useStrictMode2(configAndProps, preloadedFeatures) {
-        const isStrict = React2.useContext(LazyContext2).strict;
+        const isStrict = React.useContext(LazyContext2).strict;
         if (false) {
           const strictMessage = "You have rendered a `motion` component within a `LazyMotion` component. This will break tree shaking. Import and render a `m` component instead.";
           configAndProps.ignoreStrict ? motionUtils.warning(false, strictMessage, "lazy-strict-mode") : motionUtils.invariant(false, strictMessage, "lazy-strict-mode");
@@ -38810,7 +38810,7 @@
         }
       };
       var hasTakenAnySnapshot2 = false;
-      var MeasureLayoutWithContext2 = class extends React2.Component {
+      var MeasureLayoutWithContext2 = class extends React.Component {
         /**
          * This only mounts projection nodes for components that
          * need measuring, we might want to do it for all components
@@ -38906,8 +38906,8 @@
       };
       function MeasureLayout2(props) {
         const [isPresent3, safeToRemove] = usePresence2();
-        const layoutGroup = React2.useContext(LayoutGroupContext2);
-        return jsxRuntime.jsx(MeasureLayoutWithContext2, { ...props, layoutGroup, switchLayoutGroup: React2.useContext(SwitchLayoutGroupContext2), isPresent: isPresent3, safeToRemove });
+        const layoutGroup = React.useContext(LayoutGroupContext2);
+        return jsxRuntime.jsx(MeasureLayoutWithContext2, { ...props, layoutGroup, switchLayoutGroup: React.useContext(SwitchLayoutGroupContext2), isPresent: isPresent3, safeToRemove });
       }
       var drag2 = {
         pan: {
@@ -39155,7 +39155,7 @@
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
       var jsxRuntime = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var React2 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var React = (init_react_shim(), __toCommonJS(react_shim_exports));
       var featureBundle2 = require_feature_bundle_BieBX2Jn();
       var motionDom = require_cjs3();
       var motionUtils = require_cjs2();
@@ -39177,7 +39177,7 @@
         n.default = e;
         return Object.freeze(n);
       }
-      var React__namespace = /* @__PURE__ */ _interopNamespaceDefault(React2);
+      var React__namespace = /* @__PURE__ */ _interopNamespaceDefault(React);
       function setRef2(ref, value) {
         if (typeof ref === "function") {
           return ref(value);
@@ -39240,9 +39240,9 @@
         }
       };
       function PopChild2({ children, isPresent: isPresent2, anchorX, anchorY, root, pop }) {
-        const id5 = React2.useId();
-        const ref = React2.useRef(null);
-        const size = React2.useRef({
+        const id5 = React.useId();
+        const ref = React.useRef(null);
+        const size = React.useRef({
           width: 0,
           height: 0,
           top: 0,
@@ -39250,10 +39250,10 @@
           right: 0,
           bottom: 0
         });
-        const { nonce } = React2.useContext(featureBundle2.MotionConfigContext);
+        const { nonce } = React.useContext(featureBundle2.MotionConfigContext);
         const childRef = children.props?.ref ?? children?.ref;
         const composedRef = useComposedRefs2(ref, childRef);
-        React2.useInsertionEffect(() => {
+        React.useInsertionEffect(() => {
           const { width, height, top, left, right, bottom } = size.current;
           if (isPresent2 || pop === false || !ref.current || !width || !height)
             return;
@@ -39287,9 +39287,9 @@
       }
       var PresenceChild2 = ({ children, initial, isPresent: isPresent2, onExitComplete, custom, presenceAffectsLayout, mode, anchorX, anchorY, root }) => {
         const presenceChildren = featureBundle2.useConstant(newChildrenMap2);
-        const id5 = React2.useId();
+        const id5 = React.useId();
         let isReusedContext = true;
-        let context = React2.useMemo(() => {
+        let context = React.useMemo(() => {
           isReusedContext = false;
           return {
             id: id5,
@@ -39313,7 +39313,7 @@
         if (presenceAffectsLayout && isReusedContext) {
           context = { ...context };
         }
-        React2.useMemo(() => {
+        React.useMemo(() => {
           presenceChildren.forEach((_, key) => presenceChildren.set(key, false));
         }, [isPresent2]);
         React__namespace.useEffect(() => {
@@ -39328,22 +39328,22 @@
       var getChildKey2 = (child) => child.key || "";
       function onlyElements2(children) {
         const filtered = [];
-        React2.Children.forEach(children, (child) => {
-          if (React2.isValidElement(child))
+        React.Children.forEach(children, (child) => {
+          if (React.isValidElement(child))
             filtered.push(child);
         });
         return filtered;
       }
       var AnimatePresence2 = ({ children, custom, initial = true, onExitComplete, presenceAffectsLayout = true, mode = "sync", propagate = false, anchorX = "left", anchorY = "top", root }) => {
         const [isParentPresent, safeToRemove] = featureBundle2.usePresence(propagate);
-        const presentChildren = React2.useMemo(() => onlyElements2(children), [children]);
+        const presentChildren = React.useMemo(() => onlyElements2(children), [children]);
         const presentKeys = propagate && !isParentPresent ? [] : presentChildren.map(getChildKey2);
-        const isInitialRender = React2.useRef(true);
-        const pendingPresentChildren = React2.useRef(presentChildren);
+        const isInitialRender = React.useRef(true);
+        const pendingPresentChildren = React.useRef(presentChildren);
         const exitComplete = featureBundle2.useConstant(() => /* @__PURE__ */ new Map());
-        const exitingComponents = React2.useRef(/* @__PURE__ */ new Set());
-        const [diffedChildren, setDiffedChildren] = React2.useState(presentChildren);
-        const [renderedChildren, setRenderedChildren] = React2.useState(presentChildren);
+        const exitingComponents = React.useRef(/* @__PURE__ */ new Set());
+        const [diffedChildren, setDiffedChildren] = React.useState(presentChildren);
+        const [renderedChildren, setRenderedChildren] = React.useState(presentChildren);
         featureBundle2.useIsomorphicLayoutEffect(() => {
           isInitialRender.current = false;
           pendingPresentChildren.current = presentChildren;
@@ -39380,7 +39380,7 @@
         if (false) {
           console.warn(`You're attempting to animate multiple children within AnimatePresence, but its mode is set to "wait". This will lead to odd visual behaviour.`);
         }
-        const { forceRender } = React2.useContext(featureBundle2.LayoutGroupContext);
+        const { forceRender } = React.useContext(featureBundle2.LayoutGroupContext);
         return jsxRuntime.jsx(jsxRuntime.Fragment, { children: renderedChildren.map((child) => {
           const key = getChildKey2(child);
           const isPresent2 = propagate && !isParentPresent ? false : presentChildren === renderedChildren || presentKeys.includes(key);
@@ -39409,9 +39409,9 @@
           return jsxRuntime.jsx(PresenceChild2, { isPresent: isPresent2, initial: !isInitialRender.current || initial ? void 0 : false, custom, presenceAffectsLayout, mode, root, onExitComplete: isPresent2 ? void 0 : onExit, anchorX, anchorY, children: child }, key);
         }) });
       };
-      var DeprecatedLayoutGroupContext2 = React2.createContext(null);
+      var DeprecatedLayoutGroupContext2 = React.createContext(null);
       function useIsMounted2() {
-        const isMounted = React2.useRef(false);
+        const isMounted = React.useRef(false);
         featureBundle2.useIsomorphicLayoutEffect(() => {
           isMounted.current = true;
           return () => {
@@ -39422,20 +39422,20 @@
       }
       function useForceUpdate2() {
         const isMounted = useIsMounted2();
-        const [forcedRenderCount, setForcedRenderCount] = React2.useState(0);
-        const forceRender = React2.useCallback(() => {
+        const [forcedRenderCount, setForcedRenderCount] = React.useState(0);
+        const forceRender = React.useCallback(() => {
           isMounted.current && setForcedRenderCount(forcedRenderCount + 1);
         }, [forcedRenderCount]);
-        const deferredForceRender = React2.useCallback(() => motionDom.frame.postRender(forceRender), [forceRender]);
+        const deferredForceRender = React.useCallback(() => motionDom.frame.postRender(forceRender), [forceRender]);
         return [deferredForceRender, forcedRenderCount];
       }
       var shouldInheritGroup2 = (inherit) => inherit === true;
       var shouldInheritId2 = (inherit) => shouldInheritGroup2(inherit === true) || inherit === "id";
       var LayoutGroup2 = ({ children, id: id5, inherit = true }) => {
-        const layoutGroupContext = React2.useContext(featureBundle2.LayoutGroupContext);
-        const deprecatedLayoutGroupContext = React2.useContext(DeprecatedLayoutGroupContext2);
+        const layoutGroupContext = React.useContext(featureBundle2.LayoutGroupContext);
+        const deprecatedLayoutGroupContext = React.useContext(DeprecatedLayoutGroupContext2);
         const [forceRender, key] = useForceUpdate2();
-        const context = React2.useRef(null);
+        const context = React.useRef(null);
         const upstreamId = layoutGroupContext.id || deprecatedLayoutGroupContext;
         if (context.current === null) {
           if (shouldInheritId2(inherit) && upstreamId) {
@@ -39446,18 +39446,18 @@
             group: shouldInheritGroup2(inherit) ? layoutGroupContext.group || motionDom.nodeGroup() : motionDom.nodeGroup()
           };
         }
-        const memoizedContext = React2.useMemo(() => ({ ...context.current, forceRender }), [key]);
+        const memoizedContext = React.useMemo(() => ({ ...context.current, forceRender }), [key]);
         return jsxRuntime.jsx(featureBundle2.LayoutGroupContext.Provider, { value: memoizedContext, children });
       };
       function LazyMotion2({ children, features, strict = false }) {
-        const [, setIsLoaded] = React2.useState(!isLazyBundle2(features));
-        const loadedRenderer = React2.useRef(void 0);
+        const [, setIsLoaded] = React.useState(!isLazyBundle2(features));
+        const loadedRenderer = React.useRef(void 0);
         if (!isLazyBundle2(features)) {
           const { renderer, ...loadedFeatures } = features;
           loadedRenderer.current = renderer;
           featureBundle2.loadFeatures(loadedFeatures);
         }
-        React2.useEffect(() => {
+        React.useEffect(() => {
           if (isLazyBundle2(features)) {
             features().then(({ renderer, ...loadedFeatures }) => {
               featureBundle2.loadFeatures(loadedFeatures);
@@ -39473,11 +39473,11 @@
       }
       function MotionConfig2({ children, isValidProp, ...config }) {
         isValidProp && featureBundle2.loadExternalIsValidProp(isValidProp);
-        const parentConfig = React2.useContext(featureBundle2.MotionConfigContext);
+        const parentConfig = React.useContext(featureBundle2.MotionConfigContext);
         config = { ...parentConfig, ...config };
         config.transition = motionDom.resolveTransition(config.transition, parentConfig.transition);
         config.isStatic = featureBundle2.useConstant(() => config.isStatic);
-        const context = React2.useMemo(() => config, [
+        const context = React.useMemo(() => config, [
           JSON.stringify(config.transition),
           config.transformPagePoint,
           config.reducedMotion,
@@ -39485,7 +39485,7 @@
         ]);
         return jsxRuntime.jsx(featureBundle2.MotionConfigContext.Provider, { value: context, children });
       }
-      var ReorderContext2 = React2.createContext(null);
+      var ReorderContext2 = React.createContext(null);
       function createMotionProxy2(preloadedFeatures, createVisualElement) {
         if (typeof Proxy === "undefined") {
           return featureBundle2.createMotionComponent;
@@ -39538,8 +39538,8 @@
       function ReorderGroupComponent2({ children, as = "ul", axis = "y", onReorder, values, ...props }, externalRef) {
         const Component2 = featureBundle2.useConstant(() => motion2[as]);
         const order = [];
-        const isReordering = React2.useRef(false);
-        const groupRef = React2.useRef(null);
+        const isReordering = React.useRef(false);
+        const groupRef = React.useRef(null);
         motionUtils.invariant(Boolean(values), "Reorder.Group must be provided a values prop", "reorder-values");
         const context = {
           axis,
@@ -39574,7 +39574,7 @@
             }
           }
         };
-        React2.useEffect(() => {
+        React.useEffect(() => {
           isReordering.current = false;
         });
         const setRef3 = (element) => {
@@ -39591,16 +39591,16 @@
         };
         return jsxRuntime.jsx(Component2, { ...props, style: groupStyle, ref: setRef3, ignoreStrict: true, children: jsxRuntime.jsx(ReorderContext2.Provider, { value: context, children }) });
       }
-      var ReorderGroup2 = /* @__PURE__ */ React2.forwardRef(ReorderGroupComponent2);
+      var ReorderGroup2 = /* @__PURE__ */ React.forwardRef(ReorderGroupComponent2);
       function compareMin2(a, b) {
         return a.layout.min - b.layout.min;
       }
       function useMotionValue2(initial) {
         const value = featureBundle2.useConstant(() => motionDom.motionValue(initial));
-        const { isStatic } = React2.useContext(featureBundle2.MotionConfigContext);
+        const { isStatic } = React.useContext(featureBundle2.MotionConfigContext);
         if (isStatic) {
-          const [, setLatest] = React2.useState(initial);
-          React2.useEffect(() => value.on("change", setLatest), []);
+          const [, setLatest] = React.useState(initial);
+          React.useEffect(() => value.on("change", setLatest), []);
         }
         return value;
       }
@@ -39768,7 +39768,7 @@
       }
       function ReorderItemComponent2({ children, style: style2 = {}, value, as = "li", onDrag, onDragEnd, layout: layout2 = true, ...props }, externalRef) {
         const Component2 = featureBundle2.useConstant(() => motion2[as]);
-        const context = React2.useContext(ReorderContext2);
+        const context = React.useContext(ReorderContext2);
         const point3 = {
           x: useDefaultMotionValue2(style2.x),
           y: useDefaultMotionValue2(style2.y)
@@ -39789,7 +39789,7 @@
           registerItem(value, measured);
         }, ref: externalRef, ignoreStrict: true, children });
       }
-      var ReorderItem2 = /* @__PURE__ */ React2.forwardRef(ReorderItemComponent2);
+      var ReorderItem2 = /* @__PURE__ */ React.forwardRef(ReorderItemComponent2);
       var namespace = /* @__PURE__ */ Object.freeze({
         __proto__: null,
         Group: ReorderGroup2,
@@ -40695,7 +40695,7 @@
       }
       var m2 = /* @__PURE__ */ createMotionProxy2();
       function useUnmountEffect2(callback) {
-        return React2.useEffect(() => () => callback(), []);
+        return React.useEffect(() => () => callback(), []);
       }
       var domAnimation2 = {
         renderer: featureBundle2.createDomVisualElement,
@@ -40712,7 +40712,7 @@
         ...featureBundle2.animations
       };
       function useMotionValueEvent2(value, event, callback) {
-        React2.useInsertionEffect(() => value.on(event, callback), [value, event, callback]);
+        React.useInsertionEffect(() => value.on(event, callback), [value, event, callback]);
       }
       var createScrollMotionValues2 = () => ({
         scrollX: motionDom.motionValue(0),
@@ -40750,9 +40750,9 @@
           values.scrollXProgress.accelerate = makeAccelerateConfig2("x", options, container, target);
           values.scrollYProgress.accelerate = makeAccelerateConfig2("y", options, container, target);
         }
-        const scrollAnimation = React2.useRef(null);
-        const needsStart = React2.useRef(false);
-        const start2 = React2.useCallback(() => {
+        const scrollAnimation = React.useRef(null);
+        const needsStart = React.useRef(false);
+        const start2 = React.useCallback(() => {
           scrollAnimation.current = scroll2((_progress, { x, y }) => {
             values.scrollX.set(x.current);
             values.scrollXProgress.set(x.progress);
@@ -40776,7 +40776,7 @@
             return start2();
           }
         }, [start2]);
-        React2.useEffect(() => {
+        React.useEffect(() => {
           if (needsStart.current) {
             motionUtils.invariant(!isRefPending2(container), "Container ref is defined but not hydrated", "use-scroll-ref");
             motionUtils.invariant(!isRefPending2(target), "Target ref is defined but not hydrated", "use-scroll-ref");
@@ -40815,13 +40815,13 @@
         return useCombineMotionValues2(values.filter(motionDom.isMotionValue), buildValue);
       }
       function useFollowValue2(source, options = {}) {
-        const { isStatic } = React2.useContext(featureBundle2.MotionConfigContext);
+        const { isStatic } = React.useContext(featureBundle2.MotionConfigContext);
         const getFromSource = () => motionDom.isMotionValue(source) ? source.get() : source;
         if (isStatic) {
           return useTransform2(getFromSource);
         }
         const value = useMotionValue2(getFromSource());
-        React2.useInsertionEffect(() => {
+        React.useInsertionEffect(() => {
           return motionDom.attachFollow(value, source, options);
         }, [value, JSON.stringify(options)]);
         return value;
@@ -40830,9 +40830,9 @@
         return useFollowValue2(source, { type: "spring", ...options });
       }
       function useAnimationFrame2(callback) {
-        const initialTimestamp = React2.useRef(0);
-        const { isStatic } = React2.useContext(featureBundle2.MotionConfigContext);
-        React2.useEffect(() => {
+        const initialTimestamp = React.useRef(0);
+        const { isStatic } = React.useContext(featureBundle2.MotionConfigContext);
+        React.useEffect(() => {
           if (isStatic)
             return;
           const provideTimeSinceStart = ({ timestamp, delta }) => {
@@ -40882,7 +40882,7 @@
       }
       function useReducedMotion2() {
         !motionDom.hasReducedMotionListener.current && motionDom.initPrefersReducedMotion();
-        const [shouldReduceMotion] = React2.useState(motionDom.prefersReducedMotion.current);
+        const [shouldReduceMotion] = React.useState(motionDom.prefersReducedMotion.current);
         if (false) {
           motionUtils.warnOnce(shouldReduceMotion !== true, "You have Reduced Motion enabled on your device. Animations may not appear as expected.", "reduced-motion-disabled");
         }
@@ -40890,7 +40890,7 @@
       }
       function useReducedMotionConfig2() {
         const reducedMotionPreference = useReducedMotion2();
-        const { reducedMotion } = React2.useContext(featureBundle2.MotionConfigContext);
+        const { reducedMotion } = React.useContext(featureBundle2.MotionConfigContext);
         if (reducedMotion === "never") {
           return false;
         } else if (reducedMotion === "always") {
@@ -40969,7 +40969,7 @@
           animations: []
         }));
         const reduceMotion = useReducedMotionConfig2() ?? void 0;
-        const animate3 = React2.useMemo(() => createScopedAnimate2({ scope, reduceMotion }), [scope, reduceMotion]);
+        const animate3 = React.useMemo(() => createScopedAnimate2({ scope, reduceMotion }), [scope, reduceMotion]);
         useUnmountEffect2(() => {
           scope.animations.forEach((animation) => animation.stop());
           scope.animations.length = 0;
@@ -40995,11 +40995,11 @@
       }
       var useAnimation2 = useAnimationControls2;
       function usePresenceData2() {
-        const context = React2.useContext(featureBundle2.PresenceContext);
+        const context = React.useContext(featureBundle2.PresenceContext);
         return context ? context.custom : void 0;
       }
       function useDomEvent2(ref, eventName, handler, options) {
-        React2.useEffect(() => {
+        React.useEffect(() => {
           const element = ref.current;
           if (handler && element) {
             return motionDom.addDomEvent(element, eventName, handler, options);
@@ -41092,7 +41092,7 @@
         callback && callback();
       }
       function useResetProjection2() {
-        const reset = React2.useCallback(() => {
+        const reset = React.useCallback(() => {
           const root = motionDom.rootProjectionNode.current;
           if (!root)
             return;
@@ -41101,9 +41101,9 @@
         return reset;
       }
       function useCycle2(...items) {
-        const index3 = React2.useRef(0);
-        const [item, setItem] = React2.useState(items[index3.current]);
-        const runCycle = React2.useCallback(
+        const index3 = React.useRef(0);
+        const [item, setItem] = React.useState(items[index3.current]);
+        const runCycle = React.useCallback(
           (next2) => {
             index3.current = typeof next2 !== "number" ? motionUtils.wrap(0, items.length, index3.current + 1) : next2;
             setItem(items[index3.current]);
@@ -41116,8 +41116,8 @@
         return [item, runCycle];
       }
       function useInView2(ref, { root, margin, amount, once: once2 = false, initial = false } = {}) {
-        const [isInView, setInView] = React2.useState(initial);
-        React2.useEffect(() => {
+        const [isInView, setInView] = React.useState(initial);
+        React.useEffect(() => {
           if (!ref.current || once2 && isInView)
             return;
           const onEnter = () => {
@@ -41136,8 +41136,8 @@
       function useInstantTransition2() {
         const [forceUpdate, forcedRenderCount] = useForceUpdate2();
         const startInstantLayoutTransition = useInstantLayoutTransition2();
-        const unlockOnFrameRef = React2.useRef(-1);
-        React2.useEffect(() => {
+        const unlockOnFrameRef = React.useRef(-1);
+        React.useEffect(() => {
           motionDom.frame.postRender(() => motionDom.frame.postRender(() => {
             if (forcedRenderCount !== unlockOnFrameRef.current)
               return;
@@ -41157,8 +41157,8 @@
         motionUtils.MotionGlobalConfig.instantAnimations = false;
       }
       function usePageInView2() {
-        const [isInView, setIsInView] = React2.useState(true);
-        React2.useEffect(() => {
+        const [isInView, setIsInView] = React.useState(true);
+        React.useEffect(() => {
           const handleVisibilityChange = () => setIsInView(!document.hidden);
           if (document.hidden) {
             handleVisibilityChange();
@@ -41402,7 +41402,7 @@
         createRenderState: createObject2
       });
       function useAnimatedState2(initialState) {
-        const [animationState, setAnimationState] = React2.useState(initialState);
+        const [animationState, setAnimationState] = React.useState(initialState);
         const visualState = useVisualState2({}, false);
         const element = featureBundle2.useConstant(() => {
           return new StateVisualElement2({
@@ -41415,7 +41415,7 @@
             presenceContext: null
           }, { initialState });
         });
-        React2.useLayoutEffect(() => {
+        React.useLayoutEffect(() => {
           element.mount({});
           return () => element.unmount();
         }, [element]);
@@ -41437,7 +41437,7 @@
       function useInvertedScale2(scale2) {
         let parentScaleX = useMotionValue2(1);
         let parentScaleY = useMotionValue2(1);
-        const { visualElement } = React2.useContext(featureBundle2.MotionContext);
+        const { visualElement } = React.useContext(featureBundle2.MotionContext);
         motionUtils.invariant(!!(scale2 || visualElement), "If no scale values are provided, useInvertedScale must be used within a child of another motion component.");
         motionUtils.warning(hasWarned3, "useInvertedScale is deprecated and will be removed in 3.0. Use the layout prop instead.");
         hasWarned3 = true;
@@ -48173,17 +48173,17 @@
         renderFn: () => renderFn2
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function getValidChildren2(children) {
-        return import_react67.Children.toArray(children).filter(
-          (child) => (0, import_react67.isValidElement)(child)
+        return import_react70.Children.toArray(children).filter(
+          (child) => (0, import_react70.isValidElement)(child)
         );
       }
       var pickChildren2 = (children, targetChild) => {
         var _a;
         let target = [];
-        const withoutTargetChildren = (_a = import_react67.Children.map(children, (item) => {
-          if (!(0, import_react67.isValidElement)(item)) return item;
+        const withoutTargetChildren = (_a = import_react70.Children.map(children, (item) => {
+          if (!(0, import_react70.isValidElement)(item)) return item;
           if (item.type === targetChild) {
             target.push(item);
             return null;
@@ -48412,12 +48412,12 @@
         }
         return filteredProps;
       }
-      var React2 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
+      var React = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
       function renderFn2({ Component: Component2, props, renderCustom }) {
         if (renderCustom && typeof renderCustom === "function") {
           return renderCustom(props);
         } else {
-          return React2.createElement(Component2, props);
+          return React.createElement(Component2, props);
         }
       }
     }
@@ -48485,18 +48485,18 @@
         useSyncRef: () => useSyncRef
       });
       module.exports = __toCommonJS2(index_exports);
-      var React2 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
+      var React = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
       function createContext22(options = {}) {
         const {
           strict = true,
           errorMessage = "useContext: `context` is undefined. Seems you forgot to wrap component within the Provider",
           name
         } = options;
-        const Context = React2.createContext(void 0);
+        const Context = React.createContext(void 0);
         Context.displayName = name;
         function useContext2() {
           var _a;
-          const context = React2.useContext(Context);
+          const context = React.useContext(Context);
           if (!context && strict) {
             const error = new Error(errorMessage);
             error.name = "ContextError";
@@ -48525,7 +48525,7 @@
           refs.forEach((ref) => assignRef(ref, node));
         };
       }
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function canUseDOM() {
         return !!(typeof window !== "undefined" && window.document && window.document.createElement);
       }
@@ -48611,17 +48611,17 @@
         };
       }
       function useDOMRef(ref) {
-        const domRef = (0, import_react67.useRef)(null);
-        (0, import_react67.useImperativeHandle)(ref, () => domRef.current);
+        const domRef = (0, import_react70.useRef)(null);
+        (0, import_react70.useImperativeHandle)(ref, () => domRef.current);
         return domRef;
       }
       function useFocusableRef(ref, focusableRef) {
-        const domRef = (0, import_react67.useRef)(null);
-        (0, import_react67.useImperativeHandle)(ref, () => createFocusableRef(domRef, focusableRef));
+        const domRef = (0, import_react70.useRef)(null);
+        (0, import_react70.useImperativeHandle)(ref, () => createFocusableRef(domRef, focusableRef));
         return domRef;
       }
       function useSyncRef(context, ref) {
-        (0, import_react67.useLayoutEffect)(() => {
+        (0, import_react70.useLayoutEffect)(() => {
           if (context && context.ref && ref && ref.current) {
             context.ref.current = ref.current;
             return () => {
@@ -48652,11 +48652,11 @@
         };
       };
       var import_react_rsc_utils = require_dist9();
-      var React22 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
+      var React2 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
       function useIsHydrated() {
         const subscribe = () => () => {
         };
-        return React22.useSyncExternalStore(
+        return React2.useSyncExternalStore(
           subscribe,
           () => true,
           () => false
@@ -48702,8 +48702,8 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_system_rsc = require_dist4();
-      var import_i18n9 = require_main5();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_i18n11 = require_main5();
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_framer_motion2 = require_cjs4();
       var import_utils8 = require_main4();
       var import_overlays = require_main9();
@@ -48712,7 +48712,7 @@
         name: "ProviderContext",
         strict: false
       });
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var HeroUIProvider = ({
         children,
         navigate,
@@ -48733,9 +48733,9 @@
       }) => {
         let contents = children;
         if (navigate) {
-          contents = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_utils8.RouterProvider, { navigate, useHref, children: contents });
+          contents = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_utils8.RouterProvider, { navigate, useHref, children: contents });
         }
-        const context = (0, import_react67.useMemo)(() => {
+        const context = (0, import_react70.useMemo)(() => {
           if (disableAnimation && skipFramerMotionAnimations) {
             import_framer_motion2.MotionGlobalConfig.skipAnimations = true;
           }
@@ -48758,7 +48758,7 @@
           labelPlacement,
           spinnerVariant
         ]);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(ProviderContext, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_i18n9.I18nProvider, { locale, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion2.MotionConfig, { reducedMotion, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_overlays.OverlayProvider, { ...otherProps, children: contents }) }) }) });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(ProviderContext, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_i18n11.I18nProvider, { locale, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion2.MotionConfig, { reducedMotion, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_overlays.OverlayProvider, { ...otherProps, children: contents }) }) }) });
       };
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useLabelPlacement(props) {
@@ -48858,7 +48858,7 @@
         dateInput: () => dateInput,
         datePicker: () => datePicker,
         dateRangePicker: () => dateRangePicker,
-        defaultLayout: () => defaultLayout,
+        defaultLayout: () => defaultLayout2,
         divider: () => divider,
         drawer: () => drawer,
         drip: () => drip,
@@ -61035,7 +61035,7 @@
         }
       };
       var isBaseTheme = (theme) => theme === "light" || theme === "dark";
-      var defaultLayout = {
+      var defaultLayout2 = {
         dividerWeight: "1px",
         disabledOpacity: ".5",
         fontSize: {
@@ -61232,7 +61232,7 @@
         } = config;
         const userLightColors = ((_a = themeObject == null ? void 0 : themeObject.light) == null ? void 0 : _a.colors) || {};
         const userDarkColors = ((_b = themeObject == null ? void 0 : themeObject.dark) == null ? void 0 : _b.colors) || {};
-        const defaultLayoutObj = userLayout && typeof userLayout === "object" ? (0, import_deepmerge.default)(defaultLayout, userLayout) : defaultLayout;
+        const defaultLayoutObj = userLayout && typeof userLayout === "object" ? (0, import_deepmerge.default)(defaultLayout2, userLayout) : defaultLayout2;
         const baseLayouts = {
           light: {
             ...defaultLayoutObj,
@@ -62017,9 +62017,9 @@
         toIterator: () => toIterator2
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function forwardRef3(component) {
-        return (0, import_react67.forwardRef)(component);
+        return (0, import_react70.forwardRef)(component);
       }
       var toIterator2 = (obj) => {
         return {
@@ -62071,7 +62071,7 @@
         var _a, _b, _c;
         return !!((_c = (_b = (_a = component.type) == null ? void 0 : _a.render) == null ? void 0 : _b.displayName) == null ? void 0 : _c.includes("HeroUI"));
       };
-      var React2 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
+      var React = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
       var import_theme = require_dist12();
       function getSlots(variants) {
         if (!variants || typeof variants !== "object") return {};
@@ -62164,8 +62164,8 @@
         const inferredSlots = getSlots(mergedVariants);
         const slots = directSlots ? { ...inferredSlots, ...directSlots } : inferredSlots;
         const hasSlots = typeof slots === "object" && Object.keys(slots).length !== 0;
-        const ForwardedComponent = React2.forwardRef((originalProps = {}, ref) => {
-          const newProps = React2.useMemo(
+        const ForwardedComponent = React.forwardRef((originalProps = {}, ref) => {
+          const newProps = React.useMemo(
             () => getClassNamesWithProps(
               {
                 slots,
@@ -62179,7 +62179,7 @@
               [originalProps]
             )
           );
-          return React2.createElement(BaseComponent, { ...originalProps, ...newProps, ref });
+          return React.createElement(BaseComponent, { ...originalProps, ...newProps, ref });
         });
         if (BaseComponent.getCollectionNode) {
           ForwardedComponent.getCollectionNode = (itemProps) => {
@@ -62231,7 +62231,7 @@
       module.exports = __toCommonJS2(index_exports);
       var import_system_rsc = require_dist14();
       var import_theme = require_dist12();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_react_rsc_utils = require_dist9();
       function useSeparator(props) {
         let domProps = (0, import_react_rsc_utils.filterDOMProps)(props, {
@@ -62262,14 +62262,14 @@
           elementType: typeof Component2 === "string" ? Component2 : "hr",
           orientation
         });
-        const styles = (0, import_react67.useMemo)(
+        const styles = (0, import_react70.useMemo)(
           () => (0, import_theme.divider)({
             orientation,
             className
           }),
           [orientation, className]
         );
-        const getDividerProps = (0, import_react67.useCallback)(
+        const getDividerProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             className: styles,
             role: "separator",
@@ -62282,10 +62282,10 @@
         );
         return { Component: Component2, getDividerProps };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Divider = (0, import_system_rsc.forwardRef)((props, ref) => {
         const { Component: Component2, getDividerProps } = useDivider({ ...props });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Component2, { ref, ...getDividerProps() });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Component2, { ref, ...getDividerProps() });
       });
       Divider.displayName = "HeroUI.Divider";
       var divider_default = Divider;
@@ -65076,22 +65076,22 @@
         };
       }
       var import_focus2 = require_main14();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_button = require_main16();
       function useReactAriaAccordionItem(props, state, ref) {
         let { item, isDisabled: isDisabledProp } = props;
         let key = item.key;
         let manager = state.selectionManager;
-        let buttonId = (0, import_react67.useId)();
-        let regionId = (0, import_react67.useId)();
+        let buttonId = (0, import_react70.useId)();
+        let regionId = (0, import_react70.useId)();
         let isDisabled = state.disabledKeys.has(item.key) || isDisabledProp;
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           let isFocused = key === state.focusedKey;
           if (isFocused && document.activeElement !== ref.current) {
             ref.current && (0, import_focus2.focusSafely)(ref.current);
           }
         }, [ref, key, state.focusedKey]);
-        let onSelect = (0, import_react67.useCallback)(
+        let onSelect = (0, import_react70.useCallback)(
           (e) => {
             if (!manager.canSelectItem(key)) {
               return;
@@ -65101,7 +65101,7 @@
           },
           [key, manager]
         );
-        const extendFocusSelection = (0, import_react67.useCallback)(
+        const extendFocusSelection = (0, import_react70.useCallback)(
           (toKey2) => {
             if (manager.selectionBehavior === "replace") {
               manager.extendSelection(toKey2);
@@ -65110,7 +65110,7 @@
           },
           [manager]
         );
-        const onKeyDown = (0, import_react67.useCallback)(
+        const onKeyDown = (0, import_react70.useCallback)(
           (event) => {
             const keyMap = {
               ArrowDown: () => {
@@ -65296,17 +65296,17 @@
         WarningIcon: () => WarningIcon
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Sun = ({ fill, filled, size, height, width, ...props }) => {
         if (filled) {
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             "svg",
             {
               height: size || height || 24,
               viewBox: "0 0 512 512",
               width: size || width || 24,
               ...props,
-              children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M256 118a22 22 0 01-22-22V48a22 22 0 0144 0v48a22 22 0 01-22 22zM256 486a22 22 0 01-22-22v-48a22 22 0 0144 0v48a22 22 0 01-22 22zM369.14 164.86a22 22 0 01-15.56-37.55l33.94-33.94a22 22 0 0131.11 31.11l-33.94 33.94a21.93 21.93 0 01-15.55 6.44zM108.92 425.08a22 22 0 01-15.55-37.56l33.94-33.94a22 22 0 1131.11 31.11l-33.94 33.94a21.94 21.94 0 01-15.56 6.45zM464 278h-48a22 22 0 010-44h48a22 22 0 010 44zM96 278H48a22 22 0 010-44h48a22 22 0 010 44zM403.08 425.08a21.94 21.94 0 01-15.56-6.45l-33.94-33.94a22 22 0 0131.11-31.11l33.94 33.94a22 22 0 01-15.55 37.56zM142.86 164.86a21.89 21.89 0 01-15.55-6.44l-33.94-33.94a22 22 0 0131.11-31.11l33.94 33.94a22 22 0 01-15.56 37.55zM256 358a102 102 0 11102-102 102.12 102.12 0 01-102 102z",
@@ -65316,8 +65316,8 @@
             }
           );
         }
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("svg", { height: size || height || 24, viewBox: "0 0 512 512", width: size || width || 24, ...props, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("svg", { height: size || height || 24, viewBox: "0 0 512 512", width: size || width || 24, ...props, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             "path",
             {
               d: "M256 48v48M256 416v48M403.08 108.92l-33.94 33.94M142.86 369.14l-33.94 33.94M464 256h-48M96 256H48M403.08 403.08l-33.94-33.94M142.86 142.86l-33.94-33.94",
@@ -65328,7 +65328,7 @@
               strokeWidth: 32
             }
           ),
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             "circle",
             {
               cx: 256,
@@ -65344,21 +65344,21 @@
         ] });
       };
       var Mail = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("svg", { height: size || height || 24, viewBox: "0 0 24 24", width: size || width || 24, ...props, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("g", { fill: "none", stroke: fill, strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("path", { d: "M12 20.5H7c-3 0-5-1.5-5-5v-7c0-3.5 2-5 5-5h10c3 0 5 1.5 5 5v3" }),
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("path", { d: "M17 9l-3.13 2.5a3.166 3.166 0 01-3.75 0L7 9M19.21 14.77l-3.539 3.54a1.232 1.232 0 00-.3.59l-.19 1.35a.635.635 0 00.76.76l1.35-.19a1.189 1.189 0 00.59-.3l3.54-3.54a1.365 1.365 0 000-2.22 1.361 1.361 0 00-2.211.01zM18.7 15.28a3.185 3.185 0 002.22 2.22" })
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("svg", { height: size || height || 24, viewBox: "0 0 24 24", width: size || width || 24, ...props, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("g", { fill: "none", stroke: fill, strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("path", { d: "M12 20.5H7c-3 0-5-1.5-5-5v-7c0-3.5 2-5 5-5h10c3 0 5 1.5 5 5v3" }),
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("path", { d: "M17 9l-3.13 2.5a3.166 3.166 0 01-3.75 0L7 9M19.21 14.77l-3.539 3.54a1.232 1.232 0 00-.3.59l-.19 1.35a.635.635 0 00.76.76l1.35-.19a1.189 1.189 0 00.59-.3l3.54-3.54a1.365 1.365 0 000-2.22 1.361 1.361 0 00-2.211.01zM18.7 15.28a3.185 3.185 0 002.22 2.22" })
         ] }) });
       };
       var Moon = ({ fill, filled, size, height, width, ...props }) => {
         if (filled) {
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             "svg",
             {
               height: size || height || 24,
               viewBox: "0 0 512 512",
               width: size || width || 24,
               ...props,
-              children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M152.62 126.77c0-33 4.85-66.35 17.23-94.77C87.54 67.83 32 151.89 32 247.38 32 375.85 136.15 480 264.62 480c95.49 0 179.55-55.54 215.38-137.85-28.42 12.38-61.8 17.23-94.77 17.23-128.47 0-232.61-104.14-232.61-232.61z",
@@ -65368,7 +65368,7 @@
             }
           );
         }
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("svg", { height: size || height || 24, viewBox: "0 0 512 512", width: size || width || 24, ...props, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("svg", { height: size || height || 24, viewBox: "0 0 512 512", width: size || width || 24, ...props, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "path",
           {
             d: "M160 136c0-30.62 4.51-61.61 16-88C99.57 81.27 48 159.32 48 248c0 119.29 96.71 216 216 216 88.68 0 166.73-51.57 200-128-26.39 11.49-57.38 16-88 16-119.29 0-216-96.71-216-216z",
@@ -65382,7 +65382,7 @@
       };
       var Lock = ({ fill, size, height, width, ...props }) => {
         const color2 = fill;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             "data-name": "Iconly/Curved/Lock",
@@ -65391,8 +65391,8 @@
             width: size || width || 24,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("g", { transform: "translate(3.5 2)", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("g", { transform: "translate(3.5 2)", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M9.121,6.653V4.5A4.561,4.561,0,0,0,0,4.484V6.653",
@@ -65405,7 +65405,7 @@
                   transform: "translate(3.85 0.75)"
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M.5,0V2.221",
@@ -65418,7 +65418,7 @@
                   transform: "translate(7.91 12.156)"
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M7.66,0C1.915,0,0,1.568,0,6.271s1.915,6.272,7.66,6.272,7.661-1.568,7.661-6.272S13.4,0,7.66,0Z",
@@ -65437,7 +65437,7 @@
       };
       var Unlock = ({ fill, size, height, width, ...props }) => {
         const color2 = fill;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             "data-name": "Iconly/Curved/Lock",
@@ -65446,8 +65446,8 @@
             width: size || width || 24,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("g", { transform: "translate(3.5 2)", children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("g", { transform: "translate(3.5 2)", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M8.927,3.237A4.562,4.562,0,0,0,0,4.484V6.653",
@@ -65460,7 +65460,7 @@
                   transform: "translate(3.849 0.75)"
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M.5,0V2.221",
@@ -65473,7 +65473,7 @@
                   transform: "translate(7.91 12.156)"
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M7.66,0C1.915,0,0,1.568,0,6.271s1.915,6.272,7.66,6.272,7.661-1.568,7.661-6.272S13.406,0,7.66,0Z",
@@ -65491,13 +65491,13 @@
         );
       };
       var Password = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("svg", { height: size || height || 24, viewBox: "0 0 24 24", width: size || width || 24, ...props, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("g", { fill, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("path", { d: "M18.75 8v2.1a12.984 12.984 0 00-1.5-.1V8c0-3.15-.89-5.25-5.25-5.25S6.75 4.85 6.75 8v2a12.984 12.984 0 00-1.5.1V8c0-2.9.7-6.75 6.75-6.75S18.75 5.1 18.75 8z" }),
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("path", { d: "M18.75 10.1a12.984 12.984 0 00-1.5-.1H6.75a12.984 12.984 0 00-1.5.1C2.7 10.41 2 11.66 2 15v2c0 4 1 5 5 5h10c4 0 5-1 5-5v-2c0-3.34-.7-4.59-3.25-4.9zM8.71 16.71A1.052 1.052 0 018 17a1 1 0 01-.38-.08 1.032 1.032 0 01-.33-.21A1.052 1.052 0 017 16a1 1 0 01.08-.38 1.155 1.155 0 01.21-.33 1.032 1.032 0 01.33-.21 1 1 0 011.09.21 1.155 1.155 0 01.21.33A1 1 0 019 16a1.052 1.052 0 01-.29.71zm4.21-.33a1.155 1.155 0 01-.21.33A1.052 1.052 0 0112 17a1.033 1.033 0 01-.71-.29 1.155 1.155 0 01-.21-.33A1 1 0 0111 16a1.033 1.033 0 01.29-.71 1.047 1.047 0 011.42 0A1.033 1.033 0 0113 16a1 1 0 01-.08.38zm3.79.33a1.014 1.014 0 01-1.42 0 1.014 1.014 0 010-1.42 1.047 1.047 0 011.42 0c.04.05.08.1.12.16a.556.556 0 01.09.17.636.636 0 01.06.18 1.5 1.5 0 01.02.2 1.052 1.052 0 01-.29.71z" })
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("svg", { height: size || height || 24, viewBox: "0 0 24 24", width: size || width || 24, ...props, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("g", { fill, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("path", { d: "M18.75 8v2.1a12.984 12.984 0 00-1.5-.1V8c0-3.15-.89-5.25-5.25-5.25S6.75 4.85 6.75 8v2a12.984 12.984 0 00-1.5.1V8c0-2.9.7-6.75 6.75-6.75S18.75 5.1 18.75 8z" }),
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("path", { d: "M18.75 10.1a12.984 12.984 0 00-1.5-.1H6.75a12.984 12.984 0 00-1.5.1C2.7 10.41 2 11.66 2 15v2c0 4 1 5 5 5h10c4 0 5-1 5-5v-2c0-3.34-.7-4.59-3.25-4.9zM8.71 16.71A1.052 1.052 0 018 17a1 1 0 01-.38-.08 1.032 1.032 0 01-.33-.21A1.052 1.052 0 017 16a1 1 0 01.08-.38 1.155 1.155 0 01.21-.33 1.032 1.032 0 01.33-.21 1 1 0 011.09.21 1.155 1.155 0 01.21.33A1 1 0 019 16a1.052 1.052 0 01-.29.71zm4.21-.33a1.155 1.155 0 01-.21.33A1.052 1.052 0 0112 17a1.033 1.033 0 01-.71-.29 1.155 1.155 0 01-.21-.33A1 1 0 0111 16a1.033 1.033 0 01.29-.71 1.047 1.047 0 011.42 0A1.033 1.033 0 0113 16a1 1 0 01-.08.38zm3.79.33a1.014 1.014 0 01-1.42 0 1.014 1.014 0 010-1.42 1.047 1.047 0 011.42 0c.04.05.08.1.12.16a.556.556 0 01.09.17.636.636 0 01.06.18 1.5 1.5 0 01.02.2 1.052 1.052 0 01-.29.71z" })
         ] }) });
       };
       var Notification = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             fill: "none",
@@ -65506,7 +65506,7 @@
             width: size || width || 24,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "path",
               {
                 clipRule: "evenodd",
@@ -65519,7 +65519,7 @@
         );
       };
       var User = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             height: size || height || 24,
@@ -65527,7 +65527,7 @@
             width: size || width || 24,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
               "g",
               {
                 fill: "none",
@@ -65537,14 +65537,14 @@
                 strokeMiterlimit: 10,
                 strokeWidth: 1.5,
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+                  /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                     "path",
                     {
                       d: "M11.845 21.662C8.153 21.662 5 21.088 5 18.787s3.133-4.425 6.845-4.425c3.692 0 6.845 2.1 6.845 4.4s-3.134 2.9-6.845 2.9z",
                       "data-name": "Stroke 1"
                     }
                   ),
-                  /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("path", { d: "M11.837 11.174a4.372 4.372 0 10-.031 0z", "data-name": "Stroke 3" })
+                  /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("path", { d: "M11.837 11.174a4.372 4.372 0 10-.031 0z", "data-name": "Stroke 3" })
                 ]
               }
             )
@@ -65552,7 +65552,7 @@
         );
       };
       var VolumeUp = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             fill: "none",
@@ -65561,7 +65561,7 @@
             width: size || width || 24,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "path",
               {
                 clipRule: "evenodd",
@@ -65574,7 +65574,7 @@
         );
       };
       var Camera = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             fill: "none",
@@ -65583,7 +65583,7 @@
             width: size || width || 24,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "path",
               {
                 clipRule: "evenodd",
@@ -65596,7 +65596,7 @@
         );
       };
       var Activity2 = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             "data-name": "Iconly/Curved/Activity",
@@ -65605,7 +65605,7 @@
             width: size || width || 24,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
               "g",
               {
                 fill: "none",
@@ -65615,9 +65615,9 @@
                 strokeMiterlimit: 10,
                 strokeWidth: 1.5,
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("path", { d: "M6.918 14.854l2.993-3.889 3.414 2.68 2.929-3.78" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("path", { d: "M19.668 2.35a1.922 1.922 0 11-1.922 1.922 1.921 1.921 0 011.922-1.922z" }),
-                  /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("path", { d: "M20.756 9.269a20.809 20.809 0 01.194 3.034c0 6.938-2.312 9.25-9.25 9.25s-9.25-2.312-9.25-9.25 2.313-9.25 9.25-9.25a20.931 20.931 0 012.983.187" })
+                  /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("path", { d: "M6.918 14.854l2.993-3.889 3.414 2.68 2.929-3.78" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("path", { d: "M19.668 2.35a1.922 1.922 0 11-1.922 1.922 1.921 1.921 0 011.922-1.922z" }),
+                  /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("path", { d: "M20.756 9.269a20.809 20.809 0 01.194 3.034c0 6.938-2.312 9.25-9.25 9.25s-9.25-2.312-9.25-9.25 2.313-9.25 9.25-9.25a20.931 20.931 0 012.983.187" })
                 ]
               }
             )
@@ -65625,7 +65625,7 @@
         );
       };
       var Plus = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             height: size || height || 24,
@@ -65633,15 +65633,15 @@
             width: size || width || 24,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("g", { fill: "none", stroke: fill, strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("path", { d: "M6 12h12" }),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("path", { d: "M12 18V6" })
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("g", { fill: "none", stroke: fill, strokeLinecap: "round", strokeLinejoin: "round", strokeWidth: 1.5, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("path", { d: "M6 12h12" }),
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("path", { d: "M12 18V6" })
             ] })
           }
         );
       };
       var Minus = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             height: size || height || 24,
@@ -65649,7 +65649,7 @@
             width: size || width || 24,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "path",
               {
                 d: "M6 12h12",
@@ -65664,7 +65664,7 @@
         );
       };
       var Eye = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "svg",
           {
             fill: "none",
@@ -65674,7 +65674,7 @@
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M12.9833 10C12.9833 11.65 11.65 12.9833 10 12.9833C8.35 12.9833 7.01666 11.65 7.01666 10C7.01666 8.35 8.35 7.01666 10 7.01666C11.65 7.01666 12.9833 8.35 12.9833 10Z",
@@ -65684,7 +65684,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M9.99999 16.8916C12.9417 16.8916 15.6833 15.1583 17.5917 12.1583C18.3417 10.9833 18.3417 9.00831 17.5917 7.83331C15.6833 4.83331 12.9417 3.09998 9.99999 3.09998C7.05833 3.09998 4.31666 4.83331 2.40833 7.83331C1.65833 9.00831 1.65833 10.9833 2.40833 12.1583C4.31666 15.1583 7.05833 16.8916 9.99999 16.8916Z",
@@ -65699,7 +65699,7 @@
         );
       };
       var Edit = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "svg",
           {
             fill: "none",
@@ -65709,7 +65709,7 @@
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M11.05 3.00002L4.20835 10.2417C3.95002 10.5167 3.70002 11.0584 3.65002 11.4334L3.34169 14.1334C3.23335 15.1084 3.93335 15.775 4.90002 15.6084L7.58335 15.15C7.95835 15.0834 8.48335 14.8084 8.74168 14.525L15.5834 7.28335C16.7667 6.03335 17.3 4.60835 15.4583 2.86668C13.625 1.14168 12.2334 1.75002 11.05 3.00002Z",
@@ -65720,7 +65720,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M9.90833 4.20831C10.2667 6.50831 12.1333 8.26665 14.45 8.49998",
@@ -65731,7 +65731,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M2.5 18.3333H17.5",
@@ -65747,7 +65747,7 @@
         );
       };
       var Delete = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "svg",
           {
             fill: "none",
@@ -65757,7 +65757,7 @@
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M17.5 4.98332C14.725 4.70832 11.9333 4.56665 9.15 4.56665C7.5 4.56665 5.85 4.64998 4.2 4.81665L2.5 4.98332",
@@ -65767,7 +65767,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M7.08331 4.14169L7.26665 3.05002C7.39998 2.25835 7.49998 1.66669 8.90831 1.66669H11.0916C12.5 1.66669 12.6083 2.29169 12.7333 3.05835L12.9166 4.14169",
@@ -65777,7 +65777,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M15.7084 7.61664L15.1667 16.0083C15.075 17.3166 15 18.3333 12.675 18.3333H7.32502C5.00002 18.3333 4.92502 17.3166 4.83335 16.0083L4.29169 7.61664",
@@ -65787,7 +65787,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M8.60834 13.75H11.3833",
@@ -65797,7 +65797,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M7.91669 10.4167H12.0834",
@@ -65812,7 +65812,7 @@
         );
       };
       var ChevronDown = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             fill: "none",
@@ -65821,7 +65821,7 @@
             width: size || width || 24,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "path",
               {
                 d: "m19.92 8.95-6.52 6.52c-.77.77-2.03.77-2.8 0L4.08 8.95",
@@ -65836,7 +65836,7 @@
         );
       };
       var ChevronDownBold = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             fill: "none",
@@ -65845,7 +65845,7 @@
             width: size || width || 24,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "path",
               {
                 d: "M17.9188 8.17969H11.6888H6.07877C5.11877 8.17969 4.63877 9.33969 5.31877 10.0197L10.4988 15.1997C11.3288 16.0297 12.6788 16.0297 13.5088 15.1997L15.4788 13.2297L18.6888 10.0197C19.3588 9.33969 18.8788 8.17969 17.9188 8.17969Z",
@@ -65856,7 +65856,7 @@
         );
       };
       var NewFile = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "svg",
           {
             fill: "none",
@@ -65866,7 +65866,7 @@
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M8 2V5",
@@ -65877,7 +65877,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M16 2V5",
@@ -65888,7 +65888,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M21 8.5V13.63C20.11 12.92 18.98 12.5 17.75 12.5C16.52 12.5 15.37 12.93 14.47 13.66C13.26 14.61 12.5 16.1 12.5 17.75C12.5 18.73 12.78 19.67 13.26 20.45C13.63 21.06 14.11 21.59 14.68 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z",
@@ -65899,7 +65899,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M7 11H13",
@@ -65910,7 +65910,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M7 16H9.62",
@@ -65921,7 +65921,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M23 17.75C23 18.73 22.72 19.67 22.24 20.45C21.96 20.93 21.61 21.35 21.2 21.69C20.28 22.51 19.08 23 17.75 23C16.6 23 15.54 22.63 14.68 22C14.11 21.59 13.63 21.06 13.26 20.45C12.78 19.67 12.5 18.73 12.5 17.75C12.5 16.1 13.26 14.61 14.47 13.66C15.37 12.93 16.52 12.5 17.75 12.5C18.98 12.5 20.11 12.92 21 13.63C22.22 14.59 23 16.08 23 17.75Z",
@@ -65932,7 +65932,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M17.75 20.25C17.75 18.87 18.87 17.75 20.25 17.75C18.87 17.75 17.75 16.63 17.75 15.25C17.75 16.63 16.63 17.75 15.25 17.75C16.63 17.75 17.75 18.87 17.75 20.25Z",
@@ -65947,7 +65947,7 @@
         );
       };
       var AddNoteBulk = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "svg",
           {
             fill: "none",
@@ -65957,7 +65957,7 @@
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M7.37 22h9.25a4.87 4.87 0 0 0 4.87-4.87V8.37a4.87 4.87 0 0 0-4.87-4.87H7.37A4.87 4.87 0 0 0 2.5 8.37v8.75c0 2.7 2.18 4.88 4.87 4.88Z",
@@ -65965,7 +65965,7 @@
                   opacity: 0.4
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M8.29 6.29c-.42 0-.75-.34-.75-.75V2.75a.749.749 0 1 1 1.5 0v2.78c0 .42-.33.76-.75.76ZM15.71 6.29c-.42 0-.75-.34-.75-.75V2.75a.749.749 0 1 1 1.5 0v2.78c0 .42-.33.76-.75.76ZM12 14.75h-1.69V13c0-.41-.34-.75-.75-.75s-.75.34-.75.75v1.75H7c-.41 0-.75.34-.75.75s.34.75.75.75h1.81V18c0 .41.34.75.75.75s.75-.34.75-.75v-1.75H12c.41 0 .75-.34.75-.75s-.34-.75-.75-.75Z",
@@ -65977,7 +65977,7 @@
         );
       };
       var CopyDocumentBulk = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "svg",
           {
             fill: "none",
@@ -65987,7 +65987,7 @@
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M15.5 13.15h-2.17c-1.78 0-3.23-1.44-3.23-3.23V7.75c0-.41-.33-.75-.75-.75H6.18C3.87 7 2 8.5 2 11.18v6.64C2 20.5 3.87 22 6.18 22h5.89c2.31 0 4.18-1.5 4.18-4.18V13.9c0-.42-.34-.75-.75-.75Z",
@@ -65995,14 +65995,14 @@
                   opacity: 0.4
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M17.82 2H11.93C9.67 2 7.84 3.44 7.76 6.01c.06 0 .11-.01.17-.01h5.89C16.13 6 18 7.5 18 10.18V16.83c0 .06-.01.11-.01.16 2.23-.07 4.01-1.55 4.01-4.16V6.18C22 3.5 20.13 2 17.82 2Z",
                   fill
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M11.98 7.15c-.31-.31-.84-.1-.84.33v2.62c0 1.1.93 2 2.07 2 .71.01 1.7.01 2.55.01.43 0 .65-.5.35-.8-1.09-1.09-3.03-3.04-4.13-4.16Z",
@@ -66014,7 +66014,7 @@
         );
       };
       var EditDocumentBulk = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "svg",
           {
             fill: "none",
@@ -66024,7 +66024,7 @@
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M15.48 3H7.52C4.07 3 2 5.06 2 8.52v7.95C2 19.94 4.07 22 7.52 22h7.95c3.46 0 5.52-2.06 5.52-5.52V8.52C21 5.06 18.93 3 15.48 3Z",
@@ -66032,7 +66032,7 @@
                   opacity: 0.4
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M21.02 2.98c-1.79-1.8-3.54-1.84-5.38 0L14.51 4.1c-.1.1-.13.24-.09.37.7 2.45 2.66 4.41 5.11 5.11.03.01.08.01.11.01.1 0 .2-.04.27-.11l1.11-1.12c.91-.91 1.36-1.78 1.36-2.67 0-.9-.45-1.79-1.36-2.71ZM17.86 10.42c-.27-.13-.53-.26-.77-.41-.2-.12-.4-.25-.59-.39-.16-.1-.34-.25-.52-.4-.02-.01-.08-.06-.16-.14-.31-.25-.64-.59-.95-.96-.02-.02-.08-.08-.13-.17-.1-.11-.25-.3-.38-.51-.11-.14-.24-.34-.36-.55-.15-.25-.28-.5-.4-.76-.13-.28-.23-.54-.32-.79L7.9 10.72c-.35.35-.69 1.01-.76 1.5l-.43 2.98c-.09.63.08 1.22.47 1.61.33.33.78.5 1.28.5.11 0 .22-.01.33-.02l2.97-.42c.49-.07 1.15-.4 1.5-.76l5.38-5.38c-.25-.08-.5-.19-.78-.31Z",
@@ -66044,7 +66044,7 @@
         );
       };
       var DeleteDocumentBulk = ({ fill, size, height, width, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "svg",
           {
             fill: "none",
@@ -66054,14 +66054,14 @@
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M21.07 5.23c-1.61-.16-3.22-.28-4.84-.37v-.01l-.22-1.3c-.15-.92-.37-2.3-2.71-2.3h-2.62c-2.33 0-2.55 1.32-2.71 2.29l-.21 1.28c-.93.06-1.86.12-2.79.21l-2.04.2c-.42.04-.72.41-.68.82.04.41.4.71.82.67l2.04-.2c5.24-.52 10.52-.32 15.82.21h.08c.38 0 .71-.29.75-.68a.766.766 0 0 0-.69-.82Z",
                   fill
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M19.23 8.14c-.24-.25-.57-.39-.91-.39H5.68c-.34 0-.68.14-.91.39-.23.25-.36.59-.34.94l.62 10.26c.11 1.52.25 3.42 3.74 3.42h6.42c3.49 0 3.63-1.89 3.74-3.42l.62-10.25c.02-.36-.11-.7-.34-.95Z",
@@ -66069,7 +66069,7 @@
                   opacity: 0.399
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   clipRule: "evenodd",
@@ -66089,7 +66089,7 @@
         width,
         ...props
       }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "svg",
           {
             fill: "none",
@@ -66099,28 +66099,28 @@
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M16.25 22.5C17.2165 22.5 18 21.7165 18 20.75C18 19.7835 17.2165 19 16.25 19C15.2835 19 14.5 19.7835 14.5 20.75C14.5 21.7165 15.2835 22.5 16.25 22.5Z",
                   fill
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M8.25 22.5C9.2165 22.5 10 21.7165 10 20.75C10 19.7835 9.2165 19 8.25 19C7.2835 19 6.5 19.7835 6.5 20.75C6.5 21.7165 7.2835 22.5 8.25 22.5Z",
                   fill
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M4.84 3.94L4.64 6.39C4.6 6.86 4.97 7.25 5.44 7.25H20.75C21.17 7.25 21.52 6.93 21.55 6.51C21.68 4.74 20.33 3.3 18.56 3.3H6.27C6.17 2.86 5.97 2.44 5.66 2.09C5.16 1.56 4.46 1.25 3.74 1.25H2C1.59 1.25 1.25 1.59 1.25 2C1.25 2.41 1.59 2.75 2 2.75H3.74C4.05 2.75 4.34 2.88 4.55 3.1C4.76 3.33 4.86 3.63 4.84 3.94Z",
                   fill
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M20.5101 8.75H5.17005C4.75005 8.75 4.41005 9.07 4.37005 9.48L4.01005 13.83C3.87005 15.54 5.21005 17 6.92005 17H18.0401C19.5401 17 20.8601 15.77 20.9701 14.27L21.3001 9.6C21.3401 9.14 20.9801 8.75 20.5101 8.75Z",
@@ -66138,7 +66138,7 @@
         width,
         ...props
       }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             fill: "none",
@@ -66147,7 +66147,7 @@
             width: size || width,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "path",
               {
                 d: "M6.09 13.28h3.09v7.2c0 1.68.91 2.02 2.02.76l7.57-8.6c.93-1.05.54-1.92-.87-1.92h-3.09v-7.2c0-1.68-.91-2.02-2.02-.76l-7.57 8.6c-.92 1.06-.53 1.92.87 1.92Z",
@@ -66168,7 +66168,7 @@
         width,
         ...props
       }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             fill: "none",
@@ -66177,7 +66177,7 @@
             width: size || width,
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "path",
               {
                 d: "M19.32 10H4.69c-1.48 0-2.68-1.21-2.68-2.68V4.69c0-1.48 1.21-2.68 2.68-2.68h14.63C20.8 2.01 22 3.22 22 4.69v2.63C22 8.79 20.79 10 19.32 10ZM19.32 22H4.69c-1.48 0-2.68-1.21-2.68-2.68v-2.63c0-1.48 1.21-2.68 2.68-2.68h14.63c1.48 0 2.68 1.21 2.68 2.68v2.63c0 1.47-1.21 2.68-2.68 2.68ZM6 5v2M10 5v2M6 17v2M10 17v2M14 6h4M14 18h4",
@@ -66197,7 +66197,7 @@
         width,
         ...props
       }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "svg",
           {
             fill: "none",
@@ -66207,7 +66207,7 @@
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M18 18.86h-.76c-.8 0-1.56.31-2.12.87l-1.71 1.69c-.78.77-2.05.77-2.83 0l-1.71-1.69c-.56-.56-1.33-.87-2.12-.87H6c-1.66 0-3-1.33-3-2.97V4.98c0-1.64 1.34-2.97 3-2.97h12c1.66 0 3 1.33 3 2.97v10.91c0 1.63-1.34 2.97-3 2.97Z",
@@ -66218,7 +66218,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M12 10a2.33 2.33 0 1 0 0-4.66A2.33 2.33 0 0 0 12 10ZM16 15.66c0-1.8-1.79-3.26-4-3.26s-4 1.46-4 3.26",
@@ -66239,7 +66239,7 @@
         width,
         ...props
       }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
           "svg",
           {
             fill: "none",
@@ -66249,7 +66249,7 @@
             xmlns: "http://www.w3.org/2000/svg",
             ...props,
             children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M9 22h6c5 0 7-2 7-7V9c0-5-2-7-7-7H9C4 2 2 4 2 9v6c0 5 2 7 7 7ZM18 6 6 18",
@@ -66259,7 +66259,7 @@
                   strokeWidth: 1.5
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                 "path",
                 {
                   d: "M18 10V6h-4M6 14v4h4",
@@ -66274,7 +66274,7 @@
         );
       };
       var Search = ({ size, fill, width = 24, height = 24, ...props }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("svg", { fill: "none", height: size || height, viewBox: "0 0 24 24", width: size || width, ...props, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("svg", { fill: "none", height: size || height, viewBox: "0 0 24 24", width: size || width, ...props, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "path",
           {
             d: "M11.5 21a9.5 9.5 0 1 0 0-19 9.5 9.5 0 0 0 0 19ZM22 22l-2-2",
@@ -66285,8 +66285,8 @@
           }
         ) });
       };
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var CopyIcon = (props) => /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var CopyIcon = (props) => /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
         "svg",
         {
           "aria-hidden": "true",
@@ -66296,7 +66296,7 @@
           viewBox: "0 0 24 24",
           width: "1em",
           ...props,
-          children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+          children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
             "path",
             {
               d: "M20 2H10c-1.103 0-2 .897-2 2v4H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-4h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM4 20V10h10l.002 10H4zm16-6h-4v-4c0-1.103-.897-2-2-2h-4V4h10v10z",
@@ -67007,8 +67007,8 @@
           ]
         }
       );
-      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var InvalidCardIcon = (props) => /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
+      var import_jsx_runtime272 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var InvalidCardIcon = (props) => /* @__PURE__ */ (0, import_jsx_runtime272.jsxs)(
         "svg",
         {
           "aria-hidden": "true",
@@ -67020,7 +67020,7 @@
           width: "1em",
           ...props,
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
               "path",
               {
                 d: "M10 16.95H6.21C2.84 16.95 2 16.11 2 12.74V6.74003C2 3.37003 2.84 2.53003 6.21 2.53003H16.74C20.11 2.53003 20.95 3.37003 20.95 6.74003",
@@ -67030,7 +67030,7 @@
                 strokeWidth: "1.5"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
               "path",
               {
                 d: "M10 21.4699V16.95",
@@ -67040,7 +67040,7 @@
                 strokeWidth: "1.5"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
               "path",
               {
                 d: "M2 12.95H10",
@@ -67050,7 +67050,7 @@
                 strokeWidth: "1.5"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
               "path",
               {
                 d: "M6.73999 21.47H9.99999",
@@ -67060,7 +67060,7 @@
                 strokeWidth: "1.5"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
               "path",
               {
                 d: "M22 12.8V18.51C22 20.88 21.41 21.47 19.04 21.47H15.49C13.12 21.47 12.53 20.88 12.53 18.51V12.8C12.53 10.43 13.12 9.83997 15.49 9.83997H19.04C21.41 9.83997 22 10.43 22 12.8Z",
@@ -67070,7 +67070,7 @@
                 strokeWidth: "1.5"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime272.jsx)(
               "path",
               {
                 d: "M17.2445 18.25H17.2535",
@@ -67083,8 +67083,8 @@
           ]
         }
       );
-      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var EyeFilledIcon = (props) => /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(
+      var import_jsx_runtime282 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var EyeFilledIcon = (props) => /* @__PURE__ */ (0, import_jsx_runtime282.jsxs)(
         "svg",
         {
           "aria-hidden": "true",
@@ -67096,14 +67096,14 @@
           width: "1em",
           ...props,
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
               "path",
               {
                 d: "M21.25 9.14969C18.94 5.51969 15.56 3.42969 12 3.42969C10.22 3.42969 8.49 3.94969 6.91 4.91969C5.33 5.89969 3.91 7.32969 2.75 9.14969C1.75 10.7197 1.75 13.2697 2.75 14.8397C5.06 18.4797 8.44 20.5597 12 20.5597C13.78 20.5597 15.51 20.0397 17.09 19.0697C18.67 18.0897 20.09 16.6597 21.25 14.8397C22.25 13.2797 22.25 10.7197 21.25 9.14969ZM12 16.0397C9.76 16.0397 7.96 14.2297 7.96 11.9997C7.96 9.76969 9.76 7.95969 12 7.95969C14.24 7.95969 16.04 9.76969 16.04 11.9997C16.04 14.2297 14.24 16.0397 12 16.0397Z",
                 fill: "currentColor"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime282.jsx)(
               "path",
               {
                 d: "M11.9984 9.14062C10.4284 9.14062 9.14844 10.4206 9.14844 12.0006C9.14844 13.5706 10.4284 14.8506 11.9984 14.8506C13.5684 14.8506 14.8584 13.5706 14.8584 12.0006C14.8584 10.4306 13.5684 9.14062 11.9984 9.14062Z",
@@ -68429,14 +68429,14 @@
         useMeasure: () => useMeasure
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useMeasure() {
-        const [dimensions, setDimensions] = (0, import_react67.useState)({
+        const [dimensions, setDimensions] = (0, import_react70.useState)({
           width: null,
           height: null
         });
-        const previousObserver = (0, import_react67.useRef)(null);
-        const customRef = (0, import_react67.useCallback)((node) => {
+        const previousObserver = (0, import_react70.useRef)(null);
+        const customRef = (0, import_react70.useCallback)((node) => {
           if (previousObserver.current) {
             previousObserver.current.disconnect();
             previousObserver.current = null;
@@ -68632,15 +68632,15 @@
           }
         }
       };
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_framer_motion2 = require_cjs4();
       var import_use_measure = require_dist18();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var ResizablePanel2 = (0, import_react67.forwardRef)(
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var ResizablePanel2 = (0, import_react70.forwardRef)(
         (originalProps, ref) => {
           const { children, ...props } = originalProps;
           let [measureRef, bounds] = (0, import_use_measure.useMeasure)();
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion2.LazyMotion, { features: import_framer_motion2.domAnimation, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion2.LazyMotion, { features: import_framer_motion2.domAnimation, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             import_framer_motion2.m.div,
             {
               ref,
@@ -68648,7 +68648,7 @@
                 width: bounds.width && (bounds == null ? void 0 : bounds.width) > 0 ? bounds.width : "auto",
                 height: bounds.height && bounds.height > 0 ? bounds.height : "auto"
               },
-              children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ref: measureRef, ...props, children })
+              children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ref: measureRef, ...props, children })
             }
           ) });
         }
@@ -87303,7 +87303,7 @@
       var import_react510 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system = require_dist11();
       var import_react_utils = require_dist10();
-      var import_react67 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
+      var import_react70 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
       var import_tree = require_main12();
       var import_shared_utils = require_dist2();
       var import_theme = require_dist12();
@@ -87355,10 +87355,10 @@
         );
         const children = (0, import_react210.useMemo)(() => {
           let treeChildren = [];
-          import_react67.default.Children.map(childrenProp, (child) => {
+          import_react70.default.Children.map(childrenProp, (child) => {
             var _a2;
-            if (import_react67.default.isValidElement(child) && typeof ((_a2 = child.props) == null ? void 0 : _a2.children) !== "string") {
-              const clonedChild = import_react67.default.cloneElement(child, {
+            if (import_react70.default.isValidElement(child) && typeof ((_a2 = child.props) == null ? void 0 : _a2.children) !== "string") {
+              const clonedChild = import_react70.default.cloneElement(child, {
                 // @ts-ignore
                 hasChildItems: false
               });
@@ -87429,7 +87429,7 @@
             motionProps
           ]
         );
-        const getBaseProps = (0, import_react67.useCallback)((props2 = {}) => {
+        const getBaseProps = (0, import_react70.useCallback)((props2 = {}) => {
           return {
             ref: domRef,
             className: classNames,
@@ -87443,7 +87443,7 @@
             )
           };
         }, []);
-        const handleFocusChanged = (0, import_react67.useCallback)((isFocused, key) => {
+        const handleFocusChanged = (0, import_react70.useCallback)((isFocused, key) => {
           isFocused && setFocusedKey(key);
         }, []);
         return {
@@ -87689,7 +87689,7 @@
           getSubtitleProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var domAnimation2 = () => Promise.resolve().then(() => (init_dist(), dist_exports)).then((res) => res.default);
       var AccordionItem = (0, import_system3.forwardRef)((props, ref) => {
         const {
@@ -87719,24 +87719,24 @@
         const willChange = (0, import_framer_motion3.useWillChange)();
         const indicatorContent = (0, import_react410.useMemo)(() => {
           if (typeof indicator === "function") {
-            return indicator({ indicator: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.ChevronIcon, {}), isOpen, isDisabled });
+            return indicator({ indicator: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.ChevronIcon, {}), isOpen, isDisabled });
           }
           if (indicator) return indicator;
           return null;
         }, [indicator, isOpen, isDisabled]);
-        const indicatorComponent = indicatorContent || /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.ChevronIcon, {});
+        const indicatorComponent = indicatorContent || /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.ChevronIcon, {});
         const content = (0, import_react410.useMemo)(() => {
           if (disableAnimation) {
             if (keepContentMounted) {
-              return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getContentProps(), children });
+              return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getContentProps(), children });
             }
-            return isOpen && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getContentProps(), children });
+            return isOpen && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getContentProps(), children });
           }
           const transitionVariants = {
             exit: { ...import_framer_utils.TRANSITION_VARIANTS.collapse.exit, overflowY: "hidden" },
             enter: { ...import_framer_utils.TRANSITION_VARIANTS.collapse.enter, overflowY: "unset" }
           };
-          return keepContentMounted ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion3.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          return keepContentMounted ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion3.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             import_framer_motion3.m.section,
             {
               animate: isOpen ? "enter" : "exit",
@@ -87748,10 +87748,10 @@
                 e.stopPropagation();
               },
               ...motionProps,
-              children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getContentProps(), children })
+              children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getContentProps(), children })
             },
             "accordion-content"
-          ) }) : /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion3.AnimatePresence, { initial: false, children: isOpen && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion3.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          ) }) : /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion3.AnimatePresence, { initial: false, children: isOpen && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion3.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             import_framer_motion3.m.section,
             {
               animate: "enter",
@@ -87763,26 +87763,26 @@
                 e.stopPropagation();
               },
               ...motionProps,
-              children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getContentProps(), children })
+              children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getContentProps(), children })
             },
             "accordion-content"
           ) }) });
         }, [isOpen, disableAnimation, keepContentMounted, children, motionProps]);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ...getBaseProps(), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(HeadingComponent, { ...getHeadingProps(), children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("button", { ...getButtonProps(), children: [
-            startContent && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: slots.startContent({ class: classNames == null ? void 0 : classNames.startContent }), children: startContent }),
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { className: slots.titleWrapper({ class: classNames == null ? void 0 : classNames.titleWrapper }), children: [
-              title && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getTitleProps(), children: title }),
-              subtitle && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getSubtitleProps(), children: subtitle })
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ...getBaseProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(HeadingComponent, { ...getHeadingProps(), children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("button", { ...getButtonProps(), children: [
+            startContent && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { className: slots.startContent({ class: classNames == null ? void 0 : classNames.startContent }), children: startContent }),
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: slots.titleWrapper({ class: classNames == null ? void 0 : classNames.titleWrapper }), children: [
+              title && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getTitleProps(), children: title }),
+              subtitle && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getSubtitleProps(), children: subtitle })
             ] }),
-            !hideIndicator && indicatorComponent && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getIndicatorProps(), children: indicatorComponent })
+            !hideIndicator && indicatorComponent && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getIndicatorProps(), children: indicatorComponent })
           ] }) }),
           content
         ] });
       });
       AccordionItem.displayName = "HeroUI.AccordionItem";
       var accordion_item_default = AccordionItem;
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var AccordionGroup = (0, import_system4.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -87806,8 +87806,8 @@
         const content = (0, import_react510.useMemo)(() => {
           return [...state.collection].map((item, index3) => {
             const classNames = { ...itemClasses, ...item.props.classNames || {} };
-            return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(import_react510.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+            return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(import_react510.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
                 accordion_item_default,
                 {
                   item,
@@ -87818,11 +87818,11 @@
                   classNames
                 }
               ),
-              !item.props.hidden && !isSplitted && showDivider && index3 < state.collection.size - 1 && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_divider.Divider, { ...dividerProps })
+              !item.props.hidden && !isSplitted && showDivider && index3 < state.collection.size - 1 && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_divider.Divider, { ...dividerProps })
             ] }, item.key);
           });
         }, [values, itemClasses, handleFocusChanged, isSplitted, showDivider, state.collection]);
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Component2, { ...getBaseProps(), children: disableAnimation ? content : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_framer_motion2.LayoutGroup, { children: content }) });
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Component2, { ...getBaseProps(), children: disableAnimation ? content : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_framer_motion2.LayoutGroup, { children: content }) });
       });
       AccordionGroup.displayName = "HeroUI.Accordion";
       var accordion_default = AccordionGroup;
@@ -87855,8 +87855,8 @@
         useSafeLayoutEffect: () => useSafeLayoutEffect
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
-      var useSafeLayoutEffect = Boolean(globalThis == null ? void 0 : globalThis.document) ? import_react67.useLayoutEffect : import_react67.useEffect;
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var useSafeLayoutEffect = Boolean(globalThis == null ? void 0 : globalThis.document) ? import_react70.useLayoutEffect : import_react70.useEffect;
     }
   });
 
@@ -87887,7 +87887,7 @@
         useImage: () => useImage
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_react_utils = require_dist10();
       var import_use_safe_layout_effect = require_dist21();
       function useImage(props = {}) {
@@ -87903,16 +87903,16 @@
           shouldBypassImageLoad = false
         } = props;
         const isHydrated = (0, import_react_utils.useIsHydrated)();
-        const imageRef = (0, import_react67.useRef)(null);
-        const [status, setStatus] = (0, import_react67.useState)("pending");
-        const flush = (0, import_react67.useCallback)(() => {
+        const imageRef = (0, import_react70.useRef)(null);
+        const [status, setStatus] = (0, import_react70.useState)("pending");
+        const flush = (0, import_react70.useCallback)(() => {
           if (imageRef.current) {
             imageRef.current.onload = null;
             imageRef.current.onerror = null;
             imageRef.current = null;
           }
         }, []);
-        const load = (0, import_react67.useCallback)(() => {
+        const load = (0, import_react70.useCallback)(() => {
           if (!src) return "pending";
           if (ignoreFallback || shouldBypassImageLoad) return "loaded";
           flush();
@@ -87998,8 +87998,8 @@
       module.exports = __toCommonJS2(index_exports);
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system2 = require_dist11();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var AvatarIcon = () => /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var AvatarIcon = () => /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
         "svg",
         {
           "aria-hidden": "true",
@@ -88009,14 +88009,14 @@
           viewBox: "0 0 24 24",
           width: "80%",
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "path",
               {
                 d: "M12 2C9.38 2 7.25 4.13 7.25 6.75C7.25 9.32 9.26 11.4 11.88 11.49C11.96 11.48 12.04 11.48 12.1 11.49C12.12 11.49 12.13 11.49 12.15 11.49C12.16 11.49 12.16 11.49 12.17 11.49C14.73 11.4 16.74 9.32 16.75 6.75C16.75 4.13 14.62 2 12 2Z",
                 fill: "currentColor"
               }
             ),
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "path",
               {
                 d: "M17.0809 14.1489C14.2909 12.2889 9.74094 12.2889 6.93094 14.1489C5.66094 14.9989 4.96094 16.1489 4.96094 17.3789C4.96094 18.6089 5.66094 19.7489 6.92094 20.5889C8.32094 21.5289 10.1609 21.9989 12.0009 21.9989C13.8409 21.9989 15.6809 21.5289 17.0809 20.5889C18.3409 19.7389 19.0409 18.5989 19.0409 17.3589C19.0309 16.1289 18.3409 14.9889 17.0809 14.1489Z",
@@ -88031,7 +88031,7 @@
       var import_react_utils2 = require_dist10();
       var import_shared_utils = require_dist2();
       var import_focus2 = require_main18();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_use_image = require_dist22();
       var import_interactions = require_main17();
       var import_react_utils = require_dist10();
@@ -88086,7 +88086,7 @@
         const isImgLoaded = imageStatus === "loaded";
         const shouldFilterDOMProps = !isHeroImage;
         const showFallback = (!src || !isImgLoaded) && showFallbackProp;
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => {
             var _a2;
             return (0, import_theme.avatar)({
@@ -88112,10 +88112,10 @@
           ]
         );
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
-        const canBeFocused = (0, import_react67.useMemo)(() => {
+        const canBeFocused = (0, import_react70.useMemo)(() => {
           return isFocusable || as === "button";
         }, [isFocusable, as]);
-        const getAvatarProps = (0, import_react67.useCallback)(
+        const getAvatarProps = (0, import_react70.useCallback)(
           (props = {}) => ({
             ref: domRef,
             tabIndex: canBeFocused ? 0 : -1,
@@ -88129,7 +88129,7 @@
           }),
           [canBeFocused, slots, baseStyles, focusProps, otherProps]
         );
-        const getImageProps = (0, import_react67.useCallback)(
+        const getImageProps = (0, import_react70.useCallback)(
           (props = {}) => ({
             ref: imgRef,
             src,
@@ -88164,13 +88164,13 @@
           getImageProps
         };
       }
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Avatar = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
           ImgComponent,
           src,
-          icon = /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(AvatarIcon, {}),
+          icon = /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(AvatarIcon, {}),
           alt,
           classNames,
           slots,
@@ -88187,12 +88187,12 @@
         const fallback = (0, import_react210.useMemo)(() => {
           if (!showFallback && src) return null;
           if (fallbackComponent) {
-            return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { "aria-label": alt, className: slots.fallback({ class: classNames == null ? void 0 : classNames.fallback }), role: "img", children: fallbackComponent });
+            return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { "aria-label": alt, className: slots.fallback({ class: classNames == null ? void 0 : classNames.fallback }), role: "img", children: fallbackComponent });
           }
-          return name ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { "aria-label": alt, className: slots.name({ class: classNames == null ? void 0 : classNames.name }), role: "img", children: getInitials(name) }) : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { "aria-label": alt, className: slots.icon({ class: classNames == null ? void 0 : classNames.icon }), role: "img", children: icon });
+          return name ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { "aria-label": alt, className: slots.name({ class: classNames == null ? void 0 : classNames.name }), role: "img", children: getInitials(name) }) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { "aria-label": alt, className: slots.icon({ class: classNames == null ? void 0 : classNames.icon }), role: "img", children: icon });
         }, [showFallback, src, fallbackComponent, name, classNames]);
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...getAvatarProps(), children: [
-          src && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(ImgComponent, { ...getImageProps(), alt }),
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...getAvatarProps(), children: [
+          src && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(ImgComponent, { ...getImageProps(), alt }),
           fallback
         ] });
       });
@@ -88332,7 +88332,7 @@
       var import_theme = require_dist12();
       var import_system = require_dist11();
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useBadge(originalProps) {
         var _a, _b;
         const globalContext = (0, import_system.useProviderContext)();
@@ -88340,19 +88340,19 @@
         const [props, variantProps2] = (0, import_system.mapPropsVariants)(originalProps, import_theme.badge.variantKeys);
         const { as, children, className, content, classNames, ...otherProps } = props;
         const Component2 = as || "span";
-        const isOneChar = (0, import_react67.useMemo)(
+        const isOneChar = (0, import_react70.useMemo)(
           () => {
             var _a2;
             return ((_a2 = String(content)) == null ? void 0 : _a2.length) === 1 || (originalProps == null ? void 0 : originalProps.isOneChar);
           },
           [content, originalProps == null ? void 0 : originalProps.isOneChar]
         );
-        const isDot = (0, import_react67.useMemo)(() => {
+        const isDot = (0, import_react70.useMemo)(() => {
           var _a2;
           return ((_a2 = String(content)) == null ? void 0 : _a2.length) === 0;
         }, [content]);
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.badge, className);
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.badge)({
             ...variantProps2,
             showOutline: !!(originalProps == null ? void 0 : originalProps.disableOutline) ? !(originalProps == null ? void 0 : originalProps.disableOutline) : originalProps == null ? void 0 : originalProps.showOutline,
@@ -88380,14 +88380,14 @@
         };
       }
       var import_system2 = require_dist11();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Badge = (0, import_system2.forwardRef)((props, ref) => {
         const { Component: Component2, children, content, slots, classNames, getBadgeProps } = useBadge({
           ...props
         });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { className: slots.base({ class: classNames == null ? void 0 : classNames.base }), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: slots.base({ class: classNames == null ? void 0 : classNames.base }), children: [
           children,
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Component2, { ref, ...getBadgeProps(), children: content })
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Component2, { ref, ...getBadgeProps(), children: content })
         ] });
       });
       Badge.displayName = "HeroUI.Badge";
@@ -88426,7 +88426,7 @@
       var import_system_rsc = require_dist14();
       var import_theme = require_dist12();
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system = require_dist11();
       function useSpinner(originalProps) {
         var _a, _b;
@@ -88434,19 +88434,19 @@
         const globalContext = (0, import_system.useProviderContext)();
         const variant = (_b = (_a = originalProps == null ? void 0 : originalProps.variant) != null ? _a : globalContext == null ? void 0 : globalContext.spinnerVariant) != null ? _b : "default";
         const { children, className, classNames, label: labelProp, ...otherProps } = props;
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.spinner)({ ...variantProps2, variant }),
           [(0, import_shared_utils.objectToDeps)(variantProps2), variant]
         );
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
         const label = labelProp || children;
-        const ariaLabel = (0, import_react67.useMemo)(() => {
+        const ariaLabel = (0, import_react70.useMemo)(() => {
           if (label && typeof label === "string") {
             return label;
           }
           return !otherProps["aria-label"] ? "Loading" : "";
         }, [children, label, otherProps["aria-label"]]);
-        const getSpinnerProps = (0, import_react67.useCallback)(
+        const getSpinnerProps = (0, import_react70.useCallback)(
           () => ({
             "aria-label": ariaLabel,
             className: slots.base({
@@ -88459,12 +88459,12 @@
         return { label, slots, classNames, variant, getSpinnerProps };
       }
       var import_system_rsc2 = require_dist14();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Spinner = (0, import_system_rsc2.forwardRef)((props, ref) => {
         const { slots, classNames, label, variant, getSpinnerProps } = useSpinner({ ...props });
         if (variant === "wave" || variant === "dots") {
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ref, ...getSpinnerProps(), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }), children: [...new Array(3)].map((_, index3) => /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ref, ...getSpinnerProps(), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }), children: [...new Array(3)].map((_, index3) => /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "i",
               {
                 className: slots.dots({ class: classNames == null ? void 0 : classNames.dots }),
@@ -88474,19 +88474,19 @@
               },
               `dot-${index3}`
             )) }),
-            label && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.label({ class: classNames == null ? void 0 : classNames.label }), children: label })
+            label && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.label({ class: classNames == null ? void 0 : classNames.label }), children: label })
           ] });
         }
         if (variant === "simple") {
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ref, ...getSpinnerProps(), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ref, ...getSpinnerProps(), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
               "svg",
               {
                 className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }),
                 fill: "none",
                 viewBox: "0 0 24 24",
                 children: [
-                  /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+                  /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                     "circle",
                     {
                       className: slots.circle1({ class: classNames == null ? void 0 : classNames.circle1 }),
@@ -88497,7 +88497,7 @@
                       strokeWidth: "4"
                     }
                   ),
-                  /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+                  /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
                     "path",
                     {
                       className: slots.circle2({ class: classNames == null ? void 0 : classNames.circle2 }),
@@ -88508,12 +88508,12 @@
                 ]
               }
             ),
-            label && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.label({ class: classNames == null ? void 0 : classNames.label }), children: label })
+            label && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.label({ class: classNames == null ? void 0 : classNames.label }), children: label })
           ] });
         }
         if (variant === "spinner") {
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ref, ...getSpinnerProps(), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }), children: [...new Array(12)].map((_, index3) => /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ref, ...getSpinnerProps(), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }), children: [...new Array(12)].map((_, index3) => /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "i",
               {
                 className: slots.spinnerBars({ class: classNames == null ? void 0 : classNames.spinnerBars }),
@@ -88523,15 +88523,15 @@
               },
               `star-${index3}`
             )) }),
-            label && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.label({ class: classNames == null ? void 0 : classNames.label }), children: label })
+            label && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.label({ class: classNames == null ? void 0 : classNames.label }), children: label })
           ] });
         }
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ref, ...getSpinnerProps(), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("i", { className: slots.circle1({ class: classNames == null ? void 0 : classNames.circle1 }) }),
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("i", { className: slots.circle2({ class: classNames == null ? void 0 : classNames.circle2 }) })
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ref, ...getSpinnerProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("i", { className: slots.circle1({ class: classNames == null ? void 0 : classNames.circle1 }) }),
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("i", { className: slots.circle2({ class: classNames == null ? void 0 : classNames.circle2 }) })
           ] }),
-          label && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.label({ class: classNames == null ? void 0 : classNames.label }), children: label })
+          label && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.label({ class: classNames == null ? void 0 : classNames.label }), children: label })
         ] });
       });
       Spinner.displayName = "HeroUI.Spinner";
@@ -88569,13 +88569,13 @@
       module.exports = __toCommonJS2(index_exports);
       var import_framer_motion2 = require_cjs4();
       var import_shared_utils = require_dist2();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var domAnimation2 = () => Promise.resolve().then(() => (init_dist(), dist_exports)).then((res) => res.default);
       var Ripple = (props) => {
         const { ripples = [], motionProps, color: color2 = "currentColor", style: style2, onClear } = props;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_jsx_runtime25.Fragment, { children: ripples.map((ripple) => {
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_jsx_runtime27.Fragment, { children: ripples.map((ripple) => {
           const duration = (0, import_shared_utils.clamp)(0.01 * ripple.size, 0.2, ripple.size > 100 ? 0.75 : 0.5);
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion2.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion2.AnimatePresence, { mode: "popLayout", children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion2.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion2.AnimatePresence, { mode: "popLayout", children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             import_framer_motion2.m.span,
             {
               animate: {
@@ -88613,10 +88613,10 @@
       Ripple.displayName = "HeroUI.Ripple";
       var ripple_default = Ripple;
       var import_shared_utils2 = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useRipple(props = {}) {
-        const [ripples, setRipples] = (0, import_react67.useState)([]);
-        const onPress = (0, import_react67.useCallback)((event) => {
+        const [ripples, setRipples] = (0, import_react70.useState)([]);
+        const onPress = (0, import_react70.useCallback)((event) => {
           const trigger = event.target;
           const size = Math.max(trigger.clientWidth, trigger.clientHeight);
           setRipples((prevRipples) => [
@@ -88629,7 +88629,7 @@
             }
           ]);
         }, []);
-        const onClear = (0, import_react67.useCallback)((key) => {
+        const onClear = (0, import_react70.useCallback)((key) => {
           setRipples((prevState) => prevState.filter((ripple) => ripple.key !== key));
         }, []);
         return { ripples, onClear, onPress, ...props };
@@ -91716,7 +91716,7 @@
       var import_system2 = require_dist11();
       var import_system = require_dist11();
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_focus2 = require_main18();
       var import_react_utils2 = require_dist10();
       var import_theme = require_dist12();
@@ -91793,7 +91793,7 @@
           ]
         );
         const { onPress: onRipplePressHandler, onClear: onClearRipple, ripples } = (0, import_ripple.useRipple)();
-        const handlePress = (0, import_react67.useCallback)(
+        const handlePress = (0, import_react70.useCallback)(
           (e) => {
             if (disableRipple || isDisabled || disableAnimation) return;
             domRef.current && onRipplePressHandler(e);
@@ -91811,7 +91811,7 @@
           domRef
         );
         const { isHovered, hoverProps } = (0, import_interactions.useHover)({ isDisabled });
-        const getButtonProps = (0, import_react67.useCallback)(
+        const getButtonProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             "data-disabled": (0, import_shared_utils.dataAttr)(isDisabled),
             "data-focus": (0, import_shared_utils.dataAttr)(isFocused),
@@ -91860,7 +91860,7 @@
           };
           return buttonSpinnerSizeMap[size];
         }, [size]);
-        const getRippleProps = (0, import_react67.useCallback)(
+        const getRippleProps = (0, import_react70.useCallback)(
           () => ({ ripples, onClear: onClearRipple }),
           [ripples, onClearRipple]
         );
@@ -91881,14 +91881,14 @@
           isIconOnly
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Button = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
           domRef,
           children,
           spinnerSize,
-          spinner = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_spinner.Spinner, { color: "current", size: spinnerSize }),
+          spinner = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_spinner.Spinner, { color: "current", size: spinnerSize }),
           spinnerPlacement,
           startContent,
           endContent,
@@ -91898,13 +91898,13 @@
           getRippleProps,
           isIconOnly
         } = useButton({ ...props, ref });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ref: domRef, ...getButtonProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ref: domRef, ...getButtonProps(), children: [
           startContent,
           isLoading && spinnerPlacement === "start" && spinner,
           isLoading && isIconOnly ? null : children,
           isLoading && spinnerPlacement === "end" && spinner,
           endContent,
-          !disableRipple && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_ripple2.Ripple, { ...getRippleProps() })
+          !disableRipple && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_ripple2.Ripple, { ...getRippleProps() })
         ] });
       });
       Button.displayName = "HeroUI.Button";
@@ -91983,13 +91983,13 @@
           getButtonGroupProps
         };
       }
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var ButtonGroup = (0, import_system4.forwardRef)((props, ref) => {
         const { Component: Component2, domRef, context, children, classNames, getButtonGroupProps } = useButtonGroup({
           ...props,
           ref
         });
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(ButtonGroupProvider, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Component2, { ref: domRef, className: classNames, ...getButtonGroupProps(), children }) });
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(ButtonGroupProvider, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Component2, { ref: domRef, className: classNames, ...getButtonGroupProps(), children }) });
       });
       ButtonGroup.displayName = "HeroUI.ButtonGroup";
       var button_group_default = ButtonGroup;
@@ -92030,7 +92030,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_theme = require_dist12();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_focus2 = require_main18();
       var import_interactions = require_main17();
       var import_use_aria_button = require_dist27();
@@ -92062,7 +92062,7 @@
         const disableRipple = (_d = (_c = originalProps.disableRipple) != null ? _c : globalContext == null ? void 0 : globalContext.disableRipple) != null ? _d : false;
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
         const { onClear: onClearRipple, onPress: onRipplePressHandler, ripples } = (0, import_ripple.useRipple)();
-        const handlePress = (0, import_react67.useCallback)(
+        const handlePress = (0, import_react70.useCallback)(
           (e) => {
             if (disableRipple || disableAnimation) return;
             domRef.current && onRipplePressHandler(e);
@@ -92087,14 +92087,14 @@
         const { isFocusVisible, isFocused, focusProps } = (0, import_focus2.useFocusRing)({
           autoFocus
         });
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.card)({
             ...variantProps2,
             disableAnimation
           }),
           [(0, import_shared_utils.objectToDeps)(variantProps2), disableAnimation]
         );
-        const context = (0, import_react67.useMemo)(
+        const context = (0, import_react70.useMemo)(
           () => ({
             slots,
             classNames,
@@ -92112,7 +92112,7 @@
             originalProps.fullWidth
           ]
         );
-        const getCardProps = (0, import_react67.useCallback)(
+        const getCardProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ref: domRef,
@@ -92150,7 +92150,7 @@
             otherProps
           ]
         );
-        const getRippleProps = (0, import_react67.useCallback)(
+        const getRippleProps = (0, import_react70.useCallback)(
           () => ({ ripples, onClear: onClearRipple }),
           [ripples, onClearRipple]
         );
@@ -92180,7 +92180,7 @@
       });
       var import_system2 = require_dist11();
       var import_ripple2 = require_dist26();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Card = (0, import_system2.forwardRef)((props, ref) => {
         const {
           children,
@@ -92192,9 +92192,9 @@
           getCardProps,
           getRippleProps
         } = useCard({ ...props, ref });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ...getCardProps(), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(CardProvider, { value: context, children }),
-          isPressable && !disableAnimation && !disableRipple && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_ripple2.Ripple, { ...getRippleProps() })
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ...getCardProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(CardProvider, { value: context, children }),
+          isPressable && !disableAnimation && !disableRipple && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_ripple2.Ripple, { ...getRippleProps() })
         ] });
       });
       Card.displayName = "HeroUI.Card";
@@ -92202,7 +92202,7 @@
       var import_system3 = require_dist11();
       var import_react_utils4 = require_dist10();
       var import_theme2 = require_dist12();
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var CardHeader = (0, import_system3.forwardRef)((props, ref) => {
         var _a;
         const { as, className, children, ...otherProps } = props;
@@ -92210,7 +92210,7 @@
         const domRef = (0, import_react_utils4.useDOMRef)(ref);
         const { slots, classNames } = useCardContext();
         const headerStyles = (0, import_theme2.cn)(classNames == null ? void 0 : classNames.header, className);
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Component2, { ref: domRef, className: (_a = slots.header) == null ? void 0 : _a.call(slots, { class: headerStyles }), ...otherProps, children });
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Component2, { ref: domRef, className: (_a = slots.header) == null ? void 0 : _a.call(slots, { class: headerStyles }), ...otherProps, children });
       });
       CardHeader.displayName = "HeroUI.CardHeader";
       var card_header_default = CardHeader;
@@ -92281,7 +92281,7 @@
       var import_theme = require_dist12();
       var import_react_utils = require_dist10();
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useChip(originalProps) {
         const [props, variantProps2] = (0, import_system.mapPropsVariants)(originalProps, import_theme.chip.variantKeys);
         const {
@@ -92302,13 +92302,13 @@
         const isCloseable = !!onClose;
         const isDotVariant = originalProps.variant === "dot";
         const { focusProps: closeFocusProps, isFocusVisible: isCloseButtonFocusVisible } = (0, import_focus2.useFocusRing)();
-        const isOneChar = (0, import_react67.useMemo)(
+        const isOneChar = (0, import_react70.useMemo)(
           () => typeof children === "string" && (children == null ? void 0 : children.length) === 1,
           [children]
         );
-        const hasStartContent = (0, import_react67.useMemo)(() => !!avatar || !!startContent, [avatar, startContent]);
-        const hasEndContent = (0, import_react67.useMemo)(() => !!endContent || isCloseable, [endContent, isCloseable]);
-        const slots = (0, import_react67.useMemo)(
+        const hasStartContent = (0, import_react70.useMemo)(() => !!avatar || !!startContent, [avatar, startContent]);
+        const hasEndContent = (0, import_react70.useMemo)(() => !!endContent || isCloseable, [endContent, isCloseable]);
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.chip)({
             ...variantProps2,
             hasStartContent,
@@ -92347,13 +92347,13 @@
           };
         };
         const getAvatarClone = (avatar2) => {
-          if (!(0, import_react67.isValidElement)(avatar2)) return null;
-          return (0, import_react67.cloneElement)(avatar2, {
+          if (!(0, import_react70.isValidElement)(avatar2)) return null;
+          return (0, import_react70.cloneElement)(avatar2, {
             // @ts-ignore
             className: slots.avatar({ class: classNames == null ? void 0 : classNames.avatar })
           });
         };
-        const getContentClone = (content) => (0, import_react67.isValidElement)(content) ? (0, import_react67.cloneElement)(content, {
+        const getContentClone = (content) => (0, import_react70.isValidElement)(content) ? (0, import_react70.cloneElement)(content, {
           // @ts-ignore
           className: (0, import_theme.cn)("max-h-[80%]", content.props.className)
         }) : null;
@@ -92373,7 +92373,7 @@
       var import_shared_icons = require_dist17();
       var import_system2 = require_dist11();
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Chip = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -92392,19 +92392,19 @@
         });
         const start2 = (0, import_react210.useMemo)(() => {
           if (isDot && !startContent) {
-            return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.dot({ class: classNames == null ? void 0 : classNames.dot }) });
+            return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.dot({ class: classNames == null ? void 0 : classNames.dot }) });
           }
           return startContent;
         }, [slots, startContent, isDot]);
         const end = (0, import_react210.useMemo)(() => {
           if (isCloseable) {
-            return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getCloseButtonProps(), children: endContent || /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.CloseFilledIcon, {}) });
+            return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getCloseButtonProps(), children: endContent || /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.CloseFilledIcon, {}) });
           }
           return endContent;
         }, [endContent, isCloseable, getCloseButtonProps]);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ...getChipProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ...getChipProps(), children: [
           start2,
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.content({ class: classNames == null ? void 0 : classNames.content }), children }),
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.content({ class: classNames == null ? void 0 : classNames.content }), children }),
           end
         ] });
       });
@@ -92522,14 +92522,14 @@
         useCallbackRef: () => useCallbackRef
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_use_safe_layout_effect = require_dist21();
       function useCallbackRef(fn, deps = []) {
-        const ref = (0, import_react67.useRef)(fn);
+        const ref = (0, import_react70.useRef)(fn);
         (0, import_use_safe_layout_effect.useSafeLayoutEffect)(() => {
           ref.current = fn;
         });
-        return (0, import_react67.useCallback)((...args) => {
+        return (0, import_react70.useCallback)((...args) => {
           var _a;
           return (_a = ref.current) == null ? void 0 : _a.call(ref, ...args);
         }, deps);
@@ -93526,7 +93526,7 @@
         dateInput: () => dateInput,
         datePicker: () => datePicker,
         dateRangePicker: () => dateRangePicker,
-        defaultLayout: () => defaultLayout,
+        defaultLayout: () => defaultLayout2,
         divider: () => divider,
         drawer: () => drawer,
         drip: () => drip,
@@ -105703,7 +105703,7 @@
         }
       };
       var isBaseTheme = (theme) => theme === "light" || theme === "dark";
-      var defaultLayout = {
+      var defaultLayout2 = {
         dividerWeight: "1px",
         disabledOpacity: ".5",
         fontSize: {
@@ -105900,7 +105900,7 @@
         } = config;
         const userLightColors = ((_a = themeObject == null ? void 0 : themeObject.light) == null ? void 0 : _a.colors) || {};
         const userDarkColors = ((_b = themeObject == null ? void 0 : themeObject.dark) == null ? void 0 : _b.colors) || {};
-        const defaultLayoutObj = userLayout && typeof userLayout === "object" ? (0, import_deepmerge.default)(defaultLayout, userLayout) : defaultLayout;
+        const defaultLayoutObj = userLayout && typeof userLayout === "object" ? (0, import_deepmerge.default)(defaultLayout2, userLayout) : defaultLayout2;
         const baseLayouts = {
           light: {
             ...defaultLayoutObj,
@@ -105966,13 +105966,13 @@
         useSlottedContext: () => useSlottedContext
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_shared_utils = require_dist2();
       var DEFAULT_SLOT = /* @__PURE__ */ Symbol("default");
       function useObjectRef(ref) {
-        const objRef = (0, import_react67.useRef)(null);
-        const cleanupRef = (0, import_react67.useRef)(void 0);
-        const refEffect = (0, import_react67.useCallback)(
+        const objRef = (0, import_react70.useRef)(null);
+        const cleanupRef = (0, import_react70.useRef)(void 0);
+        const refEffect = (0, import_react70.useCallback)(
           (instance) => {
             if (typeof ref === "function") {
               const refCallback = ref;
@@ -105993,7 +105993,7 @@
           },
           [ref]
         );
-        return (0, import_react67.useMemo)(
+        return (0, import_react70.useMemo)(
           () => ({
             get current() {
               return objRef.current;
@@ -106013,7 +106013,7 @@
         );
       }
       function useSlottedContext(context, slot) {
-        let ctx = (0, import_react67.useContext)(context);
+        let ctx = (0, import_react70.useContext)(context);
         if (slot === null) {
           return null;
         }
@@ -106033,7 +106033,7 @@
       function useContextProps(props, ref, context) {
         let ctx = useSlottedContext(context, props.slot) || {};
         let { ref: contextRef, ...contextProps } = ctx;
-        let mergedRef = useObjectRef((0, import_react67.useMemo)(() => (0, import_shared_utils.mergeRefs)(ref, contextRef), [ref, contextRef]));
+        let mergedRef = useObjectRef((0, import_react70.useMemo)(() => (0, import_shared_utils.mergeRefs)(ref, contextRef), [ref, contextRef]));
         let mergedProps = (0, import_shared_utils.mergeProps)(contextProps, props);
         if ("style" in contextProps && contextProps.style && "style" in props && props.style) {
           if (typeof contextProps.style === "function" || typeof props.style === "function") {
@@ -106052,22 +106052,22 @@
       var import_form = require_main22();
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_theme = require_dist32();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var FormContext = (0, import_react210.createContext)(null);
       var Form = (0, import_react210.forwardRef)(function Form2(props, ref) {
         [props, ref] = useContextProps(props, ref, FormContext);
         let { validationErrors, validationBehavior = "native", children, className, ...domProps } = props;
         const styles = (0, import_react210.useMemo)(() => (0, import_theme.form)({ className }), [className]);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("form", { noValidate: validationBehavior !== "native", ...domProps, ref, className: styles, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(FormContext.Provider, { value: { ...props, validationBehavior }, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_form.FormValidationContext.Provider, { value: validationErrors != null ? validationErrors : {}, children }) }) });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("form", { noValidate: validationBehavior !== "native", ...domProps, ref, className: styles, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(FormContext.Provider, { value: { ...props, validationBehavior }, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_form.FormValidationContext.Provider, { value: validationErrors != null ? validationErrors : {}, children }) }) });
       });
       var import_system = require_dist11();
       var import_react310 = (init_react_shim(), __toCommonJS(react_shim_exports));
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Form3 = (0, import_react310.forwardRef)(function Form4(props, ref) {
         var _a, _b;
         const globalContext = (0, import_system.useProviderContext)();
         const validationBehavior = (_b = (_a = props.validationBehavior) != null ? _a : globalContext == null ? void 0 : globalContext.validationBehavior) != null ? _b : "native";
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Form, { ...props, ref, validationBehavior });
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Form, { ...props, ref, validationBehavior });
       });
     }
   });
@@ -106185,7 +106185,7 @@
       var import_system2 = require_dist11();
       var import_react310 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system = require_dist11();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_toggle = require_main21();
       var import_theme = require_dist12();
@@ -106260,7 +106260,7 @@
           };
           onChange = (0, import_shared_utils.chain)(dispatch, onChange);
         }
-        const labelId = (0, import_react67.useId)();
+        const labelId = (0, import_react70.useId)();
         const ariaCheckboxProps = (0, import_react210.useMemo)(
           () => ({
             name,
@@ -106349,7 +106349,7 @@
           toggleState.setSelected(isInputRefChecked);
         }, [inputRef.current]);
         const onChangeProp = (0, import_use_callback_ref.useCallbackRef)(onChange);
-        const handleCheckboxChange = (0, import_react67.useCallback)(
+        const handleCheckboxChange = (0, import_react70.useCallback)(
           (event) => {
             if (isReadOnly || isDisabled) {
               event.preventDefault();
@@ -106360,7 +106360,7 @@
           [isReadOnly, isDisabled, onChangeProp]
         );
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
-        const getBaseProps = (0, import_react67.useCallback)(() => {
+        const getBaseProps = (0, import_react70.useCallback)(() => {
           return {
             ref: domRef,
             className: slots.base({ class: baseStyles }),
@@ -106390,7 +106390,7 @@
           hoverProps,
           otherProps
         ]);
-        const getWrapperProps = (0, import_react67.useCallback)(
+        const getWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -106400,7 +106400,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.wrapper]
         );
-        const getInputProps = (0, import_react67.useCallback)(() => {
+        const getInputProps = (0, import_react70.useCallback)(() => {
           return {
             ref: (0, import_react_utils2.mergeRefs)(inputRef, ref),
             ...(0, import_shared_utils.mergeProps)(inputProps, focusProps),
@@ -106408,14 +106408,14 @@
             onChange: (0, import_shared_utils.chain)(inputProps.onChange, handleCheckboxChange)
           };
         }, [inputProps, focusProps, handleCheckboxChange, classNames == null ? void 0 : classNames.hiddenInput]);
-        const getLabelProps = (0, import_react67.useCallback)(
+        const getLabelProps = (0, import_react70.useCallback)(
           () => ({
             id: labelId,
             className: slots.label({ class: classNames == null ? void 0 : classNames.label })
           }),
           [slots, classNames == null ? void 0 : classNames.label, isDisabled, isSelected, isInvalid]
         );
-        const getIconProps = (0, import_react67.useCallback)(
+        const getIconProps = (0, import_react70.useCallback)(
           () => ({
             isSelected,
             isIndeterminate,
@@ -106441,10 +106441,10 @@
           getIconProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       function CheckIcon(props) {
         const { isSelected, disableAnimation, ...otherProps } = props;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             "aria-hidden": "true",
@@ -106461,25 +106461,25 @@
             } : {},
             viewBox: "0 0 17 18",
             ...otherProps,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("polyline", { points: "1 9 7 14 15 4" })
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("polyline", { points: "1 9 7 14 15 4" })
           }
         );
       }
       function IndeterminateIcon(props) {
         const { isSelected, disableAnimation, ...otherProps } = props;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("svg", { stroke: "currentColor", strokeWidth: 3, viewBox: "0 0 24 24", ...otherProps, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("line", { x1: "21", x2: "3", y1: "12", y2: "12" }) });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("svg", { stroke: "currentColor", strokeWidth: 3, viewBox: "0 0 24 24", ...otherProps, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("line", { x1: "21", x2: "3", y1: "12", y2: "12" }) });
       }
       function CheckboxIcon(props) {
         const { isIndeterminate, ...otherProps } = props;
         const BaseIcon = isIndeterminate ? IndeterminateIcon : CheckIcon;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(BaseIcon, { ...otherProps });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(BaseIcon, { ...otherProps });
       }
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Checkbox = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
           children,
-          icon = /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(CheckboxIcon, {}),
+          icon = /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(CheckboxIcon, {}),
           getBaseProps,
           getWrapperProps,
           getInputProps,
@@ -106487,10 +106487,10 @@
           getLabelProps
         } = useCheckbox({ ...props, ref });
         const clonedIcon = typeof icon === "function" ? icon(getIconProps()) : (0, import_react310.cloneElement)(icon, getIconProps());
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...getBaseProps(), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("input", { ...getInputProps() }),
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getWrapperProps(), children: clonedIcon }),
-          children && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getLabelProps(), children })
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...getBaseProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("input", { ...getInputProps() }),
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getWrapperProps(), children: clonedIcon }),
+          children && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getLabelProps(), children })
         ] });
       });
       Checkbox.displayName = "HeroUI.Checkbox";
@@ -106724,13 +106724,13 @@
       var import_system_rsc2 = require_dist14();
       var import_theme = require_dist12();
       var import_system_rsc = require_dist14();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_shared_utils = require_dist2();
       function useCode(originalProps) {
         const [props, variantProps2] = (0, import_system_rsc.mapPropsVariants)(originalProps, import_theme.code.variantKeys);
         const { as, children, className, ...otherProps } = props;
         const Component2 = as || "code";
-        const styles = (0, import_react67.useMemo)(
+        const styles = (0, import_react70.useMemo)(
           () => (0, import_theme.code)({
             ...variantProps2,
             className
@@ -106745,10 +106745,10 @@
         };
         return { Component: Component2, children, getCodeProps };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Code = (0, import_system_rsc2.forwardRef)((props, ref) => {
         const { Component: Component2, children, getCodeProps } = useCode({ ...props });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Component2, { ref, ...getCodeProps(), children });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Component2, { ref, ...getCodeProps(), children });
       });
       Code.displayName = "HeroUI.Code";
       var code_default = Code;
@@ -109811,7 +109811,7 @@
       var import_react_utils = require_dist10();
       var import_focus2 = require_main18();
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useLink(originalProps) {
         var _a, _b, _c, _d;
         const globalContext = (0, import_system.useProviderContext)();
@@ -109854,7 +109854,7 @@
           otherProps.rel = (_c = otherProps.rel) != null ? _c : "noopener noreferrer";
           otherProps.target = (_d = otherProps.target) != null ? _d : "_blank";
         }
-        const styles = (0, import_react67.useMemo)(
+        const styles = (0, import_react70.useMemo)(
           () => (0, import_theme.link)({
             ...variantProps2,
             disableAnimation,
@@ -109862,7 +109862,7 @@
           }),
           [(0, import_shared_utils.objectToDeps)(variantProps2), disableAnimation, className]
         );
-        const getLinkProps = (0, import_react67.useCallback)(() => {
+        const getLinkProps = (0, import_react70.useCallback)(() => {
           return {
             ref: domRef,
             className: styles,
@@ -109876,27 +109876,27 @@
         }, [styles, isFocused, isFocusVisible, focusProps, linkProps, otherProps]);
         return { Component: Component2, children, anchorIcon, showAnchorIcon, getLinkProps };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Link = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
           children,
           showAnchorIcon,
-          anchorIcon = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.LinkIcon, { className: import_theme2.linkAnchorClasses }),
+          anchorIcon = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.LinkIcon, { className: import_theme2.linkAnchorClasses }),
           getLinkProps
         } = useLink({
           ref,
           ...props
         });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Component2, { ...getLinkProps(), children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(import_jsx_runtime25.Fragment, { children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Component2, { ...getLinkProps(), children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(import_jsx_runtime27.Fragment, { children: [
           children,
           showAnchorIcon && anchorIcon
         ] }) });
       });
       Link.displayName = "HeroUI.Link";
       var link_default = Link;
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var LinkIcon2 = () => /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var LinkIcon2 = () => /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(
         "svg",
         {
           "aria-hidden": "true",
@@ -109911,9 +109911,9 @@
           viewBox: "0 0 24 24",
           width: "1em",
           children: [
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("path", { d: "M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" }),
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("path", { d: "M15 3h6v6" }),
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("path", { d: "M10 14L21 3" })
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("path", { d: "M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" }),
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("path", { d: "M15 3h6v6" }),
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("path", { d: "M10 14L21 3" })
           ]
         }
       );
@@ -109947,8 +109947,8 @@
         usePagination: () => usePagination
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
-      var import_i18n9 = require_main5();
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_i18n11 = require_main5();
       var import_shared_utils = require_dist2();
       var PaginationItemType2 = /* @__PURE__ */ ((PaginationItemType22) => {
         PaginationItemType22["DOTS"] = "dots";
@@ -109966,19 +109966,19 @@
           showControls = false,
           onChange
         } = props;
-        const [activePage, setActivePage] = (0, import_react67.useState)(page || initialPage);
-        const { direction } = (0, import_i18n9.useLocale)();
+        const [activePage, setActivePage] = (0, import_react70.useState)(page || initialPage);
+        const { direction } = (0, import_i18n11.useLocale)();
         const isRTL = direction === "rtl";
         const onChangeActivePage = (newPage) => {
           setActivePage(newPage);
           onChange && onChange(newPage);
         };
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           if (page && page !== activePage) {
             setActivePage(page);
           }
         }, [page]);
-        const setPage = (0, import_react67.useCallback)(
+        const setPage = (0, import_react70.useCallback)(
           (pageNumber) => {
             if (pageNumber <= 0) {
               onChangeActivePage(1);
@@ -109994,7 +109994,7 @@
         const previous = () => setPage(activePage - 1);
         const first = () => setPage(1);
         const last = () => setPage(total);
-        const formatRange = (0, import_react67.useCallback)(
+        const formatRange = (0, import_react70.useCallback)(
           (range2) => {
             if (showControls) {
               return [
@@ -110008,7 +110008,7 @@
           },
           [isRTL, showControls]
         );
-        const paginationRange = (0, import_react67.useMemo)(() => {
+        const paginationRange = (0, import_react70.useMemo)(() => {
           const totalPageNumbers = siblings * 2 + 3 + boundaries * 2;
           if (totalPageNumbers >= total) {
             return formatRange((0, import_shared_utils.range)(1, total));
@@ -110170,7 +110170,7 @@
         useIntersectionObserver: () => useIntersectionObserver
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useIntersectionObserver({
         threshold: threshold2 = 0,
         root = null,
@@ -110181,15 +110181,15 @@
         onChange
       } = {}) {
         var _a;
-        const [ref, setRef2] = (0, import_react67.useState)(null);
-        const [state, setState] = (0, import_react67.useState)(() => ({
+        const [ref, setRef2] = (0, import_react70.useState)(null);
+        const [state, setState] = (0, import_react70.useState)(() => ({
           isIntersecting: initialIsIntersecting,
           entry: void 0
         }));
-        const callbackRef = (0, import_react67.useRef)();
+        const callbackRef = (0, import_react70.useRef)();
         callbackRef.current = onChange;
         const frozen = ((_a = state.entry) == null ? void 0 : _a.isIntersecting) && freezeOnceVisible;
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           if (!isEnabled) return;
           if (!ref) return;
           if (!("IntersectionObserver" in window)) return;
@@ -110217,8 +110217,8 @@
             observer2.disconnect();
           };
         }, [ref, isEnabled, JSON.stringify(threshold2), root, rootMargin, frozen, freezeOnceVisible]);
-        const prevRef = (0, import_react67.useRef)(null);
-        (0, import_react67.useEffect)(() => {
+        const prevRef = (0, import_react70.useRef)(null);
+        (0, import_react70.useEffect)(() => {
           var _a2;
           if (!ref && ((_a2 = state.entry) == null ? void 0 : _a2.target) && !freezeOnceVisible && !frozen && prevRef.current !== state.entry.target) {
             prevRef.current = state.entry.target;
@@ -110277,7 +110277,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_react310 = (init_react_shim(), __toCommonJS(react_shim_exports));
-      var import_i18n9 = require_main5();
+      var import_i18n11 = require_main5();
       var import_system4 = require_dist11();
       var import_use_pagination3 = require_dist38();
       var import_shared_icons = require_dist17();
@@ -110285,7 +110285,7 @@
       var import_theme3 = require_dist12();
       var import_shared_utils = require_dist2();
       var import_use_pagination = require_dist38();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system = require_dist11();
       var import_use_pagination2 = require_dist38();
       var import_scroll_into_view_if_needed = __toESM2(require_dist40());
@@ -110318,9 +110318,9 @@
         } = props;
         const Component2 = as || "nav";
         const domRef = (0, import_react_utils.useDOMRef)(ref);
-        const cursorRef = (0, import_react67.useRef)(null);
-        const itemsRef = (0, import_react67.useRef)();
-        const cursorTimer = (0, import_react67.useRef)();
+        const cursorRef = (0, import_react70.useRef)(null);
+        const itemsRef = (0, import_react70.useRef)();
+        const cursorTimer = (0, import_react70.useRef)();
         const disableAnimation = (_b = (_a = originalProps == null ? void 0 : originalProps.disableAnimation) != null ? _a : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _b : false;
         const disableCursorAnimation = (_d = (_c = originalProps == null ? void 0 : originalProps.disableCursorAnimation) != null ? _c : disableAnimation) != null ? _d : false;
         function getItemsRefMap() {
@@ -110378,13 +110378,13 @@
           onChange
         });
         const [setRef2, isVisible] = (0, import_use_intersection_observer.useIntersectionObserver)();
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           if (domRef.current) {
             setRef2(domRef.current);
           }
         }, [domRef.current]);
-        const activePageRef = (0, import_react67.useRef)(activePage);
-        (0, import_react67.useEffect)(() => {
+        const activePageRef = (0, import_react70.useRef)(activePage);
+        (0, import_react70.useEffect)(() => {
           if (activePage && !disableAnimation && isVisible) {
             scrollTo(activePage, activePage === activePageRef.current);
           }
@@ -110399,7 +110399,7 @@
           originalProps.isCompact,
           originalProps.showControls
         ]);
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.pagination)({
             ...variantProps2,
             disableAnimation,
@@ -110586,21 +110586,21 @@
           getItemProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var PaginationItem = (0, import_system2.forwardRef)((props, ref) => {
         const { Component: Component2, children, getItemProps } = usePaginationItem({ ...props, ref });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Component2, { ...getItemProps(), children });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Component2, { ...getItemProps(), children });
       });
       PaginationItem.displayName = "HeroUI.PaginationItem";
       var pagination_item_default = PaginationItem;
       var import_system3 = require_dist11();
       var import_react_utils3 = require_dist10();
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var PaginationCursor = (0, import_system3.forwardRef)((props, ref) => {
         const { as, activePage, ...otherProps } = props;
         const Component2 = as || "span";
         const domRef = (0, import_react_utils3.useDOMRef)(ref);
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Component2, { ref: domRef, "aria-hidden": true, ...otherProps, children: activePage });
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Component2, { ref: domRef, "aria-hidden": true, ...otherProps, children: activePage });
       });
       PaginationCursor.displayName = "HeroUI.PaginationCursor";
       var pagination_cursor_default = PaginationCursor;
@@ -110629,7 +110629,7 @@
           getItemProps,
           getCursorProps
         } = usePagination({ ...props, ref });
-        const { direction } = (0, import_i18n9.useLocale)();
+        const { direction } = (0, import_i18n11.useLocale)();
         const isRTL = direction === "rtl";
         const renderChevronIcon = (0, import_react310.useCallback)(
           (key) => {
@@ -111129,7 +111129,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_system2 = require_dist11();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_focus2 = require_main18();
       var import_interactions = require_main17();
@@ -111175,8 +111175,8 @@
         const Component2 = as || "label";
         const domRef = (0, import_react_utils2.useDOMRef)(ref);
         const inputRef = (0, import_react210.useRef)(null);
-        const labelId = (0, import_react67.useId)();
-        const descriptionId = (0, import_react67.useId)();
+        const labelId = (0, import_react70.useId)();
+        const descriptionId = (0, import_react70.useId)();
         const isRequired = (0, import_react210.useMemo)(() => {
           var _a2;
           return (_a2 = groupContext.isRequired) != null ? _a2 : false;
@@ -111230,7 +111230,7 @@
           [color2, size, isDisabled, isInvalid, disableAnimation]
         );
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
-        const getBaseProps = (0, import_react67.useCallback)(
+        const getBaseProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -111265,7 +111265,7 @@
             otherProps
           ]
         );
-        const getWrapperProps = (0, import_react67.useCallback)(
+        const getWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -111275,7 +111275,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.wrapper]
         );
-        const getInputProps = (0, import_react67.useCallback)(
+        const getInputProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ref: inputRef,
@@ -111286,7 +111286,7 @@
           },
           [inputProps, focusProps, onChange]
         );
-        const getLabelProps = (0, import_react67.useCallback)(
+        const getLabelProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             ...props2,
             id: labelId,
@@ -111294,21 +111294,21 @@
           }),
           [slots, classNames == null ? void 0 : classNames.label, isDisabled, isSelected, isInvalid]
         );
-        const getLabelWrapperProps = (0, import_react67.useCallback)(
+        const getLabelWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             ...props2,
             className: slots.labelWrapper({ class: classNames == null ? void 0 : classNames.labelWrapper })
           }),
           [slots, classNames == null ? void 0 : classNames.labelWrapper]
         );
-        const getControlProps = (0, import_react67.useCallback)(
+        const getControlProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             ...props2,
             className: slots.control({ class: classNames == null ? void 0 : classNames.control })
           }),
           [slots, classNames == null ? void 0 : classNames.control]
         );
-        const getDescriptionProps = (0, import_react67.useCallback)(
+        const getDescriptionProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             ...props2,
             id: descriptionId,
@@ -111333,7 +111333,7 @@
           getDescriptionProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Radio = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -111347,12 +111347,12 @@
           getControlProps,
           getDescriptionProps
         } = useRadio({ ...props, ref });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ...getBaseProps(), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("input", { ...getInputProps() }),
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getWrapperProps(), children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getControlProps() }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ...getLabelWrapperProps(), children: [
-            children && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getLabelProps(), children }),
-            description && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getDescriptionProps(), children: description })
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ...getBaseProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("input", { ...getInputProps() }),
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getWrapperProps(), children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getControlProps() }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ...getLabelWrapperProps(), children: [
+            children && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getLabelProps(), children }),
+            description && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getDescriptionProps(), children: description })
           ] })
         ] });
       });
@@ -111528,7 +111528,7 @@
           getErrorMessageProps
         };
       }
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var RadioGroup = (0, import_system4.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -111544,10 +111544,10 @@
           getDescriptionProps,
           getErrorMessageProps
         } = useRadioGroup({ ...props, ref });
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...getGroupProps(), children: [
-          label && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getLabelProps(), children: label }),
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getWrapperProps(), children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(RadioGroupProvider, { value: context, children }) }),
-          isInvalid && errorMessage ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : description ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getDescriptionProps(), children: description }) : null
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...getGroupProps(), children: [
+          label && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getLabelProps(), children: label }),
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getWrapperProps(), children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(RadioGroupProvider, { value: context, children }) }),
+          isInvalid && errorMessage ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : description ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getDescriptionProps(), children: description }) : null
         ] });
       });
       RadioGroup.displayName = "HeroUI.RadioGroup";
@@ -111581,20 +111581,20 @@
         useClipboard: () => useClipboard
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var transformValue2 = (text) => {
         return text.replace(/[\u00A0]/g, " ");
       };
       function useClipboard({ timeout = 2e3 } = {}) {
-        const [error, setError] = (0, import_react67.useState)(null);
-        const [copied, setCopied] = (0, import_react67.useState)(false);
-        const [copyTimeout, setCopyTimeout] = (0, import_react67.useState)(null);
-        const onClearTimeout = (0, import_react67.useCallback)(() => {
+        const [error, setError] = (0, import_react70.useState)(null);
+        const [copied, setCopied] = (0, import_react70.useState)(false);
+        const [copyTimeout, setCopyTimeout] = (0, import_react70.useState)(null);
+        const onClearTimeout = (0, import_react70.useCallback)(() => {
           if (copyTimeout) {
             clearTimeout(copyTimeout);
           }
         }, [copyTimeout]);
-        const handleCopyResult = (0, import_react67.useCallback)(
+        const handleCopyResult = (0, import_react70.useCallback)(
           (value) => {
             onClearTimeout();
             setCopyTimeout(setTimeout(() => setCopied(false), timeout));
@@ -111602,7 +111602,7 @@
           },
           [onClearTimeout, timeout]
         );
-        const copy = (0, import_react67.useCallback)(
+        const copy = (0, import_react70.useCallback)(
           (valueToCopy) => {
             if ("clipboard" in navigator) {
               const transformedValue = typeof valueToCopy === "string" ? transformValue2(valueToCopy) : valueToCopy;
@@ -111613,7 +111613,7 @@
           },
           [handleCopyResult]
         );
-        const reset = (0, import_react67.useCallback)(() => {
+        const reset = (0, import_react70.useCallback)(() => {
           setCopied(false);
           setError(null);
           onClearTimeout();
@@ -114911,7 +114911,7 @@
       module.exports = __toCommonJS2(index_exports);
       var import_focus2 = require_main36();
       var import_interactions = require_main35();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var visibleOverlays = [];
       function useAriaOverlay(props, ref) {
         const {
@@ -114923,7 +114923,7 @@
           shouldCloseOnBlur,
           shouldCloseOnInteractOutside
         } = props;
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           if (isOpen && !visibleOverlays.includes(ref)) {
             visibleOverlays.push(ref);
             return () => {
@@ -115053,7 +115053,7 @@
       var import_shared_utils2 = require_dist2();
       var import_react310 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_aria_utils2 = require_dist13();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_tooltip = require_main33();
       var import_tooltip2 = require_main34();
       var import_overlays = require_main9();
@@ -115117,9 +115117,9 @@
         });
         const triggerRef = (0, import_react210.useRef)(null);
         const overlayRef = (0, import_react210.useRef)(null);
-        const tooltipId = (0, import_react67.useId)();
+        const tooltipId = (0, import_react70.useId)();
         const isOpen = state.isOpen && !isDisabled;
-        (0, import_react67.useImperativeHandle)(
+        (0, import_react70.useImperativeHandle)(
           ref,
           () => (
             // @ts-ignore
@@ -115253,7 +115253,7 @@
           getTooltipProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var domAnimation2 = () => Promise.resolve().then(() => (init_dist(), dist_exports)).then((res) => res.default);
       var Tooltip = (0, import_system2.forwardRef)((props, ref) => {
         var _a;
@@ -115278,18 +115278,18 @@
           const childrenNum = import_react310.Children.count(children);
           if (childrenNum !== 1) throw new Error();
           if (!(0, import_react310.isValidElement)(children)) {
-            trigger = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("p", { ...getTriggerProps(), children });
+            trigger = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("p", { ...getTriggerProps(), children });
           } else {
             const child = children;
             const childRef = (_a = child.props.ref) != null ? _a : child.ref;
             trigger = (0, import_react310.cloneElement)(child, getTriggerProps(child.props, childRef));
           }
         } catch {
-          trigger = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", {});
+          trigger = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", {});
           (0, import_shared_utils2.warn)("Tooltip must have only one child node. Please, check your code.");
         }
         const { ref: tooltipRef, id: id4, style: style2, ...otherTooltipProps } = getTooltipProps();
-        const animatedContent = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ref: tooltipRef, id: id4, style: style2, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        const animatedContent = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ref: tooltipRef, id: id4, style: style2, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           import_framer_motion2.m.div,
           {
             animate: "enter",
@@ -115300,13 +115300,13 @@
             style: {
               ...(0, import_aria_utils2.getTransformOrigins)(placement)
             },
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Component2, { ...getTooltipContentProps(), children: content })
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Component2, { ...getTooltipContentProps(), children: content })
           },
           `${id4}-tooltip-inner`
         ) }, `${id4}-tooltip-content`);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(import_jsx_runtime25.Fragment, { children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(import_jsx_runtime27.Fragment, { children: [
           trigger,
-          disableAnimation ? isOpen && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_overlays2.OverlayContainer, { portalContainer, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ref: tooltipRef, id: id4, style: style2, ...otherTooltipProps, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Component2, { ...getTooltipContentProps(), children: content }) }) }) : /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion2.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion2.AnimatePresence, { children: isOpen && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_overlays2.OverlayContainer, { portalContainer, children: animatedContent }) }) })
+          disableAnimation ? isOpen && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_overlays2.OverlayContainer, { portalContainer, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ref: tooltipRef, id: id4, style: style2, ...otherTooltipProps, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Component2, { ...getTooltipContentProps(), children: content }) }) }) : /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion2.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion2.AnimatePresence, { children: isOpen && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_overlays2.OverlayContainer, { portalContainer, children: animatedContent }) }) })
         ] });
       });
       Tooltip.displayName = "HeroUI.Tooltip";
@@ -115348,7 +115348,7 @@
       var import_shared_utils = require_dist2();
       var import_use_clipboard = require_dist44();
       var import_focus2 = require_main18();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useSnippet(originalProps) {
         var _a, _b, _c, _d;
         const globalContext = (0, import_system.useProviderContext)();
@@ -115386,26 +115386,26 @@
           ...userTooltipProps
         };
         const domRef = (0, import_react_utils.useDOMRef)(ref);
-        const preRef = (0, import_react67.useRef)(null);
+        const preRef = (0, import_react70.useRef)(null);
         const { copy, copied } = (0, import_use_clipboard.useClipboard)({ timeout });
         const isMultiLine = children && Array.isArray(children);
         const { isFocusVisible, isFocused, focusProps } = (0, import_focus2.useFocusRing)({
           autoFocus
         });
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.snippet)({
             ...variantProps2,
             disableAnimation
           }),
           [(0, import_shared_utils.objectToDeps)(variantProps2), disableAnimation]
         );
-        const symbolBefore = (0, import_react67.useMemo)(() => {
+        const symbolBefore = (0, import_react70.useMemo)(() => {
           if (!symbol || typeof symbol !== "string") return symbol;
           const str = symbol.trim();
           return str ? `${str} ` : "";
         }, [symbol]);
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
-        const getSnippetProps = (0, import_react67.useCallback)(
+        const getSnippetProps = (0, import_react70.useCallback)(
           () => ({
             className: slots.base({
               class: baseStyles
@@ -115416,7 +115416,7 @@
           }),
           [slots, baseStyles, isMultiLine, otherProps]
         );
-        const onCopy = (0, import_react67.useCallback)(() => {
+        const onCopy = (0, import_react70.useCallback)(() => {
           var _a2;
           if (disableCopy) {
             return;
@@ -115446,7 +115446,7 @@
           isIconOnly: true,
           ...userButtonProps
         };
-        const getCopyButtonProps = (0, import_react67.useCallback)(
+        const getCopyButtonProps = (0, import_react70.useCallback)(
           () => ({
             ...copyButtonProps,
             "data-copied": (0, import_shared_utils.dataAttr)(copied),
@@ -115494,7 +115494,7 @@
       var import_shared_icons = require_dist17();
       var import_button = require_dist28();
       var import_shared_utils2 = require_dist2();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Snippet = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -115504,8 +115504,8 @@
           slots,
           classNames,
           copied,
-          copyIcon = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.CopyLinearIcon, {}),
-          checkIcon = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.CheckLinearIcon, {}),
+          copyIcon = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.CopyLinearIcon, {}),
+          checkIcon = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.CheckLinearIcon, {}),
           symbolBefore,
           disableCopy,
           disableTooltip,
@@ -115518,7 +115518,7 @@
           getCopyButtonProps
         } = useSnippet({ ...props, ref });
         const TooltipContent = (0, import_react210.useCallback)(
-          ({ children: children2 }) => /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_tooltip.Tooltip, { ...tooltipProps, isDisabled: copied || tooltipProps.isDisabled, children: children2 }),
+          ({ children: children2 }) => /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_tooltip.Tooltip, { ...tooltipProps, isDisabled: copied || tooltipProps.isDisabled, children: children2 }),
           [(0, import_shared_utils2.objectToDeps)(tooltipProps)]
         );
         const contents = (0, import_react210.useMemo)(() => {
@@ -115527,14 +115527,14 @@
           }
           const clonedCheckIcon = checkIcon && (0, import_react210.cloneElement)(checkIcon, { className: slots.checkIcon() });
           const clonedCopyIcon = copyIcon && (0, import_react210.cloneElement)(copyIcon, { className: slots.copyIcon() });
-          const copyButton = /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(import_button.Button, { ...getCopyButtonProps(), children: [
+          const copyButton = /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(import_button.Button, { ...getCopyButtonProps(), children: [
             clonedCheckIcon,
             clonedCopyIcon
           ] });
           if (disableTooltip) {
             return copyButton;
           }
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(TooltipContent, { children: copyButton });
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(TooltipContent, { children: copyButton });
         }, [
           slots,
           classNames == null ? void 0 : classNames.copyButton,
@@ -115549,17 +115549,17 @@
         ]);
         const preContent = (0, import_react210.useMemo)(() => {
           if (isMultiLine && children && Array.isArray(children)) {
-            return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: slots.content({ class: classNames == null ? void 0 : classNames.content }), children: children.map((t, index3) => /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("pre", { className: slots.pre({ class: classNames == null ? void 0 : classNames.pre }), children: [
-              !hideSymbol && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.symbol({ class: classNames == null ? void 0 : classNames.symbol }), children: symbolBefore }),
+            return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { className: slots.content({ class: classNames == null ? void 0 : classNames.content }), children: children.map((t, index3) => /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("pre", { className: slots.pre({ class: classNames == null ? void 0 : classNames.pre }), children: [
+              !hideSymbol && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.symbol({ class: classNames == null ? void 0 : classNames.symbol }), children: symbolBefore }),
               t
             ] }, `${index3}-${t}`)) });
           }
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("pre", { ref: preRef, className: slots.pre({ class: classNames == null ? void 0 : classNames.pre }), children: [
-            !hideSymbol && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.symbol({ class: classNames == null ? void 0 : classNames.symbol }), children: symbolBefore }),
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("pre", { ref: preRef, className: slots.pre({ class: classNames == null ? void 0 : classNames.pre }), children: [
+            !hideSymbol && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.symbol({ class: classNames == null ? void 0 : classNames.symbol }), children: symbolBefore }),
             children
           ] });
         }, [children, hideSymbol, isMultiLine, symbolBefore, classNames == null ? void 0 : classNames.pre, slots]);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ref: domRef, ...getSnippetProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ref: domRef, ...getSnippetProps(), children: [
           preContent,
           contents
         ] });
@@ -115636,7 +115636,7 @@
       module.exports = __toCommonJS2(index_exports);
       var import_react310 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system2 = require_dist11();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system = require_dist11();
       var import_react_utils = require_dist10();
       var import_use_safe_layout_effect = require_dist21();
@@ -115671,10 +115671,10 @@
           ...otherProps
         } = props;
         const Component2 = as || "label";
-        const domRef = (0, import_react67.useRef)(null);
-        const inputRef = (0, import_react67.useRef)(null);
+        const domRef = (0, import_react70.useRef)(null);
+        const inputRef = (0, import_react70.useRef)(null);
         const disableAnimation = (_b = (_a = originalProps.disableAnimation) != null ? _a : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _b : false;
-        const labelId = (0, import_react67.useId)();
+        const labelId = (0, import_react70.useId)();
         const ariaSwitchProps = (0, import_react210.useMemo)(() => {
           const ariaLabel = otherProps["aria-label"] || typeof children === "string" ? children : void 0;
           return {
@@ -115741,7 +115741,7 @@
             "data-pressed": (0, import_shared_utils.dataAttr)(pressed)
           };
         };
-        const getWrapperProps = (0, import_react67.useCallback)(
+        const getWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -115760,14 +115760,14 @@
             onChange: (0, import_shared_utils.chain)(onChange, inputProps.onChange)
           };
         };
-        const getThumbProps = (0, import_react67.useCallback)(
+        const getThumbProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             ...props2,
             className: slots.thumb({ class: (0, import_theme.cn)(classNames == null ? void 0 : classNames.thumb, props2 == null ? void 0 : props2.className) })
           }),
           [slots, classNames == null ? void 0 : classNames.thumb]
         );
-        const getLabelProps = (0, import_react67.useCallback)(
+        const getLabelProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             ...props2,
             id: labelId,
@@ -115775,7 +115775,7 @@
           }),
           [slots, classNames == null ? void 0 : classNames.label, isDisabled, isSelected]
         );
-        const getThumbIconProps = (0, import_react67.useCallback)(
+        const getThumbIconProps = (0, import_react70.useCallback)(
           (props2 = {
             includeStateProps: false
           }) => (0, import_shared_utils.mergeProps)(
@@ -115790,7 +115790,7 @@
           ),
           [slots, classNames == null ? void 0 : classNames.thumbIcon, isSelected]
         );
-        const getStartContentProps = (0, import_react67.useCallback)(
+        const getStartContentProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             width: "1em",
             height: "1em",
@@ -115799,7 +115799,7 @@
           }),
           [slots, classNames == null ? void 0 : classNames.startContent, isSelected]
         );
-        const getEndContentProps = (0, import_react67.useCallback)(
+        const getEndContentProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             width: "1em",
             height: "1em",
@@ -115833,7 +115833,7 @@
           getEndContentProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Switch2 = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -115853,14 +115853,14 @@
         const clonedThumbIcon = typeof thumbIcon === "function" ? thumbIcon(getThumbIconProps({ includeStateProps: true })) : thumbIcon && (0, import_react310.cloneElement)(thumbIcon, getThumbIconProps());
         const clonedStartContent = startContent && (0, import_react310.cloneElement)(startContent, getStartContentProps());
         const clonedEndContent = endContent && (0, import_react310.cloneElement)(endContent, getEndContentProps());
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ...getBaseProps(), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("input", { ...getInputProps() }),
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("span", { ...getWrapperProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ...getBaseProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("input", { ...getInputProps() }),
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("span", { ...getWrapperProps(), children: [
             startContent && clonedStartContent,
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getThumbProps(), children: thumbIcon && clonedThumbIcon }),
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getThumbProps(), children: thumbIcon && clonedThumbIcon }),
             endContent && clonedEndContent
           ] }),
-          children && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getLabelProps(), children })
+          children && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getLabelProps(), children })
         ] });
       });
       Switch2.displayName = "HeroUI.Switch";
@@ -115896,7 +115896,7 @@
         useUser: () => useUser
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_focus2 = require_main18();
       var import_theme = require_dist12();
       var import_shared_utils = require_dist2();
@@ -115922,12 +115922,12 @@
         const shouldFilterDOMProps = typeof Component2 === "string";
         const domRef = (0, import_react_utils2.useDOMRef)(ref);
         const { isFocusVisible, isFocused, focusProps } = (0, import_focus2.useFocusRing)({});
-        const canBeFocused = (0, import_react67.useMemo)(() => {
+        const canBeFocused = (0, import_react70.useMemo)(() => {
           return isFocusable || as === "button";
         }, [isFocusable, as]);
-        const slots = (0, import_react67.useMemo)(() => (0, import_theme.user)(), []);
+        const slots = (0, import_react70.useMemo)(() => (0, import_theme.user)(), []);
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
-        const getUserProps = (0, import_react67.useCallback)(
+        const getUserProps = (0, import_react70.useCallback)(
           () => ({
             ref: domRef,
             tabIndex: canBeFocused ? 0 : -1,
@@ -115959,17 +115959,17 @@
       }
       var import_system = require_dist11();
       var import_avatar = require_dist23();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var User = (0, import_system.forwardRef)((props, ref) => {
         const { Component: Component2, name, slots, classNames, description, avatarProps, getUserProps } = useUser({
           ...props,
           ref
         });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ...getUserProps(), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_avatar.Avatar, { ...avatarProps }),
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.name({ class: classNames == null ? void 0 : classNames.name }), children: name }),
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.description({ class: classNames == null ? void 0 : classNames.description }), children: description })
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ...getUserProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_avatar.Avatar, { ...avatarProps }),
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.name({ class: classNames == null ? void 0 : classNames.name }), children: name }),
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.description({ class: classNames == null ? void 0 : classNames.description }), children: description })
           ] })
         ] });
       });
@@ -116004,12 +116004,12 @@
         useIsMounted: () => useIsMounted2
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useIsMounted2(props = {}) {
         const { rerender = false, delay: delay2 = 0 } = props;
-        const isMountedRef = (0, import_react67.useRef)(false);
-        const [isMounted, setIsMounted] = (0, import_react67.useState)(false);
-        (0, import_react67.useEffect)(() => {
+        const isMountedRef = (0, import_react70.useRef)(false);
+        const [isMounted, setIsMounted] = (0, import_react70.useState)(false);
+        (0, import_react70.useEffect)(() => {
           isMountedRef.current = true;
           let timer = null;
           if (rerender) {
@@ -116031,7 +116031,7 @@
             }
           };
         }, [rerender]);
-        return [(0, import_react67.useCallback)(() => isMountedRef.current, []), isMounted];
+        return [(0, import_react70.useCallback)(() => isMountedRef.current, []), isMounted];
       }
     }
   });
@@ -116126,7 +116126,7 @@
       var import_theme = require_dist12();
       var import_react_utils = require_dist10();
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_use_is_mounted2 = require_dist50();
       var import_progress2 = require_dist51();
       function useProgress(originalProps) {
@@ -116171,7 +116171,7 @@
           "aria-labelledby": originalProps["aria-labelledby"],
           "aria-label": originalProps["aria-label"]
         });
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.progress)({
             ...variantProps2,
             disableAnimation
@@ -116179,11 +116179,11 @@
           [(0, import_shared_utils.objectToDeps)(variantProps2), disableAnimation]
         );
         const selfMounted = disableAnimation ? true : isMounted;
-        const percentage = (0, import_react67.useMemo)(
+        const percentage = (0, import_react70.useMemo)(
           () => isIndeterminate || !selfMounted ? void 0 : (0, import_shared_utils.clampPercentage)((value - minValue) / (maxValue - minValue) * 100),
           [selfMounted, isIndeterminate, value, minValue, maxValue]
         );
-        const getProgressBarProps = (0, import_react67.useCallback)(
+        const getProgressBarProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             ref: domRef,
             "data-indeterminate": (0, import_shared_utils.dataAttr)(isIndeterminate),
@@ -116201,7 +116201,7 @@
             otherProps
           ]
         );
-        const getLabelProps = (0, import_react67.useCallback)(
+        const getLabelProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             className: slots.label({ class: classNames == null ? void 0 : classNames.label }),
             ...(0, import_shared_utils.mergeProps)(labelProps, props2)
@@ -116220,7 +116220,7 @@
           getLabelProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Progress = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -116234,12 +116234,12 @@
         } = useProgress({ ...props, ref });
         const progressBarProps = getProgressBarProps();
         const shouldShowLabelWrapper = label || showValueLabel;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ...progressBarProps, children: [
-          shouldShowLabelWrapper ? /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { className: slots.labelWrapper({ class: classNames == null ? void 0 : classNames.labelWrapper }), children: [
-            label && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getLabelProps(), children: label }),
-            showValueLabel && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.value({ class: classNames == null ? void 0 : classNames.value }), children: progressBarProps["aria-valuetext"] })
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ...progressBarProps, children: [
+          shouldShowLabelWrapper ? /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { className: slots.labelWrapper({ class: classNames == null ? void 0 : classNames.labelWrapper }), children: [
+            label && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getLabelProps(), children: label }),
+            showValueLabel && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.value({ class: classNames == null ? void 0 : classNames.value }), children: progressBarProps["aria-valuetext"] })
           ] }) : null,
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: slots.track({ class: classNames == null ? void 0 : classNames.track }), children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { className: slots.track({ class: classNames == null ? void 0 : classNames.track }), children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             "div",
             {
               className: slots.indicator({ class: classNames == null ? void 0 : classNames.indicator }),
@@ -116405,7 +116405,7 @@
           getTrackProps
         };
       }
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var CircularProgress = (0, import_system4.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -116420,15 +116420,15 @@
           getTrackProps
         } = useCircularProgress({ ref, ...props });
         const progressBarProps = getProgressBarProps();
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...progressBarProps, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: slots.svgWrapper({ class: classNames == null ? void 0 : classNames.svgWrapper }), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("svg", { ...getSvgProps(), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("circle", { ...getTrackProps() }),
-              /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("circle", { ...getIndicatorProps() })
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...progressBarProps, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { className: slots.svgWrapper({ class: classNames == null ? void 0 : classNames.svgWrapper }), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("svg", { ...getSvgProps(), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("circle", { ...getTrackProps() }),
+              /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("circle", { ...getIndicatorProps() })
             ] }),
-            showValueLabel && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { className: slots.value({ class: classNames == null ? void 0 : classNames.value }), children: progressBarProps["aria-valuetext"] })
+            showValueLabel && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { className: slots.value({ class: classNames == null ? void 0 : classNames.value }), children: progressBarProps["aria-valuetext"] })
           ] }),
-          label && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getLabelProps(), children: label })
+          label && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getLabelProps(), children: label })
         ] });
       });
       CircularProgress.displayName = "HeroUI.CircularProgress";
@@ -117213,7 +117213,7 @@
       var import_interactions = require_main17();
       var import_shared_utils = require_dist2();
       var import_utils8 = require_main38();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_textfield = require_main40();
       var import_form = require_dist33();
       function useInput(originalProps) {
@@ -117243,13 +117243,13 @@
           },
           ...otherProps
         } = props;
-        const handleValueChange = (0, import_react67.useCallback)(
+        const handleValueChange = (0, import_react70.useCallback)(
           (value) => {
             onValueChange(value != null ? value : "");
           },
           [onValueChange]
         );
-        const [isFocusWithin, setFocusWithin] = (0, import_react67.useState)(false);
+        const [isFocusWithin, setFocusWithin] = (0, import_react70.useState)(false);
         const Component2 = as || "div";
         const disableAnimation = (_c = (_b = originalProps.disableAnimation) != null ? _b : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _c : false;
         const domRef = (0, import_react_utils.useDOMRef)(ref);
@@ -117269,7 +117269,7 @@
         const isHiddenType = type === "hidden";
         const isMultiline = originalProps.isMultiline;
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className, isFilled ? "is-filled" : "");
-        const handleClear = (0, import_react67.useCallback)(() => {
+        const handleClear = (0, import_react70.useCallback)(() => {
           var _a2;
           if (isFileTypeInput) {
             domRef.current.value = "";
@@ -117346,7 +117346,7 @@
         const hasStartContent = !!startContent;
         const isLabelOutside = shouldLabelBeOutside ? isOutsideLeft || isOutsideTop || hasPlaceholder || labelPlacement === "outside" && hasStartContent : false;
         const isLabelOutsideAsPlaceholder = labelPlacement === "outside" && !hasPlaceholder && !hasStartContent;
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.input)({
             ...variantProps2,
             isInvalid,
@@ -117363,7 +117363,7 @@
             disableAnimation
           ]
         );
-        const getBaseProps = (0, import_react67.useCallback)(
+        const getBaseProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ref: baseDomRef,
@@ -117416,7 +117416,7 @@
             originalProps.isDisabled
           ]
         );
-        const getLabelProps = (0, import_react67.useCallback)(
+        const getLabelProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               "data-slot": "label",
@@ -117426,7 +117426,7 @@
           },
           [slots, isLabelHovered, labelProps, classNames == null ? void 0 : classNames.label]
         );
-        const handleKeyDown = (0, import_react67.useCallback)(
+        const handleKeyDown = (0, import_react70.useCallback)(
           (e) => {
             if (e.key === "Escape" && inputValue && (isClearable || onClear) && !originalProps.isReadOnly) {
               setInputValue("");
@@ -117435,7 +117435,7 @@
           },
           [inputValue, setInputValue, onClear, isClearable, originalProps.isReadOnly]
         );
-        const getInputProps = (0, import_react67.useCallback)(
+        const getInputProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               "data-slot": "input",
@@ -117485,7 +117485,7 @@
             handleKeyDown
           ]
         );
-        const getInputWrapperProps = (0, import_react67.useCallback)(
+        const getInputWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ref: inputWrapperRef,
@@ -117518,7 +117518,7 @@
             classNames == null ? void 0 : classNames.inputWrapper
           ]
         );
-        const getInnerWrapperProps = (0, import_react67.useCallback)(
+        const getInnerWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -117536,7 +117536,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.innerWrapper]
         );
-        const getMainWrapperProps = (0, import_react67.useCallback)(
+        const getMainWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -117548,7 +117548,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.mainWrapper]
         );
-        const getHelperWrapperProps = (0, import_react67.useCallback)(
+        const getHelperWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -117560,7 +117560,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.helperWrapper]
         );
-        const getDescriptionProps = (0, import_react67.useCallback)(
+        const getDescriptionProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -117571,7 +117571,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.description]
         );
-        const getErrorMessageProps = (0, import_react67.useCallback)(
+        const getErrorMessageProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -117582,7 +117582,7 @@
           },
           [slots, errorMessageProps, classNames == null ? void 0 : classNames.errorMessage]
         );
-        const getClearButtonProps = (0, import_react67.useCallback)(
+        const getClearButtonProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -117633,8 +117633,8 @@
           getClearButtonProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var Input2 = (0, import_system2.forwardRef)((props, ref) => {
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var Input3 = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
           label,
@@ -117660,10 +117660,10 @@
           getErrorMessageProps,
           getClearButtonProps
         } = useInput({ ...props, ref });
-        const labelContent = label ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("label", { ...getLabelProps(), children: label }) : null;
+        const labelContent = label ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("label", { ...getLabelProps(), children: label }) : null;
         const end = (0, import_react210.useMemo)(() => {
           if (isClearable) {
-            return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("button", { ...getClearButtonProps(), children: endContent || /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.CloseFilledIcon, {}) });
+            return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("button", { ...getClearButtonProps(), children: endContent || /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.CloseFilledIcon, {}) });
           }
           return endContent;
         }, [isClearable, getClearButtonProps]);
@@ -117671,7 +117671,7 @@
           const shouldShowError = isInvalid && errorMessage;
           const hasContent = shouldShowError || description;
           if (!hasHelper || !hasContent) return null;
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getHelperWrapperProps(), children: shouldShowError ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getDescriptionProps(), children: description }) });
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getHelperWrapperProps(), children: shouldShowError ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getDescriptionProps(), children: description }) });
         }, [
           hasHelper,
           isInvalid,
@@ -117682,24 +117682,24 @@
           getDescriptionProps
         ]);
         const innerWrapper = (0, import_react210.useMemo)(() => {
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ...getInnerWrapperProps(), children: [
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ...getInnerWrapperProps(), children: [
             startContent,
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("input", { ...getInputProps() }),
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("input", { ...getInputProps() }),
             end
           ] });
         }, [startContent, end, getInputProps, getInnerWrapperProps]);
         const mainWrapper = (0, import_react210.useMemo)(() => {
           if (shouldLabelBeOutside) {
-            return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ...getMainWrapperProps(), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ...getInputWrapperProps(), children: [
+            return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ...getMainWrapperProps(), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ...getInputWrapperProps(), children: [
                 !isOutsideLeft && !isOutsideTop ? labelContent : null,
                 innerWrapper
               ] }),
               helperWrapper
             ] });
           }
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(import_jsx_runtime25.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ...getInputWrapperProps(), children: [
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(import_jsx_runtime27.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ...getInputWrapperProps(), children: [
               labelContent,
               innerWrapper
             ] }),
@@ -117718,19 +117718,19 @@
           getErrorMessageProps,
           getDescriptionProps
         ]);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ...getBaseProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ...getBaseProps(), children: [
           isOutsideLeft || isOutsideTop ? labelContent : null,
           mainWrapper
         ] });
       });
-      Input2.displayName = "HeroUI.Input";
-      var input_default = Input2;
+      Input3.displayName = "HeroUI.Input";
+      var input_default = Input3;
       var import_shared_utils2 = require_dist2();
       var import_system3 = require_dist11();
       var import_react310 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_react_textarea_autosize = __toESM2((init_react_textarea_autosize_browser_esm(), __toCommonJS(react_textarea_autosize_browser_esm_exports)));
       var import_shared_icons2 = require_dist17();
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Textarea = (0, import_system3.forwardRef)(
         ({
           style: style2,
@@ -117765,7 +117765,7 @@
           } = useInput({ ...otherProps, ref, isMultiline: true });
           const [hasMultipleRows, setIsHasMultipleRows] = (0, import_react310.useState)(minRows > 1);
           const [isLimitReached, setIsLimitReached] = (0, import_react310.useState)(false);
-          const labelContent = label ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("label", { ...getLabelProps(), children: label }) : null;
+          const labelContent = label ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("label", { ...getLabelProps(), children: label }) : null;
           const inputProps = getInputProps();
           const handleHeightChange = (height, meta) => {
             if (minRows === 1) {
@@ -117777,7 +117777,7 @@
             }
             onHeightChange == null ? void 0 : onHeightChange(height, meta);
           };
-          const content = disableAutosize ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("textarea", { ...inputProps, style: (0, import_shared_utils2.mergeProps)(inputProps.style, style2 != null ? style2 : {}) }) : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+          const content = disableAutosize ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("textarea", { ...inputProps, style: (0, import_shared_utils2.mergeProps)(inputProps.style, style2 != null ? style2 : {}) }) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
             import_react_textarea_autosize.default,
             {
               ...inputProps,
@@ -117790,28 +117790,28 @@
             }
           );
           const clearButtonContent = (0, import_react310.useMemo)(() => {
-            return isClearable ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("button", { ...getClearButtonProps(), children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_shared_icons2.CloseFilledIcon, {}) }) : null;
+            return isClearable ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("button", { ...getClearButtonProps(), children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_shared_icons2.CloseFilledIcon, {}) }) : null;
           }, [isClearable, getClearButtonProps]);
           const innerWrapper = (0, import_react310.useMemo)(() => {
             if (startContent || endContent) {
-              return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getInnerWrapperProps(), children: [
+              return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getInnerWrapperProps(), children: [
                 startContent,
                 content,
                 endContent
               ] });
             }
-            return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getInnerWrapperProps(), children: content });
+            return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getInnerWrapperProps(), children: content });
           }, [startContent, inputProps, endContent, getInnerWrapperProps]);
           const shouldShowError = isInvalid && errorMessage;
           const hasHelperContent = shouldShowError || description;
-          return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...getBaseProps(), children: [
+          return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...getBaseProps(), children: [
             shouldLabelBeOutside ? labelContent : null,
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getInputWrapperProps(), "data-has-multiple-rows": (0, import_shared_utils2.dataAttr)(hasMultipleRows), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getInputWrapperProps(), "data-has-multiple-rows": (0, import_shared_utils2.dataAttr)(hasMultipleRows), children: [
               shouldLabelBeInside ? labelContent : null,
               innerWrapper,
               clearButtonContent
             ] }),
-            hasHelper && hasHelperContent ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getHelperWrapperProps(), children: shouldShowError ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getDescriptionProps(), children: description }) }) : null
+            hasHelper && hasHelperContent ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getHelperWrapperProps(), children: shouldShowError ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getDescriptionProps(), children: description }) }) : null
           ] });
         }
       );
@@ -117998,7 +117998,7 @@
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_aria_utils = require_dist13();
       var import_overlays = require_main9();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_shared_utils = require_dist2();
       var import_use_safe_layout_effect = require_dist21();
       var import_use_aria_overlay = require_dist45();
@@ -118066,7 +118066,7 @@
           if (!updatePositionDeps.length) return;
           updatePosition();
         }, updatePositionDeps);
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           var _a, _b;
           if (state.isOpen && popoverRef.current) {
             if (isNonModal) {
@@ -118303,15 +118303,15 @@
         name: "PopoverContext",
         errorMessage: "usePopoverContext: `context` is undefined. Seems you forgot to wrap all popover components within `<Popover />`"
       });
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Popover = (0, import_system2.forwardRef)((props, ref) => {
         const { children, ...otherProps } = props;
         const context = usePopover({ ...otherProps, ref });
         const [trigger, content] = import_react310.Children.toArray(children);
-        const overlay = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_overlays4.Overlay, { portalContainer: context.portalContainer, children: content });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(PopoverProvider, { value: context, children: [
+        const overlay = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_overlays4.Overlay, { portalContainer: context.portalContainer, children: content });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(PopoverProvider, { value: context, children: [
           trigger,
-          context.disableAnimation && context.isOpen ? overlay : /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion2.AnimatePresence, { children: context.isOpen ? overlay : null })
+          context.disableAnimation && context.isOpen ? overlay : /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion2.AnimatePresence, { children: context.isOpen ? overlay : null })
         ] });
       });
       Popover.displayName = "HeroUI.Popover";
@@ -118321,13 +118321,13 @@
       var import_use_aria_button = require_dist27();
       var import_button = require_dist28();
       var import_shared_utils3 = require_dist2();
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var PopoverTrigger = (props) => {
         var _a;
         const { triggerRef, getTriggerProps } = usePopoverContext();
         const { children, ...otherProps } = props;
         const child = (0, import_react410.useMemo)(() => {
-          if (typeof children === "string") return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("p", { children });
+          if (typeof children === "string") return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("p", { children });
           return import_react410.Children.only(children);
         }, [children]);
         const childRef = (_a = child.props.ref) != null ? _a : child.ref;
@@ -119816,7 +119816,7 @@
       var import_theme = require_dist12();
       var import_tree = require_main12();
       var import_react_utils = require_dist10();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_theme2 = require_dist12();
       function useMenu(props) {
         var _a;
@@ -119849,7 +119849,7 @@
         const innerState = (0, import_tree.useTreeState)({ ...otherProps, ...userMenuProps, children });
         const state = propState || innerState;
         const { menuProps } = (0, import_menu.useMenu)({ ...otherProps, ...userMenuProps, onAction }, state, domRef);
-        const slots = (0, import_react67.useMemo)(() => (0, import_theme.menu)({ className }), [className]);
+        const slots = (0, import_react70.useMemo)(() => (0, import_theme.menu)({ className }), [className]);
         const baseStyles = (0, import_theme2.cn)(classNames == null ? void 0 : classNames.base, className);
         const getBaseProps = (props2 = {}) => {
           return {
@@ -120083,10 +120083,10 @@
           getSelectedIconProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       function MenuSelectedIcon(props) {
         const { isSelected, disableAnimation, ...otherProps } = props;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             "aria-hidden": "true",
@@ -120094,7 +120094,7 @@
             role: "presentation",
             viewBox: "0 0 17 18",
             ...otherProps,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "polyline",
               {
                 fill: "none",
@@ -120113,7 +120113,7 @@
           }
         );
       }
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var MenuItem = (props) => {
         const {
           Component: Component2,
@@ -120137,21 +120137,21 @@
           getSelectedIconProps
         } = useMenuItem(props);
         const selectedContent = (0, import_react310.useMemo)(() => {
-          const defaultIcon = /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(MenuSelectedIcon, { disableAnimation, isSelected });
+          const defaultIcon = /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(MenuSelectedIcon, { disableAnimation, isSelected });
           if (typeof selectedIcon === "function") {
             return selectedIcon({ icon: defaultIcon, isSelected, isDisabled });
           }
           if (selectedIcon) return selectedIcon;
           return defaultIcon;
         }, [selectedIcon, isSelected, isDisabled, disableAnimation]);
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...getItemProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...getItemProps(), children: [
           startContent,
-          description ? /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getLabelProps(), children: rendered }),
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getDescriptionProps(), children: description })
-          ] }) : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getLabelProps(), children: rendered }),
-          shortcut && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("kbd", { ...getKeyboardShortcutProps(), children: shortcut }),
-          isSelectable && !hideSelectedIcon && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getSelectedIconProps(), children: selectedContent }),
+          description ? /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getLabelProps(), children: rendered }),
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getDescriptionProps(), children: description })
+          ] }) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getLabelProps(), children: rendered }),
+          shortcut && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("kbd", { ...getKeyboardShortcutProps(), children: shortcut }),
+          isSelectable && !hideSelectedIcon && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getSelectedIconProps(), children: selectedContent }),
           endContent
         ] });
       };
@@ -120507,7 +120507,7 @@
       var import_theme = require_dist12();
       var import_shared_utils = require_dist2();
       var import_react_utils2 = require_dist10();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var getMenuItem = (props, key) => {
         if (props) {
           const mergedChildren = Array.isArray(props.children) ? props.children : [...(props == null ? void 0 : props.items) || []];
@@ -120551,10 +120551,10 @@
           ...otherProps
         } = props;
         const Component2 = as || "div";
-        const triggerRef = (0, import_react67.useRef)(null);
+        const triggerRef = (0, import_react70.useRef)(null);
         const menuTriggerRef = triggerRefProp || triggerRef;
-        const menuRef = (0, import_react67.useRef)(null);
-        const popoverRef = (0, import_react67.useRef)(null);
+        const menuRef = (0, import_react70.useRef)(null);
+        const popoverRef = (0, import_react70.useRef)(null);
         const state = (0, import_menu.useMenuTriggerState)({
           trigger,
           isOpen,
@@ -120571,7 +120571,7 @@
           state,
           menuTriggerRef
         );
-        const styles = (0, import_react67.useMemo)(
+        const styles = (0, import_react70.useMemo)(
           () => (0, import_theme.dropdown)({
             className
           }),
@@ -120634,12 +120634,12 @@
           getMenuTriggerProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Dropdown = (props) => {
         const { children, ...otherProps } = props;
         const context = useDropdown(otherProps);
         const [menuTrigger, menu] = import_react210.default.Children.toArray(children);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(DropdownProvider, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(import_popover.Popover, { ...context.getPopoverProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(DropdownProvider, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(import_popover.Popover, { ...context.getPopoverProps(), children: [
           menuTrigger,
           menu
         ] }) });
@@ -120647,11 +120647,11 @@
       Dropdown.displayName = "HeroUI.Dropdown";
       var dropdown_default = Dropdown;
       var import_popover2 = require_dist54();
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var DropdownTrigger = (props) => {
         const { getMenuTriggerProps } = useDropdownContext();
         const { children, ...otherProps } = props;
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_popover2.PopoverTrigger, { ...getMenuTriggerProps(otherProps), children });
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_popover2.PopoverTrigger, { ...getMenuTriggerProps(otherProps), children });
       };
       DropdownTrigger.displayName = "HeroUI.DropdownTrigger";
       var dropdown_trigger_default = DropdownTrigger;
@@ -120698,7 +120698,7 @@
       module.exports = __toCommonJS2(index_exports);
       var import_react310 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system2 = require_dist11();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system = require_dist11();
       var import_theme = require_dist12();
       var import_react_utils = require_dist10();
@@ -120783,7 +120783,7 @@
             }
           };
         };
-        const getWrapperProps = (0, import_react67.useCallback)(() => {
+        const getWrapperProps = (0, import_react70.useCallback)(() => {
           const fallbackStyle = showFallback ? {
             backgroundImage: `url(${fallbackSrc})`
           } : {};
@@ -120795,7 +120795,7 @@
             }
           };
         }, [slots, showFallback, fallbackSrc, classNames == null ? void 0 : classNames.wrapper, w]);
-        const getBlurredImgProps = (0, import_react67.useCallback)(() => {
+        const getBlurredImgProps = (0, import_react70.useCallback)(() => {
           return {
             src,
             "aria-hidden": (0, import_shared_utils.dataAttr)(true),
@@ -120818,7 +120818,7 @@
           getBlurredImgProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Image3 = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -120837,19 +120837,19 @@
           ...props,
           ref
         });
-        const img = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Component2, { ref: domRef, ...getImgProps() });
+        const img = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Component2, { ref: domRef, ...getImgProps() });
         if (removeWrapper) {
           return img;
         }
-        const zoomed = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: slots.zoomedWrapper({ class: classNames == null ? void 0 : classNames.zoomedWrapper }), children: img });
+        const zoomed = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { className: slots.zoomedWrapper({ class: classNames == null ? void 0 : classNames.zoomedWrapper }), children: img });
         if (isBlurred) {
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ...getWrapperProps(), children: [
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ...getWrapperProps(), children: [
             isZoomed ? zoomed : img,
             (0, import_react310.cloneElement)(img, getBlurredImgProps())
           ] });
         }
         if (isZoomed || !disableSkeleton || fallbackSrc) {
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ...getWrapperProps(), children: [
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ...getWrapperProps(), children: [
             " ",
             isZoomed ? zoomed : img
           ] });
@@ -120889,7 +120889,7 @@
       module.exports = __toCommonJS2(index_exports);
       var import_overlays = require_main9();
       var import_utils8 = require_main4();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_use_aria_overlay = require_dist45();
       function useAriaModalOverlay(props = {
         shouldBlockScroll: true
@@ -120906,7 +120906,7 @@
           isDisabled: !state.isOpen || !props.shouldBlockScroll
         });
         (0, import_overlays.useOverlayFocusContain)();
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           if (state.isOpen && ref.current) {
             return (0, import_overlays.ariaHideOutside)([ref.current]);
           }
@@ -120956,9 +120956,9 @@
         useViewportSize: () => useViewportSize
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
+      var import_react70 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
       var visualViewport = typeof document !== "undefined" && window.visualViewport;
-      var IsSSRContext = import_react67.default.createContext(false);
+      var IsSSRContext = import_react70.default.createContext(false);
       function getSnapshot() {
         return false;
       }
@@ -120970,15 +120970,15 @@
         };
       }
       function useIsSSR() {
-        if (typeof import_react67.default["useSyncExternalStore"] === "function") {
-          return import_react67.default["useSyncExternalStore"](subscribe, getSnapshot, getServerSnapshot);
+        if (typeof import_react70.default["useSyncExternalStore"] === "function") {
+          return import_react70.default["useSyncExternalStore"](subscribe, getSnapshot, getServerSnapshot);
         }
-        return (0, import_react67.useContext)(IsSSRContext);
+        return (0, import_react70.useContext)(IsSSRContext);
       }
       function useViewportSize() {
         let isSSR = useIsSSR();
-        let [size, setSize] = (0, import_react67.useState)(() => isSSR ? { width: 0, height: 0 } : getViewportSize());
-        (0, import_react67.useEffect)(() => {
+        let [size, setSize] = (0, import_react70.useState)(() => isSSR ? { width: 0, height: 0 } : getViewportSize());
+        (0, import_react70.useEffect)(() => {
           let onResize = () => {
             setSize((size2) => {
               let newSize = getViewportSize();
@@ -121154,7 +121154,7 @@
       var import_utils8 = require_main4();
       var import_utils22 = require_main46();
       var import_use_callback_ref = require_dist31();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useDisclosure2(props = {}) {
         const {
           id: idProp,
@@ -121168,22 +121168,22 @@
         const onOpenPropCallbackRef = (0, import_use_callback_ref.useCallbackRef)(onOpenProp);
         const onClosePropCallbackRef = (0, import_use_callback_ref.useCallbackRef)(onCloseProp);
         const [isOpen, setIsOpen] = (0, import_utils22.useControlledState)(isOpenProp, defaultOpen || false, onChange);
-        const reactId = (0, import_react67.useId)();
+        const reactId = (0, import_react70.useId)();
         const id4 = idProp || reactId;
         const isControlled = isOpenProp !== void 0;
-        const onClose = (0, import_react67.useCallback)(() => {
+        const onClose = (0, import_react70.useCallback)(() => {
           if (!isControlled) {
             setIsOpen(false);
           }
           onClosePropCallbackRef == null ? void 0 : onClosePropCallbackRef();
         }, [isControlled, onClosePropCallbackRef]);
-        const onOpen = (0, import_react67.useCallback)(() => {
+        const onOpen = (0, import_react70.useCallback)(() => {
           if (!isControlled) {
             setIsOpen(true);
           }
           onOpenPropCallbackRef == null ? void 0 : onOpenPropCallbackRef();
         }, [isControlled, onOpenPropCallbackRef]);
-        const onOpenChange = (0, import_react67.useCallback)(() => {
+        const onOpenChange = (0, import_react70.useCallback)(() => {
           const action = isOpen ? onClose : onOpen;
           action();
         }, [isOpen, onOpen, onClose]);
@@ -123299,15 +123299,15 @@
         useDraggable: () => useDraggable2
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_interactions = require_main47();
       function useDraggable2(props) {
         const { targetRef, isDisabled = false, canOverflow = false } = props;
-        const boundary = (0, import_react67.useRef)({ minLeft: 0, minTop: 0, maxLeft: 0, maxTop: 0 });
-        const isDragging2 = (0, import_react67.useRef)(false);
-        const transform2 = (0, import_react67.useRef)({ offsetX: 0, offsetY: 0 });
-        const prevTargetRef = (0, import_react67.useRef)(null);
-        (0, import_react67.useEffect)(() => {
+        const boundary = (0, import_react70.useRef)({ minLeft: 0, minTop: 0, maxLeft: 0, maxTop: 0 });
+        const isDragging2 = (0, import_react70.useRef)(false);
+        const transform2 = (0, import_react70.useRef)({ offsetX: 0, offsetY: 0 });
+        const prevTargetRef = (0, import_react70.useRef)(null);
+        (0, import_react70.useEffect)(() => {
           var _a;
           const currentTarget = (_a = targetRef == null ? void 0 : targetRef.current) != null ? _a : null;
           if (prevTargetRef.current !== currentTarget) {
@@ -123315,7 +123315,7 @@
             prevTargetRef.current = currentTarget;
           }
         }, [targetRef == null ? void 0 : targetRef.current]);
-        const onMoveStart = (0, import_react67.useCallback)(() => {
+        const onMoveStart = (0, import_react70.useCallback)(() => {
           var _a, _b, _c, _d, _e;
           isDragging2.current = true;
           const { offsetX, offsetY } = transform2.current;
@@ -123337,7 +123337,7 @@
             maxTop
           };
         }, [targetRef]);
-        const onMove = (0, import_react67.useCallback)(
+        const onMove = (0, import_react70.useCallback)(
           (e) => {
             if (isDisabled) {
               return;
@@ -123360,7 +123360,7 @@
           },
           [isDisabled, canOverflow, targetRef]
         );
-        const onMoveEnd = (0, import_react67.useCallback)(() => {
+        const onMoveEnd = (0, import_react70.useCallback)(() => {
           isDragging2.current = false;
         }, []);
         const { moveProps } = (0, import_interactions.useMove)({
@@ -123368,12 +123368,12 @@
           onMove,
           onMoveEnd
         });
-        const preventDefault = (0, import_react67.useCallback)((e) => {
+        const preventDefault = (0, import_react70.useCallback)((e) => {
           if (isDragging2.current) {
             e.preventDefault();
           }
         }, []);
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           if (!isDisabled) {
             document.body.addEventListener("touchmove", preventDefault, { passive: false });
           }
@@ -123431,7 +123431,7 @@
       var import_overlays2 = require_main9();
       var import_system2 = require_dist11();
       var import_use_aria_modal_overlay = require_dist59();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_theme = require_dist12();
       var import_system = require_dist11();
       var import_use_aria_button = require_dist27();
@@ -123463,13 +123463,13 @@
         } = props;
         const Component2 = as || "section";
         const domRef = (0, import_react_utils.useDOMRef)(ref);
-        const closeButtonRef = (0, import_react67.useRef)(null);
-        const [headerMounted, setHeaderMounted] = (0, import_react67.useState)(false);
-        const [bodyMounted, setBodyMounted] = (0, import_react67.useState)(false);
+        const closeButtonRef = (0, import_react70.useRef)(null);
+        const [headerMounted, setHeaderMounted] = (0, import_react70.useState)(false);
+        const [bodyMounted, setBodyMounted] = (0, import_react70.useState)(false);
         const disableAnimation = (_b = (_a = originalProps.disableAnimation) != null ? _a : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _b : false;
-        const dialogId = (0, import_react67.useId)();
-        const headerId = (0, import_react67.useId)();
-        const bodyId = (0, import_react67.useId)();
+        const dialogId = (0, import_react70.useId)();
+        const headerId = (0, import_react70.useId)();
+        const bodyId = (0, import_react70.useId)();
         const state = (0, import_overlays.useOverlayTriggerState)({
           isOpen,
           defaultOpen,
@@ -123492,7 +123492,7 @@
         const { buttonProps: closeButtonProps } = (0, import_use_aria_button.useAriaButton)({ onPress: state.close }, closeButtonRef);
         const { isFocusVisible: isCloseButtonFocusVisible, focusProps: closeButtonFocusProps } = (0, import_focus2.useFocusRing)();
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.modal)({
             ...variantProps2,
             disableAnimation
@@ -123514,7 +123514,7 @@
             "aria-describedby": bodyMounted ? bodyId : void 0
           };
         };
-        const getBackdropProps = (0, import_react67.useCallback)(
+        const getBackdropProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             className: slots.backdrop({ class: classNames == null ? void 0 : classNames.backdrop }),
             ...underlayProps,
@@ -123561,12 +123561,12 @@
         name: "ModalContext",
         errorMessage: "useModalContext: `context` is undefined. Seems you forgot to wrap all popover components within `<Modal />`"
       });
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Modal = (0, import_system2.forwardRef)((props, ref) => {
         const { children, ...otherProps } = props;
         const context = useModal({ ...otherProps, ref });
-        const overlay = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_overlays2.Overlay, { portalContainer: context.portalContainer, children });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(ModalProvider, { value: context, children: context.disableAnimation && context.isOpen ? overlay : /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion2.AnimatePresence, { children: context.isOpen ? overlay : null }) });
+        const overlay = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_overlays2.Overlay, { portalContainer: context.portalContainer, children });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(ModalProvider, { value: context, children: context.disableAnimation && context.isOpen ? overlay : /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion2.AnimatePresence, { children: context.isOpen ? overlay : null }) });
       });
       Modal.displayName = "HeroUI.Modal";
       var modal_default = Modal;
@@ -123612,7 +123612,7 @@
           }
         }
       };
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var domAnimation2 = () => Promise.resolve().then(() => (init_dist(), dist_exports)).then((res) => res.default);
       var ModalContent = (props) => {
         const { as, children, role = "dialog", ...otherProps } = props;
@@ -123639,7 +123639,7 @@
           },
           domRef
         );
-        const closeButtonContent = (0, import_react210.isValidElement)(closeButton) ? (0, import_react210.cloneElement)(closeButton, getCloseButtonProps()) : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("button", { ...getCloseButtonProps(), children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_shared_icons.CloseIcon, {}) });
+        const closeButtonContent = (0, import_react210.isValidElement)(closeButton) ? (0, import_react210.cloneElement)(closeButton, getCloseButtonProps()) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("button", { ...getCloseButtonProps(), children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_shared_icons.CloseIcon, {}) });
         const onKeyDown = (0, import_react210.useCallback)((e) => {
           if (e.key === "Tab" && e.nativeEvent.isComposing) {
             e.stopPropagation();
@@ -123647,20 +123647,20 @@
           }
         }, []);
         const contentProps = getDialogProps((0, import_shared_utils2.mergeProps)(dialogProps, otherProps));
-        const content = /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...contentProps, onKeyDown: (0, import_shared_utils2.chain)(contentProps.onKeyDown, onKeyDown), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_overlays3.DismissButton, { onDismiss: onClose }),
+        const content = /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...contentProps, onKeyDown: (0, import_shared_utils2.chain)(contentProps.onKeyDown, onKeyDown), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_overlays3.DismissButton, { onDismiss: onClose }),
           !hideCloseButton && closeButtonContent,
           typeof children === "function" ? children(onClose) : children,
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_overlays3.DismissButton, { onDismiss: onClose })
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_overlays3.DismissButton, { onDismiss: onClose })
         ] });
         const backdropContent = (0, import_react210.useMemo)(() => {
           if (backdrop === "transparent") {
             return null;
           }
           if (disableAnimation) {
-            return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getBackdropProps() });
+            return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getBackdropProps() });
           }
-          return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_framer_motion22.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_framer_motion22.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
             import_framer_motion22.m.div,
             {
               animate: "enter",
@@ -123674,7 +123674,7 @@
         const viewportStyle = {
           "--visual-viewport-height": viewport.height + "px"
         };
-        const contents = disableAnimation ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+        const contents = disableAnimation ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
           "div",
           {
             className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }),
@@ -123682,7 +123682,7 @@
             style: viewportStyle,
             children: content
           }
-        ) : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_framer_motion22.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+        ) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_framer_motion22.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
           import_framer_motion22.m.div,
           {
             animate: "enter",
@@ -123696,7 +123696,7 @@
             children: content
           }
         ) });
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { tabIndex: -1, children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { tabIndex: -1, children: [
           backdropContent,
           contents
         ] });
@@ -123809,7 +123809,7 @@
         useScrollPosition: () => useScrollPosition
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var isBrowser3 = typeof window !== "undefined";
       function getScrollPosition(element) {
         if (!isBrowser3) return { x: 0, y: 0 };
@@ -123820,11 +123820,11 @@
       }
       var useScrollPosition = (props) => {
         const { elementRef, delay: delay2 = 30, callback, isEnabled } = props;
-        const position = (0, import_react67.useRef)(
+        const position = (0, import_react70.useRef)(
           isEnabled ? getScrollPosition(elementRef == null ? void 0 : elementRef.current) : { x: 0, y: 0 }
         );
-        const throttleTimeout = (0, import_react67.useRef)(null);
-        const handler = (0, import_react67.useCallback)(() => {
+        const throttleTimeout = (0, import_react70.useRef)(null);
+        const handler = (0, import_react70.useCallback)(() => {
           const currPos = getScrollPosition(elementRef == null ? void 0 : elementRef.current);
           if (typeof callback === "function") {
             callback({ prevPos: position.current, currPos });
@@ -123832,7 +123832,7 @@
           position.current = currPos;
           throttleTimeout.current = null;
         }, [callback, elementRef]);
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           if (!isEnabled) return;
           const handleScroll = () => {
             if (delay2) {
@@ -123886,9 +123886,9 @@
         useResizeObserver: () => useResizeObserver
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useResize(callback, immediatelyInvoke = true) {
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           const fn = () => callback();
           if (immediatelyInvoke) {
             fn();
@@ -123902,7 +123902,7 @@
       }
       function useResizeObserver(options) {
         const { ref, box, onResize } = options;
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           let element = ref == null ? void 0 : ref.current;
           if (!element) {
             return;
@@ -124126,7 +124126,7 @@
         useNavbarContext: () => useNavbarContext
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system = require_dist11();
       var import_theme = require_dist12();
       var import_react_utils = require_dist10();
@@ -124160,10 +124160,10 @@
         const Component2 = as || "nav";
         const disableAnimation = (_b = (_a = originalProps.disableAnimation) != null ? _a : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _b : false;
         const domRef = (0, import_react_utils.useDOMRef)(ref);
-        const prevWidth = (0, import_react67.useRef)(0);
-        const navHeight = (0, import_react67.useRef)(0);
-        const [isHidden, setIsHidden] = (0, import_react67.useState)(false);
-        const handleMenuOpenChange = (0, import_react67.useCallback)(
+        const prevWidth = (0, import_react70.useRef)(0);
+        const navHeight = (0, import_react70.useRef)(0);
+        const [isHidden, setIsHidden] = (0, import_react70.useState)(false);
+        const handleMenuOpenChange = (0, import_react70.useCallback)(
           (isOpen) => {
             onMenuOpenChange(isOpen || false);
           },
@@ -124200,12 +124200,12 @@
             }
           }
         });
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           var _a2;
           updateWidth();
           navHeight.current = ((_a2 = domRef.current) == null ? void 0 : _a2.offsetHeight) || 0;
         }, []);
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.navbar)({
             ...variantProps2,
             disableAnimation,
@@ -124307,7 +124307,7 @@
           }
         }
       };
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var domAnimation2 = () => Promise.resolve().then(() => (init_dist(), dist_exports)).then((res) => res.default);
       var NavbarMenu = (0, import_system2.forwardRef)((props, ref) => {
         var _a, _b;
@@ -124317,7 +124317,7 @@
         const styles = (0, import_theme2.cn)(classNames == null ? void 0 : classNames.menu, className);
         if (disableAnimation) {
           if (!isMenuOpen) return null;
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_overlays2.Overlay, { portalContainer, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_overlays2.Overlay, { portalContainer, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             "ul",
             {
               ref: domRef,
@@ -124332,7 +124332,7 @@
             }
           ) });
         }
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion3.AnimatePresence, { mode: "wait", children: isMenuOpen ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_overlays2.Overlay, { portalContainer, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion3.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion3.AnimatePresence, { mode: "wait", children: isMenuOpen ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_overlays2.Overlay, { portalContainer, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion3.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           import_framer_motion3.m.ul,
           {
             ref: domRef,
@@ -124355,18 +124355,18 @@
       });
       NavbarMenu.displayName = "HeroUI.NavbarMenu";
       var navbar_menu_default = NavbarMenu;
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var domAnimation22 = () => Promise.resolve().then(() => (init_dist(), dist_exports)).then((res) => res.default);
       var Navbar = (0, import_system3.forwardRef)((props, ref) => {
         const { children, ...otherProps } = props;
         const context = useNavbar({ ...otherProps, ref });
         const Component2 = context.Component;
         const [childrenWithoutMenu, menu] = (0, import_react_utils4.pickChildren)(children, navbar_menu_default);
-        const content = /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(import_jsx_runtime26.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("header", { ...context.getWrapperProps(), children: childrenWithoutMenu }),
+        const content = /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(import_jsx_runtime28.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("header", { ...context.getWrapperProps(), children: childrenWithoutMenu }),
           menu
         ] });
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(NavbarProvider, { value: context, children: context.shouldHideOnScroll ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_framer_motion2.LazyMotion, { features: domAnimation22, children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(NavbarProvider, { value: context, children: context.shouldHideOnScroll ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_framer_motion2.LazyMotion, { features: domAnimation22, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
           import_framer_motion2.m.nav,
           {
             animate: context.isHidden ? "hidden" : "visible",
@@ -124375,7 +124375,7 @@
             ...(0, import_shared_utils3.mergeProps)(context.getBaseProps(), context.motionProps),
             children: content
           }
-        ) }) : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Component2, { ...context.getBaseProps(), children: content }) });
+        ) }) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Component2, { ...context.getBaseProps(), children: content }) });
       });
       Navbar.displayName = "HeroUI.Navbar";
       var navbar_default = Navbar;
@@ -131112,7 +131112,7 @@
     "node_modules/@tanstack/react-virtual/dist/cjs/index.cjs"(exports) {
       "use strict";
       Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-      var React2 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var React = (init_react_shim(), __toCommonJS(react_shim_exports));
       var reactDom = require_react_dom();
       var virtualCore = require_cjs5();
       function _interopNamespaceDefault(e) {
@@ -131131,7 +131131,7 @@
         n.default = e;
         return Object.freeze(n);
       }
-      var React__namespace = /* @__PURE__ */ _interopNamespaceDefault(React2);
+      var React__namespace = /* @__PURE__ */ _interopNamespaceDefault(React);
       var useIsomorphicLayoutEffect2 = typeof document !== "undefined" ? React__namespace.useLayoutEffect : React__namespace.useEffect;
       function useVirtualizerBase(options) {
         const rerender = React__namespace.useReducer(() => ({}), {})[1];
@@ -131222,7 +131222,7 @@
         useTable: () => useTable
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_table = require_main50();
       var import_table2 = require_main53();
       var import_system = require_dist11();
@@ -131324,7 +131324,7 @@
             onCellAction
           ]
         );
-        const getBaseProps = (0, import_react67.useCallback)(
+        const getBaseProps = (0, import_react70.useCallback)(
           (props2) => ({
             ...props2,
             ref: domBaseRef,
@@ -131332,7 +131332,7 @@
           }),
           [baseStyles, slots]
         );
-        const getWrapperProps = (0, import_react67.useCallback)(
+        const getWrapperProps = (0, import_react70.useCallback)(
           (props2) => ({
             ...props2,
             ref: domBaseRef,
@@ -131340,7 +131340,7 @@
           }),
           [classNames == null ? void 0 : classNames.wrapper, slots]
         );
-        const getTableProps = (0, import_react67.useCallback)(
+        const getTableProps = (0, import_react70.useCallback)(
           (props2) => ({
             ...(0, import_shared_utils.mergeProps)(
               gridProps,
@@ -131386,7 +131386,7 @@
       var import_shared_utils2 = require_dist2();
       var import_table3 = require_main53();
       var import_theme2 = require_dist12();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var TableRowGroup = (0, import_react310.forwardRef)((props, ref) => {
         var _a;
         const { as, className, children, slots, classNames, ...otherProps } = props;
@@ -131394,7 +131394,7 @@
         const domRef = (0, import_react_utils2.useDOMRef)(ref);
         const { rowGroupProps } = (0, import_table3.useTableRowGroup)();
         const theadStyles = (0, import_theme2.cn)(classNames == null ? void 0 : classNames.thead, className);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           Component2,
           {
             ref: domRef,
@@ -131411,7 +131411,7 @@
       var import_shared_utils3 = require_dist2();
       var import_table4 = require_main53();
       var import_theme3 = require_dist12();
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var TableHeaderRow = (0, import_system2.forwardRef)((props, ref) => {
         var _a, _b;
         const { as, className, children, node, slots, classNames, state, ...otherProps } = props;
@@ -131420,7 +131420,7 @@
         const domRef = (0, import_react_utils3.useDOMRef)(ref);
         const { rowProps } = (0, import_table4.useTableHeaderRow)({ node }, state, domRef);
         const trStyles = (0, import_theme3.cn)(classNames == null ? void 0 : classNames.tr, className, (_a = node.props) == null ? void 0 : _a.className);
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
           Component2,
           {
             ref: domRef,
@@ -131633,7 +131633,7 @@
       });
       TableRow.displayName = "HeroUI.TableRow";
       var table_row_default = TableRow;
-      var import_react68 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react610 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system6 = require_dist11();
       var import_react_utils7 = require_dist10();
       var import_shared_utils7 = require_dist2();
@@ -131651,7 +131651,7 @@
         const tdStyles = (0, import_theme7.cn)(classNames == null ? void 0 : classNames.td, className, (_a = node.props) == null ? void 0 : _a.className);
         const { isFocusVisible, focusProps } = (0, import_focus4.useFocusRing)();
         const isRowSelected = state.selectionManager.isSelected(rowKey);
-        const cell = (0, import_react68.useMemo)(() => {
+        const cell = (0, import_react610.useMemo)(() => {
           const cellType = typeof node.rendered;
           return cellType !== "object" && cellType !== "function" ? /* @__PURE__ */ (0, import_jsx_runtime62.jsx)("span", { children: node.rendered }) : node.rendered;
         }, [node.rendered]);
@@ -132271,7 +132271,7 @@
       var import_system_rsc = require_dist14();
       var import_theme = require_dist12();
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var spacing = {
         px: "1px",
         0: "0px",
@@ -132317,7 +132317,7 @@
         const [props, variantProps2] = (0, import_system_rsc.mapPropsVariants)(originalProps, import_theme.spacer.variantKeys);
         const { as, className, x = 1, y = 1, ...otherProps } = props;
         const Component2 = as || "span";
-        const styles = (0, import_react67.useMemo)(
+        const styles = (0, import_react70.useMemo)(
           () => (0, import_theme.spacer)({
             ...variantProps2,
             className
@@ -132340,10 +132340,10 @@
         });
         return { Component: Component2, getSpacerProps };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Spacer = (0, import_system_rsc2.forwardRef)((props, ref) => {
         const { Component: Component2, getSpacerProps } = useSpacer({ ...props });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Component2, { ref, ...getSpacerProps() });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Component2, { ref, ...getSpacerProps() });
       });
       Spacer.displayName = "HeroUI.Spacer";
       var spacer_default = Spacer;
@@ -132382,12 +132382,12 @@
       var import_system_rsc = require_dist14();
       var import_theme = require_dist12();
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useKbd(originalProps) {
         const [props, variantProps2] = (0, import_system_rsc.mapPropsVariants)(originalProps, import_theme.kbd.variantKeys);
         const { as, children, className, keys: keys3, title, classNames, ...otherProps } = props;
         const Component2 = as || "kbd";
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.kbd)({
             ...variantProps2
           }),
@@ -132450,13 +132450,13 @@
         win: "Win",
         alt: "Alt"
       };
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Kbd = (0, import_system_rsc2.forwardRef)((props, ref) => {
         const { Component: Component2, children, slots, classNames, keysToRender, getKbdProps } = useKbd({
           ...props
         });
         const keysContent = (0, import_react210.useMemo)(() => {
-          return keysToRender.map((key) => /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          return keysToRender.map((key) => /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             "abbr",
             {
               className: slots.abbr({ class: classNames == null ? void 0 : classNames.abbr }),
@@ -132466,9 +132466,9 @@
             key
           ));
         }, [keysToRender]);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ref, ...getKbdProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ref, ...getKbdProps(), children: [
           keysContent,
-          children && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { className: slots.content({ class: classNames == null ? void 0 : classNames.content }), children })
+          children && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { className: slots.content({ class: classNames == null ? void 0 : classNames.content }), children })
         ] });
       });
       Kbd.displayName = "HeroUI.Kbd";
@@ -133330,7 +133330,7 @@
       var import_react_utils = require_dist10();
       var import_shared_utils = require_dist2();
       var import_react_utils2 = require_dist10();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_tabs = require_main55();
       var import_tabs2 = require_main56();
       function useTabs(originalProps) {
@@ -133364,7 +133364,7 @@
           state,
           domRef
         );
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.tabs)({
             ...variantProps2,
             disableAnimation,
@@ -133373,7 +133373,7 @@
           [(0, import_shared_utils.objectToDeps)(variantProps2), disableAnimation, isVertical]
         );
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
-        const values = (0, import_react67.useMemo)(
+        const values = (0, import_react70.useMemo)(
           () => ({
             state,
             slots,
@@ -133395,7 +133395,7 @@
             classNames
           ]
         );
-        const getBaseProps = (0, import_react67.useCallback)(
+        const getBaseProps = (0, import_react70.useCallback)(
           (props2) => ({
             "data-slot": "base",
             className: slots.base({ class: (0, import_theme.cn)(baseStyles, props2 == null ? void 0 : props2.className) }),
@@ -133408,7 +133408,7 @@
           }),
           [baseStyles, otherProps, slots]
         );
-        const getWrapperProps = (0, import_react67.useCallback)(
+        const getWrapperProps = (0, import_react70.useCallback)(
           (props2) => ({
             "data-slot": "tabWrapper",
             className: slots.tabWrapper({ class: (0, import_theme.cn)(classNames == null ? void 0 : classNames.tabWrapper, props2 == null ? void 0 : props2.className) }),
@@ -133417,7 +133417,7 @@
           }),
           [classNames, slots, placement, isVertical]
         );
-        const getTabListProps = (0, import_react67.useCallback)(
+        const getTabListProps = (0, import_react70.useCallback)(
           (props2) => ({
             ref: domRef,
             "data-slot": "tabList",
@@ -133426,7 +133426,7 @@
           }),
           [domRef, tabListProps, classNames, slots]
         );
-        const getTabCursorProps = (0, import_react67.useCallback)(
+        const getTabCursorProps = (0, import_react70.useCallback)(
           (props2) => ({
             "data-slot": "cursor",
             className: slots.cursor({
@@ -133455,7 +133455,7 @@
       var import_tabs3 = require_main56();
       var import_interactions = require_main17();
       var import_theme2 = require_dist12();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Tab = (0, import_system2.forwardRef)((props, ref) => {
         var _a;
         const {
@@ -133500,7 +133500,7 @@
             boundary: listRef == null ? void 0 : listRef.current
           });
         };
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           Component2,
           {
             ref: (0, import_react_utils3.mergeRefs)(domRef, tabRef),
@@ -133531,7 +133531,7 @@
             className: (_a = slots.tab) == null ? void 0 : _a.call(slots, { class: tabStyles }),
             title: otherProps == null ? void 0 : otherProps.titleValue,
             type: Component2 === "button" ? "button" : void 0,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "div",
               {
                 className: slots.tabContent({
@@ -133552,7 +133552,7 @@
       var import_tabs4 = require_main56();
       var import_focus22 = require_main18();
       var import_theme3 = require_dist12();
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var TabPanel = (0, import_system3.forwardRef)((props, ref) => {
         var _a, _b;
         const { as, tabKey, destroyInactiveTabPanel, state, className, slots, classNames, ...otherProps } = props;
@@ -133567,7 +133567,7 @@
         if (!content || !isSelected && destroyInactiveTabPanel) {
           return null;
         }
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
           Component2,
           {
             ref: domRef,
@@ -133774,7 +133774,7 @@
       var import_system = require_dist11();
       var import_theme = require_dist12();
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system2 = require_dist11();
       function useSkeleton(originalProps) {
         var _a, _b;
@@ -133783,7 +133783,7 @@
         const { as, children, isLoaded = false, className, classNames, ...otherProps } = props;
         const Component2 = as || "div";
         const disableAnimation = (_b = (_a = originalProps.disableAnimation) != null ? _a : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _b : false;
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.skeleton)({
             ...variantProps2,
             disableAnimation
@@ -133805,10 +133805,10 @@
         };
         return { Component: Component2, children, slots, classNames, getSkeletonProps, getContentProps };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Skeleton = (0, import_system3.forwardRef)((props, ref) => {
         const { Component: Component2, children, getSkeletonProps, getContentProps } = useSkeleton({ ...props });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Component2, { ref, ...getSkeletonProps(), children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getContentProps(), children }) });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Component2, { ref, ...getSkeletonProps(), children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getContentProps(), children }) });
       });
       Skeleton.displayName = "HeroUI.Skeleton";
       var skeleton_default = Skeleton;
@@ -133842,7 +133842,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useDataScrollOverflow(props = {}) {
         const {
           domRef,
@@ -133853,8 +133853,8 @@
           onVisibilityChange,
           updateDeps = []
         } = props;
-        const visibleRef = (0, import_react67.useRef)(visibility);
-        (0, import_react67.useEffect)(() => {
+        const visibleRef = (0, import_react70.useRef)(visibility);
+        (0, import_react70.useEffect)(() => {
           const el = domRef == null ? void 0 : domRef.current;
           if (!el || !isEnabled) return;
           const setAttributes = (direction, hasBefore, hasAfter, prefix, suffix) => {
@@ -133956,7 +133956,7 @@
       var import_theme = require_dist12();
       var import_react_utils = require_dist10();
       var import_use_data_scroll_overflow = require_dist72();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_shared_utils = require_dist2();
       function useScrollShadow(originalProps) {
         var _a;
@@ -133985,7 +133985,7 @@
           updateDeps: [children],
           overflowCheck: (_a = originalProps.orientation) != null ? _a : "vertical"
         });
-        const styles = (0, import_react67.useMemo)(
+        const styles = (0, import_react70.useMemo)(
           () => (0, import_theme.scrollShadow)({
             ...variantProps2,
             className
@@ -134009,10 +134009,10 @@
         };
         return { Component: Component2, styles, domRef, children, getBaseProps };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var ScrollShadow = (0, import_system2.forwardRef)((props, ref) => {
         const { Component: Component2, children, getBaseProps } = useScrollShadow({ ...props, ref });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(Component2, { ...getBaseProps(), children });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Component2, { ...getBaseProps(), children });
       });
       ScrollShadow.displayName = "HeroUI.ScrollShadow";
       var scroll_shadow_default = ScrollShadow;
@@ -134540,7 +134540,7 @@
       var import_theme = require_dist12();
       var import_list = require_main58();
       var import_react_utils = require_dist10();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_theme2 = require_dist12();
       function useListbox(props) {
         var _a;
@@ -134572,7 +134572,7 @@
         const innerState = (0, import_list.useListState)({ ...props, children, onSelectionChange });
         const state = propState || innerState;
         const { listBoxProps } = (0, import_listbox.useListBox)({ ...props, onAction }, state, domRef);
-        const slots = (0, import_react67.useMemo)(() => (0, import_theme.listbox)(), []);
+        const slots = (0, import_react70.useMemo)(() => (0, import_theme.listbox)(), []);
         const baseStyles = (0, import_theme2.cn)(classNames == null ? void 0 : classNames.base, className);
         const getBaseProps = (props2 = {}) => {
           return {
@@ -134789,10 +134789,10 @@
           getSelectedIconProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       function ListboxSelectedIcon(props) {
         const { isSelected, disableAnimation, ...otherProps } = props;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "svg",
           {
             "aria-hidden": "true",
@@ -134800,7 +134800,7 @@
             role: "presentation",
             viewBox: "0 0 17 18",
             ...otherProps,
-            children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
               "polyline",
               {
                 fill: "none",
@@ -134819,7 +134819,7 @@
           }
         );
       }
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var ListboxItem = (props) => {
         const {
           Component: Component2,
@@ -134840,21 +134840,21 @@
           getSelectedIconProps
         } = useListboxItem(props);
         const selectedContent = (0, import_react310.useMemo)(() => {
-          const defaultIcon = /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(ListboxSelectedIcon, { disableAnimation, isSelected });
+          const defaultIcon = /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(ListboxSelectedIcon, { disableAnimation, isSelected });
           if (typeof selectedIcon === "function") {
             return selectedIcon({ icon: defaultIcon, isSelected, isDisabled });
           }
           if (selectedIcon) return selectedIcon;
           return defaultIcon;
         }, [selectedIcon, isSelected, isDisabled, disableAnimation]);
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...getItemProps(), children: [
-          startContent && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { "data-slot": "startContent", children: startContent }),
-          description ? /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getWrapperProps(), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getLabelProps(), children: rendered }),
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getDescriptionProps(), children: description })
-          ] }) : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getLabelProps(), children: rendered }),
-          isSelectable && !hideSelectedIcon && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getSelectedIconProps(), children: selectedContent }),
-          endContent && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { "data-slot": "endContent", children: endContent })
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...getItemProps(), children: [
+          startContent && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { "data-slot": "startContent", children: startContent }),
+          description ? /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getWrapperProps(), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getLabelProps(), children: rendered }),
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getDescriptionProps(), children: description })
+          ] }) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getLabelProps(), children: rendered }),
+          isSelectable && !hideSelectedIcon && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getSelectedIconProps(), children: selectedContent }),
+          endContent && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { "data-slot": "endContent", children: endContent })
         ] });
       };
       ListboxItem.displayName = "HeroUI.ListboxItem";
@@ -135042,7 +135042,7 @@
           };
         }, [...updateDeps, isEnabled, visibility, overflowCheck, onVisibilityChange, domRef]);
       }
-      var import_react68 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react610 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_shared_utils4 = require_dist2();
       function useScrollShadow(originalProps) {
         var _a;
@@ -135071,7 +135071,7 @@
           updateDeps: [children],
           overflowCheck: (_a = originalProps.orientation) != null ? _a : "vertical"
         });
-        const styles = (0, import_react68.useMemo)(
+        const styles = (0, import_react610.useMemo)(
           () => (0, import_theme5.scrollShadow)({
             ...variantProps2,
             className
@@ -135370,27 +135370,27 @@
         useLayoutEffect: () => useLayoutEffect2
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_react67 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
-      var useLayoutEffect2 = typeof document !== "undefined" ? import_react67.default.useLayoutEffect : () => {
+      var import_react70 = __toESM2((init_react_shim(), __toCommonJS(react_shim_exports)));
+      var useLayoutEffect2 = typeof document !== "undefined" ? import_react70.default.useLayoutEffect : () => {
       };
       function useEffectEvent2(fn) {
-        const ref = (0, import_react67.useRef)(null);
+        const ref = (0, import_react70.useRef)(null);
         useLayoutEffect2(() => {
           ref.current = fn;
         }, [fn]);
-        return (0, import_react67.useCallback)((...args) => {
+        return (0, import_react70.useCallback)((...args) => {
           const f = ref.current;
           return f == null ? void 0 : f(...args);
         }, []);
       }
       function useFormReset(ref, initialValue, onReset) {
-        let resetValue = (0, import_react67.useRef)(initialValue);
+        let resetValue = (0, import_react70.useRef)(initialValue);
         let handleReset = useEffectEvent2(() => {
           if (onReset) {
             onReset(resetValue.current);
           }
         });
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           var _a;
           let form = (_a = ref == null ? void 0 : ref.current) == null ? void 0 : _a.form;
           form == null ? void 0 : form.addEventListener("reset", handleReset);
@@ -138906,17 +138906,17 @@
         useMultiSelectState: () => useMultiSelectState
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_i18n9 = require_main5();
+      var import_i18n11 = require_main5();
       var import_interactions = require_main59();
       var import_label = require_main60();
       var import_menu = require_main61();
       var import_selection = require_main13();
       var import_utils8 = require_main4();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useMultiSelect(props, state, ref) {
         const { disallowEmptySelection, isDisabled } = props;
-        const collator = (0, import_i18n9.useCollator)({ usage: "search", sensitivity: "base" });
-        const delegate = (0, import_react67.useMemo)(
+        const collator = (0, import_i18n11.useCollator)({ usage: "search", sensitivity: "base" });
+        const delegate = (0, import_react70.useMemo)(
           () => new import_selection.ListKeyboardDelegate(state.collection, state.disabledKeys, null, collator),
           [state.collection, state.disabledKeys, collator]
         );
@@ -139191,7 +139191,7 @@
       var import_system = require_dist11();
       var import_theme = require_dist12();
       var import_react_utils = require_dist10();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_use_aria_button = require_dist27();
       var import_focus2 = require_main18();
       var import_shared_utils = require_dist2();
@@ -139275,9 +139275,9 @@
         const Component2 = as || "button";
         const shouldFilterDOMProps = typeof Component2 === "string";
         const domRef = (0, import_react_utils.useDOMRef)(ref);
-        const triggerRef = (0, import_react67.useRef)(null);
-        const listBoxRef = (0, import_react67.useRef)(null);
-        const popoverRef = (0, import_react67.useRef)(null);
+        const triggerRef = (0, import_react70.useRef)(null);
+        const listBoxRef = (0, import_react70.useRef)(null);
+        const popoverRef = (0, import_react70.useRef)(null);
         let state = (0, import_use_aria_multiselect.useMultiSelectState)({
           ...props,
           isOpen,
@@ -139338,7 +139338,7 @@
           state,
           triggerRef
         );
-        const handleClear = (0, import_react67.useCallback)(() => {
+        const handleClear = (0, import_react70.useCallback)(() => {
           var _a2;
           state.setSelectedKeys(/* @__PURE__ */ new Set([]));
           onClear == null ? void 0 : onClear();
@@ -139367,7 +139367,7 @@
         const hasLabel = !!label;
         const hasLabelOutside = hasLabel && (isOutsideLeft || shouldLabelBeOutside && hasPlaceholder);
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.select)({
             ...variantProps2,
             isInvalid,
@@ -139383,14 +139383,14 @@
         const errorMessage = typeof props.errorMessage === "function" ? props.errorMessage({ isInvalid, validationErrors, validationDetails }) : props.errorMessage || (validationErrors == null ? void 0 : validationErrors.join(" "));
         const hasHelper = !!description || !!errorMessage;
         const hasEndContent = !!endContent;
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           if (state.isOpen && popoverRef.current && triggerRef.current) {
             let selectRect = triggerRef.current.getBoundingClientRect();
             let popover = popoverRef.current;
             popover.style.width = selectRect.width + "px";
           }
         }, [state.isOpen]);
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           if (state.isOpen && popoverRef.current && listBoxRef.current) {
             let selectedItem = listBoxRef.current.querySelector("[aria-selected=true] [data-label=true]");
             let scrollShadow = scrollShadowRef.current;
@@ -139401,7 +139401,7 @@
             }
           }
         }, [state.isOpen, disableAnimation]);
-        const getBaseProps = (0, import_react67.useCallback)(
+        const getBaseProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             "data-slot": "base",
             "data-filled": (0, import_shared_utils.dataAttr)(isFilled),
@@ -139418,7 +139418,7 @@
           }),
           [slots, hasHelper, hasValue, hasLabel, hasLabelOutside, isFilled, baseStyles]
         );
-        const getTriggerProps = (0, import_react67.useCallback)(
+        const getTriggerProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ref: triggerRef,
@@ -139458,7 +139458,7 @@
             shouldFilterDOMProps
           ]
         );
-        const getHiddenSelectProps = (0, import_react67.useCallback)(
+        const getHiddenSelectProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             state,
             triggerRef,
@@ -139483,7 +139483,7 @@
             triggerRef
           ]
         );
-        const getLabelProps = (0, import_react67.useCallback)(
+        const getLabelProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             "data-slot": "label",
             className: slots.label({
@@ -139494,7 +139494,7 @@
           }),
           [slots, classNames == null ? void 0 : classNames.label, labelProps]
         );
-        const getValueProps = (0, import_react67.useCallback)(
+        const getValueProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             "data-slot": "value",
             className: slots.value({
@@ -139505,7 +139505,7 @@
           }),
           [slots, classNames == null ? void 0 : classNames.value, valueProps]
         );
-        const getListboxWrapperProps = (0, import_react67.useCallback)(
+        const getListboxWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => ({
             "data-slot": "listboxWrapper",
             className: slots.listboxWrapper({
@@ -139542,7 +139542,7 @@
             ...(0, import_shared_utils.mergeProps)(slotsProps.listboxProps, props2, menuProps)
           };
         };
-        const getPopoverProps = (0, import_react67.useCallback)(
+        const getPopoverProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             var _a2, _b2;
             const popoverProps2 = (0, import_shared_utils.mergeProps)(slotsProps.popoverProps, props2);
@@ -139574,7 +139574,7 @@
             state.selectedItems
           ]
         );
-        const getSelectorIconProps = (0, import_react67.useCallback)(
+        const getSelectorIconProps = (0, import_react70.useCallback)(
           () => ({
             "data-slot": "selectorIcon",
             "aria-hidden": (0, import_shared_utils.dataAttr)(true),
@@ -139583,7 +139583,7 @@
           }),
           [slots, classNames == null ? void 0 : classNames.selectorIcon, state.isOpen]
         );
-        const getInnerWrapperProps = (0, import_react67.useCallback)(
+        const getInnerWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -139595,7 +139595,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.innerWrapper]
         );
-        const getHelperWrapperProps = (0, import_react67.useCallback)(
+        const getHelperWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -139607,7 +139607,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.helperWrapper]
         );
-        const getDescriptionProps = (0, import_react67.useCallback)(
+        const getDescriptionProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -139618,7 +139618,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.description]
         );
-        const getMainWrapperProps = (0, import_react67.useCallback)(
+        const getMainWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -139630,7 +139630,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.mainWrapper]
         );
-        const getEndWrapperProps = (0, import_react67.useCallback)(
+        const getEndWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -139642,7 +139642,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.endWrapper]
         );
-        const getEndContentProps = (0, import_react67.useCallback)(
+        const getEndContentProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -139654,7 +139654,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.endContent]
         );
-        const getErrorMessageProps = (0, import_react67.useCallback)(
+        const getErrorMessageProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -139665,7 +139665,7 @@
           },
           [slots, errorMessageProps, classNames == null ? void 0 : classNames.errorMessage]
         );
-        const getSpinnerProps = (0, import_react67.useCallback)(
+        const getSpinnerProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               "aria-hidden": (0, import_shared_utils.dataAttr)(true),
@@ -139680,7 +139680,7 @@
           },
           [slots, spinnerRef, spinnerProps, classNames == null ? void 0 : classNames.spinner]
         );
-        const getClearButtonProps = (0, import_react67.useCallback)(
+        const getClearButtonProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -139747,7 +139747,7 @@
           getEndContentProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       function useHiddenSelect(props, state, triggerRef) {
         var _a;
         let data = selectData.get(state) || {};
@@ -139805,20 +139805,20 @@
         let { state, triggerRef, selectRef, label, name, isDisabled, form } = props;
         let { containerProps, selectProps } = useHiddenSelect({ ...props, selectRef }, state, triggerRef);
         if (state.collection.size <= 300) {
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...containerProps, "data-testid": "hidden-select-container", children: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("label", { children: [
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...containerProps, "data-testid": "hidden-select-container", children: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("label", { children: [
             label,
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("select", { ...selectProps, ref: selectRef, children: [
-              /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("option", {}),
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("select", { ...selectProps, ref: selectRef, children: [
+              /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("option", {}),
               [...state.collection.getKeys()].map((key) => {
                 let item = state.collection.getItem(key);
                 if ((item == null ? void 0 : item.type) === "item") {
-                  return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("option", { value: item.key, children: item.textValue }, item.key);
+                  return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("option", { value: item.key, children: item.textValue }, item.key);
                 }
               })
             ] })
           ] }) });
         } else if (name) {
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             "input",
             {
               autoComplete: selectProps.autoComplete,
@@ -139832,7 +139832,7 @@
         }
         return null;
       }
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Select = (0, import_system2.forwardRef)(function Select2(props, ref) {
         var _a;
         const {
@@ -139842,7 +139842,7 @@
           hasHelper,
           isLoading,
           triggerRef,
-          selectorIcon = /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_shared_icons.ChevronDownIcon, {}),
+          selectorIcon = /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_shared_icons.ChevronDownIcon, {}),
           description,
           errorMessage,
           isInvalid,
@@ -139872,29 +139872,29 @@
           getEndWrapperProps,
           getEndContentProps
         } = useSelect({ ...props, ref });
-        const labelContent = label ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("label", { ...getLabelProps(), children: label }) : null;
+        const labelContent = label ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("label", { ...getLabelProps(), children: label }) : null;
         const clonedIcon = (0, import_react310.cloneElement)(selectorIcon, getSelectorIconProps());
         const clearButton = (0, import_react210.useMemo)(() => {
           var _a2;
           if (isClearable && ((_a2 = state.selectedItems) == null ? void 0 : _a2.length)) {
-            return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getClearButtonProps(), children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_shared_icons.CloseFilledIcon, {}) });
+            return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getClearButtonProps(), children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_shared_icons.CloseFilledIcon, {}) });
           }
           return null;
         }, [isClearable, getClearButtonProps, (_a = state.selectedItems) == null ? void 0 : _a.length]);
         const end = (0, import_react210.useMemo)(() => {
           if (clearButton) {
-            return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getEndWrapperProps(), children: [
+            return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getEndWrapperProps(), children: [
               clearButton,
-              endContent && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getEndContentProps(), children: endContent })
+              endContent && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getEndContentProps(), children: endContent })
             ] });
           }
-          return endContent && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getEndContentProps(), children: endContent });
+          return endContent && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getEndContentProps(), children: endContent });
         }, [clearButton, endContent, getEndWrapperProps, getEndContentProps]);
         const helperWrapper = (0, import_react210.useMemo)(() => {
           const shouldShowError = isInvalid && errorMessage;
           const hasContent = shouldShowError || description;
           if (!hasHelper || !hasContent) return null;
-          return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getHelperWrapperProps(), children: shouldShowError ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getDescriptionProps(), children: description }) });
+          return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getHelperWrapperProps(), children: shouldShowError ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getDescriptionProps(), children: description }) });
         }, [
           hasHelper,
           isInvalid,
@@ -139923,31 +139923,31 @@
         }, [state.selectedItems, renderValue, placeholder]);
         const renderIndicator = (0, import_react210.useMemo)(() => {
           if (isLoading) {
-            return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_spinner.Spinner, { ...getSpinnerProps() });
+            return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_spinner.Spinner, { ...getSpinnerProps() });
           }
           return clonedIcon;
         }, [isLoading, clonedIcon, getSpinnerProps]);
         const popoverContent = (0, import_react210.useMemo)(
-          () => state.isOpen ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_popover.FreeSoloPopover, { ...getPopoverProps(), children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_scroll_shadow.ScrollShadow, { ...getListboxWrapperProps(), children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_listbox.Listbox, { ...getListboxProps() }) }) }) : null,
+          () => state.isOpen ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_popover.FreeSoloPopover, { ...getPopoverProps(), children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_scroll_shadow.ScrollShadow, { ...getListboxWrapperProps(), children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_listbox.Listbox, { ...getListboxProps() }) }) }) : null,
           [state.isOpen, getPopoverProps, state, triggerRef, getListboxWrapperProps, getListboxProps]
         );
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getBaseProps(), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(HiddenSelect, { ...getHiddenSelectProps() }),
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getBaseProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(HiddenSelect, { ...getHiddenSelectProps() }),
           shouldLabelBeOutside ? labelContent : null,
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getMainWrapperProps(), children: [
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...getTriggerProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getMainWrapperProps(), children: [
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...getTriggerProps(), children: [
               !shouldLabelBeOutside ? labelContent : null,
-              /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getInnerWrapperProps(), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getInnerWrapperProps(), children: [
                 startContent,
-                /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getValueProps(), children: renderSelectedItem }),
-                endContent && state.selectedItems && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_visually_hidden2.VisuallyHidden, { elementType: "span", children: "," }),
+                /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getValueProps(), children: renderSelectedItem }),
+                endContent && state.selectedItems && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_visually_hidden2.VisuallyHidden, { elementType: "span", children: "," }),
                 end
               ] }),
               renderIndicator
             ] }),
             helperWrapper
           ] }),
-          disableAnimation ? popoverContent : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_framer_motion2.AnimatePresence, { children: popoverContent })
+          disableAnimation ? popoverContent : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_framer_motion2.AnimatePresence, { children: popoverContent })
         ] });
       });
       var select_default = Select;
@@ -140520,11 +140520,11 @@
       var import_visually_hidden = require_main8();
       var import_slider = require_main63();
       var import_react_utils = require_dist10();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_interactions = require_main17();
       var import_focus2 = require_main18();
       var import_shared_utils = require_dist2();
-      var import_i18n9 = require_main5();
+      var import_i18n11 = require_main5();
       function useSliderThumb(props) {
         const {
           ref,
@@ -140544,8 +140544,8 @@
         } = props;
         const Component2 = as || "div";
         const domRef = (0, import_react_utils.useDOMRef)(ref);
-        const inputRef = (0, import_react67.useRef)(null);
-        const numberFormatter = (0, import_i18n9.useNumberFormatter)(formatOptions);
+        const inputRef = (0, import_react70.useRef)(null);
+        const numberFormatter = (0, import_i18n11.useNumberFormatter)(formatOptions);
         const { thumbProps, inputProps, isDragging: isDragging2, isFocused } = (0, import_slider.useSliderThumb)(
           {
             index: index3,
@@ -140608,7 +140608,7 @@
           getInputProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var SliderThumb = (0, import_system.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -140625,14 +140625,14 @@
         const thumbProps = {
           ...getThumbProps(),
           index: index3,
-          children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_visually_hidden.VisuallyHidden, { children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("input", { ...getInputProps() }) })
+          children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_visually_hidden.VisuallyHidden, { children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("input", { ...getInputProps() }) })
         };
         const content = (0, import_react_utils2.renderFn)({
           Component: Component2,
           props: thumbProps,
           renderCustom: renderThumb
         });
-        return showTooltip ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_tooltip.Tooltip, { ...getTooltipProps(), children: content }) : content;
+        return showTooltip ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_tooltip.Tooltip, { ...getTooltipProps(), children: content }) : content;
       });
       SliderThumb.displayName = "HeroUI.SliderThumb";
       var slider_thumb_default = SliderThumb;
@@ -140934,7 +140934,7 @@
           getEndContentProps
         };
       }
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Slider = (0, import_system3.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -140959,8 +140959,8 @@
           getStartContentProps,
           getEndContentProps
         } = useSlider({ ...props, ref });
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...getBaseProps(), children: [
-          label && /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getLabelWrapperProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...getBaseProps(), children: [
+          label && /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getLabelWrapperProps(), children: [
             (0, import_react_utils4.renderFn)({
               Component: "label",
               props: getLabelProps(),
@@ -140972,15 +140972,15 @@
               renderCustom: renderValue
             })
           ] }),
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getTrackWrapperProps(), children: [
-            startContent && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getStartContentProps(), children: startContent }),
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getTrackProps(), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getFillerProps() }),
-              Number.isFinite(steps2) && Array.from({ length: steps2 }, (_, index3) => /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getStepProps(index3) }, index3)),
-              state.values.map((_, index3) => /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(slider_thumb_default, { ...getThumbProps(index3) }, index3)),
-              (marks == null ? void 0 : marks.length) > 0 && marks.map((mark, index3) => /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getMarkProps(mark), children: mark.label }, index3))
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getTrackWrapperProps(), children: [
+            startContent && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getStartContentProps(), children: startContent }),
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getTrackProps(), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getFillerProps() }),
+              Number.isFinite(steps2) && Array.from({ length: steps2 }, (_, index3) => /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getStepProps(index3) }, index3)),
+              state.values.map((_, index3) => /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(slider_thumb_default, { ...getThumbProps(index3) }, index3)),
+              (marks == null ? void 0 : marks.length) > 0 && marks.map((mark, index3) => /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getMarkProps(mark), children: mark.label }, index3))
             ] }),
-            endContent && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getEndContentProps(), children: endContent })
+            endContent && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getEndContentProps(), children: endContent })
           ] })
         ] });
       });
@@ -141571,7 +141571,7 @@
       var import_react_utils = require_dist10();
       var import_breadcrumbs = require_main66();
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useBreadcrumbItem(originalProps) {
         const [props, variantProps2] = (0, import_system.mapPropsVariants)(originalProps, import_theme.breadcrumbItem.variantKeys);
         const {
@@ -141598,7 +141598,7 @@
           domRef
         );
         const { isFocusVisible, isFocused, focusProps } = (0, import_focus2.useFocusRing)();
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.breadcrumbItem)({
             ...variantProps2,
             isCurrent,
@@ -141647,7 +141647,7 @@
           getSeparatorProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Breadcrumbs = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -141665,13 +141665,13 @@
           ...props,
           ref
         });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(WrapperComponent, { ...getBaseProps(), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ...getItemProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(WrapperComponent, { ...getBaseProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ...getItemProps(), children: [
             startContent,
             children,
             endContent
           ] }),
-          !isLast && !hideSeparator && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...getSeparatorProps(), children: separator })
+          !isLast && !hideSeparator && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...getSeparatorProps(), children: separator })
         ] });
       });
       Breadcrumbs.displayName = "HeroUI.Breadcrumbs";
@@ -141765,14 +141765,14 @@
           onAction
         };
       }
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Breadcrumbs2 = (0, import_system4.forwardRef)((props, ref) => {
         const {
           Component: Component2,
           children,
           childCount,
           itemProps,
-          separator = /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_shared_icons.ChevronRightIcon, {}),
+          separator = /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_shared_icons.ChevronRightIcon, {}),
           maxItems,
           itemsBeforeCollapse,
           itemsAfterCollapse,
@@ -141818,7 +141818,7 @@
           if (itemsInEllipsis.length < 1) {
             return items;
           }
-          const ellipsisIcon = /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_shared_icons.EllipsisIcon, { ...getEllipsisProps() });
+          const ellipsisIcon = /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_shared_icons.EllipsisIcon, { ...getEllipsisProps() });
           const collapsedItem = (0, import_react410.cloneElement)(itemsInEllipsis[0], {
             ...itemsInEllipsis[0].props,
             key: "ellipsis",
@@ -141831,7 +141831,7 @@
             ellipsisIcon,
             itemsBeforeCollapse,
             itemsAfterCollapse,
-            separator: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("span", { ...getSeparatorProps(), children: separator })
+            separator: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("span", { ...getSeparatorProps(), children: separator })
           }) : collapsedItem;
           return [
             ...items.slice(0, itemsBeforeCollapse),
@@ -141847,7 +141847,7 @@
           itemsAfterCollapse,
           isDisabled
         ]);
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Component2, { ...getBaseProps(), children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("ol", { ...getListProps(), children: content }) });
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(Component2, { ...getBaseProps(), children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("ol", { ...getListProps(), children: content }) });
       });
       Breadcrumbs2.displayName = "HeroUI.Breadcrumbs";
       var breadcrumbs_default = Breadcrumbs2;
@@ -145765,10 +145765,10 @@
       var import_input = require_dist53();
       var import_framer_motion2 = require_cjs4();
       var import_shared_utils = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_react_utils = require_dist10();
       var import_combobox = require_main67();
-      var import_i18n9 = require_main5();
+      var import_i18n11 = require_main5();
       var import_theme = require_dist12();
       var import_use_safe_layout_effect = require_dist21();
       var import_system = require_dist11();
@@ -145820,7 +145820,7 @@
           isReadOnly = false,
           ...otherProps
         } = props;
-        const { contains } = (0, import_i18n9.useFilter)(filterOptions);
+        const { contains } = (0, import_i18n11.useFilter)(filterOptions);
         const { onChange: _onChange, ...restProps } = originalProps;
         let state = (0, import_combobox.useComboBoxState)({
           ...restProps,
@@ -145859,10 +145859,10 @@
             disabledKeys: /* @__PURE__ */ new Set([...state.collection.getKeys()])
           }
         };
-        const buttonRef = (0, import_react67.useRef)(null);
-        const inputWrapperRef = (0, import_react67.useRef)(null);
-        const listBoxRef = (0, import_react67.useRef)(null);
-        const popoverRef = (0, import_react67.useRef)(null);
+        const buttonRef = (0, import_react70.useRef)(null);
+        const inputWrapperRef = (0, import_react70.useRef)(null);
+        const listBoxRef = (0, import_react70.useRef)(null);
+        const popoverRef = (0, import_react70.useRef)(null);
         const inputRef = (0, import_react_utils.useDOMRef)(ref);
         const scrollShadowRef = (0, import_react_utils.useDOMRef)(scrollRefProp);
         const {
@@ -145961,7 +145961,7 @@
             state.setInputValue(item.textValue);
           }
         }, [inputRef.current]);
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           let keyToFocus;
           if (state.value && state.collection.getItem(state.value) && !state.disabledKeys.has(state.value)) {
             keyToFocus = state.value;
@@ -145974,7 +145974,7 @@
           }
           state.selectionManager.setFocusedKey(keyToFocus);
         }, [state.collection, state.disabledKeys, state.value, state.isOpen, state.inputValue]);
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           if (state.isOpen && popoverRef.current && listBoxRef.current) {
             let selectedItem = listBoxRef.current.querySelector("[aria-selected=true] [data-label=true]");
             let scrollShadow = scrollShadowRef.current;
@@ -145986,7 +145986,7 @@
             }
           }
         }, [state.isOpen, disableAnimation]);
-        (0, import_react67.useEffect)(() => {
+        (0, import_react70.useEffect)(() => {
           if (isOpen) {
             if (popoverRef.current && inputWrapperRef.current) {
               let rect = inputWrapperRef.current.getBoundingClientRect();
@@ -146006,7 +146006,7 @@
           };
         }
         const Component2 = as || "div";
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.autocomplete)({
             ...variantProps2,
             isClearable,
@@ -146172,15 +146172,15 @@
           getEndContentWrapperProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Autocomplete = (0, import_system2.forwardRef)(function Autocomplete2(props, ref) {
         var _a;
         const {
           Component: Component2,
           isOpen,
           disableAnimation,
-          selectorIcon = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.ChevronDownIcon, {}),
-          clearIcon = /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.CloseIcon, {}),
+          selectorIcon = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.ChevronDownIcon, {}),
+          clearIcon = /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.CloseIcon, {}),
           endContent,
           getBaseProps,
           getSelectorButtonProps,
@@ -146193,19 +146193,19 @@
           getEndContentWrapperProps
         } = useAutocomplete({ ...props, ref });
         const listboxProps = getListBoxProps();
-        const popoverContent = isOpen ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_popover.FreeSoloPopover, { ...getPopoverProps(), children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_scroll_shadow.ScrollShadow, { ...getListBoxWrapperProps(), children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_listbox.Listbox, { ...listboxProps }) }) }) : ((_a = listboxProps.state) == null ? void 0 : _a.collection.size) === 0 ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getEmptyPopoverProps() }) : null;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ...getBaseProps(), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        const popoverContent = isOpen ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_popover.FreeSoloPopover, { ...getPopoverProps(), children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_scroll_shadow.ScrollShadow, { ...getListBoxWrapperProps(), children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_listbox.Listbox, { ...listboxProps }) }) }) : ((_a = listboxProps.state) == null ? void 0 : _a.collection.size) === 0 ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getEmptyPopoverProps() }) : null;
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ...getBaseProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             import_input.Input,
             {
               ...getInputProps(),
-              endContent: /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ...getEndContentWrapperProps(), children: [
-                endContent || /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_button.Button, { ...getClearButtonProps(), children: clearIcon }),
-                selectorIcon && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_button.Button, { ...getSelectorButtonProps(), children: selectorIcon })
+              endContent: /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ...getEndContentWrapperProps(), children: [
+                endContent || /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_button.Button, { ...getClearButtonProps(), children: clearIcon }),
+                selectorIcon && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_button.Button, { ...getSelectorButtonProps(), children: selectorIcon })
               ] })
             }
           ),
-          disableAnimation ? popoverContent : /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion2.AnimatePresence, { children: popoverContent })
+          disableAnimation ? popoverContent : /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion2.AnimatePresence, { children: popoverContent })
         ] });
       });
       var autocomplete_default = Autocomplete;
@@ -150830,17 +150830,17 @@
       var import_theme2 = require_dist12();
       var import_date = require_main74();
       var import_system = require_dist11();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_theme = require_dist12();
       var import_utils8 = require_main38();
       var import_react_utils = require_dist10();
-      var import_i18n9 = require_main5();
+      var import_i18n11 = require_main5();
       var import_shared_utils = require_dist2();
       function useCalendarBase(originalProps) {
         var _a, _b, _c, _d, _e, _f, _g;
         const [props, variantProps2] = (0, import_system.mapPropsVariants)(originalProps, import_theme.calendar.variantKeys);
         const globalContext = (0, import_system.useProviderContext)();
-        const { locale, direction } = (0, import_i18n9.useLocale)();
+        const { locale, direction } = (0, import_i18n11.useLocale)();
         const isRTL = direction === "rtl";
         const calendarProp = (0, import_date.createCalendar)(
           new import_date.DateFormatter(locale).resolvedOptions().calendar
@@ -150876,7 +150876,7 @@
         const visibleMonths = (0, import_shared_utils.clamp)(visibleMonthsProp, 1, 3);
         const showMonthAndYearPickers = originalProps.showMonthAndYearPickers && visibleMonths === 1;
         const domRef = (0, import_react_utils.useDOMRef)(ref);
-        const handleHeaderExpandedChange = (0, import_react67.useCallback)(
+        const handleHeaderExpandedChange = (0, import_react70.useCallback)(
           (isExpanded) => {
             onHeaderExpandedChange(isExpanded || false);
           },
@@ -150887,10 +150887,10 @@
           isHeaderDefaultExpanded != null ? isHeaderDefaultExpanded : false,
           handleHeaderExpandedChange
         );
-        const visibleDuration = (0, import_react67.useMemo)(() => ({ months: visibleMonths }), [visibleMonths]);
+        const visibleDuration = (0, import_react70.useMemo)(() => ({ months: visibleMonths }), [visibleMonths]);
         const hasMultipleMonths = visibleMonths > 1;
         const shouldFilterDOMProps = typeof Component2 === "string";
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.calendar)({
             ...variantProps2,
             showMonthAndYearPickers,
@@ -151093,8 +151093,8 @@
       var import_framer_motion3 = require_cjs4();
       var import_i18n62 = require_main5();
       var import_framer_utils = require_dist19();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var ChevronLeftIcon = (props) => /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var ChevronLeftIcon = (props) => /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
         "svg",
         {
           "aria-hidden": "true",
@@ -151105,7 +151105,7 @@
           viewBox: "0 0 16 16",
           width: "1em",
           ...props,
-          children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             "path",
             {
               d: "M10 3.33334L6 8.00001L10 12.6667",
@@ -151117,8 +151117,8 @@
           )
         }
       );
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
-      var ChevronRightIcon = (props) => /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var ChevronRightIcon = (props) => /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
         "svg",
         {
           "aria-hidden": "true",
@@ -151129,7 +151129,7 @@
           viewBox: "0 0 16 16",
           width: "1em",
           ...props,
-          children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+          children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
             "path",
             {
               d: "M6 3.33334L10 8.00001L6 12.6667",
@@ -151475,7 +151475,7 @@
       });
       CalendarPickerItem.displayName = "CalendarPickerItem";
       var import_i18n52 = require_main5();
-      var import_react68 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react610 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_shared_utils6 = require_dist2();
       var import_scroll_into_view_if_needed = __toESM2(require_dist40());
       var import_date5 = require_main74();
@@ -151508,12 +151508,12 @@
         var _a;
         const { date, currentMonth } = props;
         const { slots, state, headerRef, isHeaderExpanded, setIsHeaderExpanded, classNames } = useCalendarContext();
-        const highlightRef = (0, import_react68.useRef)(null);
-        const yearsListRef = (0, import_react68.useRef)(null);
-        const monthsListRef = (0, import_react68.useRef)(null);
-        const monthsItemsRef = (0, import_react68.useRef)();
-        const yearsItemsRef = (0, import_react68.useRef)();
-        const focusedDateRef = (0, import_react68.useRef)(state.focusedDate);
+        const highlightRef = (0, import_react610.useRef)(null);
+        const yearsListRef = (0, import_react610.useRef)(null);
+        const monthsListRef = (0, import_react610.useRef)(null);
+        const monthsItemsRef = (0, import_react610.useRef)();
+        const yearsItemsRef = (0, import_react610.useRef)();
+        const focusedDateRef = (0, import_react610.useRef)(state.focusedDate);
         const monthDateFormatter = (0, import_i18n52.useDateFormatter)({
           month: "long",
           era: currentMonth.calendar.identifier === "gregory" && currentMonth.era === "BC" ? "short" : void 0,
@@ -151546,7 +151546,7 @@
             map.delete(value);
           }
         }
-        const handleListScroll = (0, import_react68.useCallback)(
+        const handleListScroll = (0, import_react610.useCallback)(
           (e, highlightEl, list) => {
             if (!(e.target instanceof HTMLElement) || !highlightEl) return;
             const map = getItemsRefMap(list === "months" ? monthsItemsRef : yearsItemsRef);
@@ -151581,15 +151581,15 @@
           },
           [isHeaderExpanded]
         );
-        (0, import_react68.useEffect)(() => {
+        (0, import_react610.useEffect)(() => {
           focusedDateRef.current = state.focusedDate;
         }, [state.focusedDate]);
-        (0, import_react68.useEffect)(() => {
+        (0, import_react610.useEffect)(() => {
           if (!isHeaderExpanded) return;
           scrollTo(date.month, "months", false);
           scrollTo(date.year, "years", false);
         }, [isHeaderExpanded]);
-        (0, import_react68.useEffect)(() => {
+        (0, import_react610.useEffect)(() => {
           const monthsList = monthsListRef.current;
           const yearsList = yearsListRef.current;
           const highlightEl = highlightRef.current;
@@ -151625,7 +151625,7 @@
             boundary: listRef.current
           });
         }
-        const onPickerItemPressed = (0, import_react68.useCallback)(
+        const onPickerItemPressed = (0, import_react610.useCallback)(
           (e, list) => {
             const target = e.target;
             const value = Number(target.getAttribute("data-value"));
@@ -151634,7 +151634,7 @@
           },
           [state]
         );
-        const onPickerItemKeyDown = (0, import_react68.useCallback)(
+        const onPickerItemKeyDown = (0, import_react610.useCallback)(
           (e, value, list) => {
             var _a2;
             const map = getItemsRefMap(list === "months" ? monthsItemsRef : yearsItemsRef);
@@ -156801,7 +156801,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_system4 = require_dist11();
-      var import_i18n9 = require_main5();
+      var import_i18n11 = require_main5();
       var import_date = require_main74();
       var import_system = require_dist11();
       var import_system2 = require_dist11();
@@ -156810,14 +156810,14 @@
       var import_datepicker2 = require_main77();
       var import_shared_utils = require_dist2();
       var import_theme = require_dist12();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_form = require_dist33();
       function useDateInput(originalProps) {
         var _a, _b, _c, _d, _e, _f, _g;
         const globalContext = (0, import_system.useProviderContext)();
         const { validationBehavior: formValidationBehavior } = (0, import_form.useSlottedContext)(import_form.FormContext) || {};
         const [props, variantProps2] = (0, import_system2.mapPropsVariants)(originalProps, import_theme.dateInput.variantKeys);
-        const { locale } = (0, import_i18n9.useLocale)();
+        const { locale } = (0, import_i18n11.useLocale)();
         const calendarProp = (0, import_date.createCalendar)(
           new import_date.DateFormatter(locale).resolvedOptions().calendar
         );
@@ -156877,7 +156877,7 @@
           label
         });
         const shouldLabelBeOutside = labelPlacement === "outside" || labelPlacement === "outside-left" || labelPlacement === "outside-top";
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.dateInput)({
             ...variantProps2,
             disableAnimation,
@@ -156997,7 +156997,7 @@
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system3 = require_dist11();
       var import_shared_utils2 = require_dist2();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var DateInputGroup = (0, import_system3.forwardRef)((props, ref) => {
         const {
           as,
@@ -157020,7 +157020,7 @@
           ...otherProps
         } = props;
         const Component2 = as || "div";
-        const labelContent = label ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("span", { ...labelProps, children: label }) : null;
+        const labelContent = label ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("span", { ...labelProps, children: label }) : null;
         const errorMessage = typeof errorMessageProp === "function" ? errorMessageProp({
           isInvalid,
           validationErrors,
@@ -157029,7 +157029,7 @@
         const hasHelper = !!description || !!errorMessage;
         const helperWrapper = (0, import_react210.useMemo)(() => {
           if (!hasHelper) return null;
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...helperWrapperProps, children: isInvalid && errorMessage ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...errorMessageProps, children: errorMessage }) : description ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...descriptionProps, children: description }) : null });
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...helperWrapperProps, children: isInvalid && errorMessage ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...errorMessageProps, children: errorMessage }) : description ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...descriptionProps, children: description }) : null });
         }, [
           hasHelper,
           errorMessage,
@@ -157038,11 +157038,11 @@
           errorMessageProps,
           descriptionProps
         ]);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(Component2, { ...otherProps, ref, "data-has-helper": (0, import_shared_utils2.dataAttr)(hasHelper), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(Component2, { ...otherProps, ref, "data-has-helper": (0, import_shared_utils2.dataAttr)(hasHelper), children: [
           shouldLabelBeOutside ? labelContent : null,
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ...groupProps, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ...groupProps, children: [
             !shouldLabelBeOutside ? labelContent : null,
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ...wrapperProps, children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ...wrapperProps, children: [
               startContent,
               children,
               endContent
@@ -157057,7 +157057,7 @@
       var import_datepicker3 = require_main76();
       var import_react310 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_shared_utils3 = require_dist2();
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var DateInputSegment = ({
         state,
         segment,
@@ -157067,7 +157067,7 @@
       }) => {
         const ref = (0, import_react310.useRef)(null);
         let { segmentProps } = (0, import_datepicker3.useDateSegment)(segment, state, ref);
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
           "div",
           {
             ...(0, import_shared_utils3.mergeProps)(segmentProps, otherProps),
@@ -157375,10 +157375,10 @@
       var import_form = require_dist33();
       var import_shared_utils = require_dist2();
       var import_theme = require_dist12();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system = require_dist11();
       var import_react_utils = require_dist10();
-      var import_i18n9 = require_main5();
+      var import_i18n11 = require_main5();
       var import_utils8 = require_main38();
       var messages_default = {
         "ar-AE": {
@@ -157590,7 +157590,7 @@
           onHeaderExpandedChange,
           ...restUserCalendarProps
         } = userCalendarProps;
-        const handleHeaderExpandedChange = (0, import_react67.useCallback)(
+        const handleHeaderExpandedChange = (0, import_react70.useCallback)(
           (isExpanded) => {
             onHeaderExpandedChange == null ? void 0 : onHeaderExpandedChange(isExpanded || false);
           },
@@ -157599,7 +157599,7 @@
         const [isCalendarHeaderExpanded, setIsCalendarHeaderExpanded] = (0, import_utils8.useControlledState)(isHeaderExpanded, isHeaderDefaultExpanded != null ? isHeaderDefaultExpanded : false, handleHeaderExpandedChange);
         const domRef = (0, import_react_utils.useDOMRef)(ref);
         const disableAnimation = (_b = (_a = originalProps.disableAnimation) != null ? _a : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _b : false;
-        let stringFormatter = (0, import_i18n9.useLocalizedStringFormatter)(messages_default);
+        let stringFormatter = (0, import_i18n11.useLocalizedStringFormatter)(messages_default);
         const isDefaultColor = originalProps.color === "default" || !originalProps.color;
         const hasMultipleMonths = visibleMonths > 1;
         const placeholder = originalProps == null ? void 0 : originalProps.placeholderValue;
@@ -157893,7 +157893,7 @@
           getSelectorIconProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var DatePicker = (0, import_system3.forwardRef)(function DatePicker2(props, ref) {
         const { selectorButtonPlacement = "end", ...otherProps } = props;
         const {
@@ -157913,11 +157913,11 @@
           CalendarTopContent,
           CalendarBottomContent
         } = useDatePicker({ ...otherProps, ref });
-        const selectorContent = (0, import_react410.isValidElement)(selectorIcon) ? (0, import_react410.cloneElement)(selectorIcon, getSelectorIconProps()) : /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.CalendarBoldIcon, { ...getSelectorIconProps() });
+        const selectorContent = (0, import_react410.isValidElement)(selectorIcon) ? (0, import_react410.cloneElement)(selectorIcon, getSelectorIconProps()) : /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.CalendarBoldIcon, { ...getSelectorIconProps() });
         const calendarBottomContent = (0, import_react310.useMemo)(() => {
           if (isCalendarHeaderExpanded) return null;
-          return showTimeField ? /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(import_jsx_runtime25.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_date_input.TimeInput, { ...getTimeInputProps() }),
+          return showTimeField ? /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(import_jsx_runtime27.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_date_input.TimeInput, { ...getTimeInputProps() }),
             CalendarBottomContent
           ] }) : CalendarBottomContent;
         }, [state, showTimeField, CalendarBottomContent, isCalendarHeaderExpanded]);
@@ -157925,7 +157925,7 @@
           if (isCalendarHeaderExpanded) return null;
           return CalendarTopContent;
         }, [showTimeField, CalendarTopContent, isCalendarHeaderExpanded]);
-        const popoverContent = state.isOpen ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_popover.FreeSoloPopover, { ...getPopoverProps(), children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        const popoverContent = state.isOpen ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_popover.FreeSoloPopover, { ...getPopoverProps(), children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           import_calendar.Calendar,
           {
             ...getCalendarProps(),
@@ -157935,12 +157935,12 @@
         ) }) : null;
         const dateInputProps = {
           ...getDateInputProps(),
-          endContent: selectorButtonPlacement === "end" ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_button.Button, { ...getSelectorButtonProps(), children: endContent || selectorContent }) : endContent,
-          startContent: selectorButtonPlacement === "start" ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_button.Button, { ...getSelectorButtonProps(), children: startContent || selectorContent }) : startContent
+          endContent: selectorButtonPlacement === "end" ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_button.Button, { ...getSelectorButtonProps(), children: endContent || selectorContent }) : endContent,
+          startContent: selectorButtonPlacement === "start" ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_button.Button, { ...getSelectorButtonProps(), children: startContent || selectorContent }) : startContent
         };
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)(import_jsx_runtime25.Fragment, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_date_input.DateInput, { ...dateInputProps }),
-          disableAnimation ? popoverContent : /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion2.AnimatePresence, { children: popoverContent })
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(import_jsx_runtime27.Fragment, { children: [
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_date_input.DateInput, { ...dateInputProps }),
+          disableAnimation ? popoverContent : /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion2.AnimatePresence, { children: popoverContent })
         ] });
       });
       var date_picker_default = DatePicker;
@@ -157961,7 +157961,7 @@
       var import_react_utils2 = require_dist10();
       var import_i18n22 = require_main5();
       var import_shared_utils3 = require_dist2();
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var DateRangePickerField = (0, import_react510.forwardRef)(function DateRangePickerField2(props, ref) {
         const { as, slots, createCalendar: createCalendarProp, classNames, ...otherProps } = props;
         const Component2 = as || "div";
@@ -157980,8 +157980,8 @@
         } = (0, import_datepicker3.useDateField)({ ...otherProps, inputRef }, state, domRef);
         const isInvalid = props.isInvalid || ariaIsInvalid;
         state.isInvalid = isInvalid;
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...(0, import_shared_utils3.mergeProps)(fieldProps, (0, import_react_utils2.filterDOMProps)(otherProps)), ref: domRef, children: [
-          state.segments.map((segment, i) => /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...(0, import_shared_utils3.mergeProps)(fieldProps, (0, import_react_utils2.filterDOMProps)(otherProps)), ref: domRef, children: [
+          state.segments.map((segment, i) => /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
             import_date_input2.DateInputSegment,
             {
               classNames,
@@ -157991,12 +157991,12 @@
             },
             i
           )),
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("input", { ...inputProps, ref: inputRef })
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("input", { ...inputProps, ref: inputRef })
         ] });
       });
       var date_range_picker_field_default = DateRangePickerField;
       var import_system4 = require_dist11();
-      var import_react68 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react610 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_datepicker5 = require_main77();
       var import_datepicker6 = require_main76();
       var import_shared_utils4 = require_dist2();
@@ -158044,7 +158044,7 @@
           validationBehavior,
           shouldCloseOnSelect: () => !state.hasTime
         });
-        const popoverTriggerRef = (0, import_react68.useRef)(null);
+        const popoverTriggerRef = (0, import_react610.useRef)(null);
         let {
           groupProps,
           labelProps,
@@ -158059,11 +158059,11 @@
           errorMessageProps,
           isInvalid: isAriaInvalid
         } = (0, import_datepicker6.useDateRangePicker)({ ...originalProps, validationBehavior }, state, domRef);
-        (0, import_react68.useEffect)(() => {
+        (0, import_react610.useEffect)(() => {
           state.commitValidation();
         }, [state.value, state.commitValidation]);
         const isInvalid = isInvalidProp || isAriaInvalid;
-        const slots = (0, import_react68.useMemo)(
+        const slots = (0, import_react610.useMemo)(
           () => (0, import_theme3.dateRangePicker)({
             ...variantProps2,
             className
@@ -158173,7 +158173,7 @@
           };
         };
         const baseStyles = (0, import_theme3.cn)(classNames == null ? void 0 : classNames.base, className);
-        const dateInputSlots = (0, import_react68.useMemo)(
+        const dateInputSlots = (0, import_react610.useMemo)(
           () => (0, import_theme3.dateInput)({
             ...variantProps2,
             labelPlacement
@@ -158436,7 +158436,7 @@
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system = require_dist11();
       var import_react_utils = require_dist10();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_theme = require_dist12();
       var import_utils8 = require_main38();
       var import_shared_utils = require_dist2();
@@ -158471,16 +158471,16 @@
         const Component2 = as || "div";
         const shouldFilterDOMProps = typeof Component2 === "string";
         const domRef = (0, import_react_utils.useDOMRef)(ref);
-        const handleClose = (0, import_react67.useCallback)(() => {
+        const handleClose = (0, import_react70.useCallback)(() => {
           setIsVisible(false);
           onClose == null ? void 0 : onClose();
         }, [setIsVisible, onClose]);
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.alert)({ hasContent: !(0, import_shared_utils.isEmpty)(description) || !(0, import_shared_utils.isEmpty)(children), ...variantProps2 }),
           [description, (0, import_shared_utils.objectToDeps)(variantProps2)]
         );
-        const getBaseProps = (0, import_react67.useCallback)(() => {
+        const getBaseProps = (0, import_react70.useCallback)(() => {
           return {
             "data-visible": (0, import_shared_utils.dataAttr)(isVisible),
             "data-closeable": (0, import_shared_utils.dataAttr)(isClosable),
@@ -158495,35 +158495,35 @@
             className: slots.base({ class: baseStyles })
           };
         }, [slots, baseStyles]);
-        const getMainWrapperProps = (0, import_react67.useCallback)(() => {
+        const getMainWrapperProps = (0, import_react70.useCallback)(() => {
           return {
             className: slots.mainWrapper({ class: classNames == null ? void 0 : classNames.mainWrapper })
           };
         }, [slots, classNames == null ? void 0 : classNames.mainWrapper]);
-        const getDescriptionProps = (0, import_react67.useCallback)(() => {
+        const getDescriptionProps = (0, import_react70.useCallback)(() => {
           return {
             className: slots.description({ class: classNames == null ? void 0 : classNames.description })
           };
         }, [slots, classNames == null ? void 0 : classNames.description]);
-        const getTitleProps = (0, import_react67.useCallback)(() => {
+        const getTitleProps = (0, import_react70.useCallback)(() => {
           return {
             className: slots.title({ class: classNames == null ? void 0 : classNames.title })
           };
         }, [slots, classNames == null ? void 0 : classNames.title]);
-        const getCloseButtonProps = (0, import_react67.useCallback)(
+        const getCloseButtonProps = (0, import_react70.useCallback)(
           () => ({
             ...closeButtonProps,
             className: slots.closeButton({ class: classNames == null ? void 0 : classNames.closeButton })
           }),
           [slots, classNames == null ? void 0 : classNames.closeButton]
         );
-        const getAlertIconProps = (0, import_react67.useCallback)(
+        const getAlertIconProps = (0, import_react70.useCallback)(
           () => ({
             className: slots.alertIcon({ class: classNames == null ? void 0 : classNames.alertIcon })
           }),
           [slots, classNames == null ? void 0 : classNames.alertIcon]
         );
-        const getIconWrapperProps = (0, import_react67.useCallback)(
+        const getIconWrapperProps = (0, import_react70.useCallback)(
           () => ({
             className: slots.iconWrapper({ class: classNames == null ? void 0 : classNames.iconWrapper })
           }),
@@ -158551,7 +158551,7 @@
           getIconWrapperProps
         };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var iconMap = {
         primary: import_shared_icons.InfoCircleIcon,
         secondary: import_shared_icons.InfoCircleIcon,
@@ -158584,16 +158584,16 @@
         if (!isVisible) return null;
         const customIcon = icon && (0, import_react210.isValidElement)(icon) ? (0, import_react210.cloneElement)(icon, getAlertIconProps()) : null;
         const IconComponent = iconMap[color2] || iconMap.primary;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ref: domRef, role: "alert", ...getBaseProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ref: domRef, role: "alert", ...getBaseProps(), children: [
           startContent,
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getIconWrapperProps(), children: customIcon || /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(IconComponent, { ...getAlertIconProps() }) }),
-          /* @__PURE__ */ (0, import_jsx_runtime25.jsxs)("div", { ...getMainWrapperProps(), children: [
-            !(0, import_shared_utils2.isEmpty)(title) && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getTitleProps(), children: title }),
-            !(0, import_shared_utils2.isEmpty)(description) && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { ...getDescriptionProps(), children: description }),
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getIconWrapperProps(), children: customIcon || /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(IconComponent, { ...getAlertIconProps() }) }),
+          /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)("div", { ...getMainWrapperProps(), children: [
+            !(0, import_shared_utils2.isEmpty)(title) && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getTitleProps(), children: title }),
+            !(0, import_shared_utils2.isEmpty)(description) && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { ...getDescriptionProps(), children: description }),
             children
           ] }),
           endContent,
-          (isClosable || onClose) && /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          (isClosable || onClose) && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             import_button.Button,
             {
               isIconOnly: true,
@@ -158602,7 +158602,7 @@
               variant: "light",
               onPress: handleClose,
               ...getCloseButtonProps(),
-              children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.CloseIcon, { height: 20, width: 20 })
+              children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.CloseIcon, { height: 20, width: 20 })
             }
           )
         ] });
@@ -158649,7 +158649,7 @@
       var import_modal = require_dist63();
       var import_theme = require_dist12();
       var import_react_utils = require_dist10();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_framer_utils = require_dist19();
       var import_shared_utils = require_dist2();
       function useDrawer(originalProps) {
@@ -158664,7 +158664,7 @@
           ...otherProps
         } = originalProps;
         const domRef = (0, import_react_utils.useDOMRef)(ref);
-        const motionProps = (0, import_react67.useMemo)(() => {
+        const motionProps = (0, import_react70.useMemo)(() => {
           if (!(0, import_shared_utils.isEmpty)(drawerMotionProps)) return drawerMotionProps;
           const key = placement === "left" || placement === "right" ? "x" : "y";
           return {
@@ -158691,14 +158691,14 @@
           };
         }, [placement, drawerMotionProps]);
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className);
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.drawer)({
             size,
             placement
           }),
           [size, placement]
         );
-        const getModalProps = (0, import_react67.useCallback)(() => {
+        const getModalProps = (0, import_react70.useCallback)(() => {
           return {
             classNames: {
               ...classNames,
@@ -158712,10 +158712,10 @@
         }, [baseStyles, classNames, motionProps, scrollBehavior, size, otherProps]);
         return { domRef, getModalProps };
       }
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Drawer = (0, import_system.forwardRef)(({ children, ...props }, ref) => {
         const { domRef, getModalProps } = useDrawer({ ...props, ref });
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_modal.Modal, { ref: domRef, ...getModalProps(), children });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_modal.Modal, { ref: domRef, ...getModalProps(), children });
       });
       Drawer.displayName = "HeroUI.Drawer";
       var drawer_default = Drawer;
@@ -158985,7 +158985,7 @@
       var import_react_utils = require_dist10();
       var import_shared_utils = require_dist2();
       var import_use_form_reset = require_dist75();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_utils8 = require_main38();
       var import_form = require_main22();
       var import_form2 = require_main39();
@@ -159031,7 +159031,7 @@
           autoFocus,
           isTextInput: true
         });
-        const handleValueChange = (0, import_react67.useCallback)(
+        const handleValueChange = (0, import_react70.useCallback)(
           (value2) => {
             onValueChange(value2 != null ? value2 : "");
           },
@@ -159063,7 +159063,7 @@
         const errorMessage = typeof props.errorMessage === "function" ? props.errorMessage({ isInvalid, validationErrors, validationDetails }) : props.errorMessage || (validationErrors == null ? void 0 : validationErrors.join(" "));
         const description = props.description;
         const hasHelper = !!description || !!errorMessage;
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.inputOtp)({
             ...variantProps2,
             disableAnimation,
@@ -159072,7 +159072,7 @@
           }),
           [(0, import_shared_utils.objectToDeps)(variantProps2), disableAnimation, isInvalid, isReadOnly]
         );
-        const getBaseProps = (0, import_react67.useCallback)(
+        const getBaseProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ref: baseDomRef,
@@ -159107,7 +159107,7 @@
           },
           [baseDomRef, slots, baseStyles, isDisabled, isInvalid, isRequired, isReadOnly, value, length]
         );
-        const getInputOtpProps = (0, import_react67.useCallback)(
+        const getInputOtpProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             var _a2;
             const otpProps = {
@@ -159151,7 +159151,7 @@
             autoFocus
           ]
         );
-        const getSegmentWrapperProps = (0, import_react67.useCallback)(
+        const getSegmentWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               className: slots.segmentWrapper({
@@ -159165,7 +159165,7 @@
           },
           [classNames == null ? void 0 : classNames.segmentWrapper, isDisabled]
         );
-        const getHelperWrapperProps = (0, import_react67.useCallback)(
+        const getHelperWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               className: slots.helperWrapper({
@@ -159177,7 +159177,7 @@
           },
           [classNames == null ? void 0 : classNames.helperWrapper]
         );
-        const getErrorMessageProps = (0, import_react67.useCallback)(
+        const getErrorMessageProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               className: slots.errorMessage({
@@ -159189,7 +159189,7 @@
           },
           [classNames == null ? void 0 : classNames.errorMessage]
         );
-        const getDescriptionProps = (0, import_react67.useCallback)(
+        const getDescriptionProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               className: slots.description({
@@ -159231,7 +159231,7 @@
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_shared_utils2 = require_dist2();
       var import_theme2 = require_dist12();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var InputOtpSegment = ({
         ...props
       }) => {
@@ -159243,14 +159243,14 @@
         const displayValue = (0, import_react210.useMemo)(() => {
           var _a2, _b;
           if (props.isActive && !props.char) {
-            return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: (0, import_theme2.cn)((_a2 = slots.caret) == null ? void 0 : _a2.call(slots, { class: caretStyles })) });
+            return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { className: (0, import_theme2.cn)((_a2 = slots.caret) == null ? void 0 : _a2.call(slots, { class: caretStyles })) });
           }
           if (props.char) {
-            return type === "password" ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { className: (0, import_theme2.cn)((_b = slots.passwordChar) == null ? void 0 : _b.call(slots, { class: passwordCharStyles })) }) : /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { children: props.char });
+            return type === "password" ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { className: (0, import_theme2.cn)((_b = slots.passwordChar) == null ? void 0 : _b.call(slots, { class: passwordCharStyles })) }) : /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { children: props.char });
           }
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)("div", { children: props.placeholderChar });
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)("div", { children: props.placeholderChar });
         }, [props.char, props.isActive, props.placeholderChar, type]);
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
           "div",
           {
             className: (0, import_theme2.cn)((_a = slots.segment) == null ? void 0 : _a.call(slots, { class: segmentStyles })),
@@ -159264,7 +159264,7 @@
           }
         );
       };
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var InputOtp = (0, import_system2.forwardRef)((props, ref) => {
         const context = useInputOtp({ ...props, ref });
         const {
@@ -159286,7 +159286,7 @@
           if (!hasHelper) {
             return null;
           }
-          return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getHelperWrapperProps(), children: isInvalid && errorMessage ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getDescriptionProps(), children: description }) });
+          return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getHelperWrapperProps(), children: isInvalid && errorMessage ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getDescriptionProps(), children: description }) });
         }, [
           hasHelper,
           isInvalid,
@@ -159296,12 +159296,12 @@
           getErrorMessageProps,
           getDescriptionProps
         ]);
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(InputOtpProvider, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...getBaseProps(), children: [
-          /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(InputOtpProvider, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...getBaseProps(), children: [
+          /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
             import_input_otp.OTPInput,
             {
               ...getInputOtpProps(),
-              render: ({ slots }) => /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getSegmentWrapperProps(), children: slots.map((slot, idx) => /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+              render: ({ slots }) => /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getSegmentWrapperProps(), children: slots.map((slot, idx) => /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
                 InputOtpSegment,
                 {
                   ...slot,
@@ -160237,11 +160237,11 @@
       var import_theme = require_dist12();
       var import_react_utils = require_dist10();
       var import_interactions = require_main17();
-      var import_i18n9 = require_main5();
+      var import_i18n11 = require_main5();
       var import_shared_utils = require_dist2();
       var import_numberfield = require_main78();
       var import_numberfield2 = require_main79();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_form = require_dist33();
       function useNumberInput(originalProps) {
         var _a, _b, _c;
@@ -160269,14 +160269,14 @@
           hideStepper,
           ...otherProps
         } = props;
-        const [isFocusWithin, setFocusWithin] = (0, import_react67.useState)(false);
+        const [isFocusWithin, setFocusWithin] = (0, import_react70.useState)(false);
         const Component2 = as || "div";
         const disableAnimation = (_c = (_b = originalProps.disableAnimation) != null ? _b : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _c : false;
         const domRef = (0, import_react_utils.useDOMRef)(ref);
         const baseDomRef = (0, import_react_utils.useDOMRef)(baseRef);
         const inputWrapperRef = (0, import_react_utils.useDOMRef)(wrapperRef);
         const innerWrapperRef = (0, import_react_utils.useDOMRef)(innerWrapperRefProp);
-        const { locale } = (0, import_i18n9.useLocale)();
+        const { locale } = (0, import_i18n11.useLocale)();
         const state = (0, import_numberfield.useNumberFieldState)({
           ...originalProps,
           validationBehavior,
@@ -160299,7 +160299,7 @@
         const isFilled = !(0, import_shared_utils.isEmpty)(state.inputValue) && !(0, import_shared_utils.isEmpty)(inputValue);
         const isFilledWithin = isFilled || isFocusWithin;
         const baseStyles = (0, import_theme.cn)(classNames == null ? void 0 : classNames.base, className, isFilled ? "is-filled" : "");
-        const handleClear = (0, import_react67.useCallback)(() => {
+        const handleClear = (0, import_react70.useCallback)(() => {
           var _a2;
           state.setInputValue("");
           onClear == null ? void 0 : onClear();
@@ -160343,7 +160343,7 @@
         const hasStartContent = !!startContent;
         const isLabelOutside = shouldLabelBeOutside ? labelPlacement === "outside-left" || isOutsideTop || hasPlaceholder || labelPlacement === "outside" && hasStartContent : false;
         const isLabelOutsideAsPlaceholder = labelPlacement === "outside" && !hasPlaceholder && !hasStartContent;
-        const slots = (0, import_react67.useMemo)(
+        const slots = (0, import_react70.useMemo)(
           () => (0, import_theme.numberInput)({
             ...variantProps2,
             isInvalid,
@@ -160360,7 +160360,7 @@
             disableAnimation
           ]
         );
-        const handleKeyDown = (0, import_react67.useCallback)(
+        const handleKeyDown = (0, import_react70.useCallback)(
           (e) => {
             var _a2, _b2;
             const inputElement = e.currentTarget;
@@ -160390,7 +160390,7 @@
           },
           [inputValue, state, onClear, isClearable, originalProps.isReadOnly]
         );
-        const getBaseProps = (0, import_react67.useCallback)(
+        const getBaseProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ref: baseDomRef,
@@ -160440,7 +160440,7 @@
             originalProps.isDisabled
           ]
         );
-        const getLabelProps = (0, import_react67.useCallback)(
+        const getLabelProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               "data-slot": "label",
@@ -160450,7 +160450,7 @@
           },
           [slots, isLabelHovered, labelProps, classNames == null ? void 0 : classNames.label]
         );
-        const getNumberInputProps = (0, import_react67.useCallback)(
+        const getNumberInputProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               "data-slot": "input",
@@ -160492,7 +160492,7 @@
             handleKeyDown
           ]
         );
-        const getHiddenNumberInputProps = (0, import_react67.useCallback)(
+        const getHiddenNumberInputProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               name: originalProps.name,
@@ -160504,7 +160504,7 @@
           },
           [inputValue, originalProps.name]
         );
-        const getInputWrapperProps = (0, import_react67.useCallback)(
+        const getInputWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ref: inputWrapperRef,
@@ -160537,7 +160537,7 @@
             classNames == null ? void 0 : classNames.inputWrapper
           ]
         );
-        const getInnerWrapperProps = (0, import_react67.useCallback)(
+        const getInnerWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ref: innerWrapperRef,
@@ -160555,7 +160555,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.innerWrapper]
         );
-        const getMainWrapperProps = (0, import_react67.useCallback)(
+        const getMainWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -160567,7 +160567,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.mainWrapper]
         );
-        const getHelperWrapperProps = (0, import_react67.useCallback)(
+        const getHelperWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -160579,7 +160579,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.helperWrapper]
         );
-        const getDescriptionProps = (0, import_react67.useCallback)(
+        const getDescriptionProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -160590,7 +160590,7 @@
           },
           [slots, classNames == null ? void 0 : classNames.description]
         );
-        const getErrorMessageProps = (0, import_react67.useCallback)(
+        const getErrorMessageProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -160601,7 +160601,7 @@
           },
           [slots, errorMessageProps, classNames == null ? void 0 : classNames.errorMessage]
         );
-        const getClearButtonProps = (0, import_react67.useCallback)(
+        const getClearButtonProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -160617,7 +160617,7 @@
           },
           [slots, isClearButtonFocusVisible, clearPressProps, clearFocusProps, classNames == null ? void 0 : classNames.clearButton]
         );
-        const getStepperWrapperProps = (0, import_react67.useCallback)(
+        const getStepperWrapperProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -160629,7 +160629,7 @@
           },
           [slots]
         );
-        const getStepperIncreaseButtonProps = (0, import_react67.useCallback)(
+        const getStepperIncreaseButtonProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               ...props2,
@@ -160644,7 +160644,7 @@
           },
           [slots, incrementButtonProps, classNames == null ? void 0 : classNames.stepperButton]
         );
-        const getStepperDecreaseButtonProps = (0, import_react67.useCallback)(
+        const getStepperDecreaseButtonProps = (0, import_react70.useCallback)(
           (props2 = {}) => {
             return {
               type: "button",
@@ -160701,13 +160701,13 @@
       }
       var import_button = require_dist28();
       var import_shared_icons = require_dist17();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var NumberInputStepper = ({ direction, ...otherProps }) => {
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_button.Button, { disableRipple: true, isIconOnly: true, ...otherProps, children: direction == "up" ? /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.ChevronUpIcon, {}) : /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_shared_icons.ChevronDownIcon, {}) });
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_button.Button, { disableRipple: true, isIconOnly: true, ...otherProps, children: direction == "up" ? /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.ChevronUpIcon, {}) : /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_shared_icons.ChevronDownIcon, {}) });
       };
       NumberInputStepper.displayName = "HeroUI.NumberInputStepper";
       var number_input_stepper_default = NumberInputStepper;
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var NumberInput = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
@@ -160739,11 +160739,11 @@
           getStepperDecreaseButtonProps,
           getStepperWrapperProps
         } = useNumberInput({ ...props, ref });
-        const labelContent = label ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("label", { ...getLabelProps(), children: label }) : null;
+        const labelContent = label ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("label", { ...getLabelProps(), children: label }) : null;
         const end = (0, import_react210.useMemo)(() => {
           if (isClearable) {
-            return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(import_jsx_runtime26.Fragment, { children: [
-              /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("button", { ...getClearButtonProps(), children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_shared_icons2.CloseFilledIcon, {}) }),
+            return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(import_jsx_runtime28.Fragment, { children: [
+              /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("button", { ...getClearButtonProps(), children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_shared_icons2.CloseFilledIcon, {}) }),
               endContent
             ] });
           }
@@ -160753,7 +160753,7 @@
           const shouldShowError = isInvalid && errorMessage;
           const hasContent = shouldShowError || description;
           if (!hasHelper || !hasContent) return null;
-          return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getHelperWrapperProps(), children: shouldShowError ? /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("div", { ...getDescriptionProps(), children: description }) });
+          return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getHelperWrapperProps(), children: shouldShowError ? /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getErrorMessageProps(), children: errorMessage }) : /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("div", { ...getDescriptionProps(), children: description }) });
         }, [
           hasHelper,
           isInvalid,
@@ -160764,29 +160764,29 @@
           getDescriptionProps
         ]);
         const innerWrapper = (0, import_react210.useMemo)(() => {
-          return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getInnerWrapperProps(), children: [
+          return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getInnerWrapperProps(), children: [
             startContent,
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("input", { ...getNumberInputProps() }),
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("input", { ...getHiddenNumberInputProps() }),
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("input", { ...getNumberInputProps() }),
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsx)("input", { ...getHiddenNumberInputProps() }),
             end,
-            !hideStepper && /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getStepperWrapperProps(), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(number_input_stepper_default, { ...getStepperIncreaseButtonProps(), direction: "up" }),
-              /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(number_input_stepper_default, { ...getStepperDecreaseButtonProps(), direction: "down" })
+            !hideStepper && /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getStepperWrapperProps(), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(number_input_stepper_default, { ...getStepperIncreaseButtonProps(), direction: "up" }),
+              /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(number_input_stepper_default, { ...getStepperDecreaseButtonProps(), direction: "down" })
             ] })
           ] });
         }, [startContent, end, getNumberInputProps, getInnerWrapperProps]);
         const mainWrapper = (0, import_react210.useMemo)(() => {
           if (shouldLabelBeOutside) {
-            return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getMainWrapperProps(), children: [
-              /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getInputWrapperProps(), children: [
+            return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getMainWrapperProps(), children: [
+              /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getInputWrapperProps(), children: [
                 !isOutsideLeft && !isOutsideTop ? labelContent : null,
                 innerWrapper
               ] }),
               helperWrapper
             ] });
           }
-          return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(import_jsx_runtime26.Fragment, { children: [
-            /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)("div", { ...getInputWrapperProps(), children: [
+          return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(import_jsx_runtime28.Fragment, { children: [
+            /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)("div", { ...getInputWrapperProps(), children: [
               labelContent,
               innerWrapper
             ] }),
@@ -160805,7 +160805,7 @@
           getErrorMessageProps,
           getDescriptionProps
         ]);
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ...getBaseProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ...getBaseProps(), children: [
           isOutsideLeft || isOutsideTop ? labelContent : null,
           mainWrapper
         ] });
@@ -161407,15 +161407,15 @@
   var require_use_sync_external_store_shim_production = __commonJS({
     "node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.production.js"(exports) {
       "use strict";
-      var React2 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var React = (init_react_shim(), __toCommonJS(react_shim_exports));
       function is(x, y) {
         return x === y && (0 !== x || 1 / x === 1 / y) || x !== x && y !== y;
       }
       var objectIs = "function" === typeof Object.is ? Object.is : is;
-      var useState2 = React2.useState;
-      var useEffect2 = React2.useEffect;
-      var useLayoutEffect2 = React2.useLayoutEffect;
-      var useDebugValue2 = React2.useDebugValue;
+      var useState2 = React.useState;
+      var useEffect2 = React.useEffect;
+      var useLayoutEffect2 = React.useLayoutEffect;
+      var useDebugValue2 = React.useDebugValue;
       function useSyncExternalStore$2(subscribe, getSnapshot) {
         var value = getSnapshot(), _useState = useState2({ inst: { value, getSnapshot } }), inst = _useState[0].inst, forceUpdate = _useState[1];
         useLayoutEffect2(
@@ -161452,7 +161452,7 @@
         return getSnapshot();
       }
       var shim = "undefined" === typeof window || "undefined" === typeof window.document || "undefined" === typeof window.document.createElement ? useSyncExternalStore$1 : useSyncExternalStore$2;
-      exports.useSyncExternalStore = void 0 !== React2.useSyncExternalStore ? React2.useSyncExternalStore : shim;
+      exports.useSyncExternalStore = void 0 !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
     }
   });
 
@@ -162255,13 +162255,13 @@
       var import_spinner = require_dist25();
       var import_framer_motion22 = require_cjs4();
       var import_shared_utils = require_dist2();
-      var import_jsx_runtime25 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime27 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var domAnimation2 = () => Promise.resolve().then(() => (init_src(), src_exports)).then((res) => res.default);
       var Ripple = (props) => {
         const { ripples = [], motionProps, color: color2 = "currentColor", style: style2, onClear } = props;
-        return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_jsx_runtime25.Fragment, { children: ripples.map((ripple) => {
+        return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_jsx_runtime27.Fragment, { children: ripples.map((ripple) => {
           const duration = (0, import_shared_utils.clamp)(0.01 * ripple.size, 0.2, ripple.size > 100 ? 0.75 : 0.5);
-          return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion22.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(import_framer_motion22.AnimatePresence, { mode: "popLayout", children: /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
+          return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion22.LazyMotion, { features: domAnimation2, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(import_framer_motion22.AnimatePresence, { mode: "popLayout", children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
             import_framer_motion22.m.span,
             {
               animate: {
@@ -162299,10 +162299,10 @@
       Ripple.displayName = "HeroUI.Ripple";
       var ripple_default = Ripple;
       var import_shared_utils2 = require_dist2();
-      var import_react67 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react70 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useRipple(props = {}) {
-        const [ripples, setRipples] = (0, import_react67.useState)([]);
-        const onPress = (0, import_react67.useCallback)((event) => {
+        const [ripples, setRipples] = (0, import_react70.useState)([]);
+        const onPress = (0, import_react70.useCallback)((event) => {
           const trigger = event.target;
           const size = Math.max(trigger.clientWidth, trigger.clientHeight);
           setRipples((prevRipples) => [
@@ -162315,7 +162315,7 @@
             }
           ]);
         }, []);
-        const onClear = (0, import_react67.useCallback)((key) => {
+        const onClear = (0, import_react70.useCallback)((key) => {
           setRipples((prevState) => prevState.filter((ripple) => ripple.key !== key));
         }, []);
         return { ripples, onClear, onPress, ...props };
@@ -162750,14 +162750,14 @@
           isIconOnly
         };
       }
-      var import_jsx_runtime26 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
+      var import_jsx_runtime28 = (init_jsx_runtime_shim(), __toCommonJS(jsx_runtime_shim_exports));
       var Button = (0, import_system2.forwardRef)((props, ref) => {
         const {
           Component: Component2,
           domRef,
           children,
           spinnerSize,
-          spinner = /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(import_spinner.Spinner, { color: "current", size: spinnerSize }),
+          spinner = /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_spinner.Spinner, { color: "current", size: spinnerSize }),
           spinnerPlacement,
           startContent,
           endContent,
@@ -162767,13 +162767,13 @@
           getRippleProps,
           isIconOnly
         } = useButton({ ...props, ref });
-        return /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Component2, { ref: domRef, ...getButtonProps(), children: [
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsxs)(Component2, { ref: domRef, ...getButtonProps(), children: [
           startContent,
           isLoading && spinnerPlacement === "start" && spinner,
           isLoading && isIconOnly ? null : children,
           isLoading && spinnerPlacement === "end" && spinner,
           endContent,
-          !disableRipple && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(ripple_default, { ...getRippleProps() })
+          !disableRipple && /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(ripple_default, { ...getRippleProps() })
         ] });
       });
       Button.displayName = "HeroUI.Button";
@@ -162786,7 +162786,7 @@
       var import_theme2 = require_dist12();
       var import_react_utils3 = require_dist10();
       var import_shared_utils4 = require_dist2();
-      var import_react68 = (init_react_shim(), __toCommonJS(react_shim_exports));
+      var import_react610 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_toast = require_main81();
       var import_interactions5 = require_main17();
       var import_use_is_mobile = require_dist55();
@@ -162842,32 +162842,32 @@
             placement = "bottom-center";
           }
         }
-        const animationRef = (0, import_react68.useRef)(null);
-        const startTime = (0, import_react68.useRef)(null);
-        const progressRef = (0, import_react68.useRef)(0);
-        const progressBarRef = (0, import_react68.useRef)(null);
-        const pausedTime = (0, import_react68.useRef)(0);
-        const timeElapsed = (0, import_react68.useRef)(0);
-        (0, import_react68.useEffect)(() => {
+        const animationRef = (0, import_react610.useRef)(null);
+        const startTime = (0, import_react610.useRef)(null);
+        const progressRef = (0, import_react610.useRef)(0);
+        const progressBarRef = (0, import_react610.useRef)(null);
+        const pausedTime = (0, import_react610.useRef)(0);
+        const timeElapsed = (0, import_react610.useRef)(0);
+        (0, import_react610.useEffect)(() => {
           if (progressBarRef.current) {
             progressBarRef.current.style.width = "0%";
           }
         }, []);
-        const [isLoading, setIsLoading] = (0, import_react68.useState)(!!promiseProp);
-        const [isToastExiting, setIsToastExiting] = (0, import_react68.useState)(false);
-        const hasCalledOnCloseRef = (0, import_react68.useRef)(false);
-        (0, import_react68.useEffect)(() => {
+        const [isLoading, setIsLoading] = (0, import_react610.useState)(!!promiseProp);
+        const [isToastExiting, setIsToastExiting] = (0, import_react610.useState)(false);
+        const hasCalledOnCloseRef = (0, import_react610.useRef)(false);
+        (0, import_react610.useEffect)(() => {
           if (!promiseProp) return;
           promiseProp.finally(() => {
             setIsLoading(false);
           });
         }, [promiseProp]);
-        (0, import_react68.useEffect)(() => {
+        (0, import_react610.useEffect)(() => {
           if (isClosing && !isToastExiting) {
             setIsToastExiting(true);
           }
         }, [isClosing, isToastExiting]);
-        (0, import_react68.useEffect)(() => {
+        (0, import_react610.useEffect)(() => {
           if (isToastExiting && disableAnimation) {
             state.close(toast.key);
             if (!hasCalledOnCloseRef.current) {
@@ -162876,7 +162876,7 @@
             }
           }
         }, [isToastExiting, disableAnimation, state, toast.key, onClose]);
-        (0, import_react68.useEffect)(() => {
+        (0, import_react610.useEffect)(() => {
           const updateProgress = (timestamp) => {
             if (!timeout || isLoading) {
               return;
@@ -162928,12 +162928,12 @@
           state,
           domRef
         );
-        const [mounted, setMounted] = (0, import_react68.useState)(false);
-        (0, import_react68.useEffect)(() => {
+        const [mounted, setMounted] = (0, import_react610.useState)(false);
+        (0, import_react610.useEffect)(() => {
           setMounted(true);
         }, []);
-        const [initialHeight, setInitialHeight] = (0, import_react68.useState)(0);
-        (0, import_react68.useLayoutEffect)(() => {
+        const [initialHeight, setInitialHeight] = (0, import_react610.useState)(0);
+        (0, import_react610.useLayoutEffect)(() => {
           if (!domRef.current || !mounted || isToastExiting) {
             return;
           }
@@ -162959,7 +162959,7 @@
           liftHeight += heights[idx] || 0;
         }
         const frontHeight = heights[heights.length - 1];
-        const slots = (0, import_react68.useMemo)(
+        const slots = (0, import_react610.useMemo)(
           () => (0, import_theme2.toast)({
             ...variantProps2,
             disableAnimation
@@ -162972,8 +162972,8 @@
           visible: { opacity: 1, y: 0 },
           exit: { opacity: 0, y: -INITIAL_POSITION * multiplier }
         };
-        const [drag2, setDrag] = (0, import_react68.useState)(false);
-        const [dragValue, setDragValue] = (0, import_react68.useState)(0);
+        const [drag2, setDrag] = (0, import_react610.useState)(false);
+        const [dragValue, setDragValue] = (0, import_react610.useState)(0);
         const shouldCloseToast = (offsetX, offsetY) => {
           const isRight = placement.includes("right");
           const isLeft = placement.includes("left");
@@ -163011,7 +163011,7 @@
         } else if (drag2) {
           opacityValue = Math.max(0, 1 - dragValue / (SWIPE_THRESHOLD_X + 20));
         }
-        const getToastProps = (0, import_react68.useCallback)(
+        const getToastProps = (0, import_react610.useCallback)(
           (props2 = {}) => {
             const topExtension = 16;
             const bottomExtension = 16;
@@ -163058,14 +163058,14 @@
             disableAnimation
           ]
         );
-        const getWrapperProps = (0, import_react68.useCallback)(
+        const getWrapperProps = (0, import_react610.useCallback)(
           (props2 = {}) => ({
             className: slots.wrapper({ class: classNames == null ? void 0 : classNames.wrapper }),
             ...props2
           }),
           []
         );
-        const getIconProps = (0, import_react68.useCallback)(
+        const getIconProps = (0, import_react610.useCallback)(
           (props2 = {}) => ({
             "aria-label": "descriptionIcon",
             className: slots.icon({ class: classNames == null ? void 0 : classNames.icon }),
@@ -163073,7 +163073,7 @@
           }),
           []
         );
-        const getLoadingComponentProps = (0, import_react68.useCallback)(
+        const getLoadingComponentProps = (0, import_react610.useCallback)(
           (props2 = {}) => ({
             className: slots.loadingComponent({ class: classNames == null ? void 0 : classNames.loadingComponent }),
             "aria-label": "loadingIcon",
@@ -163082,7 +163082,7 @@
           }),
           []
         );
-        const getSpinnerComponentProps = (0, import_react68.useCallback)(
+        const getSpinnerComponentProps = (0, import_react610.useCallback)(
           (props2 = {}) => ({
             classNames: { wrapper: slots.loadingComponent({ class: classNames == null ? void 0 : classNames.loadingComponent }) },
             "aria-label": "loadingIcon",
@@ -163091,28 +163091,28 @@
           }),
           []
         );
-        const getContentProps = (0, import_react68.useCallback)(
+        const getContentProps = (0, import_react610.useCallback)(
           (props2 = {}) => ({
             className: slots.content({ class: classNames == null ? void 0 : classNames.content }),
             ...(0, import_shared_utils4.mergeProps)(props2, otherProps, contentProps)
           }),
           [contentProps]
         );
-        const getTitleProps = (0, import_react68.useCallback)(
+        const getTitleProps = (0, import_react610.useCallback)(
           (props2 = {}) => ({
             className: slots.title({ class: classNames == null ? void 0 : classNames.title }),
             ...(0, import_shared_utils4.mergeProps)(props2, otherProps, titleProps)
           }),
           [titleProps]
         );
-        const getDescriptionProps = (0, import_react68.useCallback)(
+        const getDescriptionProps = (0, import_react610.useCallback)(
           (props2 = {}) => ({
             className: slots.description({ class: classNames == null ? void 0 : classNames.description }),
             ...(0, import_shared_utils4.mergeProps)(props2, otherProps, descriptionProps)
           }),
           [descriptionProps]
         );
-        const getCloseButtonProps = (0, import_react68.useCallback)(
+        const getCloseButtonProps = (0, import_react610.useCallback)(
           (props2 = {}) => ({
             className: slots.closeButton({ class: classNames == null ? void 0 : classNames.closeButton }),
             "aria-label": "closeButton",
@@ -163130,7 +163130,7 @@
           }),
           [setIsToastExiting, onClose]
         );
-        const getCloseIconProps = (0, import_react68.useCallback)(
+        const getCloseIconProps = (0, import_react610.useCallback)(
           (props2 = {}) => ({
             className: slots.closeIcon({ class: classNames == null ? void 0 : classNames.closeIcon }),
             "aria-label": "closeIcon",
@@ -163138,7 +163138,7 @@
           }),
           []
         );
-        const getMotionDivProps = (0, import_react68.useCallback)(
+        const getMotionDivProps = (0, import_react610.useCallback)(
           (props2 = {}) => {
             const comparingValue = isRegionExpanded ? maxVisibleToasts - 1 : Math.min(2, maxVisibleToasts - 1);
             const isCloseToEnd = total - index3 - 1 <= comparingValue;
@@ -163816,8 +163816,10 @@
     getMediaDownloadActions: () => getMediaDownloadActions,
     getMediaStreamAvailabilityProviders: () => getMediaStreamAvailabilityProviders,
     getMediaStreamCatalogProviders: () => getMediaStreamCatalogProviders,
+    getPlayableUrlRewriters: () => getPlayableUrlRewriters,
     getPlaybackCapabilityProviders: () => getPlaybackCapabilityProviders,
     getPluginRegistryRevision: () => getPluginRegistryRevision,
+    getResumeRefreshProviders: () => getResumeRefreshProviders,
     getSettingsSections: () => getSettingsSections,
     getStreamProviders: () => getStreamProviders,
     getSyncIdentityProviders: () => getSyncIdentityProviders,
@@ -163853,6 +163855,14 @@
       registerInstantPlayProvider(provider) {
         if (instantPlayProviders.find((entry) => entry.id === provider.id)) return;
         instantPlayProviders.push(provider);
+      },
+      registerResumeRefreshProvider(provider) {
+        if (resumeRefreshProviders.find((entry) => entry.id === provider.id)) return;
+        resumeRefreshProviders.push(provider);
+      },
+      registerPlayableUrlRewriter(rewriter) {
+        if (playableUrlRewriters.find((entry) => entry.id === rewriter.id)) return;
+        playableUrlRewriters.push(rewriter);
       },
       registerEpisodeSidebarProvider(provider) {
         if (episodeSidebarProviders.find((p) => p.id === provider.id)) return;
@@ -163944,6 +163954,12 @@
   function getInstantPlayProviders() {
     return instantPlayProviders;
   }
+  function getResumeRefreshProviders() {
+    return [...resumeRefreshProviders].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+  }
+  function getPlayableUrlRewriters() {
+    return [...playableUrlRewriters].sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+  }
   function getEpisodeSidebarProviders() {
     return episodeSidebarProviders;
   }
@@ -164004,13 +164020,15 @@
       registryListeners.delete(listener);
     };
   }
-  var streamProviders, mediaStreamCatalogProviders, mediaStreamAvailabilityProviders, instantPlayProviders, episodeSidebarProviders, playbackCapabilityProviders, syncIdentityProviders, authCapabilityProviders, settingsSections, mediaDownloadActions, mediaDetailsActions, homeRows, homeSources, bootstraps, heroes, homeOverrides, browsePages, mainMenuItems, topbarItems, managedAuthConsumers, registeredPluginIds, registryRevision, registryListeners;
+  var streamProviders, mediaStreamCatalogProviders, mediaStreamAvailabilityProviders, instantPlayProviders, resumeRefreshProviders, playableUrlRewriters, episodeSidebarProviders, playbackCapabilityProviders, syncIdentityProviders, authCapabilityProviders, settingsSections, mediaDownloadActions, mediaDetailsActions, homeRows, homeSources, bootstraps, heroes, homeOverrides, browsePages, mainMenuItems, topbarItems, managedAuthConsumers, registeredPluginIds, registryRevision, registryListeners;
   var init_plugin_registry = __esm({
     "lib/plugin-registry.ts"() {
       streamProviders = [];
       mediaStreamCatalogProviders = [];
       mediaStreamAvailabilityProviders = [];
       instantPlayProviders = [];
+      resumeRefreshProviders = [];
+      playableUrlRewriters = [];
       episodeSidebarProviders = [];
       playbackCapabilityProviders = [];
       syncIdentityProviders = [];
@@ -164033,15 +164051,15 @@
     }
   });
 
-  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/index.ts
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/index.ts
   var runtime_exports = {};
   __export(runtime_exports, {
     StreamsScraperPlugin: () => StreamsScraperPlugin
   });
 
-  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
   init_react_shim();
-  var import_react64 = __toESM(require_dist89());
+  var import_react57 = __toESM(require_dist89());
 
   // lib/app-storage.ts
   var store = null;
@@ -164065,6 +164083,32 @@
       } catch {
       }
     }
+    if (typeof window !== "undefined") {
+      try {
+        const snapshot = window.__lumioNativeStorageSnapshot;
+        const snapRaw = snapshot?.["app_profiles"];
+        const localRaw = seeded.get("app_profiles");
+        const revOf = (raw) => {
+          if (!raw) return -1;
+          try {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) return 0;
+            const rev = Number(parsed?.rev);
+            return Number.isFinite(rev) ? rev : 0;
+          } catch {
+            return -1;
+          }
+        };
+        if (snapRaw !== void 0 && revOf(snapRaw) > revOf(localRaw)) {
+          seeded.set("app_profiles", snapRaw);
+          try {
+            localStorage.setItem("app_profiles", snapRaw);
+          } catch {
+          }
+        }
+      } catch {
+      }
+    }
     store = seeded;
     return seeded;
   }
@@ -164076,7 +164120,7 @@
   // lib/i18n.tsx
   init_react_shim();
 
-  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/profile-storage-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/profile-storage-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
   var getActiveProfileId = () => sdk.getActiveProfileId();
   var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
@@ -164117,6 +164161,18 @@
       liveTvHomeSource: "Live TV source",
       liveTvAllChannels: "All channels",
       m3uNoUrl: "No M3U URL configured. Add one in Settings.",
+      liveTvEmptyEyebrow: "LIVE TV",
+      liveTvEmptyTitle: "Connect a playlist to get started.",
+      liveTvEmptyBody: "Connect any IPTV provider. Channels are sorted by category, EPG is pulled automatically when your provider supplies it, and playback runs through native mpv.",
+      liveTvEmptyCta: "Connect a provider",
+      liveTvFeatureListsTitle: "Channel lists",
+      liveTvFeatureListsDesc: "Build your own lists and pin favorite channels to the top.",
+      liveTvFeatureEpgTitle: "Live EPG",
+      liveTvFeatureEpgDesc: "Now-playing and upcoming guide when your provider supplies it.",
+      liveTvFeatureMpvTitle: "Native mpv",
+      liveTvFeatureMpvDesc: "HEVC, HDR and multichannel audio, plus real subtitle and audio menus.",
+      liveTvFeatureLocalTitle: "Local only",
+      liveTvFeatureLocalDesc: "Playlist links are stored on this device. Nothing leaves your machine.",
       m3uLoading: "Loading channels\u2026",
       m3uError: "Failed to load channels.",
       m3uChannels: "channels",
@@ -164456,7 +164512,376 @@
       settingsTitle: "Settings",
       settingsDesc: "Configure integrations for this app.",
       profilesTitle: "Profiles",
-      profilesDesc: "Create separate local profiles with their own browser cache and playback history.",
+      profilesDesc: "Everyone who uses this device gets their own watch history, avatar, color, and optional PIN. Switch anytime.",
+      profileEditTitle: "Edit profile",
+      profileAvatarLabel: "Avatar",
+      profileColorLabel: "Color",
+      profileNoAvatar: "No avatar (initial)",
+      profileSharedSettingsTitle: "Settings for this profile",
+      profileShareWithAll: "Share settings with all profiles",
+      profileShareWithAllDesc: "One set of preferences everyone on this device uses. Watch history and lists stay personal.",
+      profileIndependentSettings: "Use independent settings for this profile",
+      profileIndependentSettingsDesc: "This profile keeps its own preferences, separate from everyone else.",
+      profilePrimaryBadge: "Primary",
+      profileLockedBadge: "Locked",
+      profileEditAction: "Edit",
+      profileWhoIsWatching: "Who's watching?",
+      profileCustomizeAction: "Customize",
+      profileAddTile: "Add",
+      profilesStripHint: "Add a profile for someone else and everyone keeps their own Continue Watching, watch history, and progress.",
+      settingsGroupOverview: "OVERVIEW",
+      settingsGroupAccount: "ACCOUNT",
+      settingsGroupStreaming: "STREAMING",
+      settingsGroupPlayback: "PLAYBACK",
+      settingsGroupAppearance: "APPEARANCE",
+      settingsGroupPlugins: "PLUGINS",
+      settingsGroupNotifications: "NOTIFICATIONS",
+      webhooksTitle: "Webhooks & rules",
+      webhooksDesc: "Send a ping to Discord or Telegram when something happens. Each rule runs on its own.",
+      webhooksWhereTitle: "Where notifications go",
+      webhooksUrlLabel: "Discord or Telegram URL",
+      webhooksUrlDesc: "A Discord webhook URL, or a Telegram bot URL with chat_id (https://api.telegram.org/bot<token>/sendMessage?chat_id=<id>).",
+      webhooksTest: "Test",
+      webhooksTestOk: "Sent!",
+      webhooksTestFailed: "Test failed",
+      webhooksTestMessage: "Lumio: webhook works \u{1F389}",
+      webhooksWhatTitle: "What gets sent",
+      webhooksSourceCalendar: "My release calendar",
+      webhooksSourceCalendarDesc: "Titles you watch in the release calendar, the day they premiere.",
+      webhooksSourceTrakt: "My Trakt lists",
+      webhooksSourceTraktDesc: "New titles appearing in lists you follow on Trakt.",
+      webhooksSourceTraktNeedsAuth: "Requires a connected Trakt account.",
+      webhooksTypesTitle: "Media types",
+      webhooksTypesLabel: "Filter by type",
+      webhooksTypesDesc: "Applied after the sources are merged.",
+      webhooksTypeAll: "Everything",
+      webhooksRunNow: "Run rules now",
+      webhooksRunSent: "Sent {n} notification(s)",
+      webhooksRunNothing: "Nothing new to send",
+      webhooksScheduleHint: "Rules run automatically shortly after launch and every 6 hours while the app is open.",
+      settingsGroupSystem: "SYSTEM",
+      settingsPageOverview: "Overview",
+      settingsPageAccount: "Account & profiles",
+      settingsPageLibrary: "Library & metadata",
+      settingsPageTracking: "Tracking services",
+      settingsPageSources: "Sources & catalogs",
+      settingsPageServers: "Server & network",
+      settingsPagePlayer: "Player & quality",
+      settingsPageHome: "Home & appearance",
+      settingsPageTheme: "Theme & scale",
+      heroTrailerLabel: "Play trailer in hero",
+      heroTrailerHint: "After a few seconds on a title, a muted trailer fades in behind the content.",
+      playerLayoutTitle: "Player layout",
+      plTabControls: "Controls",
+      plTabTimeVolume: "Time & volume",
+      plTabOverlays: "Overlays",
+      plControlsEyebrow: "Controls",
+      plEdit: "Edit",
+      plAppliesInstantly: "Changes apply instantly",
+      plResetPage: "Reset page to default",
+      plTimeFormatDesc: "What the clock labels show on the seek bar.",
+      plVolumeTitle: "Volume control",
+      plVolumeDesc: "How the volume widget renders in the control row.",
+      plVolSlider: "Slider",
+      plVolSliderDesc: "A horizontal slider next to the speaker.",
+      plVolStepper: "Stepper",
+      plVolStepperDesc: "\u2212/+ buttons with a percentage readout.",
+      plVolIcon: "Icon only",
+      plVolIconDesc: "Just the speaker \u2014 click toggles mute.",
+      plEditorEyebrow: "Layout editor",
+      plEditorClickHint: "Click any control in the preview to move or hide it.",
+      plEditorSummary: "{visible} visible, {hidden} hidden.",
+      plEditorOpen: "Edit layout",
+      plEditorSave: "Save",
+      plEditorDiscard: "Discard",
+      plEditorDiscardConfirm: "Discard unsaved layout changes?",
+      plEditorHidden: "Hidden",
+      plEditorHiddenEmpty: "Nothing hidden \u2014 click a control and use the eye to hide it.",
+      plEditorControl: "Control",
+      plEditorOrder: "Order",
+      plEditorVisible: "Visible",
+      plTimeFormatTitle: "Time format on the seek bar",
+      plTimeElapsedTotal: "Elapsed and total",
+      plTimeElapsedTotalDesc: "22:22 / 1:47:00 \u2014 today's look.",
+      plTimeRemaining: "Remaining only",
+      plTimeRemainingDesc: "A single -1:24:38 label counting down.",
+      plTimeElapsedOnly: "Elapsed only",
+      plTimeElapsedOnlyDesc: "A single 22:22 label.",
+      playerLayoutDesc: "Which controls the player bar shows, and in what order.",
+      playerLayoutHint: "Changes apply immediately. The spacer splits the left and right control groups; Play/Pause cannot be hidden.",
+      plPlayPause: "Play/Pause",
+      plSeekBack: "Seek back 10s",
+      plSeekForward: "Seek forward 10s",
+      plTime: "Time display",
+      plSpacer: "Spacer (left/right split)",
+      plSegmentBadges: "Intro/outro badges",
+      plMute: "Mute",
+      plVolume: "Volume slider",
+      plFullscreen: "Fullscreen",
+      plShow: "Show",
+      plHide: "Hide",
+      settingsTabTheme: "Theme",
+      themeScaleTitle: "Theme & scale",
+      appTheme: "Theme",
+      appThemeDesc: "Background tone across the whole app.",
+      themeMidnight: "Midnight",
+      themeMidnightDesc: "Today's Lumio: deep blue background.",
+      themePitchDesc: "Near-black for OLED and dark rooms.",
+      themeSystemDesc: "Switches with the macOS appearance setting.",
+      accentColor: "Accent color",
+      profileSharedTab: "Shared settings",
+      plTabBehavior: "Behavior",
+      settingsPageLang: "Language",
+      bugEyebrow: "Report a bug",
+      bugTitle: "Report a bug",
+      bugHint: "A specific summary lands faster than a long paragraph. Steps to reproduce help most of all.",
+      bugSummaryLabel: "What broke?",
+      bugSummaryDesc: "One sentence about what went wrong.",
+      bugSummaryPlaceholder: "The player freezes when I\u2026",
+      bugStepsLabel: "Steps to reproduce",
+      bugStepsDesc: "What did you do right before it happened?",
+      bugStepsPlaceholder: "1. Open\u2026\n2. Press\u2026\n3. \u2026",
+      bugCopyReport: "Copy report",
+      bugCopyNote: "Version and platform are attached automatically \u2014 paste it wherever you report.",
+      bugNoSummary: "Bug report",
+      bugLogEyebrow: "Player log",
+      bugLogTitle: "Export the player log",
+      bugLogHint: "If a stream or the player misbehaves, attach this file to the report.",
+      bugLogExport: "Download log",
+      bugLogError: "Could not read the log.",
+      advTitle: "Advanced",
+      advTabMaintenance: "Maintenance",
+      advTabAbout: "About",
+      advBackupEyebrow: "Backup & restore",
+      advBackupTitle: "Your entire setup in one file",
+      advBackupHint: "Profiles, settings, watchlists, history \u2014 everything. Restore it on a new computer or keep it as insurance.",
+      advExport: "Export backup",
+      advImport: "Restore from file",
+      advRestoreConfirm: "Restore the backup? Current values are overwritten and the app reloads.",
+      advBackupError: "Could not read the backup file.",
+      advDownloadsEyebrow: "Downloads",
+      advDownloadsTitle: "Download folder",
+      advDownloadsHint: "Where the player saves videos. When set, the folder picker is skipped.",
+      advDownloadsUnset: "Ask every time",
+      advDownloadsPick: "Choose folder",
+      advDownloadsClear: "Clear",
+      advOnboardingEyebrow: "Onboarding",
+      advOnboardingTitle: "Replay the walkthrough",
+      advOnboardingHint: "Runs the first-start guide again for this profile.",
+      advOnboardingReplay: "Replay onboarding",
+      advAboutEyebrow: "About",
+      advAboutHint: "Version and platform \u2014 handy when reporting a bug.",
+      advAboutVersion: "Version",
+      advLegalEyebrow: "Legal",
+      advLegalP1: 'Lumio is an independent media client. It is not affiliated with, endorsed by, sponsored by, or in any way associated with any streaming service, addon author, debrid provider, or trademark holder referenced inside the app. "TMDb", "Trakt", "IMDb", "Real-Debrid", "TorBox", "OpenSubtitles", "Plex", "Netflix", "Disney+" and all other names, logos and brand references are property of their respective owners and are used only for compatibility and identification.',
+      advLegalP2: "Lumio itself does not host, distribute, or index any media. All streams come from third-party sources, addons, or services that you configure yourself. You are responsible for what you choose to play and for complying with the laws of your jurisdiction.",
+      advAboutPlatform: "Platform",
+      subStyleEyebrow: "Subtitle style",
+      subStyleTitle: "How subtitles look",
+      subStyleHint: "Size, position and colors during playback \u2014 live preview below.",
+      langMetaEyebrow: "Metadata",
+      langMetaTitle: "App & metadata language",
+      langMetaHint: "What language the interface and the title information use.",
+      langAppLanguage: "App language",
+      langAppLanguageDesc: "The interface language of Lumio itself.",
+      langMetadataLanguage: "Metadata language",
+      langRegion: "Region",
+      langRegionDesc: "Country code for availability \u2014 which streaming services and release dates apply.",
+      langMetadataLanguageDesc: "Titles, overviews and taglines from TMDb display in this language when a translation exists.",
+      langBehaviorGroup: "AUTO-SELECTION",
+      subtitlesOffByDefault: "Start with subtitles off",
+      subtitlesOffByDefaultDesc: "Subtitles are still found and listed in the CC menu \u2014 they just never turn on by themselves.",
+      trackBlockWords: "Never auto-select tracks containing",
+      trackBlockWordsDesc: "Comma-separated words. Matching subtitle tracks are skipped during auto-selection; manual picks still work.",
+      trackBlockWordsPlaceholder: "commentary, descriptive",
+      vtTabLabel: "Video tuning",
+      vtEyebrow: "Video tuning",
+      playButtonMode: "Play button behavior",
+      playButtonModeDesc: "Instant starts the best stream right away; Manual opens the stream list so you pick source and quality.",
+      playModeInstant: "Instant",
+      playModeManual: "Manual picker",
+      showStreamQuality: "Stream quality in player",
+      showStreamQualityDesc: "Shows what is actually playing (resolution \xB7 codec) under the title.",
+      rtEyebrow: "Rendering",
+      rtTitle: "Quality & HDR",
+      rtHint: "How the desktop engine decodes and scales the picture.",
+      rtProfile: "Quality profile",
+      rtProfileDesc: "Light spares weak machines, Max uses high-quality scalers and debanding (needs a decent GPU).",
+      rtProfileLight: "Light",
+      rtProfileBalanced: "Balanced",
+      rtProfileMax: "Max",
+      rtToneMapping: "HDR tone-mapping",
+      rtToneMappingDesc: "How HDR material maps to your display. Try hable or bt.2390 if HDR looks washed out.",
+      rtInverseTm: "Inverse tone-mapping",
+      rtInverseTmDesc: "Expands SDR material toward HDR on capable displays.",
+      rtHwdec: "Hardware acceleration",
+      rtHwdecDesc: "GPU decoding \u2014 easier on the battery and CPU. Turn off only when troubleshooting.",
+      rtEngineNote: "Requires the built-in desktop engine (mpv).",
+      atEyebrow: "Audio tuning",
+      atTitle: "Shape the sound",
+      atHint: "Without touching your system EQ. Applies on the built-in desktop engine; the browser player leaves audio untouched.",
+      atNormalize: "Normalize loudness",
+      atNormalizeDesc: "Evens out quiet dialogue and loud action scenes.",
+      atBass: "Bass boost",
+      atBassDesc: "A +6 dB low shelf for thin speakers.",
+      atVoice: "Voice clarity",
+      atVoiceDesc: "Lifts the dialogue range so voices cut through.",
+      atDownmix: "Downmix surround to stereo",
+      atDownmixDesc: "Folds 5.1/7.1 down to two channels \u2014 laptop speakers and headphones.",
+      atEngineNote: "Requires the built-in desktop engine (mpv). Night mode composes on top.",
+      vtTitle: "Picture adjustments",
+      vtHint: "Applies live to an open player and to every playback that follows.",
+      vtBrightness: "Brightness",
+      vtContrast: "Contrast",
+      vtSaturation: "Saturation",
+      vtGamma: "Gamma (midtones)",
+      vtSharpen: "Sharpen",
+      vtPresetStandard: "Standard",
+      vtPresetBrighter: "Brighter",
+      vtPresetVivid: "Vivid",
+      vtPresetCinema: "Cinema dark",
+      vtPresetSharp: "Sharp",
+      vtEngineNote: "Gamma and sharpen require the built-in desktop engine; the browser player applies the rest.",
+      sfTabSafety: "Safety",
+      sfDisplayEyebrow: "Display",
+      sfDisplayHint: "Release types that never show up in the stream list.",
+      plTabNextEp: "Next episode",
+      plNextEpHint: "Autoplay, the popup and outro behavior between episodes.",
+      langAudioSubTab: "Audio & subtitles",
+      langAudioSubTitle: "Audio & subtitle defaults",
+      langAudioSubHint: "Preferred languages and how subtitles look in the player.",
+      spoilersHint: "What gets blurred until you choose to reveal it.",
+      profileCreateDone: "Done \u2014 switch to the profile",
+      libContentEyebrow: "Content filters",
+      libContentTitle: "What may appear on Home",
+      libContentHint: "Watched and unreleased titles can be kept out of the catalog rows.",
+      libCardsEyebrow: "Card badges",
+      libCardsTitle: "Poster card badges",
+      libCardsHint: "Tags and markers shown on poster cards across Home and grids.",
+      profilesEyebrow: "Profiles",
+      profileRequirePin: "Require PIN when switching profiles",
+      profileRequirePinDesc: "Optional four-digit code per profile. Without it anyone switches instantly.",
+      profileStartFrom: "Start new profiles from",
+      profileStartFromDesc: "What a new profile inherits when created.",
+      profileStartFromCurrent: "Everything as it looks now",
+      profileStartFromDefaults: "Default settings",
+      trackingSyncEyebrow: "What gets synced",
+      trackingSyncHint: "How Lumio and Trakt exchange playback and list changes.",
+      trackingCommunityEyebrow: "Community",
+      trackingCommunityHint: "Public content from other Trakt users on your detail pages.",
+      profileSharedHint: "Applies to the whole settings panel, not just this page.",
+      profileSharedNoProfile: "The device runs in shared mode until a profile exists \u2014 then each profile makes its own choice.",
+      profileSharedEyebrow: "Settings per profile",
+      fontPair: "Typography",
+      fontPairDesc: "Font pairing for interface and headings.",
+      cardRadius: "Poster corner radius",
+      cardRadiusDesc: "Rounding on poster cards across home and grids.",
+      cardRadiusSquare: "Square",
+      tsTitle: "Your themes",
+      tsNew: "New theme",
+      tsImport: "Import",
+      tsImportFailed: "Could not read the theme file.",
+      tsEmpty: "No custom themes yet \u2014 create one and the whole app previews it live while you edit.",
+      tsUnnamed: "Unnamed theme",
+      tsActive: "Active",
+      tsUse: "Use",
+      tsExport: "Export",
+      tsDelete: "Delete",
+      tsNamePlaceholder: "Theme name",
+      tsCssPlaceholder: "Custom CSS (optional) \u2014 injected while the theme is active",
+      tsLivePreview: "The app previews your edits live.",
+      tsBg: "Background",
+      tsSurface: "Surface",
+      tsElevated: "Elevated",
+      tsBorder: "Border",
+      tsAccent: "Accent",
+      accentColorDesc: "Buttons, highlights and the seek bar across the app.",
+      themePitch: "Pitch black",
+      themeSystem: "Follow system",
+      uiScale: "Interface scale",
+      uiScaleDesc: "Scales the entire interface. Useful on 4K and ultrawide screens.",
+      reduceMotion: "Reduce motion",
+      reduceMotionDesc: "Turns off animations and soft transitions throughout the app.",
+      settingsPagePluginManage: "Manage plugins",
+      settingsTabStatus: "Status",
+      settingsTabQuick: "Quick settings",
+      settingsTabProviders: "Providers",
+      settingsTabAccounts: "Accounts",
+      settingsTabApiKeys: "API keys",
+      settingsTabAddons: "Addons",
+      settingsTabSourcesMain: "Sources & addons",
+      settingsTabScrapersDebrid: "Scrapers & debrid",
+      settingsTabScrapers: "Scrapers",
+      settingsTabDebrid: "Debrid",
+      cardTagNew: "New",
+      showCardTags: "Show tags on cards",
+      showCardTagsDesc: "Marks titles released in the last 30 days. Needs a known release date, so older catalogue items are never tagged.",
+      traktCommentsTitle: "COMMENTS FROM TRAKT",
+      traktCommentsTab: "Comments",
+      showRecommendations: "Show recommendations on detail pages",
+      showRecommendationsDesc: "The row of similar titles under a movie or series.",
+      traktCommentSpoiler: "Contains a spoiler \u2014 click to reveal",
+      showTraktComments: "Show comments on detail pages",
+      traktScrobble: "Real-time scrobbling",
+      traktScrobbleDesc: "Report playback to Trakt live \u2014 start, pause and stop land in your Trakt history as they happen.",
+      traktTwoWaySync: "Two-way sync",
+      traktTwoWaySyncDesc: "Every 15 minutes, watchlist changes and watched titles are merged in both directions.",
+      traktConflictRule: "First-sync conflict rule",
+      traktConflictRuleDesc: "What to do when the two sides differ and no earlier sync can tell additions from removals.",
+      traktConflictMerge: "Merge (keep both)",
+      traktConflictTrakt: "Trakt wins",
+      traktConflictLocal: "This device wins",
+      showTraktCommentsDesc: "Public Trakt comments under movies and series. Spoiler-marked ones stay hidden until you click them.",
+      debridSectionDesc: "API keys are shared across every scraper. Which service a scraper resolves through is set on that scraper under Scrapers.",
+      debridKeySaved: "Key saved",
+      debridNoKeyBadge: "No key",
+      debridKeyPlaceholder: "Paste API key",
+      debridPerScraperHint: "A key entered here is used by every scraper configured for that service.",
+      shortcutsBindableTitle: "KEYS (CLICK TO CHANGE)",
+      shortcutsTracks: "Tracks",
+      shortcutsGlobal: "Global",
+      shortcutsSubtitleCycle: "Cycle subtitle track",
+      shortcutsSubtitleDelayBack: "Subtitle delay \u22120.1 s",
+      shortcutsSubtitleDelayForward: "Subtitle delay +0.1 s",
+      shortcutsPressKey: "Press a key\u2026",
+      shortcutsReset: "Reset to default",
+      shortcutsConflict: "That key is already used by {name}. Pick another one.",
+      shortcutsBindableHint: "Esc always closes the player and cannot be rebound. Bindings are stored per profile.",
+      settingsTabLocalFiles: "Local files",
+      settingsTabThisComputer: "This computer",
+      settingsTabStorage: "Storage",
+      settingsTabHome: "Home",
+      settingsTabZapp: "Zapp",
+      settingsSearchPlaceholder: "Search settings",
+      settingsNyBadge: "NEW",
+      ovKickerDone: "DONE",
+      ovKickerAction: "ACTION",
+      ovTraktTitle: "Trakt",
+      ovTraktConnectedDesc: "Connected \u2014 playback and lists sync.",
+      ovTraktMissingDesc: "Not connected \u2014 connect to sync watch state across devices.",
+      ovOpenTracking: "Open Tracking services",
+      ovTmdbTitle: "TMDb key",
+      ovTmdbOkDesc: "Saved \u2014 catalogs and title logos load.",
+      ovTmdbDefaultDesc: "Built-in default key in use \u2014 Home keeps its rows. Set your own key for a higher quota.",
+      ovTmdbMissingDesc: "Missing \u2014 Home loses its catalog rows.",
+      ovOpenLibrary: "Open Library & metadata",
+      appLanguageDesc: "Language of the app interface. Stored per profile.",
+      settingsPageFilters: "Stream filters",
+      sfLevelTitle: "FILTERING LEVEL",
+      sfLevelStrict: "Strict",
+      sfLevelStrictDesc: "Rejects suspicious file extensions, wrong year or episode, season packs on episode searches, trailers/samples and cams.",
+      sfLevelBalanced: "Balanced",
+      sfLevelBalancedDesc: "Follows the rules below \u2014 protection against cams and screeners, no extra heuristics.",
+      sfLevelOff: "Off",
+      sfLevelOffDesc: "No filtering. Every stream from every source shows, even obvious junk.",
+      sfTogglesTitle: "RULES",
+      sfHideCam: "Hide cams",
+      sfHideTs: "Hide telesync/telecine",
+      sfHideScr: "Hide screeners",
+      sfHideBelow720p: "Hide below 720p",
+      sfForcedByStrict: "Always on at the Strict level.",
+      settingsAutosaved: "Changes saved",
+      settingsAutosaveError: "Some changes could not be saved",
       profileName: "Profile name",
       profileNamePlaceholder: "For example Family or Kids",
       createProfile: "Create profile",
@@ -164805,6 +165230,28 @@
       rememberAspectRatioDesc: "Uses your chosen aspect ratio as the default for new movies and episodes.",
       autoSkipIntro: "Auto-skip intro",
       autoSkipIntroDesc: "When enabled, intros are skipped automatically. When disabled, a Skip intro button is shown if IntroDB has a match.",
+      resumePromptEyebrow: "CONTINUE OR START OVER",
+      resumePromptBody: "You stopped at {time}. Continue from there, or start from the beginning?",
+      resumePromptResume: "Continue from {time}",
+      resumePromptRestart: "Start over",
+      askResumeOrRestart: "Ask: resume or start over",
+      askResumeOrRestartDesc: "Show a prompt when you press Play on something partially watched instead of resuming silently.",
+      seriesNameFirst: "Series name first in the player",
+      seriesNameFirstDesc: "Leads the player header with the series name instead of the episode code.",
+      heroRotationLabel: "Change title every",
+      heroRotationDesc: "How often the hero banner rotates on its own. Off means it only changes when you swipe.",
+      heroRotationNever: "Never",
+      nextEpPopupAuto: "Auto",
+      advanceAtOutro: "Skip the credits and go straight to the next episode",
+      advanceAtOutroDesc: "When an outro is detected, the next episode starts immediately instead of showing the next-episode card. Episodes without a detected outro still show the card.",
+      stayFullscreenOnClose: "Stay fullscreen when the player closes",
+      stayFullscreenOnCloseDesc: "The window keeps fullscreen instead of dropping back to windowed mode.",
+      showTitleOnStart: "Show title when playback starts",
+      showTitleOnStartDesc: "The title fades in for a few seconds and then disappears.",
+      hideSkipButtonAfter: "Hide the Skip button after",
+      hideSkipButtonAfterDesc: "The button hides itself so a false intro match does not sit on screen all episode.",
+      hideUnreleasedHome: "Hide unreleased titles on Home",
+      hideUnreleasedHomeDesc: "Titles whose release year is still in the future are left out of Home rows.",
       hideWatchedMoviesHome: "Hide watched movies on Home",
       hideWatchedMoviesHomeDesc: "Exclude movies marked as watched from Home grids and sliders.",
       stillWatching: "Still watching?",
@@ -164813,8 +165260,94 @@
       stillWatchingMaxMinutesDesc: "Default matches Netflix timing: 90 minutes. Prompt appears only for TV series after at least 3 episodes.",
       stillWatchingContinue: "Continue watching",
       stillWatchingExit: "Close player",
+      spoilersGroupTitle: "SPOILERS",
+      spoilerBlurEnabled: "Blur spoilers",
+      spoilerBlurEnabledDesc: "Hides spoiler-prone episode details in episode lists until you have watched them. Hover an episode to peek.",
+      spoilerBlurThumbnails: "Blur thumbnails",
+      spoilerBlurTitles: "Blur titles",
+      spoilerBlurDescriptions: "Blur descriptions",
+      spoilerBlurDetailImages: "Blur episode images on detail page",
+      spoilerBlurDetailImagesDesc: "Blurs episode stills on the details page until you hover to reveal.",
+      spoilerKeepNextVisible: "Keep the next episode visible",
+      spoilerKeepNextVisibleDesc: "Leave the episode you are up to clear and only blur the ones after it.",
+      spoilerBlurStreamBackdrop: "Blur stream backdrop",
+      spoilerBlurStreamBackdropDesc: "Adds a blurred glass effect behind the stream picker panel.",
+      spoilerHoverToPeek: "Hover to peek",
+      spoilerPreviewTitle1: "The Last Stand",
+      spoilerPreviewSynopsis1: "With the city surrounded, an unlikely alliance forms as a long-buried secret finally comes to light.",
+      spoilerPreviewTitle2: "No Way Out",
+      spoilerPreviewSynopsis2: "Loyalties shatter as the survivors realize the enemy has been among them all along.",
       autoplayMaxStreamSize: "Max stream size",
       autoplayMaxStreamSizeDesc: "Optional limit in GB for auto-play attempts. Empty means no size cap.",
+      autoplayMaxResolution: "Max resolution for auto-play",
+      autoplayMaxResolutionDesc: "Skip sources above this resolution when auto-playing. Sources with an unknown resolution are still allowed.",
+      autoplayMaxResolutionUnlimited: "Unlimited",
+      preferEmbeddedSubtitles: "Prefer embedded subtitles",
+      preferEmbeddedSubtitlesDesc: "When picking subtitles automatically, try tracks embedded in the video first \u2014 they are always in sync.",
+      peekSeasonWord: "season",
+      peekSeasonsWord: "seasons",
+      peekOpenDetails: "More info",
+      cardPeek: "Hover preview on cards",
+      cardPeekDesc: "Rest the pointer on a poster to expand a preview with backdrop, genres and description.",
+      engineGroupTitle: "ENGINE",
+      engineAuto: "Auto",
+      engineStreams: "Engine for streams",
+      engineStreamsDesc: "Auto uses the native engine (mpv) in the app. HTML5 forces the browser player \u2014 useful when mpv misbehaves with a source.",
+      engineLocal: "Engine for local files",
+      engineLocalDesc: "Playback engine for files from your library folders.",
+      rtInterpolation: "Motion interpolation",
+      rtInterpolationDesc: "Resample video to your display\u2019s refresh rate for smoother pans. Uses more GPU.",
+      rtAnime4k: "Anime4K upscaling",
+      rtAnime4kDesc: "Shader-based upscaling tuned for anime. Downloads the shader pack (~1 MB) on first use.",
+      rtBuffer: "Large buffer for unstable connections",
+      rtBufferDesc: "Read ahead ~5\xD7 more of the stream at the cost of RAM. Helps sources that stall in bursts.",
+      advMpvConfTitle: "Raw mpv.conf",
+      advMpvConfHint: "One property=value per line, applied to the player after all managed settings. For power users.",
+      advMpvConfNote: "Applies on the next playback start. Invalid lines are ignored.",
+      extraSubtitleLanguages: "More subtitle languages",
+      extraSubtitleLanguagesDesc: "Ordered list of language codes tried after the default and fallback, comma-separated.",
+      forcedSubtitlesWhenAudioMatches: "Forced subtitles when audio matches",
+      forcedSubtitlesWhenAudioMatchesDesc: "When subtitles are turned off because the audio is already in your language, still show forced tracks (foreign dialogue, signs).",
+      upgradeSubtitleWhenBetter: "Upgrade subtitles when better ones load",
+      upgradeSubtitleWhenBetterDesc: "Swap to a higher-priority subtitle if one arrives after playback starts. Manual picks are never overridden.",
+      ipDescRpdb: "Posters with the rating burned in, on every card. Free key at ratingposterdb.com.",
+      ipDescMdblist: "Aggregated scores from Trakt, Letterboxd and more on the details page. Free key at mdblist.com.",
+      ipRpdbHint: "With a key set, card posters swap to RPDB rated posters (IMDb-keyed).",
+      ipMdblistHint: "Shown as extra badges next to the year on the details page.",
+      ratingBadgePosition: "Rating badge position",
+      ratingBadgePositionDesc: "Which corner of the poster the score badge sits in.",
+      badgePosTr: "Top right",
+      badgePosTl: "Top left",
+      badgePosBr: "Bottom right",
+      badgePosBl: "Bottom left",
+      hideCardTitles: "Hide titles under posters",
+      hideCardTitlesDesc: "Show only the artwork \u2014 no title or meta line under the cards.",
+      posterScale: "Poster size",
+      posterScaleDesc: "Global card size on home rows: compact fits more, large shows fewer but bigger.",
+      posterScaleCompact: "Compact",
+      posterScaleStandard: "Standard",
+      posterScaleLarge: "Large",
+      sbTitle: "Seek bar",
+      sbDesc: "Style, height and color of the timeline in the player.",
+      sbStyleLabel: "Style",
+      sbStyleFlat: "Flat",
+      sbStyleGlass: "Glass",
+      sbStylePinstripe: "Pinstripe",
+      sbHeightLabel: "Height",
+      sbHeightSlim: "Slim",
+      sbHeightStandard: "Standard",
+      sbHeightChunky: "Chunky",
+      sbColorLabel: "Color",
+      sbColorAccent: "Accent",
+      sbColorWhite: "White",
+      sbColorRed: "Red",
+      sbColorAmber: "Amber",
+      sbDotLabel: "Drag dot",
+      sbDotDesc: "Show the round handle on the seek bar.",
+      detailsTrailerLabel: "Trailer on the details page",
+      detailsTrailerHint: "After 2.5 s on a details page, the backdrop fades into the muted trailer.",
+      ipSourceEnabled: "Use this source",
+      vtLiveNote: "Applies live and saves to Settings",
       introDebugReady: "IntroDB ready",
       introDebugLoading: "IntroDB loading",
       introDebugFound: "Intro found",
@@ -164961,6 +165494,10 @@
       watchlistEmpty: "No starred titles yet.",
       watchlistEmptyHint: "Star titles in the release calendar to follow premieres.",
       seriesWatchlistEmpty: "No followed series yet.",
+      seriesWatchlistEmptyHint: "Follow a series from its detail page and new episodes show up here.",
+      noMoviesInListYetHint: "Add movies to My list from any detail page to save them here.",
+      watchlistConnectTraktHint: "Connect Trakt in Settings to sync this list across devices.",
+      watchlistConnectTraktCta: "Connect Trakt",
       watchlistNoNewEpisodes: "No new episodes right now.",
       newEpisodeBadge: "New ep",
       seriesNewCount: "{{n}} new",
@@ -164988,6 +165525,11 @@
       onboardingWelcomeEyebrow: "WELCOME",
       onboardingWelcomeTitle: "Welcome to Lumio",
       onboardingWelcomeDesc: "Your media player and hub for movies and series \u2014 play your own library and keep everything you follow in one place.",
+      onboardingLanguageEyebrow: "Language",
+      onboardingLanguageTitle: "Choose your language.",
+      onboardingLanguageDesc: "Pick the app language and your preferred subtitle language. You can change both at any time in Settings.",
+      onboardingAppLanguageLabel: "App language",
+      onboardingLanguageHint: "Subtitles in your preferred language are selected automatically when available, with the fallback used when the primary is missing.",
       onboardingPluginsEyebrow: "PLUGINS",
       onboardingPluginsTitle: "Choose your plugins",
       onboardingPluginsDesc: "Tick the plugins you want to install right away. Everything can be added or removed later under Settings \u2192 Plugins.",
@@ -165170,6 +165712,22 @@
       hpGenreThriller: "Thriller",
       hpGenreWar: "War",
       hpGenreWestern: "Western",
+      hpGenreActionAdventure: "Action & Adventure",
+      hpGenreKids: "Kids",
+      hpGenreReality: "Reality",
+      hpGenreSciFiFantasy: "Sci-Fi & Fantasy",
+      hpGenreWarPolitics: "War & Politics",
+      hpHeroMediaTypeLabel: "Content",
+      hpHeroMediaTypeMovies: "Movies",
+      hpHeroMediaTypeSeries: "Series",
+      hpHeroMediaTypeMixed: "Movies & series",
+      hpRowDensityTitle: "Row density",
+      hpRowDensityHint: "How tightly Home rows are stacked, and how large their headings are.",
+      hpRowDensityLabel: "Density",
+      hpRowHeadingLabel: "Heading size",
+      hpDensityCompact: "Compact",
+      hpDensityNormal: "Normal",
+      hpDensityAiry: "Airy",
       hpLayoutSlider: "Carousel",
       hpLayoutGrid: "Show all",
       hpLayoutFull: "Large banner",
@@ -165482,6 +166040,18 @@
       liveTvHomeSource: "K\xE4lla f\xF6r Live TV",
       liveTvAllChannels: "Alla kanaler",
       m3uNoUrl: "Ingen M3U-l\xE4nk konfigurerad. L\xE4gg till en i Inst\xE4llningar.",
+      liveTvEmptyEyebrow: "LIVE TV",
+      liveTvEmptyTitle: "Anslut en spellista f\xF6r att komma ig\xE5ng.",
+      liveTvEmptyBody: "Anslut valfri IPTV-leverant\xF6r. Kanaler sorteras per kategori, EPG h\xE4mtas automatiskt n\xE4r din leverant\xF6r erbjuder det, och uppspelningen sker via inbyggd mpv.",
+      liveTvEmptyCta: "Anslut en leverant\xF6r",
+      liveTvFeatureListsTitle: "Kanallistor",
+      liveTvFeatureListsDesc: "Bygg egna listor och f\xE4st favoritkanaler h\xF6gst upp.",
+      liveTvFeatureEpgTitle: "Live-EPG",
+      liveTvFeatureEpgDesc: "Visar nu och h\xE4rn\xE4st n\xE4r din leverant\xF6r erbjuder tabl\xE5data.",
+      liveTvFeatureMpvTitle: "Inbyggd mpv",
+      liveTvFeatureMpvDesc: "HEVC, HDR och flerkanalsljud, plus riktiga undertext- och ljudmenyer.",
+      liveTvFeatureLocalTitle: "Bara lokalt",
+      liveTvFeatureLocalDesc: "Spellistl\xE4nkar sparas p\xE5 den h\xE4r enheten. Inget l\xE4mnar din dator.",
       m3uLoading: "Laddar kanaler\u2026",
       m3uError: "Kunde inte ladda kanaler.",
       m3uChannels: "kanaler",
@@ -165821,7 +166391,376 @@
       settingsTitle: "Inst\xE4llningar",
       settingsDesc: "Konfigurera integrationer f\xF6r den h\xE4r appen.",
       profilesTitle: "Profiler",
-      profilesDesc: "Skapa separata lokala profiler med egen browser-cache och egen uppspelningshistorik.",
+      profilesDesc: "Alla som anv\xE4nder den h\xE4r enheten f\xE5r egen tittarhistorik, avatar, f\xE4rg och valfri PIN. Byt n\xE4r som helst.",
+      profileEditTitle: "Redigera profil",
+      profileAvatarLabel: "Avatar",
+      profileColorLabel: "F\xE4rg",
+      profileNoAvatar: "Ingen avatar (initial)",
+      profileSharedSettingsTitle: "Inst\xE4llningar f\xF6r denna profil",
+      profileShareWithAll: "Dela inst\xE4llningar med alla profiler",
+      profileShareWithAllDesc: "En upps\xE4ttning inst\xE4llningar som alla p\xE5 den h\xE4r enheten anv\xE4nder. Tittarhistorik och listor f\xF6rblir personliga.",
+      profileIndependentSettings: "Egna inst\xE4llningar f\xF6r denna profil",
+      profileIndependentSettingsDesc: "Profilen beh\xE5ller sina egna inst\xE4llningar, separat fr\xE5n alla andra.",
+      profilePrimaryBadge: "Prim\xE4r",
+      profileLockedBadge: "L\xE5st",
+      profileEditAction: "Redigera",
+      profileWhoIsWatching: "Vem tittar?",
+      profileCustomizeAction: "Anpassa",
+      profileAddTile: "L\xE4gg till",
+      profilesStripHint: "L\xE4gg till en profil f\xF6r n\xE5gon annan s\xE5 beh\xE5ller alla sitt eget Forts\xE4tt titta, sin historik och sina framsteg.",
+      settingsGroupOverview: "\xD6VERSIKT",
+      settingsGroupAccount: "KONTO",
+      settingsGroupStreaming: "STR\xD6MNING",
+      settingsGroupPlayback: "UPPSPELNING",
+      settingsGroupAppearance: "UTSEENDE",
+      settingsGroupPlugins: "PLUGINS",
+      settingsGroupNotifications: "AVISERINGAR",
+      webhooksTitle: "Webhooks & regler",
+      webhooksDesc: "Skicka en ping till Discord eller Telegram n\xE4r n\xE5got h\xE4nder. Varje regel k\xF6rs f\xF6r sig.",
+      webhooksWhereTitle: "Vart aviseringar g\xE5r",
+      webhooksUrlLabel: "Discord- eller Telegram-URL",
+      webhooksUrlDesc: "En Discord-webhook-URL, eller en Telegram-bot-URL med chat_id (https://api.telegram.org/bot<token>/sendMessage?chat_id=<id>).",
+      webhooksTest: "Testa",
+      webhooksTestOk: "Skickat!",
+      webhooksTestFailed: "Testet misslyckades",
+      webhooksTestMessage: "Lumio: webhooken funkar \u{1F389}",
+      webhooksWhatTitle: "Vad som skickas",
+      webhooksSourceCalendar: "Min releasekalender",
+      webhooksSourceCalendarDesc: "Titlar du bevakar i releasekalendern, samma dag de har premi\xE4r.",
+      webhooksSourceTrakt: "Mina Trakt-listor",
+      webhooksSourceTraktDesc: "Nya titlar som dyker upp i listor du f\xF6ljer p\xE5 Trakt.",
+      webhooksSourceTraktNeedsAuth: "Kr\xE4ver ett anslutet Trakt-konto.",
+      webhooksTypesTitle: "Mediatyper",
+      webhooksTypesLabel: "Filtrera efter typ",
+      webhooksTypesDesc: "G\xE4ller efter att k\xE4llorna slagits samman.",
+      webhooksTypeAll: "Allt",
+      webhooksRunNow: "K\xF6r reglerna nu",
+      webhooksRunSent: "Skickade {n} avisering(ar)",
+      webhooksRunNothing: "Inget nytt att skicka",
+      webhooksScheduleHint: "Reglerna k\xF6rs automatiskt strax efter start och var 6:e timme medan appen \xE4r ig\xE5ng.",
+      settingsGroupSystem: "SYSTEM",
+      settingsPageOverview: "\xD6versikt",
+      settingsPageAccount: "Konto & profiler",
+      settingsPageLibrary: "Bibliotek & metadata",
+      settingsPageTracking: "Sp\xE5rningstj\xE4nster",
+      settingsPageSources: "K\xE4llor & kataloger",
+      settingsPageServers: "Server & n\xE4tverk",
+      settingsPagePlayer: "Spelare & kvalitet",
+      settingsPageHome: "Hem & utseende",
+      settingsPageTheme: "Tema & skala",
+      heroTrailerLabel: "Spela trailer i heron",
+      heroTrailerHint: "Efter n\xE5gra sekunder p\xE5 en titel tonas en ljudl\xF6s trailer in bakom inneh\xE5llet.",
+      playerLayoutTitle: "Spelarlayout",
+      plTabControls: "Kontroller",
+      plTabTimeVolume: "Tid & volym",
+      plTabOverlays: "\xD6verl\xE4gg",
+      plControlsEyebrow: "Kontroller",
+      plEdit: "Redigera",
+      plAppliesInstantly: "\xC4ndringar sparas direkt",
+      plResetPage: "\xC5terst\xE4ll sidan till standard",
+      plTimeFormatDesc: "Vad klockm\xE4rkena p\xE5 s\xF6kraden visar.",
+      plVolumeTitle: "Volymkontroll",
+      plVolumeDesc: "Hur volymwidgeten visas i kontrollraden.",
+      plVolSlider: "Skjutreglage",
+      plVolSliderDesc: "Ett horisontellt reglage bredvid h\xF6gtalaren.",
+      plVolStepper: "Steg",
+      plVolStepperDesc: "\u2212/+-knappar med procentvisning.",
+      plVolIcon: "Bara ikon",
+      plVolIconDesc: "Bara h\xF6gtalaren \u2014 klick v\xE4xlar ljud av.",
+      plEditorEyebrow: "Layoutredigerare",
+      plEditorClickHint: "Klicka p\xE5 en kontroll i f\xF6rhandsvisningen f\xF6r att flytta eller d\xF6lja den.",
+      plEditorSummary: "{visible} synliga, {hidden} dolda.",
+      plEditorOpen: "Redigera layouten",
+      plEditorSave: "Spara",
+      plEditorDiscard: "\xC5ngra",
+      plEditorDiscardConfirm: "Sl\xE4ng osparade layout\xE4ndringar?",
+      plEditorHidden: "Dolda",
+      plEditorHiddenEmpty: "Inget dolt \u2014 klicka p\xE5 en kontroll och anv\xE4nd \xF6gat f\xF6r att d\xF6lja den.",
+      plEditorControl: "Kontroll",
+      plEditorOrder: "Ordning",
+      plEditorVisible: "Synlig",
+      plTimeFormatTitle: "Tidsformat p\xE5 s\xF6kraden",
+      plTimeElapsedTotal: "F\xF6rfluten och total",
+      plTimeElapsedTotalDesc: "22:22 / 1:47:00 \u2014 dagens utseende.",
+      plTimeRemaining: "Bara kvar",
+      plTimeRemainingDesc: "En enda -1:24:38-etikett som r\xE4knar ner.",
+      plTimeElapsedOnly: "Bara f\xF6rfluten",
+      plTimeElapsedOnlyDesc: "En enda 22:22-etikett.",
+      playerLayoutDesc: "Vilka kontroller spelarens rad visar, och i vilken ordning.",
+      playerLayoutHint: "\xC4ndringar g\xE4ller direkt. Mellanrummet delar v\xE4nster och h\xF6ger kontrollgrupp; Spela/Pausa kan inte d\xF6ljas.",
+      plPlayPause: "Spela/Pausa",
+      plSeekBack: "Spola bak\xE5t 10s",
+      plSeekForward: "Spola fram\xE5t 10s",
+      plTime: "Tidsvisning",
+      plSpacer: "Mellanrum (v\xE4nster/h\xF6ger-delning)",
+      plSegmentBadges: "Intro/outro-m\xE4rken",
+      plMute: "Ljud av",
+      plVolume: "Volymreglage",
+      plFullscreen: "Helsk\xE4rm",
+      plShow: "Visa",
+      plHide: "D\xF6lj",
+      settingsTabTheme: "Tema",
+      themeScaleTitle: "Tema & skala",
+      appTheme: "Tema",
+      appThemeDesc: "Bakgrundston i hela appen.",
+      themeMidnight: "Midnatt",
+      themeMidnightDesc: "Dagens Lumio: djupbl\xE5 bakgrund.",
+      themePitchDesc: "N\xE4stan svart f\xF6r OLED och m\xF6rka rum.",
+      themeSystemDesc: "Byter med macOS utseende-inst\xE4llning.",
+      accentColor: "Accentf\xE4rg",
+      profileSharedTab: "Delade inst\xE4llningar",
+      plTabBehavior: "Beteende",
+      settingsPageLang: "Spr\xE5k",
+      bugEyebrow: "Rapportera en bugg",
+      bugTitle: "Rapportera en bugg",
+      bugHint: "En specifik sammanfattning landar snabbare \xE4n ett l\xE5ngt stycke. Steg f\xF6r att \xE5terskapa hj\xE4lper mest av allt.",
+      bugSummaryLabel: "Vad gick s\xF6nder?",
+      bugSummaryDesc: "En mening om vad som gick fel.",
+      bugSummaryPlaceholder: "Spelaren fryser n\xE4r jag\u2026",
+      bugStepsLabel: "Steg f\xF6r att \xE5terskapa",
+      bugStepsDesc: "Vad gjorde du precis innan det h\xE4nde?",
+      bugStepsPlaceholder: "1. \xD6ppna\u2026\n2. Tryck\u2026\n3. \u2026",
+      bugCopyReport: "Kopiera rapporten",
+      bugCopyNote: "Version och plattform bifogas automatiskt \u2014 klistra in d\xE4r du rapporterar.",
+      bugNoSummary: "Buggrapport",
+      bugLogEyebrow: "Spelarlogg",
+      bugLogTitle: "Exportera spelarloggen",
+      bugLogHint: "Om en str\xF6m eller spelaren beter sig fel, bifoga den h\xE4r filen i rapporten.",
+      bugLogExport: "Ladda ner logg",
+      bugLogError: "Kunde inte l\xE4sa loggen.",
+      advTitle: "Avancerat",
+      advTabMaintenance: "Underh\xE5ll",
+      advTabAbout: "Om",
+      advBackupEyebrow: "Backup & \xE5terst\xE4llning",
+      advBackupTitle: "Hela din setup i en fil",
+      advBackupHint: "Profiler, inst\xE4llningar, watchlists, historik \u2014 allt. \xC5terst\xE4ll p\xE5 en ny dator eller ha som f\xF6rs\xE4kring.",
+      advExport: "Exportera backup",
+      advImport: "\xC5terst\xE4ll fr\xE5n fil",
+      advRestoreConfirm: "\xC5terst\xE4lla backupen? Nuvarande v\xE4rden skrivs \xF6ver och appen laddas om.",
+      advBackupError: "Kunde inte l\xE4sa backupfilen.",
+      advDownloadsEyebrow: "Nedladdningar",
+      advDownloadsTitle: "Nedladdningsmapp",
+      advDownloadsHint: "Var spelaren sparar video. N\xE4r satt hoppas mappv\xE4ljaren \xF6ver.",
+      advDownloadsUnset: "Fr\xE5ga varje g\xE5ng",
+      advDownloadsPick: "V\xE4lj mapp",
+      advDownloadsClear: "Rensa",
+      advOnboardingEyebrow: "Onboarding",
+      advOnboardingTitle: "Spela upp guiden igen",
+      advOnboardingHint: "K\xF6r f\xF6rstag\xE5ngsguiden igen f\xF6r den h\xE4r profilen.",
+      advOnboardingReplay: "Spela upp onboardingen",
+      advAboutEyebrow: "Om",
+      advAboutHint: "Version och plattform \u2014 bra att ha vid buggrapport.",
+      advAboutVersion: "Version",
+      advLegalEyebrow: "Juridiskt",
+      advLegalP1: 'Lumio \xE4r en frist\xE5ende mediaklient. Den \xE4r inte ansluten till, godk\xE4nd av, sponsrad av eller p\xE5 n\xE5got s\xE4tt associerad med n\xE5gon streamingtj\xE4nst, addon-utvecklare, debrid-leverant\xF6r eller varum\xE4rkesinnehavare som refereras i appen. "TMDb", "Trakt", "IMDb", "Real-Debrid", "TorBox", "OpenSubtitles", "Plex", "Netflix", "Disney+" och alla andra namn, logotyper och varum\xE4rken tillh\xF6r sina respektive \xE4gare och anv\xE4nds enbart f\xF6r kompatibilitet och identifiering.',
+      advLegalP2: "Lumio varken lagrar, distribuerar eller indexerar n\xE5got medieinneh\xE5ll. Alla str\xF6mmar kommer fr\xE5n tredjepartsk\xE4llor, addons eller tj\xE4nster som du sj\xE4lv konfigurerar. Du ansvarar f\xF6r vad du v\xE4ljer att spela upp och f\xF6r att f\xF6lja lagarna i din jurisdiktion.",
+      advAboutPlatform: "Plattform",
+      subStyleEyebrow: "Undertextstil",
+      subStyleTitle: "Hur undertexter ser ut",
+      subStyleHint: "Storlek, position och f\xE4rger under uppspelning \u2014 f\xF6rhandsvisning nedan.",
+      langMetaEyebrow: "Metadata",
+      langMetaTitle: "App- & metadataspr\xE5k",
+      langMetaHint: "Vilket spr\xE5k gr\xE4nssnittet och titelinformationen anv\xE4nder.",
+      langAppLanguage: "Appspr\xE5k",
+      langAppLanguageDesc: "Spr\xE5ket i sj\xE4lva Lumio-gr\xE4nssnittet.",
+      langMetadataLanguage: "Metadataspr\xE5k",
+      langRegion: "Region",
+      langRegionDesc: "Landskod f\xF6r tillg\xE4nglighet \u2014 vilka streamingtj\xE4nster och releasedatum som g\xE4ller.",
+      langMetadataLanguageDesc: "Titlar, beskrivningar och taglines fr\xE5n TMDb visas p\xE5 detta spr\xE5k n\xE4r \xF6vers\xE4ttning finns.",
+      langBehaviorGroup: "AUTOVAL",
+      subtitlesOffByDefault: "Starta med undertexter av",
+      subtitlesOffByDefaultDesc: "Undertexter hittas och listas fortfarande i CC-menyn \u2014 de sl\xE5s bara aldrig p\xE5 av sig sj\xE4lva.",
+      trackBlockWords: "V\xE4lj aldrig sp\xE5r som inneh\xE5ller",
+      trackBlockWordsDesc: "Kommaseparerade ord. Matchande undertextsp\xE5r hoppas \xF6ver vid autoval; manuella val funkar \xE4nd\xE5.",
+      trackBlockWordsPlaceholder: "commentary, descriptive",
+      vtTabLabel: "Bildjustering",
+      vtEyebrow: "Bildjustering",
+      playButtonMode: "Play-knappens beteende",
+      playButtonModeDesc: "Direkt startar b\xE4sta str\xF6mmen p\xE5 en g\xE5ng; Manuell \xF6ppnar str\xF6mlistan s\xE5 du v\xE4ljer k\xE4lla och kvalitet.",
+      playModeInstant: "Direkt",
+      playModeManual: "Manuell v\xE4ljare",
+      showStreamQuality: "Str\xF6mkvalitet i spelaren",
+      showStreamQualityDesc: "Visar vad som faktiskt spelas (uppl\xF6sning \xB7 codec) under titeln.",
+      rtEyebrow: "Rendering",
+      rtTitle: "Kvalitet & HDR",
+      rtHint: "Hur desktop-motorn avkodar och skalar bilden.",
+      rtProfile: "Kvalitetsprofil",
+      rtProfileDesc: "L\xE4tt skonar svaga maskiner, Max anv\xE4nder h\xF6gkvalitativa skalare och debanding (kr\xE4ver hyfsad GPU).",
+      rtProfileLight: "L\xE4tt",
+      rtProfileBalanced: "Balanserad",
+      rtProfileMax: "Max",
+      rtToneMapping: "HDR-tone-mapping",
+      rtToneMappingDesc: "Hur HDR-material mappas till din sk\xE4rm. Prova hable eller bt.2390 om HDR ser urblekt ut.",
+      rtInverseTm: "Omv\xE4nd tone-mapping",
+      rtInverseTmDesc: "Expanderar SDR-material mot HDR p\xE5 kapabla sk\xE4rmar.",
+      rtHwdec: "H\xE5rdvaruacceleration",
+      rtHwdecDesc: "GPU-avkodning \u2014 sn\xE4llare mot batteri och CPU. St\xE4ng bara av vid fels\xF6kning.",
+      rtEngineNote: "Kr\xE4ver den inbyggda desktop-motorn (mpv).",
+      atEyebrow: "Ljudjustering",
+      atTitle: "Forma ljudet",
+      atHint: "Utan att r\xF6ra systemets EQ. G\xE4ller den inbyggda desktop-motorn; webbspelaren l\xE4mnar ljudet or\xF6rt.",
+      atNormalize: "Normalisera ljudstyrka",
+      atNormalizeDesc: "J\xE4mnar ut tyst dialog och h\xF6ga actionscener.",
+      atBass: "Basboost",
+      atBassDesc: "En +6 dB l\xE5g-shelf f\xF6r tunna h\xF6gtalare.",
+      atVoice: "R\xF6stklarhet",
+      atVoiceDesc: "Lyfter dialogregistret s\xE5 r\xF6ster sk\xE4r igenom.",
+      atDownmix: "Mixa ner surround till stereo",
+      atDownmixDesc: "F\xE4ller ihop 5.1/7.1 till tv\xE5 kanaler \u2014 laptoph\xF6gtalare och h\xF6rlurar.",
+      atEngineNote: "Kr\xE4ver den inbyggda desktop-motorn (mpv). Nattl\xE4get l\xE4ggs ovanp\xE5.",
+      vtTitle: "Bildjusteringar",
+      vtHint: "G\xE4ller live i en \xF6ppen spelare och f\xF6r all uppspelning fram\xE5t.",
+      vtBrightness: "Ljusstyrka",
+      vtContrast: "Kontrast",
+      vtSaturation: "M\xE4ttnad",
+      vtGamma: "Gamma (mellantoner)",
+      vtSharpen: "Sk\xE4rpa",
+      vtPresetStandard: "Standard",
+      vtPresetBrighter: "Ljusare",
+      vtPresetVivid: "Levande",
+      vtPresetCinema: "Bio-m\xF6rkt",
+      vtPresetSharp: "Skarp",
+      vtEngineNote: "Gamma och sk\xE4rpa kr\xE4ver den inbyggda desktop-motorn; webbspelaren till\xE4mpar resten.",
+      sfTabSafety: "S\xE4kerhet",
+      sfDisplayEyebrow: "Visning",
+      sfDisplayHint: "Sl\xE4pptyper som aldrig dyker upp i str\xF6mlistan.",
+      plTabNextEp: "N\xE4sta avsnitt",
+      plNextEpHint: "Autoplay, popupen och outro-beteendet mellan avsnitt.",
+      langAudioSubTab: "Ljud & undertext",
+      langAudioSubTitle: "Standard f\xF6r ljud & undertext",
+      langAudioSubHint: "F\xF6redragna spr\xE5k och hur undertexter ser ut i spelaren.",
+      spoilersHint: "Vad som blurras tills du v\xE4ljer att visa det.",
+      profileCreateDone: "Klart \u2014 byt till profilen",
+      libContentEyebrow: "Inneh\xE5llsfilter",
+      libContentTitle: "Vad som f\xE5r synas p\xE5 Hem",
+      libContentHint: "Sedda och ej sl\xE4ppta titlar kan h\xE5llas borta fr\xE5n katalograderna.",
+      libCardsEyebrow: "Kortm\xE4rkning",
+      libCardsTitle: "M\xE4rken p\xE5 posterkort",
+      libCardsHint: "Taggar och mark\xF6rer som visas p\xE5 posterkort p\xE5 Hem och i rutn\xE4t.",
+      profilesEyebrow: "Profiler",
+      profileRequirePin: "Kr\xE4v PIN vid profilbyte",
+      profileRequirePinDesc: "Valfri fyrsiffrig kod per profil. Utan PIN byter vem som helst profil direkt.",
+      profileStartFrom: "Starta nya profiler fr\xE5n",
+      profileStartFromDesc: "Vad en ny profil \xE4rver n\xE4r den skapas.",
+      profileStartFromCurrent: "Allt som det ser ut nu",
+      profileStartFromDefaults: "Standardinst\xE4llningar",
+      trackingSyncEyebrow: "Vad som synkas",
+      trackingSyncHint: "Hur Lumio och Trakt utbyter uppspelning och list\xE4ndringar.",
+      trackingCommunityEyebrow: "Community",
+      trackingCommunityHint: "Publikt inneh\xE5ll fr\xE5n andra Trakt-anv\xE4ndare p\xE5 dina detaljsidor.",
+      profileSharedHint: "G\xE4ller hela inst\xE4llningspanelen, inte bara den h\xE4r sidan.",
+      profileSharedNoProfile: "Enheten k\xF6r i delat l\xE4ge tills en profil finns \u2014 sedan g\xF6r varje profil sitt eget val.",
+      profileSharedEyebrow: "Inst\xE4llningar per profil",
+      fontPair: "Typografi",
+      fontPairDesc: "Typsnittspar f\xF6r gr\xE4nssnitt och rubriker.",
+      cardRadius: "H\xF6rnradie p\xE5 posterkort",
+      cardRadiusDesc: "Rundning p\xE5 posterkort p\xE5 hem och i rutn\xE4t.",
+      cardRadiusSquare: "Fyrkantig",
+      tsTitle: "Dina teman",
+      tsNew: "Nytt tema",
+      tsImport: "Importera",
+      tsImportFailed: "Kunde inte l\xE4sa temafilen.",
+      tsEmpty: "Inga egna teman \xE4nnu \u2014 skapa ett s\xE5 f\xF6rhandsvisas hela appen live medan du redigerar.",
+      tsUnnamed: "Namnl\xF6st tema",
+      tsActive: "Aktivt",
+      tsUse: "Anv\xE4nd",
+      tsExport: "Exportera",
+      tsDelete: "Ta bort",
+      tsNamePlaceholder: "Temanamn",
+      tsCssPlaceholder: "Egen CSS (valfritt) \u2014 injiceras medan temat \xE4r aktivt",
+      tsLivePreview: "Appen f\xF6rhandsvisar dina \xE4ndringar live.",
+      tsBg: "Bakgrund",
+      tsSurface: "Yta",
+      tsElevated: "Upph\xF6jd",
+      tsBorder: "Kant",
+      tsAccent: "Accent",
+      accentColorDesc: "Knappar, markeringar och s\xF6kraden i hela appen.",
+      themePitch: "Kolsvart",
+      themeSystem: "F\xF6lj systemet",
+      uiScale: "Gr\xE4nssnittsskala",
+      uiScaleDesc: "Skalar hela gr\xE4nssnittet. Bra p\xE5 4K- och ultrawide-sk\xE4rmar.",
+      reduceMotion: "Minska r\xF6relse",
+      reduceMotionDesc: "St\xE4nger av animationer och mjuka \xF6verg\xE5ngar i hela appen.",
+      settingsPagePluginManage: "Hantera plugins",
+      settingsTabStatus: "Status",
+      settingsTabQuick: "Snabbinst\xE4llningar",
+      settingsTabProviders: "Leverant\xF6rer",
+      settingsTabAccounts: "Konton",
+      settingsTabApiKeys: "API-nycklar",
+      settingsTabAddons: "Addons",
+      settingsTabSourcesMain: "K\xE4llor & addons",
+      settingsTabScrapersDebrid: "Scrapers & debrid",
+      settingsTabScrapers: "Scrapers",
+      settingsTabDebrid: "Debrid",
+      cardTagNew: "Nyhet",
+      showCardTags: "Visa taggar p\xE5 kort",
+      showCardTagsDesc: "M\xE4rker titlar som sl\xE4ppts de senaste 30 dagarna. Kr\xE4ver k\xE4nt releasedatum, s\xE5 \xE4ldre katalogtitlar taggas aldrig.",
+      traktCommentsTitle: "KOMMENTARER FR\xC5N TRAKT",
+      traktCommentsTab: "Kommentarer",
+      showRecommendations: "Visa rekommendationer p\xE5 detaljsidor",
+      showRecommendationsDesc: "Raden med liknande titlar under en film eller serie.",
+      traktCommentSpoiler: "Inneh\xE5ller spoiler \u2014 klicka f\xF6r att visa",
+      showTraktComments: "Visa kommentarer p\xE5 detaljsidor",
+      traktScrobble: "Realtidsscrobbling",
+      traktScrobbleDesc: "Rapportera uppspelning till Trakt live \u2014 start, paus och stopp hamnar i din Trakt-historik direkt.",
+      traktTwoWaySync: "Tv\xE5v\xE4gssynk",
+      traktTwoWaySyncDesc: "Var 15:e minut sl\xE5s watchlist-\xE4ndringar och sedda titlar ihop i b\xE5da riktningarna.",
+      traktConflictRule: "Konfliktregel vid f\xF6rsta synken",
+      traktConflictRuleDesc: "Vad som g\xE4ller n\xE4r sidorna skiljer sig och ingen tidigare synk kan skilja tillagt fr\xE5n borttaget.",
+      traktConflictMerge: "Sl\xE5 ihop (beh\xE5ll b\xE5da)",
+      traktConflictTrakt: "Trakt vinner",
+      traktConflictLocal: "Den h\xE4r enheten vinner",
+      showTraktCommentsDesc: "Publika Trakt-kommentarer under filmer och serier. Spoilerm\xE4rkta d\xF6ljs tills du klickar p\xE5 dem.",
+      debridSectionDesc: "API-nycklarna delas mellan alla scrapers. Vilken tj\xE4nst en scraper anv\xE4nder st\xE4lls p\xE5 den scrapern under Scrapers.",
+      debridKeySaved: "Nyckel sparad",
+      debridNoKeyBadge: "Ingen nyckel",
+      debridKeyPlaceholder: "Klistra in API-nyckel",
+      debridPerScraperHint: "En nyckel h\xE4r anv\xE4nds av alla scrapers som \xE4r konfigurerade f\xF6r den tj\xE4nsten.",
+      shortcutsBindableTitle: "TANGENTER (KLICKA F\xD6R ATT \xC4NDRA)",
+      shortcutsTracks: "Sp\xE5r",
+      shortcutsGlobal: "Globalt",
+      shortcutsSubtitleCycle: "Byt undertextsp\xE5r",
+      shortcutsSubtitleDelayBack: "Undertextf\xF6rdr\xF6jning \u22120,1 s",
+      shortcutsSubtitleDelayForward: "Undertextf\xF6rdr\xF6jning +0,1 s",
+      shortcutsPressKey: "Tryck en tangent\u2026",
+      shortcutsReset: "\xC5terst\xE4ll till standard",
+      shortcutsConflict: "Tangenten anv\xE4nds redan av {name}. V\xE4lj en annan.",
+      shortcutsBindableHint: "Esc st\xE4nger alltid spelaren och kan inte bindas om. Bindningarna sparas per profil.",
+      settingsTabLocalFiles: "Egna filer",
+      settingsTabThisComputer: "Den h\xE4r datorn",
+      settingsTabStorage: "Lagring",
+      settingsTabHome: "Hem",
+      settingsTabZapp: "Zapp",
+      settingsSearchPlaceholder: "S\xF6k inst\xE4llningar",
+      settingsNyBadge: "NY",
+      ovKickerDone: "KLART",
+      ovKickerAction: "\xC5TG\xC4RD",
+      ovTraktTitle: "Trakt",
+      ovTraktConnectedDesc: "Ansluten \u2014 visningar och listor synkas.",
+      ovTraktMissingDesc: "Inte ansluten \u2014 anslut f\xF6r att synka tittarstatus mellan enheter.",
+      ovOpenTracking: "\xD6ppna Sp\xE5rningstj\xE4nster",
+      ovTmdbTitle: "TMDb-nyckel",
+      ovTmdbOkDesc: "Sparad \u2014 kataloger och titellogotyper h\xE4mtas.",
+      ovTmdbDefaultDesc: "Inbyggd standardnyckel anv\xE4nds \u2014 Hem har sina rader. S\xE4tt en egen nyckel f\xF6r h\xF6gre kvot.",
+      ovTmdbMissingDesc: "Saknas \u2014 Hem tappar sina katalograder.",
+      ovOpenLibrary: "\xD6ppna Bibliotek & metadata",
+      appLanguageDesc: "Spr\xE5k i appens gr\xE4nssnitt. Sparas per profil.",
+      settingsPageFilters: "Str\xF6mfilter",
+      sfLevelTitle: "FILTRERINGSNIV\xC5",
+      sfLevelStrict: "Strikt",
+      sfLevelStrictDesc: "Avvisar misst\xE4nkta fil\xE4ndelser, fel \xE5r eller avsnitt, s\xE4songspaket vid avsnittss\xF6kningar, trailers/samples och cams.",
+      sfLevelBalanced: "Balanserad",
+      sfLevelBalancedDesc: "F\xF6ljer reglerna nedan \u2014 skydd mot cams och screeners, inga extra heuristiker.",
+      sfLevelOff: "Av",
+      sfLevelOffDesc: "Ingen filtrering. Varje str\xF6m fr\xE5n varje k\xE4lla visas, \xE4ven uppenbart skr\xE4p.",
+      sfTogglesTitle: "REGLER",
+      sfHideCam: "D\xF6lj cams",
+      sfHideTs: "D\xF6lj telesync/telecine",
+      sfHideScr: "D\xF6lj screeners",
+      sfHideBelow720p: "D\xF6lj under 720p",
+      sfForcedByStrict: "Alltid p\xE5 i niv\xE5n Strikt.",
+      settingsAutosaved: "\xC4ndringar sparade",
+      settingsAutosaveError: "Vissa \xE4ndringar kunde inte sparas",
       profileName: "Profilnamn",
       profileNamePlaceholder: "Till exempel Familj eller Barn",
       createProfile: "Skapa profil",
@@ -166170,6 +167109,28 @@
       rememberAspectRatioDesc: "Anv\xE4nder ditt valda bildformat som standard f\xF6r nya filmer och avsnitt.",
       autoSkipIntro: "Auto-skippa intro",
       autoSkipIntroDesc: "Om det \xE4r p\xE5slaget hoppas intro \xF6ver automatiskt. Om det \xE4r av visas en Skippa intro-knapp n\xE4r IntroDB har en tr\xE4ff.",
+      resumePromptEyebrow: "FORTS\xC4TT ELLER B\xD6RJA OM",
+      resumePromptBody: "Du slutade vid {time}. Forts\xE4tt d\xE4r, eller b\xF6rja fr\xE5n b\xF6rjan?",
+      resumePromptResume: "Forts\xE4tt fr\xE5n {time}",
+      resumePromptRestart: "B\xF6rja om",
+      askResumeOrRestart: "Fr\xE5ga: \xE5teruppta eller b\xF6rja om",
+      askResumeOrRestartDesc: "Visa en fr\xE5ga n\xE4r du trycker Spela p\xE5 n\xE5got delvis sett i st\xE4llet f\xF6r att \xE5terupptas direkt.",
+      seriesNameFirst: "Seriens namn f\xF6rst i spelaren",
+      seriesNameFirstDesc: "Leder spelarens rubrik med serienamnet i st\xE4llet f\xF6r avsnittskoden.",
+      heroRotationLabel: "Byt titel varje",
+      heroRotationDesc: "Hur ofta hero-bannern roterar av sig sj\xE4lv. Av betyder att den bara byter n\xE4r du swipar.",
+      heroRotationNever: "Aldrig",
+      nextEpPopupAuto: "Auto",
+      advanceAtOutro: "Hoppa \xF6ver eftertexterna och g\xE5 direkt till n\xE4sta avsnitt",
+      advanceAtOutroDesc: "N\xE4r ett outro hittas startar n\xE4sta avsnitt direkt i st\xE4llet f\xF6r att kortet visas. Avsnitt utan detekterat outro visar kortet som vanligt.",
+      stayFullscreenOnClose: "Stanna i helsk\xE4rm n\xE4r spelaren st\xE4ngs",
+      stayFullscreenOnCloseDesc: "F\xF6nstret beh\xE5ller helsk\xE4rm i st\xE4llet f\xF6r att falla tillbaka till f\xF6nsterl\xE4ge.",
+      showTitleOnStart: "Visa titel n\xE4r uppspelningen startar",
+      showTitleOnStartDesc: "Titeln tonar in n\xE5gra sekunder och f\xF6rsvinner sedan.",
+      hideSkipButtonAfter: "D\xF6lj Skippa-knappen efter",
+      hideSkipButtonAfterDesc: "Knappen f\xF6rsvinner av sig sj\xE4lv s\xE5 en felaktig introtr\xE4ff inte ligger kvar hela avsnittet.",
+      hideUnreleasedHome: "D\xF6lj ej sl\xE4ppta titlar p\xE5 Hem",
+      hideUnreleasedHomeDesc: "Titlar med release\xE5r i framtiden visas inte i Hems rader.",
       hideWatchedMoviesHome: "D\xF6lj sedda filmer p\xE5 startsidan",
       hideWatchedMoviesHomeDesc: "Exkludera filmer som markerats som sedda fr\xE5n startsidans gridar och sliders.",
       stillWatching: "Tittar du fortfarande?",
@@ -166178,8 +167139,94 @@
       stillWatchingMaxMinutesDesc: "Standard matchar Netflix-tiden: 90 minuter. Prompten visas bara f\xF6r TV-serier efter minst 3 avsnitt.",
       stillWatchingContinue: "Forts\xE4tt titta",
       stillWatchingExit: "St\xE4ng spelaren",
+      spoilersGroupTitle: "SPOILERS",
+      spoilerBlurEnabled: "Sudda spoilers",
+      spoilerBlurEnabledDesc: "D\xF6ljer spoilerk\xE4nsliga avsnittsdetaljer i avsnittslistor tills du har sett dem. Hovra \xF6ver ett avsnitt f\xF6r att kika.",
+      spoilerBlurThumbnails: "Sudda miniatyrer",
+      spoilerBlurTitles: "Sudda titlar",
+      spoilerBlurDescriptions: "Sudda beskrivningar",
+      spoilerBlurDetailImages: "Sudda avsnittsbilder p\xE5 detaljsidan",
+      spoilerBlurDetailImagesDesc: "Suddar avsnittsstillbilder p\xE5 detaljsidan tills du hovrar f\xF6r att visa.",
+      spoilerKeepNextVisible: "H\xE5ll n\xE4sta avsnitt synligt",
+      spoilerKeepNextVisibleDesc: "L\xE4mnar avsnittet du \xE4r p\xE5 tydligt och suddar bara de som kommer efter.",
+      spoilerBlurStreamBackdrop: "Sudda streambakgrund",
+      spoilerBlurStreamBackdropDesc: "L\xE4gger en suddig glaseffekt bakom streamv\xE4ljarpanelen.",
+      spoilerHoverToPeek: "Hovra f\xF6r att kika",
+      spoilerPreviewTitle1: "The Last Stand",
+      spoilerPreviewSynopsis1: "Med staden omringad formas en ov\xE4ntad allians n\xE4r en l\xE4nge begravd hemlighet till slut kommer fram.",
+      spoilerPreviewTitle2: "No Way Out",
+      spoilerPreviewSynopsis2: "Lojaliteter krossas n\xE4r de \xF6verlevande inser att fienden har funnits mitt ibland dem hela tiden.",
       autoplayMaxStreamSize: "Max storlek per stream",
       autoplayMaxStreamSizeDesc: "Valfri gr\xE4ns i GB f\xF6r autoplay-f\xF6rs\xF6k. L\xE4mna tomt f\xF6r ingen storleksgr\xE4ns.",
+      autoplayMaxResolution: "H\xF6gsta uppl\xF6sning f\xF6r autoplay",
+      autoplayMaxResolutionDesc: "Hoppa \xF6ver k\xE4llor \xF6ver den h\xE4r uppl\xF6sningen vid autoplay. K\xE4llor med ok\xE4nd uppl\xF6sning till\xE5ts \xE4nd\xE5.",
+      autoplayMaxResolutionUnlimited: "Obegr\xE4nsat",
+      preferEmbeddedSubtitles: "F\xF6redra inb\xE4ddade undertexter",
+      preferEmbeddedSubtitlesDesc: "Vid automatiskt undertextval pr\xF6vas sp\xE5r inb\xE4ddade i videon f\xF6rst \u2014 de \xE4r alltid i synk.",
+      peekSeasonWord: "s\xE4song",
+      peekSeasonsWord: "s\xE4songer",
+      peekOpenDetails: "Mer info",
+      cardPeek: "Hover-f\xF6rhandsvisning p\xE5 kort",
+      cardPeekDesc: "Vila pekaren p\xE5 en poster f\xF6r att f\xE4lla ut en f\xF6rhandsvisning med bakgrundsbild, genrer och beskrivning.",
+      engineGroupTitle: "MOTOR",
+      engineAuto: "Auto",
+      engineStreams: "Motor f\xF6r str\xF6mmar",
+      engineStreamsDesc: "Auto anv\xE4nder den inbyggda motorn (mpv) i appen. HTML5 tvingar webbl\xE4sarspelaren \u2014 bra n\xE4r mpv strular med en k\xE4lla.",
+      engineLocal: "Motor f\xF6r lokala filer",
+      engineLocalDesc: "Uppspelningsmotor f\xF6r filer fr\xE5n dina biblioteksmappar.",
+      rtInterpolation: "R\xF6relseinterpolation",
+      rtInterpolationDesc: "Samplar om videon till sk\xE4rmens uppdateringsfrekvens f\xF6r j\xE4mnare panoreringar. Drar mer GPU.",
+      rtAnime4k: "Anime4K-uppskalning",
+      rtAnime4kDesc: "Shaderbaserad uppskalning anpassad f\xF6r anime. H\xE4mtar shaderpaketet (~1 MB) vid f\xF6rsta anv\xE4ndningen.",
+      rtBuffer: "Stor buffert f\xF6r instabil lina",
+      rtBufferDesc: "L\xE4ser in ~5\xD7 mer av str\xF6mmen i f\xF6rv\xE4g p\xE5 bekostnad av RAM. Hj\xE4lper k\xE4llor som hackar i skov.",
+      advMpvConfTitle: "R\xE5 mpv.conf",
+      advMpvConfHint: "En property=value per rad, appliceras p\xE5 spelaren efter alla hanterade inst\xE4llningar. F\xF6r powerusers.",
+      advMpvConfNote: "G\xE4ller fr\xE5n n\xE4sta uppspelningsstart. Ogiltiga rader ignoreras.",
+      extraSubtitleLanguages: "Fler undertextspr\xE5k",
+      extraSubtitleLanguagesDesc: "Ordnad lista med spr\xE5kkoder som pr\xF6vas efter standard och reserv, kommaseparerad.",
+      forcedSubtitlesWhenAudioMatches: "Forcerade undertexter vid matchande ljud",
+      forcedSubtitlesWhenAudioMatchesDesc: "N\xE4r undertexter st\xE4ngs av f\xF6r att ljudet redan \xE4r p\xE5 ditt spr\xE5k visas \xE4nd\xE5 forcerade sp\xE5r (utl\xE4ndsk dialog, skyltar).",
+      upgradeSubtitleWhenBetter: "Uppgradera undertext n\xE4r b\xE4ttre laddas",
+      upgradeSubtitleWhenBetterDesc: "Byt till en h\xF6gre prioriterad undertext om en dyker upp efter uppspelningsstart. Manuella val skrivs aldrig \xF6ver.",
+      ipDescRpdb: "Posters med betyget inbr\xE4nt, p\xE5 varje kort. Gratis nyckel p\xE5 ratingposterdb.com.",
+      ipDescMdblist: "Aggregerade betyg fr\xE5n Trakt, Letterboxd m.fl. p\xE5 detaljsidan. Gratis nyckel p\xE5 mdblist.com.",
+      ipRpdbHint: "Med nyckel satt byts kortens posters till RPDB:s betygsposters (IMDb-nycklade).",
+      ipMdblistHint: "Visas som extra badges bredvid \xE5rtalet p\xE5 detaljsidan.",
+      ratingBadgePosition: "Betygsbadgens position",
+      ratingBadgePositionDesc: "Vilket h\xF6rn av postern betygsbadgen sitter i.",
+      badgePosTr: "Uppe till h\xF6ger",
+      badgePosTl: "Uppe till v\xE4nster",
+      badgePosBr: "Nere till h\xF6ger",
+      badgePosBl: "Nere till v\xE4nster",
+      hideCardTitles: "D\xF6lj titlar under posters",
+      hideCardTitlesDesc: "Visa bara artwork \u2014 ingen titel eller metarad under korten.",
+      posterScale: "Posterstorlek",
+      posterScaleDesc: "Global kortstorlek p\xE5 hemraderna: kompakt f\xE5r plats med fler, stor visar f\xE4rre men st\xF6rre.",
+      posterScaleCompact: "Kompakt",
+      posterScaleStandard: "Standard",
+      posterScaleLarge: "Stor",
+      sbTitle: "Seek bar",
+      sbDesc: "Stil, h\xF6jd och f\xE4rg p\xE5 tidslinjen i spelaren.",
+      sbStyleLabel: "Stil",
+      sbStyleFlat: "Platt",
+      sbStyleGlass: "Glas",
+      sbStylePinstripe: "Kritstreck",
+      sbHeightLabel: "H\xF6jd",
+      sbHeightSlim: "Tunn",
+      sbHeightStandard: "Standard",
+      sbHeightChunky: "Tjock",
+      sbColorLabel: "F\xE4rg",
+      sbColorAccent: "Accent",
+      sbColorWhite: "Vit",
+      sbColorRed: "R\xF6d",
+      sbColorAmber: "B\xE4rnsten",
+      sbDotLabel: "Dragpunkt",
+      sbDotDesc: "Visa den runda handtagspunkten p\xE5 seekbaren.",
+      detailsTrailerLabel: "Trailer p\xE5 detaljsidan",
+      detailsTrailerHint: "Efter 2,5 s p\xE5 en detaljsida tonar bakgrundsbilden \xF6ver i den ljudl\xF6sa trailern.",
+      ipSourceEnabled: "Anv\xE4nd den h\xE4r k\xE4llan",
+      vtLiveNote: "Sl\xE5r igenom direkt och sparas i Inst\xE4llningar",
       introDebugReady: "IntroDB klar",
       introDebugLoading: "IntroDB laddar",
       introDebugFound: "Intro hittat",
@@ -166326,6 +167373,10 @@
       watchlistEmpty: "Inga stj\xE4rnm\xE4rkta titlar \xE4n.",
       watchlistEmptyHint: "Stj\xE4rnm\xE4rk titlar i releasekalendern f\xF6r att f\xF6lja premi\xE4rer.",
       seriesWatchlistEmpty: "Inga f\xF6ljda serier \xE4n.",
+      seriesWatchlistEmptyHint: "F\xF6lj en serie fr\xE5n dess detaljsida s\xE5 dyker nya avsnitt upp h\xE4r.",
+      noMoviesInListYetHint: "L\xE4gg till filmer i Min lista fr\xE5n valfri detaljsida f\xF6r att spara dem h\xE4r.",
+      watchlistConnectTraktHint: "Anslut Trakt i Inst\xE4llningar f\xF6r att synka listan mellan enheter.",
+      watchlistConnectTraktCta: "Anslut Trakt",
       watchlistNoNewEpisodes: "Inga nya avsnitt just nu.",
       newEpisodeBadge: "Nytt avsnitt",
       seriesNewCount: "{{n}} nya",
@@ -166353,6 +167404,11 @@
       onboardingWelcomeEyebrow: "V\xC4LKOMMEN",
       onboardingWelcomeTitle: "V\xE4lkommen till Lumio",
       onboardingWelcomeDesc: "Din mediaspelare och hub f\xF6r film och serier \u2014 spela upp ditt eget bibliotek och samla allt du f\xF6ljer p\xE5 ett st\xE4lle.",
+      onboardingLanguageEyebrow: "Spr\xE5k",
+      onboardingLanguageTitle: "V\xE4lj ditt spr\xE5k.",
+      onboardingLanguageDesc: "V\xE4lj appens spr\xE5k och ditt f\xF6redragna undertextspr\xE5k. B\xE5da kan \xE4ndras n\xE4r som helst i Inst\xE4llningar.",
+      onboardingAppLanguageLabel: "Appspr\xE5k",
+      onboardingLanguageHint: "Undertexter p\xE5 ditt f\xF6redragna spr\xE5k v\xE4ljs automatiskt n\xE4r de finns, och reservspr\xE5ket anv\xE4nds n\xE4r det prim\xE4ra saknas.",
       onboardingPluginsEyebrow: "TILL\xC4GG",
       onboardingPluginsTitle: "V\xE4lj dina till\xE4gg",
       onboardingPluginsDesc: "Bocka f\xF6r de till\xE4gg du vill installera direkt. Allt g\xE5r att l\xE4gga till eller ta bort senare under Inst\xE4llningar \u2192 Plugins.",
@@ -166535,6 +167591,22 @@
       hpGenreThriller: "Thriller",
       hpGenreWar: "Krig",
       hpGenreWestern: "Western",
+      hpGenreActionAdventure: "Action & \xE4ventyr",
+      hpGenreKids: "Barn",
+      hpGenreReality: "Reality",
+      hpGenreSciFiFantasy: "Sci-fi & fantasy",
+      hpGenreWarPolitics: "Krig & politik",
+      hpHeroMediaTypeLabel: "Inneh\xE5ll",
+      hpHeroMediaTypeMovies: "Filmer",
+      hpHeroMediaTypeSeries: "Serier",
+      hpHeroMediaTypeMixed: "Filmer & serier",
+      hpRowDensityTitle: "Radt\xE4thet",
+      hpRowDensityHint: "Hur t\xE4tt Hems rader ligger och hur stora deras rubriker \xE4r.",
+      hpRowDensityLabel: "T\xE4thet",
+      hpRowHeadingLabel: "Rubrikstorlek",
+      hpDensityCompact: "Kompakt",
+      hpDensityNormal: "Normal",
+      hpDensityAiry: "Luftig",
       hpLayoutSlider: "Karusell",
       hpLayoutGrid: "Visa allt",
       hpLayoutFull: "Stor banner",
@@ -166895,6 +167967,299 @@
     return isLanClientSession();
   }
 
+  // lib/tauri-mpv.ts
+  init_plugin_registry();
+  function detectTauriEnv() {
+    if (typeof window === "undefined") return false;
+    const maybeTauriWindow = window;
+    if (maybeTauriWindow.__TAURI_INTERNALS__ || maybeTauriWindow.__TAURI__) {
+      return true;
+    }
+    const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : "";
+    if (userAgent.includes("Tauri")) return true;
+    const host = window.location.hostname;
+    const port = window.location.port;
+    return isLocalAppHost(host) && port === "3011";
+  }
+  var isTauriEnv = detectTauriEnv();
+  var hasTauriIpc = typeof window !== "undefined" && Boolean(
+    window.__TAURI_INTERNALS__ || window.__TAURI__
+  );
+  var isDesktopTauriEnv = isTauriEnv && hasTauriIpc && !(typeof navigator !== "undefined" && /android/i.test(navigator.userAgent));
+  function isLiveStreamUrl(url) {
+    const lower = url.toLowerCase();
+    const pathOnly = lower.split("?")[0].split("#")[0];
+    if (pathOnly.endsWith(".m3u8") || pathOnly.endsWith(".mpd")) return true;
+    return lower.includes("/live/") || lower.includes("hls/") || lower.includes("/dash/");
+  }
+  function sourceCacheUrl(originalUrl) {
+    if (!/^https?:\/\//i.test(originalUrl)) return null;
+    if (isLiveStreamUrl(originalUrl)) return null;
+    try {
+      if (isLocalAppHost(new URL(originalUrl).hostname)) return null;
+    } catch {
+      return null;
+    }
+    return `${window.location.origin}/api/source-cache?u=${encodeURIComponent(originalUrl)}`;
+  }
+  function warmSourceCache(originalUrl) {
+    const wrapped = sourceCacheUrl(originalUrl);
+    if (!wrapped) return;
+    void fetch(wrapped, { headers: { Range: "bytes=0-1" } }).then((r) => r.body?.cancel()).catch(() => {
+    });
+  }
+  function releaseSourceCache(originalUrl) {
+    if (!sourceCacheUrl(originalUrl)) return;
+    void fetch("/api/source-cache/release", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ u: originalUrl }),
+      keepalive: true
+    }).catch(() => {
+    });
+  }
+  async function openMpvPlayer(args) {
+    const { shouldAbort: _ignored, ...rest } = args;
+    const cached = sourceCacheUrl(args.url);
+    if (cached) {
+      if (args.shouldAbort?.()) return;
+      return invoke("mpv_open", { args: { ...rest, url: cached } });
+    }
+    let url = args.url;
+    for (const rewriter of getPlayableUrlRewriters()) {
+      try {
+        const rewritten = await rewriter.rewrite(url);
+        if (rewritten) {
+          url = rewritten;
+          break;
+        }
+      } catch {
+      }
+    }
+    if (args.shouldAbort?.()) return;
+    return invoke("mpv_open", { args: { ...rest, url } });
+  }
+  async function closeMpvPlayer() {
+    return invoke("mpv_close");
+  }
+  async function setMpvPause(paused) {
+    return invoke("mpv_set_pause", { paused });
+  }
+  async function setMpvAudioTrack(aid) {
+    return invoke("mpv_set_audio_track", { aid });
+  }
+  async function setMpvVideoGeometry(args) {
+    try {
+      return await invoke("mpv_set_video_geometry", {
+        aspectOverride: args.aspectOverride ?? null,
+        panscan: args.panscan,
+        videoZoom: args.videoZoom
+      });
+    } catch (error) {
+      const message = String(error ?? "");
+      if (!/mpv not initialized/i.test(message)) {
+        console.warn("[mpv] set video geometry error:", error);
+      }
+    }
+  }
+  async function setMpvSubtitleTrack(sid) {
+    return invoke("mpv_set_subtitle_track", { sid });
+  }
+  async function getMpvSid() {
+    return invoke("mpv_get_sid");
+  }
+  async function getMpvSubtitleTracks() {
+    return invoke("mpv_get_subtitle_tracks");
+  }
+  async function getMpvAudioTracks() {
+    return invoke("mpv_get_audio_tracks");
+  }
+  async function toggleWindowFullscreen() {
+    return invoke("toggle_window_fullscreen");
+  }
+  async function getWindowFullscreen() {
+    return invoke("get_window_fullscreen");
+  }
+  async function getWindowNativeFullscreen() {
+    return invoke("get_window_native_fullscreen");
+  }
+  async function setWindowFullscreen(fullscreen) {
+    return invoke("set_window_fullscreen", { fullscreen });
+  }
+  async function setWindowNativeFullscreen(fullscreen) {
+    return invoke("set_window_native_fullscreen", { fullscreen });
+  }
+  async function mpvGetAudioFilterChain() {
+    try {
+      return await invoke("mpv_get_af") || "(tom)";
+    } catch (e) {
+      return `(ol\xE4sbar: ${String(e)})`;
+    }
+  }
+  async function mpvCommand(args) {
+    try {
+      if (args[0] === "set_property" && args.length >= 3) {
+        const value = typeof args[2] === "boolean" ? args[2] ? "yes" : "no" : String(args[2]);
+        return await invoke("mpv_set_property_strings", { props: [{ name: String(args[1]), value }] });
+      }
+      if (args[0] === "get_property" && args.length >= 2) {
+        return await invoke("mpv_get_property_ts", { name: String(args[1]) });
+      }
+      return await invoke("mpv_command_ts", { args });
+    } catch (e) {
+      console.warn("[mpv] command error:", args, e);
+    }
+  }
+  async function mpvSetPropertyStrings(props) {
+    try {
+      return await invoke("mpv_set_property_strings", { props });
+    } catch (e) {
+      console.warn("[mpv] set property error:", props, e);
+    }
+  }
+  async function mpvApplySubtitleStyle(args) {
+    try {
+      return await invoke("mpv_apply_subtitle_style", { args });
+    } catch (e) {
+      console.warn("[mpv] apply subtitle style error:", args, e);
+    }
+  }
+  function mpvSetBounds(rect) {
+    if (rect.width <= 0 || rect.height <= 0) return;
+    void invoke("mpv_set_bounds", {
+      x: rect.left,
+      y: rect.top,
+      w: rect.width,
+      h: rect.height,
+      windowHeight: window.innerHeight,
+      scale: window.devicePixelRatio
+    });
+  }
+  function useMpvPlayer(enabled = true) {
+    const [timePos, setTimePos] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [paused, setPaused] = useState(false);
+    const [ended, setEnded] = useState(false);
+    const [sid, setSid] = useState(null);
+    const [fileLoaded, setFileLoaded] = useState(false);
+    const [fileLoadedToken, setFileLoadedToken] = useState(0);
+    const [playbackRestarted, setPlaybackRestarted] = useState(false);
+    const [playbackRestartedToken, setPlaybackRestartedToken] = useState(0);
+    const [pausedForCache, setPausedForCache] = useState(false);
+    const [coreIdle, setCoreIdle] = useState(true);
+    const [firstFrameRendered, setFirstFrameRendered] = useState(false);
+    const [loadFailed, setLoadFailed] = useState(false);
+    const [loadFailedToken, setLoadFailedToken] = useState(0);
+    const [loadFailedError, setLoadFailedError] = useState(null);
+    useEffect(() => {
+      if (!isTauriEnv || !enabled) return;
+      const cleanups = [];
+      void listen("mpv://time-pos", (e) => setTimePos(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://duration", (e) => setDuration(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://paused", (e) => setPaused(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://ended", () => setEnded(true)).then((u) => cleanups.push(u));
+      void listen("mpv://sid", (e) => setSid(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://file-loaded", () => {
+        setFileLoaded(true);
+        setFileLoadedToken((t) => t + 1);
+      }).then((u) => cleanups.push(u));
+      void listen("mpv://playback-restart", () => {
+        setPlaybackRestarted(true);
+        setPlaybackRestartedToken((t) => t + 1);
+      }).then((u) => cleanups.push(u));
+      void listen("mpv://paused-for-cache", (e) => setPausedForCache(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://core-idle", (e) => setCoreIdle(e.payload)).then((u) => cleanups.push(u));
+      void listen("mpv://first-frame-rendered", () => {
+        void fetch(`/api/debug-log?msg=${encodeURIComponent(`${performance.now().toFixed(0)} first-frame-rendered received`)}`);
+        setFirstFrameRendered(true);
+      }).then((u) => cleanups.push(u));
+      void listen("mpv://load-failed", (e) => {
+        setLoadFailedError(typeof e.payload === "number" ? e.payload : null);
+        setLoadFailed(true);
+        setLoadFailedToken((t) => t + 1);
+      }).then((u) => cleanups.push(u));
+      return () => cleanups.forEach((fn) => fn());
+    }, [enabled]);
+    const seek = useCallback((time2) => {
+      void mpvCommand(["seek", time2, "absolute"]);
+    }, []);
+    const seekRelative = useCallback((delta) => {
+      void mpvCommand(["seek", delta, "relative"]);
+    }, []);
+    const setPlayPause = useCallback((pause) => {
+      void mpvCommand(["set_property", "pause", pause]);
+    }, []);
+    const setVolume = useCallback((vol) => {
+      void mpvSetPropertyStrings([{ name: "volume", value: String(Math.round(vol * 100)) }]);
+    }, []);
+    const setMuted = useCallback((muted) => {
+      void mpvSetPropertyStrings([{ name: "mute", value: muted ? "yes" : "no" }]);
+    }, []);
+    const setAudioTrack = useCallback((aid) => {
+      void setMpvAudioTrack(aid);
+    }, []);
+    const resetFileLoaded = useCallback(() => {
+      setFileLoaded(false);
+    }, []);
+    const resetEnded = useCallback(() => {
+      setEnded(false);
+    }, []);
+    const resetPlaybackRestarted = useCallback(() => {
+      setPlaybackRestarted(false);
+    }, []);
+    const resetFirstFrameRendered = useCallback(() => {
+      setFirstFrameRendered(false);
+    }, []);
+    const resetLoadFailed = useCallback(() => {
+      setLoadFailed(false);
+      setLoadFailedError(null);
+    }, []);
+    return {
+      timePos,
+      duration,
+      paused,
+      ended,
+      sid,
+      fileLoaded,
+      fileLoadedToken,
+      resetEnded,
+      playbackRestarted,
+      playbackRestartedToken,
+      pausedForCache,
+      coreIdle,
+      firstFrameRendered,
+      loadFailed,
+      loadFailedToken,
+      loadFailedError,
+      seek,
+      seekRelative,
+      setPlayPause,
+      setVolume,
+      setMuted,
+      setAudioTrack,
+      resetFileLoaded,
+      resetPlaybackRestarted,
+      resetFirstFrameRendered,
+      resetLoadFailed
+    };
+  }
+
+  // lib/open-external.ts
+  async function openExternalUrl(url) {
+    if (!url) return;
+    if (isTauriEnv) {
+      try {
+        const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
+        await invoke2("open_external_url", { url });
+        return;
+      } catch {
+      }
+    }
+    if (typeof window !== "undefined") {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  }
+
   // lib/stream-provider-runtime/stream-provider-settings.ts
   var SCRAPER_PRESETS = [
     {
@@ -167205,6 +168570,1533 @@
     return getScraperStreamProviderId(config);
   }
 
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
+  init_jsx_runtime_shim();
+  var TORRENTIO_QUALITY_OPTIONS = [
+    { id: "brremux", label: "BluRay REMUX" },
+    { id: "hdrall", label: "HDR/HDR10+/Dolby Vision" },
+    { id: "dolbyvision", label: "Dolby Vision" },
+    { id: "dolbyvisionwithhdr", label: "Dolby Vision + HDR" },
+    { id: "threed", label: "3D" },
+    { id: "4k", label: "4K" },
+    { id: "1080p", label: "1080p" },
+    { id: "720p", label: "720p" },
+    { id: "480p", label: "480p" },
+    { id: "other", label: "Other (DVDRip/HDRip/BDRip\u2026)" },
+    { id: "scr", label: "Screener" },
+    { id: "cam", label: "Cam" },
+    { id: "unknown", label: "Unknown" }
+  ];
+  function toOptionItems(raw) {
+    if (!Array.isArray(raw)) return [];
+    return raw.map((entry) => {
+      const value = String(entry.value ?? "").trim();
+      const label = String(entry.label ?? "").trim() || value;
+      return { id: value, label };
+    }).filter((item) => item.id.length > 0);
+  }
+  var cachedCatalogs = null;
+  async function fetchScraperOptionCatalogs() {
+    if (cachedCatalogs) return cachedCatalogs;
+    try {
+      const res = await fetch("/api/scraper-options");
+      if (!res.ok) return null;
+      const data = await res.json();
+      const catalogs = {
+        qualities: toOptionItems(data.qualities),
+        languages: toOptionItems(data.languages),
+        providers: toOptionItems(data.providers),
+        sort: toOptionItems(data.sort)
+      };
+      if (catalogs.qualities.length === 0) return null;
+      cachedCatalogs = catalogs;
+      return catalogs;
+    } catch {
+      return null;
+    }
+  }
+  var COMET_QUALITY_OPTIONS = ["240p", "360p", "480p", "576p", "720p", "1080p", "1440p", "2160p", "unknown"];
+  var JACKETTIO_QUALITY_OPTIONS = ["360p", "480p", "720p", "1080p", "2160p", "unknown"];
+  var TORRENTIO_LANGUAGE_OPTIONS = [
+    { id: "swedish", label: "Svenska" },
+    { id: "english", label: "English" },
+    { id: "danish", label: "Dansk" },
+    { id: "norwegian", label: "Norsk" },
+    { id: "finnish", label: "Suomi" },
+    { id: "german", label: "Deutsch" },
+    { id: "french", label: "Fran\xE7ais" },
+    { id: "spanish", label: "Espa\xF1ol" },
+    { id: "portuguese", label: "Portugu\xEAs" },
+    { id: "italian", label: "Italiano" },
+    { id: "dutch", label: "Nederlands" },
+    { id: "polish", label: "Polski" },
+    { id: "russian", label: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439" },
+    { id: "japanese", label: "\u65E5\u672C\u8A9E" },
+    { id: "korean", label: "\uD55C\uAD6D\uC5B4" },
+    { id: "chinese", label: "\u4E2D\u6587" },
+    { id: "arabic", label: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" },
+    { id: "hindi", label: "\u0939\u093F\u0928\u094D\u0926\u0940" },
+    { id: "turkish", label: "T\xFCrk\xE7e" },
+    { id: "ukrainian", label: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430" },
+    { id: "romanian", label: "Rom\xE2n\u0103" },
+    { id: "hungarian", label: "Magyar" },
+    { id: "czech", label: "\u010Ce\u0161tina" },
+    { id: "greek", label: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC" },
+    { id: "bulgarian", label: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438" },
+    { id: "serbian", label: "Srpski" },
+    { id: "croatian", label: "Hrvatski" },
+    { id: "hebrew", label: "\u05E2\u05D1\u05E8\u05D9\u05EA" },
+    { id: "vietnamese", label: "Ti\u1EBFng Vi\u1EC7t" },
+    { id: "thai", label: "\u0E20\u0E32\u0E29\u0E32\u0E44\u0E17\u0E22" },
+    { id: "indonesian", label: "Bahasa Indonesia" },
+    { id: "malay", label: "Bahasa Melayu" },
+    { id: "catalan", label: "Catal\xE0" },
+    { id: "latin", label: "Latina" }
+  ];
+  var ISO_LANGUAGE_OPTIONS = [
+    { code: "sv", label: "Svenska" },
+    { code: "en", label: "English" },
+    { code: "da", label: "Dansk" },
+    { code: "no", label: "Norsk" },
+    { code: "fi", label: "Suomi" },
+    { code: "de", label: "Deutsch" },
+    { code: "fr", label: "Fran\xE7ais" },
+    { code: "es", label: "Espa\xF1ol" },
+    { code: "pt", label: "Portugu\xEAs" },
+    { code: "it", label: "Italiano" },
+    { code: "nl", label: "Nederlands" },
+    { code: "pl", label: "Polski" },
+    { code: "ru", label: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439" },
+    { code: "ja", label: "\u65E5\u672C\u8A9E" },
+    { code: "ko", label: "\uD55C\uAD6D\uC5B4" },
+    { code: "zh", label: "\u4E2D\u6587" },
+    { code: "ar", label: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" },
+    { code: "hi", label: "\u0939\u093F\u0928\u094D\u0926\u0940" },
+    { code: "tr", label: "T\xFCrk\xE7e" },
+    { code: "uk", label: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430" },
+    { code: "ro", label: "Rom\xE2n\u0103" },
+    { code: "hu", label: "Magyar" },
+    { code: "cs", label: "\u010Ce\u0161tina" },
+    { code: "el", label: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC" },
+    { code: "bg", label: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438" },
+    { code: "sr", label: "Srpski" },
+    { code: "hr", label: "Hrvatski" },
+    { code: "he", label: "\u05E2\u05D1\u05E8\u05D9\u05EA" },
+    { code: "vi", label: "Ti\u1EBFng Vi\u1EC7t" },
+    { code: "th", label: "\u0E20\u0E32\u0E29\u0E32\u0E44\u0E17\u0E22" },
+    { code: "id", label: "Bahasa Indonesia" },
+    { code: "ms", label: "Bahasa Melayu" }
+  ];
+  var TORRENTIO_PROVIDERS = [
+    "YTS",
+    "EZTV",
+    "RARBG",
+    "ThePirateBay",
+    "1337x",
+    "KickassTorrents",
+    "TorrentGalaxy",
+    "MagnetDL",
+    "HorribleSubs",
+    "NyaaSi",
+    "TokyoTosho",
+    "AniDex",
+    "Rutor",
+    "Rutracker",
+    "Comando",
+    "CineCalidad",
+    "FilmeHD",
+    "BitSearch",
+    "ETTV",
+    "TorrentDownloads",
+    "TheRarbg",
+    "TGx",
+    "Zooqle",
+    "AnimeTosho"
+  ];
+  var TORRENTIO_SORT_OPTIONS = [
+    { id: "quality", label: "Quality" },
+    { id: "qualitysize", label: "Quality + Size" },
+    { id: "seeders", label: "Seeders" },
+    { id: "size", label: "Size" }
+  ];
+  var DEBRID_PROVIDER_LABELS = {
+    none: "None",
+    realdebrid: "RealDebrid",
+    alldebrid: "AllDebrid",
+    easydebrid: "EasyDebrid",
+    offcloud: "Offcloud",
+    torbox: "TorBox",
+    putio: "Put.io"
+  };
+  var DEBRID_PROVIDERS = [
+    { id: "none", label: "None" },
+    { id: "realdebrid", label: "RealDebrid" },
+    { id: "alldebrid", label: "AllDebrid" },
+    { id: "offcloud", label: "Offcloud" },
+    { id: "torbox", label: "TorBox" },
+    { id: "putio", label: "Put.io" }
+  ];
+  function getDebridProviderLabel(id4) {
+    return DEBRID_PROVIDER_LABELS[id4] ?? id4;
+  }
+  var PRESET_NAMES = {
+    torrentio: "Torrentio",
+    torrentsdb: "TorrentsDB",
+    comet: "Comet",
+    jackettio: "Jackettio",
+    aiostreams: "AIOStreams",
+    orion: "Orion",
+    custom: "Custom URL"
+  };
+  var heroInputClassNames = {
+    inputWrapper: "border border-white/10 bg-white/[0.03] hover:border-white/20 h-12 focus-within:outline-none focus-within:ring-0",
+    input: "text-sm text-white placeholder:text-slate-600 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 shadow-none"
+  };
+  async function fetchScraperManifest(preset, customUrl) {
+    const params = new URLSearchParams();
+    if ((preset === "custom" || preset === "aiostreams") && customUrl) {
+      params.set("url", customUrl);
+    } else {
+      params.set("preset", preset);
+    }
+    const res = await fetch(`/api/stream-providers/manifest?${params.toString()}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
+    return data;
+  }
+  function SectionLabel({ children }) {
+    return /* @__PURE__ */ jsx("p", { className: "text-[11px] uppercase tracking-[0.12em] text-slate-500", children });
+  }
+  function FieldHeader({ label }) {
+    return /* @__PURE__ */ jsx(SectionLabel, { children: label });
+  }
+  function MultiSelectDropdown({
+    value,
+    onChange,
+    placeholder,
+    options
+  }) {
+    const [open, setOpen] = useState(false);
+    const rootRef = useRef(null);
+    useEffect(() => {
+      if (!open) return;
+      function onDocPointer(event) {
+        if (rootRef.current && !rootRef.current.contains(event.target)) {
+          setOpen(false);
+        }
+      }
+      document.addEventListener("mousedown", onDocPointer);
+      return () => document.removeEventListener("mousedown", onDocPointer);
+    }, [open]);
+    const selectedLabels = options.filter((option) => value.includes(option.id)).map((option) => option.label);
+    const summary = selectedLabels.length > 0 ? selectedLabels.join(", ") : placeholder;
+    return /* @__PURE__ */ jsxs("div", { ref: rootRef, className: "relative", children: [
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => setOpen((current2) => !current2),
+          className: "flex h-12 w-full items-center justify-between rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-left text-sm text-white outline-none transition hover:border-white/20",
+          children: [
+            /* @__PURE__ */ jsx("span", { className: `truncate ${selectedLabels.length === 0 ? "text-slate-500" : ""}`, children: summary }),
+            /* @__PURE__ */ jsx("span", { className: `ml-2 flex-none text-slate-500 transition-transform ${open ? "rotate-180" : ""}`, children: "\u25BE" })
+          ]
+        }
+      ),
+      open ? /* @__PURE__ */ jsx(
+        "div",
+        {
+          className: "absolute left-0 right-0 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-[1.1rem] border border-white/10 p-1.5 shadow-2xl",
+          style: { backgroundColor: "#10162a" },
+          children: options.map(({ id: id4, label }) => {
+            const checked = value.includes(id4);
+            return /* @__PURE__ */ jsxs(
+              "button",
+              {
+                type: "button",
+                onClick: () => onChange(checked ? value.filter((v) => v !== id4) : [...value, id4]),
+                className: "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-slate-100 transition hover:bg-white/5",
+                children: [
+                  /* @__PURE__ */ jsx(
+                    "span",
+                    {
+                      "aria-hidden": "true",
+                      className: `flex h-4 w-4 flex-none items-center justify-center rounded-[3px] border text-[10px] ${checked ? "border-aurora-400/80 bg-aurora-500/20 text-aurora-200" : "border-white/15 bg-white/[0.02] text-transparent"}`,
+                      children: "\u2713"
+                    }
+                  ),
+                  /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: label })
+                ]
+              },
+              id4
+            );
+          })
+        }
+      ) : null
+    ] });
+  }
+  function DebridSelect({
+    value,
+    onChange
+  }) {
+    return /* @__PURE__ */ jsx(
+      "select",
+      {
+        value,
+        onChange: (event) => onChange(event.target.value),
+        className: "h-12 w-full rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition hover:border-white/20 focus:border-white/20",
+        children: DEBRID_PROVIDERS.map(({ id: id4, label }) => /* @__PURE__ */ jsx("option", { value: id4, className: "bg-slate-900 text-white", children: label }, id4))
+      }
+    );
+  }
+  function DebridKeyField({
+    debridProvider,
+    onProviderChange
+  }) {
+    const { t } = useLang();
+    const [keyValue, setKeyValue] = useState(() => getStreamProviderAccessKey(debridProvider));
+    useEffect(() => {
+      setKeyValue(getStreamProviderAccessKey(debridProvider));
+    }, [debridProvider]);
+    if (debridProvider === "none") return null;
+    return /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+      /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+        /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderSelection") }),
+        /* @__PURE__ */ jsx(
+          DebridSelect,
+          {
+            value: debridProvider,
+            onChange: (v) => {
+              onProviderChange(v);
+              setKeyValue(getStreamProviderAccessKey(v));
+            }
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+        /* @__PURE__ */ jsx(SectionLabel, { children: `${getDebridProviderLabel(debridProvider)} ${t("apiKeyLabel")}` }),
+        /* @__PURE__ */ jsx(
+          import_react57.Input,
+          {
+            type: "password",
+            value: keyValue,
+            onValueChange: (v) => {
+              setKeyValue(v);
+              setStreamProviderAccessKey(debridProvider, v);
+            },
+            placeholder: t("streamProviderApiKeyPlaceholder"),
+            radius: "lg",
+            classNames: heroInputClassNames
+          }
+        )
+      ] })
+    ] });
+  }
+  function getScraperSnapshot(config) {
+    const debridProvider = config.options.streamProvider?.trim().toLowerCase() ?? config.options.debridProvider?.trim().toLowerCase() ?? "";
+    const providerKey = debridProvider && debridProvider !== "none" ? getStreamProviderAccessKey(debridProvider).trim() : "";
+    return JSON.stringify({
+      config,
+      debridProvider,
+      providerKey
+    });
+  }
+  function ScraperCard({
+    config,
+    onChange,
+    onRemove,
+    onMoveUp,
+    onMoveDown,
+    isFirst,
+    isLast
+  }) {
+    const { t } = useLang();
+    const [catalogs, setCatalogs] = useState(cachedCatalogs);
+    useEffect(() => {
+      let cancelled = false;
+      void fetchScraperOptionCatalogs().then((result) => {
+        if (!cancelled && result) setCatalogs(result);
+      });
+      return () => {
+        cancelled = true;
+      };
+    }, []);
+    const [manifest, setManifest] = useState({ state: "idle" });
+    const [expanded, setExpanded] = useState(false);
+    const [saveState, setSaveState] = useState("idle");
+    const [savedSnapshot, setSavedSnapshot] = useState(() => getScraperSnapshot(config));
+    const saveTimerRef = useRef(null);
+    const fetchedRef = useRef(false);
+    useEffect(() => {
+      if (fetchedRef.current) return;
+      fetchedRef.current = true;
+      const customUrl = config.preset === "custom" ? config.options.rawUrl : config.preset === "aiostreams" ? config.options.manifestUrl : void 0;
+      if ((config.preset === "custom" || config.preset === "aiostreams") && !customUrl) return;
+      setManifest({ state: "loading" });
+      void fetchScraperManifest(config.preset, customUrl).then((data) => setManifest({ state: "ok", name: data.name, version: data.version })).catch((err) => setManifest({ state: "error", error: String(err) }));
+    }, [config.preset, config.options]);
+    const currentSnapshot = getScraperSnapshot(config);
+    const hasPendingChanges = currentSnapshot !== savedSnapshot;
+    useEffect(() => {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+      setSaveState("idle");
+      setSavedSnapshot(getScraperSnapshot(config));
+    }, [config.id]);
+    useEffect(() => {
+      return () => {
+        if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      };
+    }, []);
+    function refresh() {
+      fetchedRef.current = false;
+      const customUrl = config.preset === "custom" ? config.options.rawUrl : config.preset === "aiostreams" ? config.options.manifestUrl : void 0;
+      if ((config.preset === "custom" || config.preset === "aiostreams") && !customUrl) return;
+      setManifest({ state: "loading" });
+      void fetchScraperManifest(config.preset, customUrl).then((data) => setManifest({ state: "ok", name: data.name, version: data.version })).catch((err) => setManifest({ state: "error", error: String(err) }));
+    }
+    function persistCard() {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+      }
+      try {
+        const debridProvider = config.options.debridProvider?.trim().toLowerCase();
+        if (debridProvider && debridProvider !== "none") {
+          const key = getStreamProviderAccessKey(debridProvider);
+          setStreamProviderAccessKey(debridProvider, key);
+        }
+        setSavedSnapshot(getScraperSnapshot(config));
+        setSaveState("saved");
+        saveTimerRef.current = setTimeout(() => {
+          setSaveState("idle");
+          saveTimerRef.current = null;
+        }, 1800);
+      } catch {
+        setSaveState("error");
+        saveTimerRef.current = setTimeout(() => {
+          setSaveState("idle");
+          saveTimerRef.current = null;
+        }, 2200);
+      }
+    }
+    function updateOptions(patch) {
+      onChange({ ...config, options: { ...config.options, ...patch } });
+    }
+    const isCustom = config.preset === "custom";
+    const title = isCustom ? manifest.state === "ok" && manifest.name ? manifest.name : t("streamProviderCustomUrl") : PRESET_NAMES[config.preset];
+    return /* @__PURE__ */ jsxs("div", { className: `rounded-xl border transition ${config.enabled ? "border-aurora-400/30 bg-aurora-400/5" : "border-white/10 bg-slate-900/60"}`, children: [
+      /* @__PURE__ */ jsxs(
+        "div",
+        {
+          className: "flex cursor-pointer items-center justify-between gap-3 px-4 py-3 select-none",
+          onClick: () => setExpanded((v) => !v),
+          children: [
+            /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-2", children: [
+              /* @__PURE__ */ jsx(
+                "input",
+                {
+                  type: "checkbox",
+                  checked: config.enabled,
+                  onChange: (e) => {
+                    e.stopPropagation();
+                    onChange({ ...config, enabled: e.target.checked });
+                  },
+                  onClick: (e) => e.stopPropagation(),
+                  className: "h-3.5 w-3.5 cursor-pointer rounded accent-aurora-400"
+                }
+              ),
+              /* @__PURE__ */ jsx("p", { className: `text-sm font-medium ${config.enabled ? "text-white" : "text-slate-500"}`, children: title }),
+              manifest.state === "ok" && manifest.version && /* @__PURE__ */ jsxs("span", { className: "text-[10px] text-slate-600", children: [
+                "v",
+                manifest.version
+              ] }),
+              /* @__PURE__ */ jsx(
+                "span",
+                {
+                  className: `h-1.5 w-1.5 flex-shrink-0 rounded-full ${!config.enabled ? "bg-red-500" : manifest.state === "loading" ? "bg-amber-400 animate-pulse" : manifest.state === "ok" ? "bg-emerald-400" : manifest.state === "error" ? "bg-red-400" : "bg-slate-700"}`,
+                  title: manifest.state === "error" ? manifest.error : manifest.state
+                }
+              ),
+              isCustom && /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-600", children: (() => {
+                const rawUrl = config.options.rawUrl;
+                if (!rawUrl) return t("streamProviderNoUrl");
+                try {
+                  return new URL(rawUrl.replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "")).hostname;
+                } catch {
+                  return rawUrl.slice(0, 40);
+                }
+              })() })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5", onClick: (e) => e.stopPropagation(), children: [
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: onMoveUp,
+                  disabled: isFirst,
+                  className: "rounded-md border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 transition hover:border-white/20 hover:text-slate-300 disabled:opacity-30",
+                  children: "\u2191"
+                }
+              ),
+              /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: onMoveDown,
+                  disabled: isLast,
+                  className: "rounded-md border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 transition hover:border-white/20 hover:text-slate-300 disabled:opacity-30",
+                  children: "\u2193"
+                }
+              ),
+              onRemove && /* @__PURE__ */ jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: onRemove,
+                  className: "text-[10px] uppercase tracking-[0.1em] text-red-400/70 transition hover:text-red-300",
+                  children: t("remove")
+                }
+              ),
+              /* @__PURE__ */ jsx("span", { className: "ml-1 text-[10px] text-slate-600", children: expanded ? "\u25B2" : "\u25BC" })
+            ] })
+          ]
+        }
+      ),
+      expanded && /* @__PURE__ */ jsxs("div", { className: "space-y-4 border-t border-white/5 px-4 pb-4 pt-4", children: [
+        config.preset === "torrentio" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx(
+              DebridKeyField,
+              {
+                debridProvider: opts.debridProvider,
+                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
+              }
+            ),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.qualityFilter,
+                  onChange: (v) => updateOptions({ qualityFilter: v }),
+                  placeholder: t("streamProviderSelectQualities"),
+                  options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.languages,
+                  onChange: (v) => updateOptions({ languages: v }),
+                  placeholder: t("streamProviderSelectLanguages"),
+                  options: catalogs?.languages ?? TORRENTIO_LANGUAGE_OPTIONS
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderSources") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.providers,
+                  onChange: (v) => updateOptions({ providers: v }),
+                  placeholder: t("streamProviderSelectSources"),
+                  options: catalogs?.providers ?? TORRENTIO_PROVIDERS.map((p) => ({ id: p, label: p }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Sort" }),
+                /* @__PURE__ */ jsx(
+                  "select",
+                  {
+                    value: opts.sort,
+                    onChange: (event) => updateOptions({ sort: event.target.value }),
+                    className: "h-12 w-full rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition hover:border-white/20 focus:border-white/20",
+                    children: (catalogs?.sort ?? TORRENTIO_SORT_OPTIONS).map(({ id: id4, label }) => /* @__PURE__ */ jsx("option", { value: id4, className: "bg-slate-900 text-white", children: label }, id4))
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Max results (0 = no limit)" }),
+                /* @__PURE__ */ jsx(
+                  import_react57.Input,
+                  {
+                    type: "number",
+                    value: String(opts.limit),
+                    onValueChange: (v) => updateOptions({ limit: Math.max(0, Number(v) || 0) }),
+                    radius: "lg",
+                    classNames: heroInputClassNames
+                  }
+                )
+              ] })
+            ] })
+          ] });
+        })(),
+        config.preset === "torrentsdb" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx(
+              DebridKeyField,
+              {
+                debridProvider: opts.debridProvider,
+                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
+              }
+            ),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.qualityFilter,
+                  onChange: (v) => updateOptions({ qualityFilter: v }),
+                  placeholder: t("streamProviderSelectQualities"),
+                  options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.languages,
+                  onChange: (v) => updateOptions({ languages: v }),
+                  placeholder: t("streamProviderSelectLanguages"),
+                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
+                }
+              )
+            ] })
+          ] });
+        })(),
+        config.preset === "comet" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx(
+              DebridKeyField,
+              {
+                debridProvider: opts.debridProvider,
+                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
+              }
+            ),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.qualityFilter,
+                  onChange: (v) => updateOptions({ qualityFilter: v }),
+                  placeholder: t("streamProviderSelectQualities"),
+                  options: COMET_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.languages,
+                  onChange: (v) => updateOptions({ languages: v }),
+                  placeholder: t("streamProviderSelectLanguages"),
+                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderMaxResults") }),
+                /* @__PURE__ */ jsx(
+                  import_react57.Input,
+                  {
+                    type: "number",
+                    value: String(opts.maxResults),
+                    onValueChange: (v) => updateOptions({ maxResults: Number(v) || 5 }),
+                    radius: "lg",
+                    classNames: heroInputClassNames
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Max size (GB, 0 = no limit)" }),
+                /* @__PURE__ */ jsx(
+                  import_react57.Input,
+                  {
+                    type: "number",
+                    value: String(opts.maxSize),
+                    onValueChange: (v) => updateOptions({ maxSize: Math.max(0, Number(v) || 0) }),
+                    radius: "lg",
+                    classNames: heroInputClassNames
+                  }
+                )
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3", children: [
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsx("p", { className: "text-sm text-white", children: "Cached only" }),
+                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: "Only show cached (instant) results" })
+                ] }),
+                /* @__PURE__ */ jsx(
+                  import_react57.Switch,
+                  {
+                    isSelected: opts.cachedOnly,
+                    onValueChange: (v) => updateOptions({ cachedOnly: v }),
+                    size: "sm",
+                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
+                /* @__PURE__ */ jsxs("div", { children: [
+                  /* @__PURE__ */ jsx("p", { className: "text-sm text-white", children: "Mix cached & uncached" }),
+                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: "Sort cached and uncached results together" })
+                ] }),
+                /* @__PURE__ */ jsx(
+                  import_react57.Switch,
+                  {
+                    isSelected: opts.sortCachedUncachedTogether,
+                    onValueChange: (v) => updateOptions({ sortCachedUncachedTogether: v }),
+                    size: "sm",
+                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
+                  }
+                )
+              ] })
+            ] })
+          ] });
+        })(),
+        config.preset === "jackettio" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx(
+              DebridKeyField,
+              {
+                debridProvider: opts.debridProvider,
+                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
+              }
+            ),
+            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: "Jackettio st\xF6djer Real-Debrid och AllDebrid \u2014 andra val faller tillbaka till Real-Debrid." }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.qualityFilter,
+                  onChange: (v) => updateOptions({ qualityFilter: v }),
+                  placeholder: t("streamProviderSelectQualities"),
+                  options: JACKETTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(
+                MultiSelectDropdown,
+                {
+                  value: opts.languages,
+                  onChange: (v) => updateOptions({ languages: v }),
+                  placeholder: t("streamProviderSelectLanguages"),
+                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
+              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Max torrents (0 = default 8)" }),
+                /* @__PURE__ */ jsx(
+                  import_react57.Input,
+                  {
+                    type: "number",
+                    value: String(opts.maxTorrents),
+                    onValueChange: (v) => updateOptions({ maxTorrents: Math.max(0, Number(v) || 0) }),
+                    radius: "lg",
+                    classNames: heroInputClassNames
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxs("div", { className: "flex items-end justify-between gap-3 pb-1", children: [
+                /* @__PURE__ */ jsx(FieldHeader, { label: "Endast cachade" }),
+                /* @__PURE__ */ jsx(
+                  import_react57.Switch,
+                  {
+                    isSelected: opts.hideUncached,
+                    onValueChange: (v) => updateOptions({ hideUncached: v }),
+                    size: "sm",
+                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
+                  }
+                )
+              ] })
+            ] })
+          ] });
+        })(),
+        config.preset === "aiostreams" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: t("aiostreamsHint") }),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                onClick: () => void openExternalUrl("https://aiostreams-nightly.fortheweak.cloud/stremio/configure"),
+                className: "inline-flex rounded-full border border-white/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-slate-300 transition hover:border-white/30 hover:text-white",
+                children: t("aiostreamsOpenConfig")
+              }
+            ),
+            /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("aiostreamsManifestLabel") }),
+              /* @__PURE__ */ jsx(
+                import_react57.Input,
+                {
+                  type: "text",
+                  value: opts.manifestUrl,
+                  onValueChange: (v) => updateOptions({ manifestUrl: v }),
+                  placeholder: "https://aiostreams-nightly.fortheweak.cloud/stremio/<uuid>/<l\xF6senord>/manifest.json",
+                  radius: "lg",
+                  classNames: heroInputClassNames
+                }
+              )
+            ] })
+          ] });
+        })(),
+        config.preset === "orion" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+              /* @__PURE__ */ jsx(SectionLabel, { children: "Orion API Key" }),
+              /* @__PURE__ */ jsx(
+                import_react57.Input,
+                {
+                  type: "password",
+                  value: opts.orionKey,
+                  onValueChange: (v) => updateOptions({ orionKey: v.trim() }),
+                  placeholder: "Klistra in din Orion API-nyckel",
+                  radius: "lg",
+                  classNames: heroInputClassNames
+                }
+              )
+            ] }),
+            /* @__PURE__ */ jsx(
+              DebridKeyField,
+              {
+                debridProvider: opts.debridProvider,
+                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
+              }
+            )
+          ] });
+        })(),
+        config.preset === "custom" && (() => {
+          const opts = config.options;
+          return /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+            /* @__PURE__ */ jsx(SectionLabel, { children: t("streamProviderManifestUrl") }),
+            /* @__PURE__ */ jsx(
+              import_react57.Input,
+              {
+                type: "text",
+                value: opts.rawUrl,
+                onValueChange: (v) => updateOptions({ rawUrl: v.trim() }),
+                placeholder: t("streamProviderManifestPlaceholder"),
+                radius: "lg",
+                classNames: heroInputClassNames
+              }
+            )
+          ] });
+        })(),
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-3 border-t border-white/5 pt-3", children: [
+          /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-500", children: saveState === "saved" ? /* @__PURE__ */ jsx("span", { className: "text-emerald-300", children: "Sparat!" }) : saveState === "error" ? /* @__PURE__ */ jsx("span", { className: "text-rose-300", children: "Kunde inte spara" }) : hasPendingChanges ? /* @__PURE__ */ jsx("span", { children: "Osparade \xE4ndringar" }) : /* @__PURE__ */ jsx("span", { children: "\xA0" }) }),
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                onClick: persistCard,
+                className: "rounded-md border border-white/10 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-300 transition hover:border-white/20 hover:text-white",
+                children: saveState === "saved" ? "Sparat" : "Spara"
+              }
+            ),
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                onClick: refresh,
+                disabled: manifest.state === "loading",
+                className: "text-[10px] uppercase tracking-[0.1em] text-slate-500 transition hover:text-slate-300 disabled:opacity-40",
+                children: manifest.state === "loading" ? "..." : "Refresh manifest"
+              }
+            )
+          ] })
+        ] })
+      ] })
+    ] });
+  }
+  function defaultOptions(preset) {
+    switch (preset) {
+      case "torrentio":
+        return {
+          streamProvider: "realdebrid",
+          debridProvider: "realdebrid",
+          qualityFilter: [],
+          languages: [],
+          providers: [],
+          sort: "quality",
+          limit: 0
+        };
+      case "torrentsdb":
+        return {
+          streamProvider: "realdebrid",
+          debridProvider: "realdebrid",
+          qualityFilter: [],
+          languages: []
+        };
+      case "comet":
+        return {
+          streamProvider: "realdebrid",
+          debridProvider: "realdebrid",
+          languages: [],
+          qualityFilter: [],
+          maxResults: 5,
+          maxSize: 0,
+          cachedOnly: false,
+          sortCachedUncachedTogether: true
+        };
+      case "jackettio":
+        return {
+          streamProvider: "realdebrid",
+          debridProvider: "realdebrid",
+          languages: [],
+          qualityFilter: [],
+          maxTorrents: 0,
+          hideUncached: false
+        };
+      case "aiostreams":
+        return { manifestUrl: "" };
+      case "orion":
+        return {
+          orionKey: "",
+          streamProvider: "realdebrid",
+          debridProvider: "realdebrid"
+        };
+      case "custom":
+        return { rawUrl: "" };
+    }
+  }
+  var ADDABLE_PRESETS = [
+    "torrentio",
+    "comet",
+    "jackettio",
+    "aiostreams",
+    "orion",
+    "custom"
+  ];
+  function ScrapersSettingsSection() {
+    const { t } = useLang();
+    const [configs, setConfigsState] = useState(() => getStreamProviderConfigs());
+    const configsRef = useRef(configs);
+    configsRef.current = configs;
+    const addedPresets = new Set(configs.map((c) => c.preset));
+    const availableToAdd = ADDABLE_PRESETS.filter((preset) => !addedPresets.has(preset) || preset === "custom");
+    function saveConfigs(next2) {
+      configsRef.current = next2;
+      setConfigsState(next2);
+      setStreamProviderConfigs(next2);
+    }
+    function handleConfigChange(updated) {
+      saveConfigs(configsRef.current.map((c) => c.id === updated.id ? updated : c));
+    }
+    function handleRemove(id4) {
+      saveConfigs(configsRef.current.filter((c) => c.id !== id4));
+    }
+    function handleMoveByOffset(id4, offset) {
+      const current2 = configsRef.current;
+      const idx = current2.findIndex((c) => c.id === id4);
+      if (idx < 0) return;
+      const next2 = [...current2];
+      const target = idx + offset;
+      if (target < 0 || target >= next2.length) return;
+      [next2[idx], next2[target]] = [next2[target], next2[idx]];
+      saveConfigs(next2);
+    }
+    function handleAddPreset(preset) {
+      const id4 = preset === "custom" ? `custom-${Date.now()}` : preset;
+      const newConfig = { id: id4, preset, enabled: true, options: defaultOptions(preset) };
+      saveConfigs([...configsRef.current, newConfig]);
+    }
+    return /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
+      configs.map((config, idx) => /* @__PURE__ */ jsx(
+        ScraperCard,
+        {
+          config,
+          onChange: handleConfigChange,
+          onRemove: () => handleRemove(config.id),
+          onMoveUp: () => handleMoveByOffset(config.id, -1),
+          onMoveDown: () => handleMoveByOffset(config.id, 1),
+          isFirst: idx === 0,
+          isLast: idx === configs.length - 1
+        },
+        config.id
+      )),
+      availableToAdd.length > 0 && /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: availableToAdd.map((preset) => /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => handleAddPreset(preset),
+          className: "rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs text-slate-500 transition hover:border-white/30 hover:text-slate-300",
+          children: preset === "torrentio" ? t("streamProviderAddStandard") : preset === "torrentsdb" ? t("streamProviderAddIndexed") : preset === "comet" ? t("streamProviderAddComet") : preset === "jackettio" ? t("streamProviderAddJackettio") : preset === "aiostreams" ? t("streamProviderAddAiostreams") : preset === "orion" ? "+ Orion" : t("streamProviderAddCustom")
+        },
+        preset
+      )) })
+    ] });
+  }
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
+  init_react_shim();
+  var import_react_dom2 = __toESM(require_react_dom());
+
+  // lib/trakt-storage.ts
+  var AUTH_KEY = "trakt_auth";
+  var EVENT = "lumio-trakt-auth-changed";
+  function getTraktAuth() {
+    if (typeof window === "undefined") return null;
+    try {
+      const raw = getScopedStorageItem(AUTH_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (typeof parsed.accessToken !== "string" || typeof parsed.refreshToken !== "string" || typeof parsed.expiresAt !== "number") {
+        return null;
+      }
+      return {
+        accessToken: parsed.accessToken,
+        refreshToken: parsed.refreshToken,
+        expiresAt: parsed.expiresAt,
+        scope: typeof parsed.scope === "string" ? parsed.scope : "",
+        tokenType: typeof parsed.tokenType === "string" ? parsed.tokenType : "bearer",
+        username: typeof parsed.username === "string" ? parsed.username : null,
+        name: typeof parsed.name === "string" ? parsed.name : null
+      };
+    } catch {
+      return null;
+    }
+  }
+  function emitChanged() {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent(EVENT));
+    }
+  }
+  function setTraktAuth(auth) {
+    if (typeof window === "undefined") return;
+    if (!auth) {
+      removeScopedStorageItem(AUTH_KEY);
+      emitChanged();
+      return;
+    }
+    setScopedStorageItem(AUTH_KEY, JSON.stringify(auth));
+    emitChanged();
+  }
+  function clearTraktAuth() {
+    setTraktAuth(null);
+  }
+  var SCROBBLE_KEY = "trakt_scrobble_enabled";
+  function getTraktScrobbleEnabled() {
+    if (typeof window === "undefined") return false;
+    return getScopedStorageItem(SCROBBLE_KEY) !== "0";
+  }
+
+  // lib/watched-episodes.ts
+  var KEY = "watched_episodes";
+  var EVENT2 = "lumio-watched-episodes-changed";
+  var DETAIL_EVENT = "lumio-watched-episode-mutated";
+  function epKey(tmdbId, season, episode) {
+    return `${tmdbId}-S${season}E${episode}`;
+  }
+  function read() {
+    if (typeof window === "undefined") return {};
+    try {
+      return JSON.parse(getScopedStorageItem(KEY) ?? "{}");
+    } catch {
+      return {};
+    }
+  }
+  function write(data) {
+    setScopedStorageItem(KEY, JSON.stringify(data));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent(EVENT2));
+    }
+  }
+  function isWatched(tmdbId, season, episode) {
+    return !!read()[epKey(tmdbId, season, episode)];
+  }
+  function setWatched(tmdbId, season, episode, watched, options) {
+    const data = read();
+    if (watched) {
+      data[epKey(tmdbId, season, episode)] = true;
+    } else {
+      delete data[epKey(tmdbId, season, episode)];
+    }
+    write(data);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent(DETAIL_EVENT, {
+        detail: {
+          tmdbId,
+          imdbId: options?.imdbId ?? null,
+          season,
+          episode,
+          watched,
+          source: options?.source ?? "local"
+        }
+      }));
+    }
+  }
+  function toggleWatched(tmdbId, season, episode, options) {
+    const next2 = !isWatched(tmdbId, season, episode);
+    setWatched(tmdbId, season, episode, next2, options);
+    return next2;
+  }
+  function getWatchedForSeries(tmdbId) {
+    const data = read();
+    const prefix = `${tmdbId}-`;
+    return new Set(Object.keys(data).filter((k) => k.startsWith(prefix)));
+  }
+  function markSeasonWatched(tmdbId, season, episodeCount, options) {
+    const data = read();
+    for (let e = 1; e <= episodeCount; e++) {
+      data[epKey(tmdbId, season, e)] = true;
+    }
+    write(data);
+    if (typeof window !== "undefined") {
+      for (let e = 1; e <= episodeCount; e++) {
+        window.dispatchEvent(new CustomEvent(DETAIL_EVENT, {
+          detail: {
+            tmdbId,
+            imdbId: options?.imdbId ?? null,
+            season,
+            episode: e,
+            watched: true,
+            source: options?.source ?? "local"
+          }
+        }));
+      }
+    }
+  }
+  function onWatchedEpisodesChanged(listener) {
+    if (typeof window === "undefined") return () => {
+    };
+    window.addEventListener(EVENT2, listener);
+    return () => window.removeEventListener(EVENT2, listener);
+  }
+
+  // lib/watched-movies.ts
+  var KEY_WATCHED_MOVIES = "watched_movies";
+  var EVENT_WATCHED_MOVIES_CHANGED = "lumio-watched-movies-changed";
+  var DETAIL_EVENT_WATCHED_MOVIE_MUTATED = "lumio-watched-movie-mutated";
+  function normalizeId(value) {
+    if (typeof value !== "string") return null;
+    const trimmed = value.trim();
+    return trimmed.length > 0 ? trimmed : null;
+  }
+  function normalizeTitle(value) {
+    if (typeof value !== "string") return null;
+    const normalized = value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+    return normalized.length > 0 ? normalized : null;
+  }
+  function normalizeYear(value) {
+    return typeof value === "number" && Number.isFinite(value) ? value : null;
+  }
+  function readEntries() {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = getScopedStorageItem(KEY_WATCHED_MOVIES);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((entry) => Boolean(entry) && typeof entry === "object").map((entry) => ({
+        tmdbId: normalizeId(typeof entry.tmdbId === "string" ? entry.tmdbId : null),
+        imdbId: normalizeId(typeof entry.imdbId === "string" ? entry.imdbId : null),
+        title: typeof entry.title === "string" ? entry.title : null,
+        year: normalizeYear(typeof entry.year === "number" ? entry.year : null),
+        posterUrl: typeof entry.posterUrl === "string" ? entry.posterUrl : null,
+        watchedAt: typeof entry.watchedAt === "string" && entry.watchedAt.trim().length > 0 ? entry.watchedAt : (/* @__PURE__ */ new Date()).toISOString()
+      })).filter((entry) => Boolean(entry.tmdbId || entry.imdbId || normalizeTitle(entry.title) && entry.year != null));
+    } catch {
+      return [];
+    }
+  }
+  function writeEntries(entries) {
+    if (typeof window === "undefined") return;
+    setScopedStorageItem(KEY_WATCHED_MOVIES, JSON.stringify(entries));
+    window.dispatchEvent(new CustomEvent(EVENT_WATCHED_MOVIES_CHANGED, {
+      detail: {
+        action: "add",
+        entry: entries[0] ?? { watchedAt: (/* @__PURE__ */ new Date()).toISOString() },
+        source: "local",
+        entries
+      }
+    }));
+  }
+  function emitMutation(mutation) {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new CustomEvent(DETAIL_EVENT_WATCHED_MOVIE_MUTATED, {
+      detail: {
+        ...mutation,
+        entries: readEntries()
+      }
+    }));
+  }
+  function sameMovie(entry, target) {
+    const entryTmdbId = normalizeId(entry.tmdbId);
+    const entryImdbId = normalizeId(entry.imdbId);
+    const entryTitle = normalizeTitle(entry.title);
+    const entryYear = normalizeYear(entry.year);
+    const targetTmdbId = normalizeId(target.tmdbId);
+    const targetImdbId = normalizeId(target.imdbId);
+    const targetTitle = normalizeTitle(target.title);
+    const targetYear = normalizeYear(target.year);
+    return Boolean(
+      entryTmdbId && targetTmdbId && entryTmdbId === targetTmdbId || entryImdbId && targetImdbId && entryImdbId === targetImdbId
+    ) || Boolean(
+      entryTitle && targetTitle && entryYear != null && targetYear != null && entryTitle === targetTitle && entryYear === targetYear
+    );
+  }
+  function setMovieWatched(entry, watched, options) {
+    const tmdbId = normalizeId(entry.tmdbId);
+    const imdbId = normalizeId(entry.imdbId);
+    const title = entry.title ?? null;
+    const year = normalizeYear(entry.year);
+    if (!tmdbId && !imdbId && !(normalizeTitle(title) && year != null)) return;
+    const current2 = readEntries();
+    const next2 = current2.filter((currentEntry) => !sameMovie(currentEntry, { tmdbId, imdbId, title, year }));
+    const nextEntry = {
+      tmdbId,
+      imdbId,
+      title,
+      year,
+      posterUrl: entry.posterUrl ?? null,
+      watchedAt: options?.watchedAt ?? entry.watchedAt ?? (/* @__PURE__ */ new Date()).toISOString()
+    };
+    if (watched) {
+      next2.unshift(nextEntry);
+    }
+    writeEntries(next2);
+    emitMutation({
+      action: watched ? "add" : "remove",
+      entry: nextEntry,
+      source: options?.source ?? "local"
+    });
+  }
+
+  // lib/playback-settings.ts
+  var KEY_DEFAULT_SUBTITLE_LANGUAGE = "playback_defaultSubtitleLanguage";
+  var KEY_FALLBACK_SUBTITLE_LANGUAGE = "playback_fallbackSubtitleLanguage";
+  var KEY_DEFAULT_AUDIO_LANGUAGE = "playback_defaultAudioLanguage";
+  var KEY_AUDIO_OUTPUT_MODE = "playback_audioOutputMode";
+  var KEY_DEFAULT_SUBTITLE_SIZE = "playback_defaultSubtitleSize";
+  var KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION = "playback_defaultSubtitleVerticalPosition";
+  var KEY_DEFAULT_SUBTITLE_OPACITY = "playback_defaultSubtitleOpacity";
+  var KEY_SUBTITLE_TEXT_COLOR = "playback_subtitleTextColor";
+  var KEY_SUBTITLE_BACKGROUND_COLOR = "playback_subtitleBackgroundColor";
+  var KEY_SUBTITLE_OUTLINE_COLOR = "playback_subtitleOutlineColor";
+  var KEY_DEFAULT_ASPECT_RATIO = "playback_defaultAspectRatio";
+  var KEY_REMEMBER_ASPECT_RATIO = "playback_rememberAspectRatio";
+  var KEY_AUTO_SKIP_INTRO = "playback_autoSkipIntro";
+  var KEY_AUTO_PLAY_MAX_STREAM_SIZE_GB = "playback_autoPlayMaxStreamSizeGb";
+  var KEY_STILL_WATCHING_ENABLED = "playback_stillWatchingEnabled";
+  var KEY_STILL_WATCHING_MAX_MINUTES = "playback_stillWatchingMaxMinutes";
+  var KEY_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES = "playback_disableSubtitlesWhenAudioMatches";
+  var KEY_NIGHT_MODE = "playback_nightMode";
+  var KEY_STAY_FULLSCREEN_ON_CLOSE = "playback_stayFullscreenOnClose";
+  var KEY_HIDE_SKIP_BUTTON_AFTER = "playback_hideSkipButtonAfterSeconds";
+  var KEY_SHOW_TITLE_ON_START = "playback_showTitleOnStart";
+  var KEY_SERIES_NAME_FIRST = "playback_seriesNameFirst";
+  var HIDE_SKIP_BUTTON_OPTIONS = [0, 5, 10, 30];
+  var PLAYBACK_SETTINGS_CHANGED_EVENT = "lumio-playback-settings-changed";
+  var LANG_NAMES = {
+    en: "English",
+    sv: "Svenska",
+    no: "Norsk",
+    da: "Dansk",
+    fi: "Suomi",
+    de: "Deutsch",
+    fr: "Fran\xE7ais",
+    es: "Espa\xF1ol",
+    it: "Italiano",
+    pt: "Portugu\xEAs",
+    nl: "Nederlands",
+    pl: "Polski",
+    ru: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
+    ar: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629",
+    hi: "\u0939\u093F\u0928\u094D\u0926\u0940",
+    zh: "\u4E2D\u6587",
+    ja: "\u65E5\u672C\u8A9E",
+    ko: "\uD55C\uAD6D\uC5B4",
+    tr: "T\xFCrk\xE7e",
+    cs: "\u010Ce\u0161tina",
+    ro: "Rom\xE2n\u0103",
+    hu: "Magyar",
+    el: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC",
+    he: "\u05E2\u05D1\u05E8\u05D9\u05EA",
+    uk: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430",
+    sr: "Srpski",
+    hr: "Hrvatski",
+    sk: "Sloven\u010Dina",
+    bg: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438",
+    vi: "Ti\u1EBFng Vi\u1EC7t",
+    th: "\u0E44\u0E17\u0E22",
+    id: "Bahasa Indonesia"
+  };
+  var NIGHT_MODE_OPTIONS = ["off", "mild", "strong"];
+  var ASPECT_RATIO_MODES = ["auto", "contain", "fill", "ratio_16_9", "ratio_4_3"];
+  var LANG3_TO_2 = {
+    eng: "en",
+    swe: "sv",
+    nor: "no",
+    dan: "da",
+    fin: "fi",
+    deu: "de",
+    ger: "de",
+    fra: "fr",
+    fre: "fr",
+    spa: "es",
+    ita: "it",
+    por: "pt",
+    nld: "nl",
+    dut: "nl",
+    pol: "pl",
+    rus: "ru",
+    ara: "ar",
+    hin: "hi",
+    zho: "zh",
+    chi: "zh",
+    jpn: "ja",
+    kor: "ko",
+    tur: "tr",
+    ces: "cs",
+    cze: "cs",
+    ron: "ro",
+    rum: "ro",
+    hun: "hu",
+    ell: "el",
+    gre: "el",
+    heb: "he",
+    ukr: "uk",
+    srp: "sr",
+    hrv: "hr",
+    slk: "sk",
+    bul: "bg",
+    vie: "vi",
+    tha: "th",
+    ind: "id"
+  };
+  var DEFAULT_SUBTITLE_SIZE = 100;
+  var DEFAULT_AUDIO_OUTPUT_MODE = "best";
+  var DEFAULT_SUBTITLE_VERTICAL_POSITION = 5;
+  var DEFAULT_SUBTITLE_OPACITY = 100;
+  var DEFAULT_SUBTITLE_TEXT_COLOR = "#ffffff";
+  var DEFAULT_SUBTITLE_BACKGROUND_COLOR = "transparent";
+  var DEFAULT_SUBTITLE_OUTLINE_COLOR = "#000000";
+  var DEFAULT_ASPECT_RATIO = "auto";
+  var DEFAULT_REMEMBER_ASPECT_RATIO = false;
+  var DEFAULT_AUTO_SKIP_INTRO = false;
+  var DEFAULT_STILL_WATCHING_ENABLED = false;
+  var DEFAULT_STILL_WATCHING_MAX_MINUTES = 90;
+  var DEFAULT_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES = false;
+  var DEFAULT_NIGHT_MODE = "off";
+  function getStoredString(key, fallback = "") {
+    if (typeof window === "undefined") return fallback;
+    return getScopedStorageItem(key) ?? fallback;
+  }
+  function emitPlaybackSettingsChanged() {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new Event(PLAYBACK_SETTINGS_CHANGED_EVENT));
+  }
+  function onPlaybackSettingsChanged(listener) {
+    if (typeof window === "undefined") return () => {
+    };
+    window.addEventListener(PLAYBACK_SETTINGS_CHANGED_EVENT, listener);
+    return () => window.removeEventListener(PLAYBACK_SETTINGS_CHANGED_EVENT, listener);
+  }
+  function normalizeLanguageCode(value) {
+    if (!value) return null;
+    const normalized = value.trim().toLowerCase();
+    if (!normalized) return null;
+    return LANG3_TO_2[normalized] ?? normalized;
+  }
+  function getDefaultSubtitleLanguage() {
+    return normalizeLanguageCode(getStoredString(KEY_DEFAULT_SUBTITLE_LANGUAGE, "")) ?? "";
+  }
+  function getFallbackSubtitleLanguage() {
+    return normalizeLanguageCode(getStoredString(KEY_FALLBACK_SUBTITLE_LANGUAGE, "")) ?? "";
+  }
+  function getDefaultAudioLanguage() {
+    return normalizeLanguageCode(getStoredString(KEY_DEFAULT_AUDIO_LANGUAGE, "")) ?? "";
+  }
+  function getAudioOutputMode() {
+    const stored = getStoredString(KEY_AUDIO_OUTPUT_MODE, DEFAULT_AUDIO_OUTPUT_MODE);
+    return stored === "compatible" || stored === "best" ? stored : DEFAULT_AUDIO_OUTPUT_MODE;
+  }
+  function getDefaultSubtitleSize() {
+    if (typeof window === "undefined") return DEFAULT_SUBTITLE_SIZE;
+    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_SIZE) ?? "", 10);
+    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_SIZE;
+  }
+  function setDefaultSubtitleSize(value) {
+    setScopedStorageItem(KEY_DEFAULT_SUBTITLE_SIZE, String(value));
+    emitPlaybackSettingsChanged();
+  }
+  function getDefaultSubtitleVerticalPosition() {
+    if (typeof window === "undefined") return DEFAULT_SUBTITLE_VERTICAL_POSITION;
+    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION) ?? "", 10);
+    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_VERTICAL_POSITION;
+  }
+  function setDefaultSubtitleVerticalPosition(value) {
+    setScopedStorageItem(KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION, String(value));
+    emitPlaybackSettingsChanged();
+  }
+  function getDefaultSubtitleOpacity() {
+    if (typeof window === "undefined") return DEFAULT_SUBTITLE_OPACITY;
+    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_OPACITY) ?? "", 10);
+    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_OPACITY;
+  }
+  function getSubtitleTextColor() {
+    return getStoredString(KEY_SUBTITLE_TEXT_COLOR, DEFAULT_SUBTITLE_TEXT_COLOR);
+  }
+  function getSubtitleBackgroundColor() {
+    return getStoredString(KEY_SUBTITLE_BACKGROUND_COLOR, DEFAULT_SUBTITLE_BACKGROUND_COLOR);
+  }
+  function getSubtitleOutlineColor() {
+    return getStoredString(KEY_SUBTITLE_OUTLINE_COLOR, DEFAULT_SUBTITLE_OUTLINE_COLOR);
+  }
+  function getDefaultAspectRatio() {
+    const stored = getStoredString(KEY_DEFAULT_ASPECT_RATIO, DEFAULT_ASPECT_RATIO);
+    return ASPECT_RATIO_MODES.includes(stored) ? stored : DEFAULT_ASPECT_RATIO;
+  }
+  function setDefaultAspectRatio(value) {
+    setScopedStorageItem(KEY_DEFAULT_ASPECT_RATIO, value);
+    emitPlaybackSettingsChanged();
+  }
+  function getRememberAspectRatio() {
+    if (typeof window === "undefined") return DEFAULT_REMEMBER_ASPECT_RATIO;
+    return (getScopedStorageItem(KEY_REMEMBER_ASPECT_RATIO) ?? "0") === "1";
+  }
+  function getAutoSkipIntro() {
+    if (typeof window === "undefined") return DEFAULT_AUTO_SKIP_INTRO;
+    return (getScopedStorageItem(KEY_AUTO_SKIP_INTRO) ?? "0") === "1";
+  }
+  function getStayFullscreenOnClose() {
+    if (typeof window === "undefined") return false;
+    return (getScopedStorageItem(KEY_STAY_FULLSCREEN_ON_CLOSE) ?? "0") === "1";
+  }
+  function getHideSkipButtonAfterSeconds() {
+    if (typeof window === "undefined") return 0;
+    const parsed = Number.parseInt(getScopedStorageItem(KEY_HIDE_SKIP_BUTTON_AFTER) ?? "", 10);
+    return HIDE_SKIP_BUTTON_OPTIONS.includes(parsed) ? parsed : 0;
+  }
+  function getSubtitlesOffByDefault() {
+    if (typeof window === "undefined") return false;
+    return getScopedStorageItem("playback_subtitlesOffByDefault") === "1";
+  }
+  function getTrackBlockWords() {
+    if (typeof window === "undefined") return [];
+    const raw = getScopedStorageItem("playback_trackBlockWords") ?? "";
+    return raw.split(",").map((word) => word.trim().toLowerCase()).filter(Boolean);
+  }
+  function getDownloadDir() {
+    if (typeof window === "undefined") return "";
+    try {
+      return window.localStorage.getItem("lumio_download_dir") ?? "";
+    } catch {
+      return "";
+    }
+  }
+  function getShowStreamQuality() {
+    if (typeof window === "undefined") return true;
+    return getScopedStorageItem("playback_showStreamQuality") !== "0";
+  }
+  function getShowTitleOnStart() {
+    if (typeof window === "undefined") return false;
+    return (getScopedStorageItem(KEY_SHOW_TITLE_ON_START) ?? "0") === "1";
+  }
+  function getSeriesNameFirst() {
+    if (typeof window === "undefined") return true;
+    return (getScopedStorageItem(KEY_SERIES_NAME_FIRST) ?? "1") === "1";
+  }
+  function getStillWatchingEnabled() {
+    if (typeof window === "undefined") return DEFAULT_STILL_WATCHING_ENABLED;
+    return (getScopedStorageItem(KEY_STILL_WATCHING_ENABLED) ?? "0") === "1";
+  }
+  function getStillWatchingMaxMinutes() {
+    if (typeof window === "undefined") return DEFAULT_STILL_WATCHING_MAX_MINUTES;
+    const raw = Number.parseInt(getScopedStorageItem(KEY_STILL_WATCHING_MAX_MINUTES) ?? "", 10);
+    if (!Number.isFinite(raw) || raw <= 0) return DEFAULT_STILL_WATCHING_MAX_MINUTES;
+    return raw;
+  }
+  var KEY_UPGRADE_SUBTITLE_WHEN_BETTER = "playback_upgradeSubtitleWhenBetter";
+  function getUpgradeSubtitleWhenBetter() {
+    if (typeof window === "undefined") return true;
+    return (getScopedStorageItem(KEY_UPGRADE_SUBTITLE_WHEN_BETTER) ?? "1") === "1";
+  }
+  var KEY_FORCED_SUBS_WHEN_AUDIO_MATCHES = "playback_forcedSubtitlesWhenAudioMatches";
+  function getForcedSubtitlesWhenAudioMatches() {
+    if (typeof window === "undefined") return false;
+    return (getScopedStorageItem(KEY_FORCED_SUBS_WHEN_AUDIO_MATCHES) ?? "0") === "1";
+  }
+  function getDisableSubtitlesWhenAudioMatches() {
+    if (typeof window === "undefined") return DEFAULT_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES;
+    return (getScopedStorageItem(KEY_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES) ?? "0") === "1";
+  }
+  function getAutoPlayMaxStreamSizeGb() {
+    if (typeof window === "undefined") return null;
+    const raw = Number.parseFloat(getScopedStorageItem(KEY_AUTO_PLAY_MAX_STREAM_SIZE_GB) ?? "");
+    if (!Number.isFinite(raw) || raw <= 0) return null;
+    return raw;
+  }
+  var KEY_EXTRA_SUBTITLE_LANGUAGES = "playback_extraSubtitleLanguages";
+  function getExtraSubtitleLanguagesRaw() {
+    if (typeof window === "undefined") return "";
+    return getScopedStorageItem(KEY_EXTRA_SUBTITLE_LANGUAGES) ?? "";
+  }
+  function getExtraSubtitleLanguages() {
+    return getExtraSubtitleLanguagesRaw().split(",").map((code) => code.trim().toLowerCase()).filter(Boolean);
+  }
+  var KEY_RAW_MPV_CONF = "playback_rawMpvConf";
+  function getRawMpvConf() {
+    if (typeof window === "undefined") return "";
+    return getScopedStorageItem(KEY_RAW_MPV_CONF) ?? "";
+  }
+  function parseRawMpvConf(raw) {
+    return raw.split("\n").map((line) => line.trim()).filter((line) => line && !line.startsWith("#")).map((line) => {
+      const eq = line.indexOf("=");
+      if (eq <= 0) return null;
+      const name = line.slice(0, eq).trim();
+      const value = line.slice(eq + 1).trim();
+      return name ? [name, value] : null;
+    }).filter((entry) => entry != null);
+  }
+  var KEY_PREFER_EMBEDDED_SUBTITLES = "playback_preferEmbeddedSubtitles";
+  function getPreferEmbeddedSubtitles() {
+    if (typeof window === "undefined") return false;
+    return (getScopedStorageItem(KEY_PREFER_EMBEDDED_SUBTITLES) ?? "0") === "1";
+  }
+  var KEY_EXTERNAL_PLAYER_APP = "playback_externalPlayerApp";
+  function getExternalPlayerApp() {
+    if (typeof window === "undefined") return "VLC";
+    const stored = (getScopedStorageItem(KEY_EXTERNAL_PLAYER_APP) ?? "").trim();
+    return stored || "VLC";
+  }
+  function getNightMode() {
+    const stored = getStoredString(KEY_NIGHT_MODE, DEFAULT_NIGHT_MODE);
+    return NIGHT_MODE_OPTIONS.includes(stored) ? stored : DEFAULT_NIGHT_MODE;
+  }
+  function setNightMode(value) {
+    setScopedStorageItem(KEY_NIGHT_MODE, value);
+    emitPlaybackSettingsChanged();
+  }
+
   // lib/async-utils.ts
   async function mapWithConcurrency(items, concurrency, mapper) {
     if (items.length === 0) return [];
@@ -167222,6 +170114,367 @@
     const workers = Array.from({ length: Math.min(limit, items.length) }, () => worker());
     await Promise.all(workers);
     return results;
+  }
+
+  // lib/series-watchlist-feed.ts
+  init_plugin_registry();
+
+  // lib/plugin-state.ts
+  var STORAGE_KEY2 = "lumio:plugin-state";
+  function normalizeState(state, fallback) {
+    return {
+      ...fallback,
+      ...state,
+      installed: state?.installed ?? fallback.installed,
+      active: state?.active ?? fallback.active,
+      order: state?.order ?? fallback.order,
+      sourceType: state?.sourceType ?? fallback.sourceType,
+      runtimeAvailable: state?.runtimeAvailable ?? fallback.runtimeAvailable
+    };
+  }
+  function readAll() {
+    if (typeof window === "undefined") return {};
+    try {
+      const raw = getScopedStorageItem(STORAGE_KEY2);
+      return raw ? JSON.parse(raw) : {};
+    } catch {
+      return {};
+    }
+  }
+  function getPluginPersistedState(pluginId, defaultOrder, defaults = {}) {
+    const all = readAll();
+    return normalizeState(all[pluginId], {
+      installed: true,
+      active: true,
+      sourceType: "builtin",
+      runtimeAvailable: true,
+      ...defaults,
+      order: defaults.order ?? defaultOrder
+    });
+  }
+  function isPluginEnabled(pluginId, defaultOrder = 0, defaults = {}) {
+    const state = getPluginPersistedState(pluginId, defaultOrder, defaults);
+    return Boolean(state.installed && state.active);
+  }
+
+  // lib/stream-provider-runtime/stream-filters.ts
+  var FILTER_KEY = "stream_provider_filters";
+  var LEGACY_FILTER_KEY = "rd_stream_filters";
+  var LEVEL_KEY = "stream_filter_level";
+  function getStreamFilterLevel() {
+    if (typeof window === "undefined") return "balanced";
+    const raw = getScopedStorageItem(LEVEL_KEY);
+    return raw === "strict" || raw === "off" ? raw : "balanced";
+  }
+  var CONTEXT_GLOBAL_KEY = "__lumioStreamFilterContext";
+  function readStreamFilterContext() {
+    if (typeof globalThis === "undefined") return {};
+    return globalThis[CONTEXT_GLOBAL_KEY] ?? {};
+  }
+  var DEFAULT_FILTERS = {
+    hideCam: true,
+    hideTs: true,
+    hideScr: true,
+    hideBelow720p: true
+  };
+  function getStreamFilters() {
+    try {
+      if (typeof window === "undefined") return DEFAULT_FILTERS;
+      const raw = getScopedStorageItem(FILTER_KEY) ?? getScopedStorageItem(LEGACY_FILTER_KEY);
+      if (!raw) return DEFAULT_FILTERS;
+      return { ...DEFAULT_FILTERS, ...JSON.parse(raw) };
+    } catch {
+      return DEFAULT_FILTERS;
+    }
+  }
+  function buildTorrentioQualityFilter(filters) {
+    const level = getStreamFilterLevel();
+    if (level === "off") return "";
+    const strict = level === "strict";
+    const parts = [];
+    if (strict || filters.hideCam) parts.push("cam", "hdcam");
+    if (strict || filters.hideTs) parts.push("ts", "tc");
+    if (strict || filters.hideScr) parts.push("scr", "dvdscr", "r5");
+    return parts.join(",");
+  }
+  function applyStreamFilters(streams, filters, context) {
+    const level = getStreamFilterLevel();
+    if (level === "off") return streams.map(() => true);
+    const strict = level === "strict";
+    const activeContext = context ?? readStreamFilterContext();
+    return streams.map((s) => {
+      const text = `${s.name} ${s.title}`.toUpperCase();
+      if ((strict || filters.hideCam) && /\bCAM\b|\bCAMRIP\b|\bCAM-RIP\b/.test(text)) return false;
+      if ((strict || filters.hideTs) && /\bHDTS\b|\bHDTC\b|\bTELESYNC\b|\bTELECINE\b/.test(text)) return false;
+      if ((strict || filters.hideTs) && /(?<![A-Z])TS(?![A-Z])/.test(text) && !/\d{3,4}P/.test(text)) return false;
+      if ((strict || filters.hideScr) && /\bSCR\b|\bSCREENER\b|\bDVDSCR\b|\bDVD-SCR\b/.test(text)) return false;
+      if (filters.hideBelow720p && /\b(480|360|240)P\b/.test(text)) return false;
+      if (strict) {
+        if (/\bSAMPLE\b|\bTRAILER\b/.test(text)) return false;
+        if (/\.(EXE|MSI|ISO|ZIP|RAR|7Z|LNK|BAT|CMD|SCR|APK)\b/.test(text)) return false;
+        if (activeContext.episode != null) {
+          const epTag = `E${String(activeContext.episode).padStart(2, "0")}`;
+          const hasSeasonMarker = /\bS\d{1,2}\b|\bSEASON[\s.]?\d{1,2}\b|\bS\d{2}[\s.-]/.test(text);
+          const hasAnyEpisode = /S\d{1,2}E\d{1,3}|\bE\d{2,3}\b|\d{1,2}X\d{2}/.test(text);
+          if (hasAnyEpisode && !text.includes(epTag) && !new RegExp(`\\d{1,2}X${String(activeContext.episode).padStart(2, "0")}`).test(text)) return false;
+          if (!hasAnyEpisode && hasSeasonMarker && /\bCOMPLETE\b|\bPACK\b|\bSEASON\b/.test(text)) return false;
+        }
+        if (activeContext.year && activeContext.episode == null) {
+          const years = (text.match(/\b(19|20)\d{2}\b/g) ?? []).map(Number);
+          if (years.length > 0 && !years.some((y) => Math.abs(y - Number(activeContext.year)) <= 1)) return false;
+        }
+      }
+      return true;
+    });
+  }
+
+  // lib/media-stream/availability-throttle.ts
+  var MIN_INTERVAL_MS = 1500;
+  var nextSlotAt = 0;
+  async function awaitAvailabilitySlot() {
+    const now3 = Date.now();
+    const at = Math.max(now3, nextSlotAt);
+    nextSlotAt = at + MIN_INTERVAL_MS;
+    if (at > now3) {
+      await new Promise((resolve) => setTimeout(resolve, at - now3));
+    }
+  }
+  var RATE_LIMIT_COOLDOWN_MS = 10 * 60 * 1e3;
+  var rateLimitedUntil = 0;
+  function markAvailabilityRateLimited() {
+    rateLimitedUntil = Date.now() + RATE_LIMIT_COOLDOWN_MS;
+  }
+  function availabilityRateLimited() {
+    return Date.now() < rateLimitedUntil;
+  }
+  function isRateLimitNotice(text) {
+    return Boolean(text && (/rate.?limit/i.test(text) || /\b429\b/.test(text)));
+  }
+
+  // lib/stream-provider-runtime/stream-provider-url-builder.ts
+  function buildScraperUrl(config) {
+    switch (config.preset) {
+      case "torrentio":
+        return buildTorrentioUrl(config.options);
+      case "torrentsdb":
+        return buildTorrentsDbUrl(config.options);
+      case "comet":
+        return buildCometUrl(config.options);
+      case "jackettio":
+        return buildJackettioUrl(config.options);
+      case "aiostreams":
+        return buildAiostreamsUrl(config.options);
+      case "orion":
+        return buildOrionUrl(config.options);
+      case "custom":
+        return buildCustomUrl(config.options);
+      default:
+        return "";
+    }
+  }
+  function buildScraperCacheUrl(config) {
+    if (config.preset !== "torrentio") {
+      return buildScraperUrl(config);
+    }
+    return buildTorrentioCacheUrl(config.options);
+  }
+  function resolveScraperAccessKey(config) {
+    switch (config.preset) {
+      case "torrentio": {
+        const opts = config.options;
+        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
+      }
+      case "torrentsdb": {
+        const opts = config.options;
+        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
+      }
+      case "comet": {
+        const opts = config.options;
+        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
+      }
+      case "jackettio": {
+        const opts = config.options;
+        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
+      }
+      case "orion": {
+        const opts = config.options;
+        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
+      }
+      default:
+        return "";
+    }
+  }
+  function getScraperTypeForApi(config) {
+    return config.preset === "torrentio" ? "torrentio" : "preconfigured";
+  }
+  function getScraperDisplayName(config) {
+    switch (config.preset) {
+      case "torrentio":
+        return "Torrentio";
+      case "torrentsdb":
+        return "TorrentsDB";
+      case "comet":
+        return "Comet";
+      case "jackettio":
+        return "Jackettio";
+      case "aiostreams":
+        return "AIOStreams";
+      case "orion":
+        return "Orion";
+      case "custom": {
+        const opts = config.options;
+        try {
+          return new URL(opts.rawUrl.replace(/^stremio:\/\//, "https://")).hostname;
+        } catch {
+          return "Custom";
+        }
+      }
+      default:
+        return "Scraper";
+    }
+  }
+  function buildTorrentioSegments(options) {
+    const segments = [];
+    if (options.providers.length > 0) segments.push(`providers=${options.providers.join(",")}`);
+    if (options.sort && options.sort !== "quality") segments.push(`sort=${options.sort}`);
+    if (options.languages.length > 0) segments.push(`language=${options.languages.join(",")}`);
+    if (options.qualityFilter.length > 0) segments.push(`qualityfilter=${options.qualityFilter.join(",")}`);
+    if (options.limit > 0) segments.push(`limit=${options.limit}`);
+    return segments;
+  }
+  function buildTorrentioUrl(options) {
+    return buildTorrentioCacheUrl(options);
+  }
+  function buildTorrentioCacheUrl(options) {
+    const streamProvider = (options.streamProvider ?? options.debridProvider ?? "realdebrid").trim().toLowerCase();
+    const accessKey = getStreamProviderAccessKey(streamProvider);
+    const segments = buildTorrentioSegments(options);
+    if (accessKey && streamProvider !== "none") segments.push(`${streamProvider}=${accessKey}`);
+    const base = "https://torrentio.strem.fun";
+    return segments.length > 0 ? `${base}/${segments.join("|")}` : base;
+  }
+  function buildTorrentsDbUrl(options) {
+    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
+    const accessKey = getStreamProviderAccessKey(streamProvider);
+    const cfg = {};
+    if (accessKey && streamProvider !== "none") cfg[streamProvider] = accessKey;
+    const b64 = btoa(JSON.stringify(cfg));
+    return `https://torrentsdb.com/${b64}`;
+  }
+  var COMET_RESOLUTION_MAP = {
+    "240p": "r240p",
+    "360p": "r360p",
+    "480p": "r480p",
+    "576p": "r576p",
+    "720p": "r720p",
+    "1080p": "r1080p",
+    "1440p": "r1440p",
+    "2160p": "r2160p",
+    "unknown": "unknown"
+  };
+  function buildCometUrl(options) {
+    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
+    const accessKey = getStreamProviderAccessKey(streamProvider);
+    const resolutions = {};
+    for (const q of options.qualityFilter) {
+      const key = COMET_RESOLUTION_MAP[q];
+      if (key) resolutions[key] = false;
+    }
+    const cfg = {
+      debridServices: accessKey && streamProvider !== "none" ? [{ service: streamProvider, apiKey: accessKey }] : [],
+      enableTorrent: !accessKey || streamProvider === "none",
+      deduplicateStreams: false,
+      scrapeDebridAccountTorrents: false,
+      maxResultsPerResolution: options.maxResults,
+      maxSize: options.maxSize > 0 ? options.maxSize * 1024 * 1024 * 1024 : 0,
+      cachedOnly: options.cachedOnly,
+      sortCachedUncachedTogether: options.sortCachedUncachedTogether,
+      removeTrash: true,
+      debridStreamProxyPassword: "",
+      resultFormat: ["all"],
+      resolutions,
+      languages: {
+        required: [],
+        allowed: [],
+        exclude: [],
+        preferred: options.languages
+      },
+      options: {
+        remove_ranks_under: -1e10,
+        allow_english_in_languages: false,
+        remove_unknown_languages: false
+      }
+    };
+    return `https://comet.elfhosted.com/${btoa(JSON.stringify(cfg))}`;
+  }
+  var JACKETTIO_QUALITY_MAP = {
+    "unknown": 0,
+    "360p": 360,
+    "480p": 480,
+    "720p": 720,
+    "1080p": 1080,
+    "2160p": 2160
+  };
+  function buildJackettioUrl(options) {
+    const streamProvider = (options.streamProvider ?? options.debridProvider ?? "realdebrid").trim().toLowerCase();
+    const accessKey = getStreamProviderAccessKey(streamProvider);
+    if (!accessKey || streamProvider === "none") return "";
+    const excluded = new Set(
+      options.qualityFilter.map((q) => JACKETTIO_QUALITY_MAP[q]).filter((v) => v !== void 0)
+    );
+    const qualities = Object.values(JACKETTIO_QUALITY_MAP).filter((v) => !excluded.has(v));
+    const cfg = {
+      qualities,
+      excludeKeywords: [],
+      maxTorrents: options.maxTorrents > 0 ? options.maxTorrents : 8,
+      priotizeLanguages: options.languages,
+      priotizePackTorrents: 2,
+      forceCacheNextEpisode: false,
+      sortCached: [["quality", true], ["size", true]],
+      sortUncached: [["seeders", true]],
+      hideUncached: options.hideUncached,
+      indexers: ["all"],
+      indexerTimeoutSec: 60,
+      passkey: "",
+      metaLanguage: "",
+      enableMediaFlow: false,
+      mediaflowProxyUrl: "",
+      mediaflowApiPassword: "",
+      mediaflowPublicIp: "",
+      debridId: streamProvider,
+      debridApiKey: accessKey
+    };
+    return `https://jackettio.elfhosted.com/${btoa(JSON.stringify(cfg))}`;
+  }
+  function buildAiostreamsUrl(options) {
+    return options.manifestUrl.trim().replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "").replace(/\/$/, "");
+  }
+  function buildOrionUrl(options) {
+    if (!options.orionKey.trim()) return "";
+    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
+    const rdToken = getStreamProviderAccessKey(streamProvider);
+    const params = [];
+    if (rdToken && streamProvider !== "none") params.push(`${streamProvider}=${rdToken}`);
+    const key = options.orionKey.trim();
+    return params.length > 0 ? `https://addon.orionoid.com/${key}/${params.join("|")}` : `https://addon.orionoid.com/${key}`;
+  }
+  function buildCustomUrl(options) {
+    return options.rawUrl.trim().replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "").replace(/\/$/, "");
+  }
+  function buildStreamProviderUrl(config) {
+    return buildScraperUrl(config);
+  }
+  function buildStreamProviderCacheUrl(config) {
+    return buildScraperCacheUrl(config);
+  }
+  function resolveStreamProviderAccessKey(config) {
+    return resolveScraperAccessKey(config);
+  }
+  function getStreamProviderTypeForApi(config) {
+    return getScraperTypeForApi(config);
+  }
+  function getStreamProviderDisplayName(config) {
+    return getScraperDisplayName(config);
   }
 
   // lib/stream-provider-runtime/playback/providers/alldebrid-playback-provider.ts
@@ -167789,741 +171042,836 @@
     }
   };
 
-  // lib/watched-episodes.ts
-  var KEY = "watched_episodes";
-  var EVENT = "lumio-watched-episodes-changed";
-  var DETAIL_EVENT = "lumio-watched-episode-mutated";
-  function epKey(tmdbId, season, episode) {
-    return `${tmdbId}-S${season}E${episode}`;
-  }
-  function read() {
-    if (typeof window === "undefined") return {};
-    try {
-      return JSON.parse(getScopedStorageItem(KEY) ?? "{}");
-    } catch {
-      return {};
-    }
-  }
-  function write(data) {
-    setScopedStorageItem(KEY, JSON.stringify(data));
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent(EVENT));
-    }
-  }
-  function isWatched(tmdbId, season, episode) {
-    return !!read()[epKey(tmdbId, season, episode)];
-  }
-  function setWatched(tmdbId, season, episode, watched, options) {
-    const data = read();
-    if (watched) {
-      data[epKey(tmdbId, season, episode)] = true;
-    } else {
-      delete data[epKey(tmdbId, season, episode)];
-    }
-    write(data);
-    if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent(DETAIL_EVENT, {
-        detail: {
-          tmdbId,
-          imdbId: options?.imdbId ?? null,
-          season,
-          episode,
-          watched,
-          source: options?.source ?? "local"
-        }
-      }));
-    }
-  }
-  function toggleWatched(tmdbId, season, episode, options) {
-    const next2 = !isWatched(tmdbId, season, episode);
-    setWatched(tmdbId, season, episode, next2, options);
-    return next2;
-  }
-  function getWatchedForSeries(tmdbId) {
-    const data = read();
-    const prefix = `${tmdbId}-`;
-    return new Set(Object.keys(data).filter((k) => k.startsWith(prefix)));
-  }
-  function markSeasonWatched(tmdbId, season, episodeCount, options) {
-    const data = read();
-    for (let e = 1; e <= episodeCount; e++) {
-      data[epKey(tmdbId, season, e)] = true;
-    }
-    write(data);
-    if (typeof window !== "undefined") {
-      for (let e = 1; e <= episodeCount; e++) {
-        window.dispatchEvent(new CustomEvent(DETAIL_EVENT, {
-          detail: {
-            tmdbId,
-            imdbId: options?.imdbId ?? null,
-            season,
-            episode: e,
-            watched: true,
-            source: options?.source ?? "local"
-          }
-        }));
-      }
-    }
-  }
-  function onWatchedEpisodesChanged(listener) {
-    if (typeof window === "undefined") return () => {
-    };
-    window.addEventListener(EVENT, listener);
-    return () => window.removeEventListener(EVENT, listener);
-  }
-
-  // lib/watched-movies.ts
-  var KEY_WATCHED_MOVIES = "watched_movies";
-  var EVENT_WATCHED_MOVIES_CHANGED = "lumio-watched-movies-changed";
-  var DETAIL_EVENT_WATCHED_MOVIE_MUTATED = "lumio-watched-movie-mutated";
-  function normalizeId(value) {
-    if (typeof value !== "string") return null;
-    const trimmed = value.trim();
-    return trimmed.length > 0 ? trimmed : null;
-  }
-  function normalizeTitle(value) {
-    if (typeof value !== "string") return null;
-    const normalized = value.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-    return normalized.length > 0 ? normalized : null;
-  }
-  function normalizeYear(value) {
-    return typeof value === "number" && Number.isFinite(value) ? value : null;
-  }
-  function readEntries() {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = getScopedStorageItem(KEY_WATCHED_MOVIES);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) return [];
-      return parsed.filter((entry) => Boolean(entry) && typeof entry === "object").map((entry) => ({
-        tmdbId: normalizeId(typeof entry.tmdbId === "string" ? entry.tmdbId : null),
-        imdbId: normalizeId(typeof entry.imdbId === "string" ? entry.imdbId : null),
-        title: typeof entry.title === "string" ? entry.title : null,
-        year: normalizeYear(typeof entry.year === "number" ? entry.year : null),
-        posterUrl: typeof entry.posterUrl === "string" ? entry.posterUrl : null,
-        watchedAt: typeof entry.watchedAt === "string" && entry.watchedAt.trim().length > 0 ? entry.watchedAt : (/* @__PURE__ */ new Date()).toISOString()
-      })).filter((entry) => Boolean(entry.tmdbId || entry.imdbId || normalizeTitle(entry.title) && entry.year != null));
-    } catch {
-      return [];
-    }
-  }
-  function writeEntries(entries) {
-    if (typeof window === "undefined") return;
-    setScopedStorageItem(KEY_WATCHED_MOVIES, JSON.stringify(entries));
-    window.dispatchEvent(new CustomEvent(EVENT_WATCHED_MOVIES_CHANGED, {
-      detail: {
-        action: "add",
-        entry: entries[0] ?? { watchedAt: (/* @__PURE__ */ new Date()).toISOString() },
-        source: "local",
-        entries
-      }
-    }));
-  }
-  function emitMutation(mutation) {
-    if (typeof window === "undefined") return;
-    window.dispatchEvent(new CustomEvent(DETAIL_EVENT_WATCHED_MOVIE_MUTATED, {
-      detail: {
-        ...mutation,
-        entries: readEntries()
-      }
-    }));
-  }
-  function sameMovie(entry, target) {
-    const entryTmdbId = normalizeId(entry.tmdbId);
-    const entryImdbId = normalizeId(entry.imdbId);
-    const entryTitle = normalizeTitle(entry.title);
-    const entryYear = normalizeYear(entry.year);
-    const targetTmdbId = normalizeId(target.tmdbId);
-    const targetImdbId = normalizeId(target.imdbId);
-    const targetTitle = normalizeTitle(target.title);
-    const targetYear = normalizeYear(target.year);
-    return Boolean(
-      entryTmdbId && targetTmdbId && entryTmdbId === targetTmdbId || entryImdbId && targetImdbId && entryImdbId === targetImdbId
-    ) || Boolean(
-      entryTitle && targetTitle && entryYear != null && targetYear != null && entryTitle === targetTitle && entryYear === targetYear
-    );
-  }
-  function setMovieWatched(entry, watched, options) {
-    const tmdbId = normalizeId(entry.tmdbId);
-    const imdbId = normalizeId(entry.imdbId);
-    const title = entry.title ?? null;
-    const year = normalizeYear(entry.year);
-    if (!tmdbId && !imdbId && !(normalizeTitle(title) && year != null)) return;
-    const current2 = readEntries();
-    const next2 = current2.filter((currentEntry) => !sameMovie(currentEntry, { tmdbId, imdbId, title, year }));
-    const nextEntry = {
-      tmdbId,
-      imdbId,
-      title,
-      year,
-      posterUrl: entry.posterUrl ?? null,
-      watchedAt: options?.watchedAt ?? entry.watchedAt ?? (/* @__PURE__ */ new Date()).toISOString()
-    };
-    if (watched) {
-      next2.unshift(nextEntry);
-    }
-    writeEntries(next2);
-    emitMutation({
-      action: watched ? "add" : "remove",
-      entry: nextEntry,
-      source: options?.source ?? "local"
-    });
-  }
-
-  // lib/playback-settings.ts
-  var KEY_DEFAULT_SUBTITLE_LANGUAGE = "playback_defaultSubtitleLanguage";
-  var KEY_FALLBACK_SUBTITLE_LANGUAGE = "playback_fallbackSubtitleLanguage";
-  var KEY_DEFAULT_AUDIO_LANGUAGE = "playback_defaultAudioLanguage";
-  var KEY_AUDIO_OUTPUT_MODE = "playback_audioOutputMode";
-  var KEY_DEFAULT_SUBTITLE_SIZE = "playback_defaultSubtitleSize";
-  var KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION = "playback_defaultSubtitleVerticalPosition";
-  var KEY_DEFAULT_SUBTITLE_OPACITY = "playback_defaultSubtitleOpacity";
-  var KEY_SUBTITLE_TEXT_COLOR = "playback_subtitleTextColor";
-  var KEY_SUBTITLE_BACKGROUND_COLOR = "playback_subtitleBackgroundColor";
-  var KEY_SUBTITLE_OUTLINE_COLOR = "playback_subtitleOutlineColor";
-  var KEY_DEFAULT_ASPECT_RATIO = "playback_defaultAspectRatio";
-  var KEY_REMEMBER_ASPECT_RATIO = "playback_rememberAspectRatio";
-  var KEY_AUTO_SKIP_INTRO = "playback_autoSkipIntro";
-  var KEY_AUTO_PLAY_MAX_STREAM_SIZE_GB = "playback_autoPlayMaxStreamSizeGb";
-  var KEY_STILL_WATCHING_ENABLED = "playback_stillWatchingEnabled";
-  var KEY_STILL_WATCHING_MAX_MINUTES = "playback_stillWatchingMaxMinutes";
-  var KEY_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES = "playback_disableSubtitlesWhenAudioMatches";
-  var KEY_NIGHT_MODE = "playback_nightMode";
-  var PLAYBACK_SETTINGS_CHANGED_EVENT = "lumio-playback-settings-changed";
-  var LANG_NAMES = {
-    en: "English",
-    sv: "Svenska",
-    no: "Norsk",
-    da: "Dansk",
-    fi: "Suomi",
-    de: "Deutsch",
-    fr: "Fran\xE7ais",
-    es: "Espa\xF1ol",
-    it: "Italiano",
-    pt: "Portugu\xEAs",
-    nl: "Nederlands",
-    pl: "Polski",
-    ru: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439",
-    ar: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629",
-    hi: "\u0939\u093F\u0928\u094D\u0926\u0940",
-    zh: "\u4E2D\u6587",
-    ja: "\u65E5\u672C\u8A9E",
-    ko: "\uD55C\uAD6D\uC5B4",
-    tr: "T\xFCrk\xE7e",
-    cs: "\u010Ce\u0161tina",
-    ro: "Rom\xE2n\u0103",
-    hu: "Magyar",
-    el: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC",
-    he: "\u05E2\u05D1\u05E8\u05D9\u05EA",
-    uk: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430",
-    sr: "Srpski",
-    hr: "Hrvatski",
-    sk: "Sloven\u010Dina",
-    bg: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438",
-    vi: "Ti\u1EBFng Vi\u1EC7t",
-    th: "\u0E44\u0E17\u0E22",
-    id: "Bahasa Indonesia"
-  };
-  var NIGHT_MODE_OPTIONS = ["off", "mild", "strong"];
-  var ASPECT_RATIO_MODES = ["auto", "contain", "fill", "ratio_16_9", "ratio_4_3"];
-  var LANG3_TO_2 = {
-    eng: "en",
-    swe: "sv",
-    nor: "no",
-    dan: "da",
-    fin: "fi",
-    deu: "de",
-    ger: "de",
-    fra: "fr",
-    fre: "fr",
-    spa: "es",
-    ita: "it",
-    por: "pt",
-    nld: "nl",
-    dut: "nl",
-    pol: "pl",
-    rus: "ru",
-    ara: "ar",
-    hin: "hi",
-    zho: "zh",
-    chi: "zh",
-    jpn: "ja",
-    kor: "ko",
-    tur: "tr",
-    ces: "cs",
-    cze: "cs",
-    ron: "ro",
-    rum: "ro",
-    hun: "hu",
-    ell: "el",
-    gre: "el",
-    heb: "he",
-    ukr: "uk",
-    srp: "sr",
-    hrv: "hr",
-    slk: "sk",
-    bul: "bg",
-    vie: "vi",
-    tha: "th",
-    ind: "id"
-  };
-  var DEFAULT_SUBTITLE_SIZE = 100;
-  var DEFAULT_AUDIO_OUTPUT_MODE = "best";
-  var DEFAULT_SUBTITLE_VERTICAL_POSITION = 5;
-  var DEFAULT_SUBTITLE_OPACITY = 100;
-  var DEFAULT_SUBTITLE_TEXT_COLOR = "#ffffff";
-  var DEFAULT_SUBTITLE_BACKGROUND_COLOR = "transparent";
-  var DEFAULT_SUBTITLE_OUTLINE_COLOR = "#000000";
-  var DEFAULT_ASPECT_RATIO = "auto";
-  var DEFAULT_REMEMBER_ASPECT_RATIO = false;
-  var DEFAULT_AUTO_SKIP_INTRO = false;
-  var DEFAULT_STILL_WATCHING_ENABLED = false;
-  var DEFAULT_STILL_WATCHING_MAX_MINUTES = 90;
-  var DEFAULT_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES = false;
-  var DEFAULT_NIGHT_MODE = "off";
-  function getStoredString(key, fallback = "") {
-    if (typeof window === "undefined") return fallback;
-    return getScopedStorageItem(key) ?? fallback;
-  }
-  function emitPlaybackSettingsChanged() {
-    if (typeof window === "undefined") return;
-    window.dispatchEvent(new Event(PLAYBACK_SETTINGS_CHANGED_EVENT));
-  }
-  function onPlaybackSettingsChanged(listener) {
-    if (typeof window === "undefined") return () => {
-    };
-    window.addEventListener(PLAYBACK_SETTINGS_CHANGED_EVENT, listener);
-    return () => window.removeEventListener(PLAYBACK_SETTINGS_CHANGED_EVENT, listener);
-  }
-  function normalizeLanguageCode(value) {
-    if (!value) return null;
-    const normalized = value.trim().toLowerCase();
-    if (!normalized) return null;
-    return LANG3_TO_2[normalized] ?? normalized;
-  }
-  function getDefaultSubtitleLanguage() {
-    return normalizeLanguageCode(getStoredString(KEY_DEFAULT_SUBTITLE_LANGUAGE, "")) ?? "";
-  }
-  function getFallbackSubtitleLanguage() {
-    return normalizeLanguageCode(getStoredString(KEY_FALLBACK_SUBTITLE_LANGUAGE, "")) ?? "";
-  }
-  function getDefaultAudioLanguage() {
-    return normalizeLanguageCode(getStoredString(KEY_DEFAULT_AUDIO_LANGUAGE, "")) ?? "";
-  }
-  function getAudioOutputMode() {
-    const stored = getStoredString(KEY_AUDIO_OUTPUT_MODE, DEFAULT_AUDIO_OUTPUT_MODE);
-    return stored === "compatible" || stored === "best" ? stored : DEFAULT_AUDIO_OUTPUT_MODE;
-  }
-  function getDefaultSubtitleSize() {
-    if (typeof window === "undefined") return DEFAULT_SUBTITLE_SIZE;
-    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_SIZE) ?? "", 10);
-    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_SIZE;
-  }
-  function setDefaultSubtitleSize(value) {
-    setScopedStorageItem(KEY_DEFAULT_SUBTITLE_SIZE, String(value));
-    emitPlaybackSettingsChanged();
-  }
-  function getDefaultSubtitleVerticalPosition() {
-    if (typeof window === "undefined") return DEFAULT_SUBTITLE_VERTICAL_POSITION;
-    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION) ?? "", 10);
-    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_VERTICAL_POSITION;
-  }
-  function setDefaultSubtitleVerticalPosition(value) {
-    setScopedStorageItem(KEY_DEFAULT_SUBTITLE_VERTICAL_POSITION, String(value));
-    emitPlaybackSettingsChanged();
-  }
-  function getDefaultSubtitleOpacity() {
-    if (typeof window === "undefined") return DEFAULT_SUBTITLE_OPACITY;
-    const raw = parseInt(getScopedStorageItem(KEY_DEFAULT_SUBTITLE_OPACITY) ?? "", 10);
-    return Number.isFinite(raw) ? raw : DEFAULT_SUBTITLE_OPACITY;
-  }
-  function getSubtitleTextColor() {
-    return getStoredString(KEY_SUBTITLE_TEXT_COLOR, DEFAULT_SUBTITLE_TEXT_COLOR);
-  }
-  function getSubtitleBackgroundColor() {
-    return getStoredString(KEY_SUBTITLE_BACKGROUND_COLOR, DEFAULT_SUBTITLE_BACKGROUND_COLOR);
-  }
-  function getSubtitleOutlineColor() {
-    return getStoredString(KEY_SUBTITLE_OUTLINE_COLOR, DEFAULT_SUBTITLE_OUTLINE_COLOR);
-  }
-  function getDefaultAspectRatio() {
-    const stored = getStoredString(KEY_DEFAULT_ASPECT_RATIO, DEFAULT_ASPECT_RATIO);
-    return ASPECT_RATIO_MODES.includes(stored) ? stored : DEFAULT_ASPECT_RATIO;
-  }
-  function setDefaultAspectRatio(value) {
-    setScopedStorageItem(KEY_DEFAULT_ASPECT_RATIO, value);
-    emitPlaybackSettingsChanged();
-  }
-  function getRememberAspectRatio() {
-    if (typeof window === "undefined") return DEFAULT_REMEMBER_ASPECT_RATIO;
-    return (getScopedStorageItem(KEY_REMEMBER_ASPECT_RATIO) ?? "0") === "1";
-  }
-  function getAutoSkipIntro() {
-    if (typeof window === "undefined") return DEFAULT_AUTO_SKIP_INTRO;
-    return (getScopedStorageItem(KEY_AUTO_SKIP_INTRO) ?? "0") === "1";
-  }
-  function getStillWatchingEnabled() {
-    if (typeof window === "undefined") return DEFAULT_STILL_WATCHING_ENABLED;
-    return (getScopedStorageItem(KEY_STILL_WATCHING_ENABLED) ?? "0") === "1";
-  }
-  function getStillWatchingMaxMinutes() {
-    if (typeof window === "undefined") return DEFAULT_STILL_WATCHING_MAX_MINUTES;
-    const raw = Number.parseInt(getScopedStorageItem(KEY_STILL_WATCHING_MAX_MINUTES) ?? "", 10);
-    if (!Number.isFinite(raw) || raw <= 0) return DEFAULT_STILL_WATCHING_MAX_MINUTES;
-    return raw;
-  }
-  function getDisableSubtitlesWhenAudioMatches() {
-    if (typeof window === "undefined") return DEFAULT_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES;
-    return (getScopedStorageItem(KEY_DISABLE_SUBTITLES_WHEN_AUDIO_MATCHES) ?? "0") === "1";
-  }
-  function getAutoPlayMaxStreamSizeGb() {
+  // lib/stream-provider-runtime/real-debrid/rd-client.ts
+  var RD_PROXY = "/api/stream-providers/realdebrid";
+  var RD_API_BASE_URL = "https://api.real-debrid.com/rest/1.0";
+  function getRdApiKey() {
     if (typeof window === "undefined") return null;
-    const raw = Number.parseFloat(getScopedStorageItem(KEY_AUTO_PLAY_MAX_STREAM_SIZE_GB) ?? "");
-    if (!Number.isFinite(raw) || raw <= 0) return null;
-    return raw;
+    const key = getGlobalStreamProviderAccessKey("realdebrid").trim();
+    return key || null;
   }
-  var KEY_EXTERNAL_PLAYER_APP = "playback_externalPlayerApp";
-  function getExternalPlayerApp() {
-    if (typeof window === "undefined") return "VLC";
-    const stored = (getScopedStorageItem(KEY_EXTERNAL_PLAYER_APP) ?? "").trim();
-    return stored || "VLC";
-  }
-  function getNightMode() {
-    const stored = getStoredString(KEY_NIGHT_MODE, DEFAULT_NIGHT_MODE);
-    return NIGHT_MODE_OPTIONS.includes(stored) ? stored : DEFAULT_NIGHT_MODE;
-  }
-  function setNightMode(value) {
-    setScopedStorageItem(KEY_NIGHT_MODE, value);
-    emitPlaybackSettingsChanged();
-  }
-
-  // lib/series-watchlist-feed.ts
-  init_plugin_registry();
-
-  // lib/plugin-state.ts
-  var STORAGE_KEY2 = "lumio:plugin-state";
-  function normalizeState(state, fallback) {
-    return {
-      ...fallback,
-      ...state,
-      installed: state?.installed ?? fallback.installed,
-      active: state?.active ?? fallback.active,
-      order: state?.order ?? fallback.order,
-      sourceType: state?.sourceType ?? fallback.sourceType,
-      runtimeAvailable: state?.runtimeAvailable ?? fallback.runtimeAvailable
+  async function rdFetch(path, options = {}) {
+    const key = getRdApiKey();
+    const headers = {
+      ...options.headers
     };
+    if (key) headers["x-stream-provider-token"] = key;
+    return fetch(`${RD_PROXY}${path}`, { ...options, headers });
   }
-  function readAll() {
-    if (typeof window === "undefined") return {};
-    try {
-      const raw = getScopedStorageItem(STORAGE_KEY2);
-      return raw ? JSON.parse(raw) : {};
-    } catch {
-      return {};
+  async function rdDesktopJson(path, method = "GET", body) {
+    const token = getRdApiKey();
+    if (!token) throw new Error("No Real-Debrid API key configured");
+    const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
+    const headers = [`Authorization: Bearer ${token}`];
+    if (body && body.trim().length > 0) {
+      headers.push("Content-Type: application/x-www-form-urlencoded");
     }
-  }
-  function getPluginPersistedState(pluginId, defaultOrder, defaults = {}) {
-    const all = readAll();
-    return normalizeState(all[pluginId], {
-      installed: true,
-      active: true,
-      sourceType: "builtin",
-      runtimeAvailable: true,
-      ...defaults,
-      order: defaults.order ?? defaultOrder
+    return invoke2("desktop_external_api_request", {
+      baseUrl: RD_API_BASE_URL,
+      path,
+      method,
+      headers,
+      body: body ?? null,
+      timeoutMs: 12e3
     });
   }
-  function isPluginEnabled(pluginId, defaultOrder = 0, defaults = {}) {
-    const state = getPluginPersistedState(pluginId, defaultOrder, defaults);
-    return Boolean(state.installed && state.active);
+  function isTransientDesktopRdError(error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const normalized = message.toLowerCase();
+    return normalized.includes("timeout") || normalized.includes("timed out") || normalized.includes("failed to fetch") || normalized.includes("connection") || normalized.includes("network") || normalized.includes("reset by peer") || normalized.includes("could not resolve host") || normalized.includes("empty reply");
   }
-
-  // lib/stream-provider-runtime/stream-filters.ts
-  var FILTER_KEY = "stream_provider_filters";
-  var LEGACY_FILTER_KEY = "rd_stream_filters";
-  var DEFAULT_FILTERS = {
-    hideCam: true,
-    hideTs: true,
-    hideScr: true,
-    hideBelow720p: true
-  };
-  function getStreamFilters() {
-    try {
-      if (typeof window === "undefined") return DEFAULT_FILTERS;
-      const raw = getScopedStorageItem(FILTER_KEY) ?? getScopedStorageItem(LEGACY_FILTER_KEY);
-      if (!raw) return DEFAULT_FILTERS;
-      return { ...DEFAULT_FILTERS, ...JSON.parse(raw) };
-    } catch {
-      return DEFAULT_FILTERS;
+  async function rdDesktopJsonWithRetry(path, method = "GET", body, attempts = 3) {
+    let lastError = null;
+    for (let attempt = 1; attempt <= attempts; attempt += 1) {
+      try {
+        return await rdDesktopJson(path, method, body);
+      } catch (error) {
+        lastError = error;
+        if (attempt >= attempts || !isTransientDesktopRdError(error)) break;
+        await new Promise((resolve) => setTimeout(resolve, 350 * attempt));
+      }
     }
+    throw lastError instanceof Error ? lastError : new Error(String(lastError));
   }
-  function buildTorrentioQualityFilter(filters) {
-    const parts = [];
-    if (filters.hideCam) parts.push("cam", "hdcam");
-    if (filters.hideTs) parts.push("ts", "tc");
-    if (filters.hideScr) parts.push("scr", "dvdscr", "r5");
-    return parts.join(",");
+  async function rdJson(path, options) {
+    if (isPluginDesktopHost()) {
+      const method = (options?.method ?? "GET").toUpperCase();
+      const rawBody = options?.body;
+      const body = typeof rawBody === "string" ? rawBody : rawBody instanceof URLSearchParams ? rawBody.toString() : void 0;
+      return rdDesktopJsonWithRetry(path, method, body, 3);
+    }
+    const res = await rdFetch(path, options);
+    const data = await res.json();
+    if (!res.ok) {
+      const msg = data.error ?? `HTTP ${res.status}`;
+      throw new Error(msg);
+    }
+    return data;
   }
-  function applyStreamFilters(streams, filters) {
-    return streams.map((s) => {
-      const text = `${s.name} ${s.title}`.toUpperCase();
-      if (filters.hideCam && /\bCAM\b|\bCAMRIP\b|\bCAM-RIP\b/.test(text)) return false;
-      if (filters.hideTs && /\bHDTS\b|\bHDTC\b|\bTELESYNC\b|\bTELECINE\b/.test(text)) return false;
-      if (filters.hideTs && /(?<![A-Z])TS(?![A-Z])/.test(text) && !/\d{3,4}P/.test(text)) return false;
-      if (filters.hideScr && /\bSCR\b|\bSCREENER\b|\bDVDSCR\b|\bDVD-SCR\b/.test(text)) return false;
-      if (filters.hideBelow720p && /\b(480|360|240)P\b/.test(text)) return false;
-      return true;
+  async function rdUnrestrictLink(link) {
+    return rdJson("/unrestrict/link", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ link }).toString()
     });
   }
+  async function rdAddMagnet(magnet) {
+    return rdJson("/torrents/addMagnet", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ magnet }).toString()
+    });
+  }
+  async function rdGetTorrentInfo(id4) {
+    return rdJson(`/torrents/info/${id4}`);
+  }
+  async function rdGetInstantAvailability(hashes) {
+    const cleaned = hashes.map((hash) => hash.trim().toLowerCase()).filter(Boolean);
+    if (cleaned.length === 0) return {};
+    return rdJson(
+      `/torrents/instantAvailability/${cleaned.join("/")}`
+    );
+  }
+  async function rdSelectFiles(id4, files = "all") {
+    if (isPluginDesktopHost()) {
+      await rdDesktopJsonWithRetry(
+        `/torrents/selectFiles/${id4}`,
+        "POST",
+        new URLSearchParams({ files }).toString(),
+        3
+      );
+      return;
+    }
+    const res = await rdFetch(`/torrents/selectFiles/${id4}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ files }).toString()
+    });
+    if (!res.ok && res.status !== 204) {
+      const data = await res.json();
+      throw new Error(data.error ?? `HTTP ${res.status}`);
+    }
+  }
+  function isMagnetLink(input) {
+    return input.trim().toLowerCase().startsWith("magnet:");
+  }
 
-  // lib/media-stream/availability-throttle.ts
-  var MIN_INTERVAL_MS = 1500;
-  var nextSlotAt = 0;
-  async function awaitAvailabilitySlot() {
-    const now3 = Date.now();
-    const at = Math.max(now3, nextSlotAt);
-    nextSlotAt = at + MIN_INTERVAL_MS;
-    if (at > now3) {
-      await new Promise((resolve) => setTimeout(resolve, at - now3));
+  // lib/stream-provider-runtime/playback/providers/legacy-playback-provider.ts
+  function chunk(items, size) {
+    const result = [];
+    for (let index3 = 0; index3 < items.length; index3 += size) {
+      result.push(items.slice(index3, index3 + size));
     }
+    return result;
   }
-  var RATE_LIMIT_COOLDOWN_MS = 10 * 60 * 1e3;
-  var rateLimitedUntil = 0;
-  function markAvailabilityRateLimited() {
-    rateLimitedUntil = Date.now() + RATE_LIMIT_COOLDOWN_MS;
-  }
-  function availabilityRateLimited() {
-    return Date.now() < rateLimitedUntil;
-  }
-  function isRateLimitNotice(text) {
-    return Boolean(text && (/rate.?limit/i.test(text) || /\b429\b/.test(text)));
-  }
-
-  // lib/stream-provider-runtime/stream-provider-url-builder.ts
-  function buildScraperUrl(config) {
-    switch (config.preset) {
-      case "torrentio":
-        return buildTorrentioUrl(config.options);
-      case "torrentsdb":
-        return buildTorrentsDbUrl(config.options);
-      case "comet":
-        return buildCometUrl(config.options);
-      case "jackettio":
-        return buildJackettioUrl(config.options);
-      case "aiostreams":
-        return buildAiostreamsUrl(config.options);
-      case "orion":
-        return buildOrionUrl(config.options);
-      case "custom":
-        return buildCustomUrl(config.options);
-      default:
-        return "";
+  async function lookupCachedStreams3(candidates) {
+    const cachedHashes = /* @__PURE__ */ new Set();
+    const cachedTitles = /* @__PURE__ */ new Set();
+    const downloadableHashes = /* @__PURE__ */ new Set();
+    const downloadableTitles = /* @__PURE__ */ new Set();
+    const cachedStreamKeys = /* @__PURE__ */ new Set();
+    const downloadableStreamKeys = /* @__PURE__ */ new Set();
+    const byHash = /* @__PURE__ */ new Map();
+    for (const candidate of candidates) {
+      const hash = candidate.infoHash.trim().toLowerCase();
+      if (!hash) continue;
+      const bucket = byHash.get(hash);
+      if (bucket) {
+        bucket.push(candidate);
+      } else {
+        byHash.set(hash, [candidate]);
+      }
     }
-  }
-  function buildScraperCacheUrl(config) {
-    if (config.preset !== "torrentio") {
-      return buildScraperUrl(config);
-    }
-    return buildTorrentioCacheUrl(config.options);
-  }
-  function resolveScraperAccessKey(config) {
-    switch (config.preset) {
-      case "torrentio": {
-        const opts = config.options;
-        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
-      }
-      case "torrentsdb": {
-        const opts = config.options;
-        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
-      }
-      case "comet": {
-        const opts = config.options;
-        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
-      }
-      case "jackettio": {
-        const opts = config.options;
-        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
-      }
-      case "orion": {
-        const opts = config.options;
-        return getStreamProviderAccessKey(opts.streamProvider ?? opts.debridProvider).trim();
-      }
-      default:
-        return "";
-    }
-  }
-  function getScraperTypeForApi(config) {
-    return config.preset === "torrentio" ? "torrentio" : "preconfigured";
-  }
-  function getScraperDisplayName(config) {
-    switch (config.preset) {
-      case "torrentio":
-        return "Torrentio";
-      case "torrentsdb":
-        return "TorrentsDB";
-      case "comet":
-        return "Comet";
-      case "jackettio":
-        return "Jackettio";
-      case "aiostreams":
-        return "AIOStreams";
-      case "orion":
-        return "Orion";
-      case "custom": {
-        const opts = config.options;
+    const chunks = chunk([...byHash.keys()], 40);
+    const chunkResults = await Promise.all(
+      chunks.map(async (hashes) => {
         try {
-          return new URL(opts.rawUrl.replace(/^stremio:\/\//, "https://")).hostname;
+          return await rdGetInstantAvailability(hashes);
         } catch {
-          return "Custom";
+          return {};
+        }
+      })
+    );
+    for (let i = 0; i < chunks.length; i++) {
+      const hashes = chunks[i];
+      const availability = chunkResults[i];
+      for (const hash of hashes) {
+        const relatedCandidates = byHash.get(hash) ?? [];
+        const availabilityEntry = availability[hash];
+        const rdEntries = Array.isArray(availabilityEntry) ? availabilityEntry : availabilityEntry?.rd;
+        const cachedFileIds = /* @__PURE__ */ new Set();
+        for (const rdVariant of rdEntries ?? []) {
+          if (!rdVariant || typeof rdVariant !== "object") continue;
+          for (const fileIdRaw of Object.keys(rdVariant)) {
+            const fileId = Number.parseInt(fileIdRaw, 10);
+            if (!Number.isNaN(fileId) && fileId >= 0) cachedFileIds.add(fileId);
+          }
+        }
+        const hasPerFileAvailability = cachedFileIds.size > 0;
+        const isCached = hasPerFileAvailability || (rdEntries?.length ?? 0) > 0;
+        downloadableHashes.add(hash);
+        downloadableStreamKeys.add(`${hash}@*`);
+        if (isCached) cachedHashes.add(hash);
+        if (isCached && !hasPerFileAvailability) cachedStreamKeys.add(`${hash}@*`);
+        for (const candidate of relatedCandidates) {
+          const title = candidate.title.trim();
+          const fileIdx = Number.isFinite(candidate.fileIdx) ? Math.trunc(candidate.fileIdx) : null;
+          const streamKey = `${hash}@${fileIdx != null ? fileIdx : "*"}`;
+          downloadableStreamKeys.add(streamKey);
+          if (title) downloadableTitles.add(title);
+          const candidateCached = hasPerFileAvailability ? fileIdx != null ? cachedFileIds.has(fileIdx) || cachedFileIds.has(fileIdx + 1) : true : isCached;
+          if (candidateCached) {
+            cachedStreamKeys.add(streamKey);
+            if (title) cachedTitles.add(title);
+          }
         }
       }
+    }
+    return {
+      cachedHashes,
+      cachedTitles,
+      downloadableHashes,
+      downloadableTitles,
+      cachedStreamKeys,
+      downloadableStreamKeys
+    };
+  }
+  var legacyPlaybackProvider = {
+    id: "legacy",
+    label: "Legacy playback provider",
+    getAccessKey() {
+      return getRdApiKey();
+    },
+    buildConfigSegment(accessKey, qualityFilter = "") {
+      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
+      segments.push(`realdebrid=${accessKey}`);
+      return segments.join("|");
+    },
+    lookupCachedStreams: lookupCachedStreams3,
+    hideUnknownStreamsFromList() {
+      return false;
+    },
+    isMagnetSource(input) {
+      return isMagnetLink(input);
+    },
+    addMagnet(magnet) {
+      return rdAddMagnet(magnet);
+    },
+    getSourceInfo(id4) {
+      return rdGetTorrentInfo(id4);
+    },
+    selectFiles(id4, files = "all") {
+      return rdSelectFiles(id4, files);
+    },
+    resolveLink(link) {
+      return rdUnrestrictLink(link);
+    }
+  };
+
+  // lib/stream-provider-runtime/playback/providers/offcloud-playback-provider.ts
+  var OFFCLOUD_PROXY = "/api/stream-providers/offcloud";
+  var sourceState2 = /* @__PURE__ */ new Map();
+  var linkCache = /* @__PURE__ */ new Map();
+  function getAccessKey2() {
+    const key = getStreamProviderAccessKey("offcloud").trim();
+    return key || null;
+  }
+  async function offcloudJson(path, init = {}) {
+    const token = getAccessKey2();
+    if (!token) throw new Error("Offcloud API key missing");
+    const headers = new Headers(init.headers);
+    headers.set("x-offcloud-key", token);
+    headers.set("Accept", "application/json");
+    if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+    const response = await fetch(`${OFFCLOUD_PROXY}${path}`, {
+      ...init,
+      headers
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = data?.error || data?.not_available || `Offcloud request failed (${response.status})`;
+      throw new Error(message);
+    }
+    if (data && typeof data === "object" && ("error" in data || "not_available" in data)) {
+      const message = data.error || data.not_available;
+      if (message) throw new Error(message);
+    }
+    return data;
+  }
+  function extractInfoHash2(input) {
+    const match = input.match(/btih:([a-f0-9]+)/i);
+    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
+  }
+  function buildSourceId2(requestId) {
+    return `oc-${requestId}`;
+  }
+  function getSourceState2(id4) {
+    const state = sourceState2.get(id4);
+    if (!state) throw new Error("Offcloud source not found");
+    return state;
+  }
+  function parseFilenameFromUrl(link) {
+    try {
+      const url = new URL(link);
+      const lastSegment = url.pathname.split("/").filter(Boolean).pop();
+      return decodeURIComponent(lastSegment || "download");
+    } catch {
+      return link.split("/").pop()?.split("?")[0] ?? "download";
+    }
+  }
+  function toTrimmedString(value) {
+    if (typeof value === "string") return value.trim();
+    if (typeof value === "number" || typeof value === "boolean") return String(value).trim();
+    return "";
+  }
+  function toTorrentFile(link, index3, path, bytes = 0) {
+    return {
+      id: index3 + 1,
+      path: path || parseFilenameFromUrl(link),
+      bytes,
+      selected: 1
+    };
+  }
+  function mapStatus(status) {
+    switch (toTrimmedString(status).toLowerCase()) {
+      case "downloaded":
+        return "downloaded";
+      case "downloading":
+        return "downloading";
+      case "error":
+      case "canceled":
+        return "error";
+      case "queued":
+      case "created":
       default:
-        return "Scraper";
+        return "queued";
     }
   }
-  function buildTorrentioSegments(options) {
-    const segments = [];
-    if (options.providers.length > 0) segments.push(`providers=${options.providers.join(",")}`);
-    if (options.sort && options.sort !== "quality") segments.push(`sort=${options.sort}`);
-    if (options.languages.length > 0) segments.push(`language=${options.languages.join(",")}`);
-    if (options.qualityFilter.length > 0) segments.push(`qualityfilter=${options.qualityFilter.join(",")}`);
-    if (options.limit > 0) segments.push(`limit=${options.limit}`);
-    return segments;
+  async function getCloudStatus(requestId) {
+    return offcloudJson("/cloud/status", {
+      method: "POST",
+      body: JSON.stringify({ requestId })
+    });
   }
-  function buildTorrentioUrl(options) {
-    return buildTorrentioCacheUrl(options);
+  async function getCacheEntry(magnet) {
+    const data = await offcloudJson("/cache", {
+      method: "POST",
+      body: JSON.stringify({
+        urls: [magnet],
+        includeFiles: true
+      })
+    });
+    if (!Array.isArray(data)) return null;
+    const entry = data[0];
+    if (!entry || typeof entry !== "object") return null;
+    return entry;
   }
-  function buildTorrentioCacheUrl(options) {
-    const streamProvider = (options.streamProvider ?? options.debridProvider ?? "realdebrid").trim().toLowerCase();
-    const accessKey = getStreamProviderAccessKey(streamProvider);
-    const segments = buildTorrentioSegments(options);
-    if (accessKey && streamProvider !== "none") segments.push(`${streamProvider}=${accessKey}`);
-    const base = "https://torrentio.strem.fun";
-    return segments.length > 0 ? `${base}/${segments.join("|")}` : base;
-  }
-  function buildTorrentsDbUrl(options) {
-    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
-    const accessKey = getStreamProviderAccessKey(streamProvider);
-    const cfg = {};
-    if (accessKey && streamProvider !== "none") cfg[streamProvider] = accessKey;
-    const b64 = btoa(JSON.stringify(cfg));
-    return `https://torrentsdb.com/${b64}`;
-  }
-  var COMET_RESOLUTION_MAP = {
-    "240p": "r240p",
-    "360p": "r360p",
-    "480p": "r480p",
-    "576p": "r576p",
-    "720p": "r720p",
-    "1080p": "r1080p",
-    "1440p": "r1440p",
-    "2160p": "r2160p",
-    "unknown": "unknown"
-  };
-  function buildCometUrl(options) {
-    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
-    const accessKey = getStreamProviderAccessKey(streamProvider);
-    const resolutions = {};
-    for (const q of options.qualityFilter) {
-      const key = COMET_RESOLUTION_MAP[q];
-      if (key) resolutions[key] = false;
+  async function lookupCachedStreams4(candidates) {
+    const data = await offcloudJson("/cache", {
+      method: "POST",
+      body: JSON.stringify({
+        urls: candidates.map((candidate) => `magnet:?xt=urn:btih:${candidate.infoHash}`),
+        includeFiles: false
+      })
+    });
+    const cachedHashes = /* @__PURE__ */ new Set();
+    const cachedTitles = /* @__PURE__ */ new Set();
+    const downloadableHashes = /* @__PURE__ */ new Set();
+    const downloadableTitles = /* @__PURE__ */ new Set();
+    if (!Array.isArray(data)) {
+      return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
     }
-    const cfg = {
-      debridServices: accessKey && streamProvider !== "none" ? [{ service: streamProvider, apiKey: accessKey }] : [],
-      enableTorrent: !accessKey || streamProvider === "none",
-      deduplicateStreams: false,
-      scrapeDebridAccountTorrents: false,
-      maxResultsPerResolution: options.maxResults,
-      maxSize: options.maxSize > 0 ? options.maxSize * 1024 * 1024 * 1024 : 0,
-      cachedOnly: options.cachedOnly,
-      sortCachedUncachedTogether: options.sortCachedUncachedTogether,
-      removeTrash: true,
-      debridStreamProxyPassword: "",
-      resultFormat: ["all"],
-      resolutions,
-      languages: {
-        required: [],
-        allowed: [],
-        exclude: [],
-        preferred: options.languages
-      },
-      options: {
-        remove_ranks_under: -1e10,
-        allow_english_in_languages: false,
-        remove_unknown_languages: false
+    for (const [index3, entry] of data.entries()) {
+      if (!entry || typeof entry !== "object") continue;
+      if (!entry.cached) continue;
+      const candidate = candidates[index3];
+      if (!candidate) continue;
+      cachedHashes.add(candidate.infoHash);
+      if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
+    }
+    return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
+  }
+  async function getExploreFiles(requestId) {
+    const data = await offcloudJson(`/cloud/explore/${encodeURIComponent(requestId)}`);
+    return Array.isArray(data.files) ? data.files : [];
+  }
+  async function buildTorrentInfo2(id4) {
+    const state = getSourceState2(id4);
+    const status = await getCloudStatus(state.requestId);
+    const normalizedStatus = mapStatus(status.status);
+    const statusLabel = toTrimmedString(status.status) || normalizedStatus;
+    const fileName = toTrimmedString(status.fileName);
+    const createdOn = toTrimmedString(status.createdOn);
+    const directUrl = toTrimmedString(status.url);
+    const exploreFiles = normalizedStatus === "downloaded" ? await getExploreFiles(state.requestId) : [];
+    const directLinks = exploreFiles.map((file) => toTrimmedString(file.url)).filter(Boolean);
+    if (normalizedStatus === "downloaded" && directLinks.length === 0 && directUrl) {
+      directLinks.push(directUrl);
+    }
+    for (const file of exploreFiles) {
+      const link = toTrimmedString(file.url);
+      if (link && !linkCache.has(link)) {
+        linkCache.set(link, {
+          filename: toTrimmedString(file.path) || toTrimmedString(file.name) || parseFilenameFromUrl(link),
+          filesize: typeof file.size === "number" ? file.size : 0
+        });
       }
+    }
+    if (normalizedStatus === "downloaded" && directUrl && !linkCache.has(directUrl)) {
+      linkCache.set(directUrl, {
+        filename: fileName || parseFilenameFromUrl(directUrl),
+        filesize: 0
+      });
+    }
+    const files = directLinks.map((link, index3) => {
+      const cached = linkCache.get(link);
+      return toTorrentFile(link, index3, cached?.filename, cached?.filesize ?? 0);
+    });
+    const totalBytes = files.reduce((sum, file) => sum + file.bytes, 0);
+    return {
+      id: id4,
+      filename: fileName || files[0]?.path || state.hash,
+      hash: state.hash,
+      bytes: totalBytes,
+      host: "offcloud",
+      split: 0,
+      progress: normalizedStatus === "downloaded" ? 100 : normalizedStatus === "downloading" ? 50 : 0,
+      status: normalizedStatus,
+      statusLabel,
+      added: createdOn || state.addedAt,
+      links: directLinks,
+      original_filename: fileName || state.hash,
+      original_bytes: totalBytes,
+      files
     };
-    return `https://comet.elfhosted.com/${btoa(JSON.stringify(cfg))}`;
   }
-  var JACKETTIO_QUALITY_MAP = {
-    "unknown": 0,
-    "360p": 360,
-    "480p": 480,
-    "720p": 720,
-    "1080p": 1080,
-    "2160p": 2160
+  var offcloudPlaybackProvider = {
+    id: "offcloud",
+    label: "Offcloud playback provider",
+    getAccessKey: getAccessKey2,
+    buildConfigSegment(accessKey, qualityFilter = "") {
+      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
+      segments.push(`offcloud=${accessKey}`);
+      return segments.join("|");
+    },
+    lookupCachedStreams: lookupCachedStreams4,
+    hideUncachedStreamsFromList() {
+      return true;
+    },
+    hideUnknownStreamsFromList() {
+      return true;
+    },
+    isMagnetSource(input) {
+      return input.trim().toLowerCase().startsWith("magnet:");
+    },
+    async addMagnet(magnet) {
+      const cacheEntry = await getCacheEntry(magnet);
+      if (!cacheEntry?.cached) {
+        throw new Error("Not cached on Offcloud");
+      }
+      const data = await offcloudJson("/cloud", {
+        method: "POST",
+        body: JSON.stringify({ url: magnet })
+      });
+      const requestId = toTrimmedString(data.requestId);
+      if (!requestId) throw new Error("Offcloud did not return a request ID");
+      const id4 = buildSourceId2(requestId);
+      sourceState2.set(id4, {
+        requestId,
+        magnet,
+        hash: extractInfoHash2(magnet),
+        addedAt: toTrimmedString(data.createdOn) || (/* @__PURE__ */ new Date()).toISOString()
+      });
+      return {
+        id: id4,
+        uri: magnet,
+        hash: extractInfoHash2(magnet)
+      };
+    },
+    async getSourceInfo(id4) {
+      return buildTorrentInfo2(id4);
+    },
+    async selectFiles() {
+    },
+    async resolveLink(link) {
+      const cached = linkCache.get(link);
+      return {
+        id: link,
+        filename: cached?.filename ?? parseFilenameFromUrl(link),
+        mimeType: "application/octet-stream",
+        filesize: cached?.filesize ?? 0,
+        link,
+        host: "offcloud",
+        chunks: 1,
+        crc: 0,
+        download: link,
+        streamable: 0
+      };
+    }
   };
-  function buildJackettioUrl(options) {
-    const streamProvider = (options.streamProvider ?? options.debridProvider ?? "realdebrid").trim().toLowerCase();
-    const accessKey = getStreamProviderAccessKey(streamProvider);
-    if (!accessKey || streamProvider === "none") return "";
-    const excluded = new Set(
-      options.qualityFilter.map((q) => JACKETTIO_QUALITY_MAP[q]).filter((v) => v !== void 0)
+
+  // lib/stream-provider-runtime/playback/providers/torbox-playback-provider.ts
+  var TORBOX_PROXY = "/api/stream-providers/torbox";
+  var INFO_CACHE_TTL_MS = 1500;
+  var VIDEO_EXT_RE = /\.(mkv|mp4|avi|m4v|mov|webm|ts|m2ts|wmv|flv)$/i;
+  var sourceState3 = /* @__PURE__ */ new Map();
+  var directLinkCache2 = /* @__PURE__ */ new Map();
+  function getAccessKey3() {
+    const key = getStreamProviderAccessKey("torbox").trim();
+    return key || null;
+  }
+  function extractInfoHash3(input) {
+    const match = input.match(/btih:([a-f0-9]+)/i);
+    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
+  }
+  function buildSourceId3(magnet) {
+    return `tb-${extractInfoHash3(magnet)}`;
+  }
+  function getSourceState3(id4) {
+    const state = sourceState3.get(id4);
+    if (!state) throw new Error("TorBox source not found");
+    return state;
+  }
+  async function torboxJson(path, init = {}) {
+    const token = getAccessKey3();
+    if (!token) throw new Error("TorBox key missing");
+    const headers = new Headers(init.headers);
+    headers.set("x-tb-token", token);
+    headers.set("Accept", "application/json");
+    const response = await fetch(`${TORBOX_PROXY}${path}`, { ...init, headers });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = data && typeof data === "object" && "error" in data && typeof data.error === "string" && data.error || data && typeof data === "object" && "detail" in data && typeof data.detail === "string" && data.detail || `TorBox request failed (${response.status})`;
+      throw new Error(message);
+    }
+    return data;
+  }
+  async function torboxCreateTorrent(magnet) {
+    const formData = new FormData();
+    formData.append("magnet", magnet);
+    formData.append("seed", "3");
+    formData.append("allow_zip", "false");
+    const data = await torboxJson(
+      "/torrents/createtorrent",
+      { method: "POST", body: formData }
     );
-    const qualities = Object.values(JACKETTIO_QUALITY_MAP).filter((v) => !excluded.has(v));
-    const cfg = {
-      qualities,
-      excludeKeywords: [],
-      maxTorrents: options.maxTorrents > 0 ? options.maxTorrents : 8,
-      priotizeLanguages: options.languages,
-      priotizePackTorrents: 2,
-      forceCacheNextEpisode: false,
-      sortCached: [["quality", true], ["size", true]],
-      sortUncached: [["seeders", true]],
-      hideUncached: options.hideUncached,
-      indexers: ["all"],
-      indexerTimeoutSec: 60,
-      passkey: "",
-      metaLanguage: "",
-      enableMediaFlow: false,
-      mediaflowProxyUrl: "",
-      mediaflowApiPassword: "",
-      mediaflowPublicIp: "",
-      debridId: streamProvider,
-      debridApiKey: accessKey
+    if (!data.success || typeof data.data?.torrent_id !== "number") {
+      throw new Error(data.detail || data.error || "TorBox createtorrent failed");
+    }
+    return {
+      torrent_id: data.data.torrent_id,
+      hash: (data.data.hash ?? "").toLowerCase()
     };
-    return `https://jackettio.elfhosted.com/${btoa(JSON.stringify(cfg))}`;
   }
-  function buildAiostreamsUrl(options) {
-    return options.manifestUrl.trim().replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "").replace(/\/$/, "");
+  async function torboxGetInfo(torrentId) {
+    const data = await torboxJson(
+      `/torrents/mylist?bypass_cache=true&id=${torrentId}`
+    );
+    if (!data.success || !data.data) return null;
+    if (Array.isArray(data.data)) return data.data[0] ?? null;
+    return data.data;
   }
-  function buildOrionUrl(options) {
-    if (!options.orionKey.trim()) return "";
-    const streamProvider = (options.streamProvider ?? options.debridProvider).trim().toLowerCase();
-    const rdToken = getStreamProviderAccessKey(streamProvider);
-    const params = [];
-    if (rdToken && streamProvider !== "none") params.push(`${streamProvider}=${rdToken}`);
-    const key = options.orionKey.trim();
-    return params.length > 0 ? `https://addon.orionoid.com/${key}/${params.join("|")}` : `https://addon.orionoid.com/${key}`;
+  async function prefetchVideoFileUrls(state) {
+    if (state.torrentId == null || !state.pendingInfo) return;
+    const info = await state.pendingInfo;
+    if (!info?.files || state.torrentId == null) return;
+    for (const file of info.files) {
+      const name = file.short_name?.trim() || file.name.trim();
+      if (!VIDEO_EXT_RE.test(name)) continue;
+      if (state.pendingDlUrls.has(file.id)) continue;
+      state.pendingDlUrls.set(file.id, torboxRequestDl(state.torrentId, file.id).catch(() => null));
+    }
   }
-  function buildCustomUrl(options) {
-    return options.rawUrl.trim().replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "").replace(/\/$/, "");
+  async function torboxRequestDl(torrentId, fileId) {
+    const token = getAccessKey3();
+    if (!token) return null;
+    const data = await torboxJson(
+      `/torrents/requestdl?token=${encodeURIComponent(token)}&torrent_id=${torrentId}&file_id=${fileId}&redirect=false`
+    );
+    if (!data.success || typeof data.data !== "string") return null;
+    return data.data;
   }
-  function buildStreamProviderUrl(config) {
-    return buildScraperUrl(config);
+  async function torboxCheckCached(hashes) {
+    const result = /* @__PURE__ */ new Set();
+    if (hashes.length === 0) return result;
+    const params = new URLSearchParams();
+    for (const h of hashes) params.append("hash", h);
+    params.set("format", "list");
+    params.set("list_files", "false");
+    try {
+      const data = await torboxJson(
+        `/torrents/checkcached?${params}`
+      );
+      if (!data.success || !data.data) return result;
+      if (Array.isArray(data.data)) {
+        for (const entry of data.data) {
+          if (typeof entry?.hash === "string") result.add(entry.hash.toLowerCase());
+        }
+      } else if (typeof data.data === "object") {
+        for (const [hash, value] of Object.entries(data.data)) {
+          if (value) result.add(hash.toLowerCase());
+        }
+      }
+    } catch {
+    }
+    return result;
   }
-  function buildStreamProviderCacheUrl(config) {
-    return buildScraperCacheUrl(config);
+  function toTorrentFiles2(files, isSelected) {
+    return files.map((file) => ({
+      id: file.id,
+      path: file.short_name?.trim() || file.name.trim(),
+      bytes: file.size,
+      selected: isSelected(file.id) ? 1 : 0
+    }));
   }
-  function resolveStreamProviderAccessKey(config) {
-    return resolveScraperAccessKey(config);
+  function mapStatus2(info) {
+    if (info.download_finished) return "downloaded";
+    const state = info.download_state?.toLowerCase() ?? "";
+    if (state.includes("cached")) return "downloaded";
+    if (state.includes("error") || state.includes("failed") || state.includes("dead")) return "error";
+    if (state.includes("queue")) return "queued";
+    if (state.includes("upload")) return "uploading";
+    if (state.includes("processing")) return "magnet_conversion";
+    return "downloading";
   }
-  function getStreamProviderTypeForApi(config) {
-    return getScraperTypeForApi(config);
+  function buildTorrentInfo3(state, info, status, files, links = [], statusLabel) {
+    const totalBytes = info?.size ?? files.reduce((sum, file) => sum + file.bytes, 0);
+    const selectedFiles = files.filter((file) => file.selected === 1);
+    return {
+      id: buildSourceId3(state.magnet),
+      filename: selectedFiles[0]?.path ?? files[0]?.path ?? info?.name ?? state.hash,
+      hash: state.hash,
+      bytes: totalBytes,
+      host: "torbox",
+      split: 0,
+      progress: status === "downloaded" ? 100 : 0,
+      status,
+      statusLabel,
+      added: state.addedAt,
+      links,
+      original_filename: info?.name ?? files[0]?.path ?? state.hash,
+      original_bytes: totalBytes,
+      files
+    };
   }
-  function getStreamProviderDisplayName(config) {
-    return getScraperDisplayName(config);
+  var torboxPlaybackProvider = {
+    id: "torbox",
+    label: "TorBox playback provider",
+    getAccessKey: getAccessKey3,
+    // Torrentio's config segment for TorBox addons is `torbox=<api_key>`,
+    // analogous to `realdebrid=<api_key>` / `easydebrid=<api_key>` etc.
+    buildConfigSegment(accessKey, qualityFilter = "") {
+      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
+      segments.push(`torbox=${accessKey}`);
+      return segments.join("|");
+    },
+    async lookupCachedStreams(candidates) {
+      const hashes = candidates.map((candidate) => candidate.infoHash?.toLowerCase()).filter((hash) => Boolean(hash));
+      if (hashes.length === 0) {
+        return {
+          cachedHashes: /* @__PURE__ */ new Set(),
+          cachedTitles: /* @__PURE__ */ new Set(),
+          downloadableHashes: /* @__PURE__ */ new Set(),
+          downloadableTitles: /* @__PURE__ */ new Set()
+        };
+      }
+      const cached = await torboxCheckCached(hashes);
+      const cachedHashes = /* @__PURE__ */ new Set();
+      const cachedTitles = /* @__PURE__ */ new Set();
+      for (const candidate of candidates) {
+        const hash = candidate.infoHash?.toLowerCase();
+        if (hash && cached.has(hash)) {
+          cachedHashes.add(candidate.infoHash);
+          if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
+        }
+      }
+      return {
+        cachedHashes,
+        cachedTitles,
+        downloadableHashes: /* @__PURE__ */ new Set(),
+        downloadableTitles: /* @__PURE__ */ new Set()
+      };
+    },
+    hideUncachedStreamsFromList() {
+      return false;
+    },
+    hideUnknownStreamsFromList() {
+      return false;
+    },
+    isMagnetSource(input) {
+      return input.trim().toLowerCase().startsWith("magnet:");
+    },
+    async addMagnet(magnet) {
+      const id4 = buildSourceId3(magnet);
+      const hash = extractInfoHash3(magnet);
+      const existing = sourceState3.get(id4);
+      if (existing && existing.torrentId != null) {
+        existing.pendingInfo = torboxGetInfo(existing.torrentId).catch(() => null);
+        existing.pendingDlUrls = /* @__PURE__ */ new Map();
+        void prefetchVideoFileUrls(existing);
+        return { id: id4, uri: magnet, hash: existing.hash };
+      }
+      const created = await torboxCreateTorrent(magnet);
+      const pendingInfo = torboxGetInfo(created.torrent_id).catch(() => null);
+      const state = {
+        magnet,
+        hash: created.hash || hash,
+        addedAt: (/* @__PURE__ */ new Date()).toISOString(),
+        torrentId: created.torrent_id,
+        selectedFileIds: null,
+        pendingInfo,
+        lastInfo: null,
+        lastInfoAt: 0,
+        pendingDlUrls: /* @__PURE__ */ new Map()
+      };
+      sourceState3.set(id4, state);
+      void prefetchVideoFileUrls(state);
+      return { id: id4, uri: magnet, hash: created.hash || hash };
+    },
+    async getSourceInfo(id4) {
+      const state = getSourceState3(id4);
+      if (state.torrentId == null) {
+        throw new Error("TorBox torrent id not yet known");
+      }
+      let info;
+      if (state.pendingInfo) {
+        info = await state.pendingInfo;
+        state.pendingInfo = null;
+        state.lastInfo = info;
+        state.lastInfoAt = Date.now();
+      } else if (state.lastInfo && Date.now() - state.lastInfoAt < INFO_CACHE_TTL_MS) {
+        info = state.lastInfo;
+      } else {
+        info = await torboxGetInfo(state.torrentId);
+        state.lastInfo = info;
+        state.lastInfoAt = Date.now();
+      }
+      if (!info) {
+        return buildTorrentInfo3(state, null, "magnet_conversion", [], [], "Looking up on TorBox\u2026");
+      }
+      const isSelected = (fileId) => state.selectedFileIds === "all" || state.selectedFileIds instanceof Set && state.selectedFileIds.has(fileId);
+      const status = mapStatus2(info);
+      const files = toTorrentFiles2(info.files ?? [], isSelected);
+      if (status !== "downloaded") {
+        return buildTorrentInfo3(state, info, status, files, [], info.download_state);
+      }
+      if (state.selectedFileIds === null) {
+        return buildTorrentInfo3(state, info, "waiting_files_selection", files, [], "Select files");
+      }
+      const selectedFiles = files.filter((file) => file.selected === 1);
+      const resolvedLinks = await Promise.all(
+        selectedFiles.map(async (file) => {
+          const pending = state.pendingDlUrls.get(file.id);
+          const url = pending != null ? await pending : await torboxRequestDl(state.torrentId, file.id);
+          return url ? { url, file } : null;
+        })
+      );
+      const links = [];
+      for (const entry of resolvedLinks) {
+        if (!entry) continue;
+        links.push(entry.url);
+        directLinkCache2.set(entry.url, { filename: entry.file.path, filesize: entry.file.bytes });
+      }
+      if (links.length === 0) {
+        return buildTorrentInfo3(state, info, "error", files, [], "No playable links from TorBox");
+      }
+      return buildTorrentInfo3(state, info, "downloaded", files, links, "Ready");
+    },
+    async selectFiles(id4, files = "all") {
+      const state = getSourceState3(id4);
+      state.selectedFileIds = files === "all" ? "all" : new Set(
+        files.split(",").map((value) => Number.parseInt(value.trim(), 10)).filter((value) => Number.isFinite(value))
+      );
+    },
+    async resolveLink(link) {
+      const cached = directLinkCache2.get(link);
+      return {
+        id: link,
+        filename: cached?.filename ?? link.split("/").pop()?.split("?")[0] ?? "download",
+        mimeType: "application/octet-stream",
+        filesize: cached?.filesize ?? 0,
+        link,
+        host: "torbox",
+        chunks: 1,
+        crc: 0,
+        download: link,
+        streamable: 1
+      };
+    }
+  };
+
+  // lib/stream-provider-runtime/playback/stream-provider-playback.ts
+  var playbackProviders = /* @__PURE__ */ new Map([
+    ["alldebrid", alldebridPlaybackProvider],
+    ["easydebrid", easyDebridPlaybackProvider],
+    ["offcloud", offcloudPlaybackProvider],
+    ["realdebrid", legacyPlaybackProvider],
+    ["torbox", torboxPlaybackProvider]
+  ]);
+  function getPlaybackProviderOverride() {
+    if (typeof window === "undefined") return null;
+    return window.__lumioPluginRuntime?.playbackProviderOverride ?? null;
+  }
+  function resolveActiveProviderId() {
+    return getPlaybackProviderOverride() ?? getActiveStreamProvider().trim().toLowerCase();
+  }
+  function getActivePlaybackProvider() {
+    const providerId = resolveActiveProviderId();
+    const provider = playbackProviders.get(providerId);
+    if (!provider) throw new Error(`Playback provider "${providerId}" is not supported`);
+    return provider;
+  }
+  function findActivePlaybackProvider() {
+    const providerId = resolveActiveProviderId();
+    return playbackProviders.get(providerId) ?? null;
+  }
+  function getPlaybackAccessKey() {
+    return findActivePlaybackProvider()?.getAccessKey() ?? null;
+  }
+  function buildPlaybackProviderConfigSegment(qualityFilter = "") {
+    const accessKey = getPlaybackAccessKey();
+    if (!accessKey) return null;
+    const provider = findActivePlaybackProvider();
+    if (!provider) return null;
+    return provider.buildConfigSegment(accessKey, qualityFilter);
+  }
+  var cacheProbeTtlMs = 6e4;
+  var cacheProbeMemo = /* @__PURE__ */ new Map();
+  function buildCacheProbeKey(providerId, candidates) {
+    const hashes = candidates.map((c) => c.infoHash?.toLowerCase() ?? "").filter(Boolean).sort().join(",");
+    return `${providerId}|${hashes}`;
+  }
+  async function lookupPlaybackCachedStreams(candidates) {
+    const provider = findActivePlaybackProvider();
+    if (!provider?.lookupCachedStreams) return null;
+    const key = buildCacheProbeKey(provider.id, candidates);
+    const now3 = Date.now();
+    const cached = cacheProbeMemo.get(key);
+    if (cached && cached.expiresAt > now3) return cached.result;
+    const result = await provider.lookupCachedStreams(candidates);
+    cacheProbeMemo.set(key, { expiresAt: now3 + cacheProbeTtlMs, result });
+    return result;
+  }
+  function hideUncachedPlaybackStreamsFromList() {
+    return findActivePlaybackProvider()?.hideUncachedStreamsFromList?.() ?? false;
+  }
+  function hideUnknownPlaybackStreamsFromList() {
+    return findActivePlaybackProvider()?.hideUnknownStreamsFromList?.() ?? false;
+  }
+  function isMagnetPlaybackSource(input) {
+    return getActivePlaybackProvider().isMagnetSource(input);
+  }
+  async function queueMagnetForPlayback(magnet) {
+    return getActivePlaybackProvider().addMagnet(magnet);
+  }
+  async function getPlaybackSourceInfo(id4) {
+    return getActivePlaybackProvider().getSourceInfo(id4);
+  }
+  async function selectPlaybackFiles(id4, files = "all") {
+    return getActivePlaybackProvider().selectFiles(id4, files);
+  }
+  async function resolvePlaybackLink(link) {
+    return getActivePlaybackProvider().resolveLink(link);
   }
 
   // lib/stream-provider-runtime/stream-provider-request-context.ts
@@ -168769,10 +172117,10 @@
   init_jsx_runtime_shim();
 
   // components/results/results-pagination.tsx
-  var import_react55 = __toESM(require_dist89());
+  var import_react58 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/utils/scroll-lock.ts
@@ -168795,6 +172143,25 @@
   var KEY_AUTOPLAY = "autoPlayNextEpisode";
   var KEY_POPUP_SECONDS = "nextEpPopupSeconds";
   var DEFAULT_POPUP_SECONDS = 10;
+  var KEY_POPUP_AUTO = "nextEpPopupAuto";
+  var KEY_ADVANCE_AT_OUTRO = "autoplay_advanceAtOutro";
+  var OUTRO_FIRED_KEY = "__lumioOutroFired";
+  function markOutroFired(fired) {
+    if (typeof globalThis === "undefined") return;
+    globalThis[OUTRO_FIRED_KEY] = fired;
+  }
+  function hasOutroFired() {
+    if (typeof globalThis === "undefined") return false;
+    return globalThis[OUTRO_FIRED_KEY] === true;
+  }
+  function getAdvanceAtOutro() {
+    if (typeof window === "undefined") return false;
+    return getScopedStorageItem(KEY_ADVANCE_AT_OUTRO) === "1";
+  }
+  function autoPopupSecondsFor(durationSeconds) {
+    if (!durationSeconds) return DEFAULT_POPUP_SECONDS;
+    return Math.max(8, Math.min(45, Math.round(durationSeconds * 0.04)));
+  }
   var FIXED_NEXT_EP_PRELOAD_LEAD_SECONDS = 300;
   function getAutoPlayNextEpisode() {
     if (typeof window === "undefined") return true;
@@ -168806,9 +172173,25 @@
     const v = parseInt(getScopedStorageItem(KEY_POPUP_SECONDS) ?? "");
     return isNaN(v) ? DEFAULT_POPUP_SECONDS : v;
   }
+  function getNextEpPopupAuto() {
+    if (typeof window === "undefined") return false;
+    return getScopedStorageItem(KEY_POPUP_AUTO) === "1";
+  }
+  function setAutoplayDurationHint(durationSeconds) {
+    if (typeof window === "undefined") return;
+    if (!getNextEpPopupAuto()) return;
+    const resolved = autoPopupSecondsFor(durationSeconds);
+    if (resolved !== getNextEpPopupSeconds()) setNextEpPopupSeconds(resolved);
+  }
+  function setNextEpPopupSeconds(value) {
+    setScopedStorageItem(KEY_POPUP_SECONDS, String(value));
+  }
   function getNextEpPreloadLeadSeconds() {
     return FIXED_NEXT_EP_PRELOAD_LEAD_SECONDS;
   }
+
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/video-player-modal-shim.ts
+  init_react_shim();
 
   // components/player/video-player-modal.tsx
   init_react_shim();
@@ -170820,11 +174203,11 @@
   init_plugin_registry();
 
   // lib/video-progress.ts
-  var EVENT2 = "lumio-stream-progress-changed";
+  var EVENT3 = "lumio-stream-progress-changed";
   if (typeof window !== "undefined") {
     void Promise.resolve().then(() => (init_plugin_registry(), plugin_registry_exports)).then(({ subscribePluginRegistry: subscribePluginRegistry2 }) => {
       subscribePluginRegistry2(() => {
-        window.dispatchEvent(new CustomEvent(EVENT2));
+        window.dispatchEvent(new CustomEvent(EVENT3));
         window.dispatchEvent(new CustomEvent(HISTORY_EVENT));
       });
     }).catch(() => {
@@ -170927,7 +174310,7 @@
     const sanitizedEntry = sanitizeEntry(entry);
     const list = dedupeProgressEntries([sanitizedEntry, ...read2()]).slice(0, MAX);
     setScopedStorageItem(KEY2, JSON.stringify(list));
-    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT2));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT3));
     appendHistoryEntry(sanitizedEntry);
   }
   function removeStreamProgress(id4, season, episode) {
@@ -170939,7 +174322,452 @@
       return entryLookupKey !== key && entryLookupKey !== prefixedMovieKey && entryLookupKey !== prefixedTvKey;
     });
     setScopedStorageItem(KEY2, JSON.stringify(list));
-    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT2));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT3));
+  }
+
+  // lib/trakt-scrobble.ts
+  function identityKey(identity) {
+    const id4 = identity.imdbId || `tmdb:${identity.tmdbId ?? ""}`;
+    return identity.mediaType === "episode" ? `${id4}:S${identity.season ?? 0}E${identity.episode ?? 0}` : `${id4}`;
+  }
+  var lastCallKey = "";
+  var lastCallAt = 0;
+  var DUPLICATE_WINDOW_MS = 5e3;
+  async function scrobble(action, identity, progressPercent) {
+    if (typeof window === "undefined") return;
+    if (!getTraktScrobbleEnabled()) return;
+    const auth = getTraktAuth();
+    if (!auth) return;
+    if (!identity.tmdbId && !identity.imdbId) return;
+    if (identity.mediaType === "episode" && (identity.season == null || identity.episode == null)) return;
+    const progress2 = Math.min(100, Math.max(0, Math.round(progressPercent * 10) / 10));
+    const callKey = `${action}:${identityKey(identity)}:${Math.round(progress2)}`;
+    const now3 = Date.now();
+    if (callKey === lastCallKey && now3 - lastCallAt < DUPLICATE_WINDOW_MS) return;
+    lastCallKey = callKey;
+    lastCallAt = now3;
+    try {
+      const response = await fetch("/api/trakt/scrobble", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          auth,
+          action,
+          mediaType: identity.mediaType,
+          tmdbId: identity.tmdbId ?? void 0,
+          imdbId: identity.imdbId ?? void 0,
+          season: identity.season ?? void 0,
+          episode: identity.episode ?? void 0,
+          progress: progress2
+        })
+      });
+      if (response.status === 401) {
+        const payload2 = await response.json().catch(() => null);
+        if (payload2?.authExpired) clearTraktAuth();
+        return;
+      }
+      if (!response.ok) return;
+      const payload = await response.json();
+      if (payload.auth?.accessToken && payload.auth.accessToken !== auth.accessToken) {
+        setTraktAuth({ ...auth, ...payload.auth });
+      }
+    } catch {
+    }
+  }
+
+  // lib/player-layout.ts
+  var PLAYER_CONTROL_IDS = [
+    "playPause",
+    "seekBack",
+    "seekForward",
+    "time",
+    "spacer",
+    "subtitles",
+    "cast",
+    "audioTrack",
+    "aspect",
+    "cropZoom",
+    "audioOutput",
+    "segmentBadges",
+    "mute",
+    "volume",
+    "wiki",
+    "soundtrack",
+    "tuning",
+    "more",
+    "fullscreen"
+  ];
+  var LAYOUT_KEY = "player_layout";
+  var EVENT4 = "lumio-player-layout-changed";
+  function defaultLayout() {
+    return {
+      order: [...PLAYER_CONTROL_IDS],
+      hidden: [],
+      timeFormat: "elapsed-total",
+      volumeStyle: "slider",
+      seekBarStyle: "flat",
+      seekBarHeight: "standard",
+      seekBarColor: "accent",
+      seekBarDot: true
+    };
+  }
+  function getPlayerLayout() {
+    if (typeof window === "undefined") return defaultLayout();
+    try {
+      const raw = getScopedStorageItem(LAYOUT_KEY);
+      if (!raw) return defaultLayout();
+      const parsed = JSON.parse(raw);
+      const known = new Set(PLAYER_CONTROL_IDS);
+      const order = (Array.isArray(parsed.order) ? parsed.order : []).filter(
+        (id4) => known.has(id4)
+      );
+      for (const id4 of PLAYER_CONTROL_IDS) {
+        if (order.includes(id4)) continue;
+        const defaultIndex = PLAYER_CONTROL_IDS.indexOf(id4);
+        let insertAt = order.length;
+        for (let i = defaultIndex - 1; i >= 0; i--) {
+          const at = order.indexOf(PLAYER_CONTROL_IDS[i]);
+          if (at >= 0) {
+            insertAt = at + 1;
+            break;
+          }
+          if (i === 0) insertAt = 0;
+        }
+        order.splice(insertAt, 0, id4);
+      }
+      const hidden = (Array.isArray(parsed.hidden) ? parsed.hidden : []).filter(
+        (id4) => known.has(id4) && id4 !== "playPause"
+      );
+      const timeFormat = parsed.timeFormat === "remaining" || parsed.timeFormat === "elapsed" ? parsed.timeFormat : "elapsed-total";
+      const volumeStyle = parsed.volumeStyle === "stepper" || parsed.volumeStyle === "icon" ? parsed.volumeStyle : "slider";
+      const seekBarStyle = parsed.seekBarStyle === "glass" || parsed.seekBarStyle === "pinstripe" ? parsed.seekBarStyle : "flat";
+      const seekBarHeight = parsed.seekBarHeight === "slim" || parsed.seekBarHeight === "chunky" ? parsed.seekBarHeight : "standard";
+      const seekBarColor = parsed.seekBarColor === "white" || parsed.seekBarColor === "red" || parsed.seekBarColor === "amber" ? parsed.seekBarColor : "accent";
+      const seekBarDot = parsed.seekBarDot !== false;
+      return { order, hidden, timeFormat, volumeStyle, seekBarStyle, seekBarHeight, seekBarColor, seekBarDot };
+    } catch {
+      return defaultLayout();
+    }
+  }
+  function onPlayerLayoutChanged(listener) {
+    if (typeof window === "undefined") return () => {
+    };
+    window.addEventListener(EVENT4, listener);
+    return () => window.removeEventListener(EVENT4, listener);
+  }
+
+  // components/player/player-tuning-panel.tsx
+  init_react_shim();
+
+  // lib/video-tuning.ts
+  var DEFAULT_TUNING = { brightness: 0, contrast: 0, saturation: 0, gamma: 0, sharpen: 0 };
+  var TUNING_PRESETS = {
+    standard: { labelKey: "vtPresetStandard", patch: {} },
+    brighter: { labelKey: "vtPresetBrighter", patch: { gamma: 12, brightness: 4 } },
+    vivid: { labelKey: "vtPresetVivid", patch: { saturation: 15, contrast: 8 } },
+    cinema: { labelKey: "vtPresetCinema", patch: { brightness: -4, gamma: -6, saturation: -5 } },
+    sharp: { labelKey: "vtPresetSharp", patch: { sharpen: 0.6, saturation: 8 } }
+  };
+  var KEY3 = "video_tuning";
+  var EVENT5 = "lumio-video-tuning-changed";
+  function getVideoTuning() {
+    if (typeof window === "undefined") return { ...DEFAULT_TUNING };
+    try {
+      const raw = getScopedStorageItem(KEY3);
+      if (!raw) return { ...DEFAULT_TUNING };
+      const parsed = JSON.parse(raw);
+      const clamp2 = (v, lo, hi, dflt) => {
+        const n = Number(v);
+        return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : dflt;
+      };
+      return {
+        brightness: clamp2(parsed.brightness, -50, 50, 0),
+        contrast: clamp2(parsed.contrast, -50, 50, 0),
+        saturation: clamp2(parsed.saturation, -50, 50, 0),
+        gamma: clamp2(parsed.gamma, -50, 50, 0),
+        sharpen: clamp2(parsed.sharpen, 0, 2, 0)
+      };
+    } catch {
+      return { ...DEFAULT_TUNING };
+    }
+  }
+  function setVideoTuning(tuning) {
+    setScopedStorageItem(KEY3, JSON.stringify(tuning));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT5));
+  }
+  function onVideoTuningChanged(listener) {
+    if (typeof window === "undefined") return () => {
+    };
+    window.addEventListener(EVENT5, listener);
+    return () => window.removeEventListener(EVENT5, listener);
+  }
+  var TONE_MAPPINGS = ["auto", "hable", "mobius", "reinhard", "bt.2390"];
+  var DEFAULT_RENDER_TUNING = {
+    toneMapping: "auto",
+    inverseToneMapping: false,
+    hwdec: true,
+    profile: "balanced",
+    interpolation: false,
+    anime4k: false,
+    largeBuffer: false
+  };
+  var RENDER_KEY = "video_render_tuning";
+  function getRenderTuning() {
+    if (typeof window === "undefined") return { ...DEFAULT_RENDER_TUNING };
+    try {
+      const raw = getScopedStorageItem(RENDER_KEY);
+      if (!raw) return { ...DEFAULT_RENDER_TUNING };
+      const parsed = JSON.parse(raw);
+      return {
+        toneMapping: TONE_MAPPINGS.includes(parsed.toneMapping) ? parsed.toneMapping : "auto",
+        inverseToneMapping: parsed.inverseToneMapping === true,
+        hwdec: parsed.hwdec !== false,
+        profile: parsed.profile === "light" || parsed.profile === "max" ? parsed.profile : "balanced",
+        interpolation: parsed.interpolation === true,
+        anime4k: parsed.anime4k === true,
+        largeBuffer: parsed.largeBuffer === true
+      };
+    } catch {
+      return { ...DEFAULT_RENDER_TUNING };
+    }
+  }
+  function setRenderTuning(tuning) {
+    setScopedStorageItem(RENDER_KEY, JSON.stringify(tuning));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT5));
+  }
+  function renderTuningProperties(t) {
+    const props = [
+      ["hwdec", t.hwdec ? "auto-safe" : "no"],
+      ["tone-mapping", t.toneMapping === "auto" ? "auto" : t.toneMapping],
+      ["inverse-tone-mapping", t.inverseToneMapping ? "yes" : "no"],
+      ["interpolation", t.interpolation ? "yes" : "no"],
+      ["video-sync", t.interpolation ? "display-resample" : "audio"],
+      // Buffer: explicit both ways so toggling off mid-session restores mpv's
+      // stock demuxer limits.
+      ["demuxer-max-bytes", t.largeBuffer ? "768MiB" : "150MiB"],
+      ["demuxer-max-back-bytes", t.largeBuffer ? "256MiB" : "50MiB"],
+      ["demuxer-readahead-secs", t.largeBuffer ? "120" : "1"]
+    ];
+    if (t.profile === "light") {
+      props.push(["scale", "bilinear"], ["dscale", "bilinear"], ["deband", "no"]);
+    } else if (t.profile === "max") {
+      props.push(["scale", "ewa_lanczossharp"], ["dscale", "mitchell"], ["deband", "yes"]);
+    } else {
+      props.push(["scale", "lanczos"], ["dscale", "mitchell"], ["deband", "no"]);
+    }
+    return props;
+  }
+  function isDefaultTuning(t) {
+    return t.brightness === 0 && t.contrast === 0 && t.saturation === 0 && t.gamma === 0 && t.sharpen === 0;
+  }
+  function tuningToCssFilter(t) {
+    if (t.brightness === 0 && t.contrast === 0 && t.saturation === 0) return "";
+    const mul = (v) => (1 + v / 100).toFixed(3);
+    return `brightness(${mul(t.brightness)}) contrast(${mul(t.contrast)}) saturate(${mul(t.saturation)})`;
+  }
+
+  // lib/audio-tuning.ts
+  var DEFAULT_AUDIO_TUNING = {
+    normalize: false,
+    bassBoost: false,
+    voiceClarity: false,
+    downmixStereo: false
+  };
+  var KEY4 = "audio_tuning";
+  var EVENT6 = "lumio-audio-tuning-changed";
+  function getAudioTuning() {
+    if (typeof window === "undefined") return { ...DEFAULT_AUDIO_TUNING };
+    try {
+      const raw = getScopedStorageItem(KEY4);
+      if (!raw) return { ...DEFAULT_AUDIO_TUNING };
+      const parsed = JSON.parse(raw);
+      return {
+        normalize: parsed.normalize === true,
+        bassBoost: parsed.bassBoost === true,
+        voiceClarity: parsed.voiceClarity === true,
+        downmixStereo: parsed.downmixStereo === true
+      };
+    } catch {
+      return { ...DEFAULT_AUDIO_TUNING };
+    }
+  }
+  function setAudioTuning(tuning) {
+    setScopedStorageItem(KEY4, JSON.stringify(tuning));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT6));
+  }
+  function onAudioTuningChanged(listener) {
+    if (typeof window === "undefined") return () => {
+    };
+    window.addEventListener(EVENT6, listener);
+    return () => window.removeEventListener(EVENT6, listener);
+  }
+  function audioTuningFilters(t) {
+    const filters = [];
+    if (t.bassBoost) filters.push("lavfi=[bass=g=6]");
+    if (t.voiceClarity) filters.push("lavfi=[highpass=f=90,equalizer=f=2000:t=q:w=0.7:g=6,equalizer=f=4000:t=q:w=1.0:g=3]");
+    if (t.normalize) filters.push("lavfi=[dynaudnorm=f=250:g=15]");
+    return filters;
+  }
+
+  // components/player/player-tuning-panel.tsx
+  init_jsx_runtime_shim();
+  var DIALS = [
+    { key: "brightness", labelKey: "vtBrightness", min: -50, max: 50, step: 1 },
+    { key: "contrast", labelKey: "vtContrast", min: -50, max: 50, step: 1 },
+    { key: "saturation", labelKey: "vtSaturation", min: -50, max: 50, step: 1 },
+    { key: "gamma", labelKey: "vtGamma", min: -50, max: 50, step: 1 },
+    { key: "sharpen", labelKey: "vtSharpen", min: 0, max: 2, step: 0.05 }
+  ];
+  var AUDIO_TOGGLES = [
+    ["normalize", "atNormalize"],
+    ["bassBoost", "atBass"],
+    ["voiceClarity", "atVoice"],
+    ["downmixStereo", "atDownmix"]
+  ];
+  function MiniHeader({ children }) {
+    return /* @__PURE__ */ jsx("p", { className: "mb-2 mt-4 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 first:mt-0", children });
+  }
+  function MiniToggle({ checked, onChange }) {
+    return /* @__PURE__ */ jsx(
+      "button",
+      {
+        type: "button",
+        role: "switch",
+        "aria-checked": checked,
+        onClick: onChange,
+        className: `relative h-5 w-9 flex-none rounded-full transition ${checked ? "bg-accent-500" : "bg-white/10"}`,
+        children: /* @__PURE__ */ jsx("span", { className: `absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all ${checked ? "left-[1.125rem]" : "left-0.5"}` })
+      }
+    );
+  }
+  function PlayerTuningPanel({ onClose }) {
+    const { t } = useLang();
+    const [tuning, setTuningState] = useState(() => getVideoTuning());
+    const [render, setRenderState] = useState(() => getRenderTuning());
+    const [audio, setAudioState] = useState(() => getAudioTuning());
+    useEffect(() => onVideoTuningChanged(() => {
+      setTuningState(getVideoTuning());
+      setRenderState(getRenderTuning());
+    }), []);
+    useEffect(() => onAudioTuningChanged(() => setAudioState(getAudioTuning())), []);
+    function apply(next2) {
+      setTuningState(next2);
+      setVideoTuning(next2);
+    }
+    function applyRender(next2) {
+      setRenderState(next2);
+      setRenderTuning(next2);
+    }
+    function applyAudio(next2) {
+      setAudioState(next2);
+      setAudioTuning(next2);
+    }
+    const matchesPreset2 = (patch) => {
+      const full = { ...DEFAULT_TUNING, ...patch };
+      return Object.keys(full).every((k) => full[k] === tuning[k]);
+    };
+    return /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: "absolute bottom-24 right-4 z-[60] max-h-[70vh] w-80 overflow-y-auto rounded-2xl border border-white/10 bg-black/85 p-4 shadow-2xl backdrop-blur-xl",
+        onClick: (e) => e.stopPropagation(),
+        onMouseMove: (e) => e.stopPropagation(),
+        children: [
+          /* @__PURE__ */ jsxs("div", { className: "mb-3 flex items-center justify-between", children: [
+            /* @__PURE__ */ jsx("p", { className: "text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400", children: t("vtTitle") }),
+            /* @__PURE__ */ jsx("button", { type: "button", onClick: onClose, className: "text-slate-400 transition hover:text-white", "aria-label": t("close"), children: /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12" }) }) })
+          ] }),
+          /* @__PURE__ */ jsx("div", { className: "mb-3 flex flex-wrap gap-1.5", children: Object.entries(TUNING_PRESETS).map(([id4, preset]) => /* @__PURE__ */ jsx(
+            "button",
+            {
+              type: "button",
+              onClick: () => apply({ ...DEFAULT_TUNING, ...preset.patch }),
+              className: `rounded-full border px-2.5 py-1 text-[10.5px] font-medium transition ${matchesPreset2(preset.patch) ? "border-accent-400/60 bg-accent-500/15 text-accent-200" : "border-white/10 text-slate-300 hover:border-white/25"}`,
+              children: t(preset.labelKey)
+            },
+            id4
+          )) }),
+          /* @__PURE__ */ jsx("div", { className: "space-y-2.5", children: DIALS.map(({ key, labelKey, min, max, step }) => /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5", children: [
+            /* @__PURE__ */ jsx("span", { className: "w-16 flex-none text-[11px] text-slate-300", children: t(labelKey) }),
+            /* @__PURE__ */ jsx(
+              "input",
+              {
+                type: "range",
+                min,
+                max,
+                step,
+                value: tuning[key],
+                onChange: (e) => apply({ ...tuning, [key]: Number(e.target.value) }),
+                className: "h-1 flex-1 cursor-pointer appearance-none rounded-full bg-white/20 accent-aurora-400"
+              }
+            ),
+            /* @__PURE__ */ jsx("span", { className: "w-9 flex-none text-right text-[10.5px] tabular-nums text-slate-400", children: key === "sharpen" ? tuning[key].toFixed(2) : tuning[key] > 0 ? `+${tuning[key]}` : tuning[key] })
+          ] }, key)) }),
+          /* @__PURE__ */ jsx(MiniHeader, { children: t("atEyebrow") }),
+          /* @__PURE__ */ jsx("div", { className: "space-y-2", children: AUDIO_TOGGLES.map(([key, labelKey]) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-2", children: [
+            /* @__PURE__ */ jsx("span", { className: "text-[11px] text-slate-300", children: t(labelKey) }),
+            /* @__PURE__ */ jsx(MiniToggle, { checked: audio[key], onChange: () => applyAudio({ ...audio, [key]: !audio[key] }) })
+          ] }, key)) }),
+          /* @__PURE__ */ jsx(MiniHeader, { children: t("rtEyebrow") }),
+          /* @__PURE__ */ jsxs("div", { className: "space-y-2.5", children: [
+            /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1.5", children: ["light", "balanced", "max"].map((profile) => /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                onClick: () => applyRender({ ...render, profile }),
+                className: `rounded-full border px-2.5 py-1 text-[10.5px] font-medium transition ${render.profile === profile ? "border-accent-400/60 bg-accent-500/15 text-accent-200" : "border-white/10 text-slate-300 hover:border-white/25"}`,
+                children: t(profile === "light" ? "rtProfileLight" : profile === "max" ? "rtProfileMax" : "rtProfileBalanced")
+              },
+              profile
+            )) }),
+            /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-2", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[11px] text-slate-300", children: t("rtToneMapping") }),
+              /* @__PURE__ */ jsx(
+                "select",
+                {
+                  value: render.toneMapping,
+                  onChange: (e) => applyRender({ ...render, toneMapping: e.target.value }),
+                  className: "cursor-pointer rounded-lg border border-white/10 bg-transparent px-2 py-1 text-[11px] text-slate-200 outline-none hover:text-white",
+                  children: TONE_MAPPINGS.map((mode) => /* @__PURE__ */ jsx("option", { value: mode, className: "bg-slate-900", children: mode }, mode))
+                }
+              )
+            ] }),
+            [
+              ["inverseToneMapping", "rtInverseTm"],
+              ["hwdec", "rtHwdec"],
+              ["interpolation", "rtInterpolation"],
+              ["anime4k", "rtAnime4k"],
+              ["largeBuffer", "rtBuffer"]
+            ].map(([key, labelKey]) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-2", children: [
+              /* @__PURE__ */ jsx("span", { className: "text-[11px] text-slate-300", children: t(labelKey) }),
+              /* @__PURE__ */ jsx(
+                MiniToggle,
+                {
+                  checked: Boolean(render[key]),
+                  onChange: () => applyRender({ ...render, [key]: !render[key] })
+                }
+              )
+            ] }, key))
+          ] }),
+          /* @__PURE__ */ jsxs("div", { className: "mt-4 flex items-center justify-between", children: [
+            /* @__PURE__ */ jsx(
+              "button",
+              {
+                type: "button",
+                disabled: isDefaultTuning(tuning),
+                onClick: () => {
+                  apply({ ...DEFAULT_TUNING });
+                  applyRender({ ...DEFAULT_RENDER_TUNING });
+                },
+                className: "rounded-full border border-white/10 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-slate-300 transition hover:border-white/30 hover:text-white disabled:opacity-30",
+                children: t("shortcutsReset")
+              }
+            ),
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-slate-500", children: t("vtLiveNote") })
+          ] })
+        ]
+      }
+    );
   }
 
   // lib/vlc-deep-link.ts
@@ -172051,15 +175879,15 @@
     return /* @__PURE__ */ jsxs(
       "div",
       {
-        className: "absolute inset-y-0 right-0 z-40 flex w-[340px] flex-col overflow-hidden",
+        className: "absolute inset-y-0 right-0 z-40 flex w-[min(340px,88vw)] flex-col overflow-hidden",
         style: {
-          background: "rgba(7, 11, 26, 0.96)",
+          background: "rgb(var(--base-950) / 0.96)",
           backdropFilter: "blur(12px)",
           borderLeft: "1px solid rgba(255,255,255,0.07)"
         },
         onClick: (e) => e.stopPropagation(),
         children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex flex-shrink-0 items-center justify-between border-b border-white/[0.07] px-4 py-3", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex flex-shrink-0 items-center justify-between border-b border-white/[0.07] px-4 pb-3 pt-[max(0.75rem,calc(env(safe-area-inset-top)+0.5rem))]", children: [
             /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
               onBack ? /* @__PURE__ */ jsx(
                 "button",
@@ -172161,7 +175989,7 @@
       "div",
       {
         className: "absolute inset-y-0 right-0 z-[80] flex w-[340px] flex-col overflow-hidden",
-        style: { background: "rgba(7, 11, 26, 0.96)", backdropFilter: "blur(12px)", borderLeft: "1px solid rgba(255,255,255,0.07)" },
+        style: { background: "rgb(var(--base-950) / 0.96)", backdropFilter: "blur(12px)", borderLeft: "1px solid rgba(255,255,255,0.07)" },
         onClick: (e) => e.stopPropagation(),
         children: [
           /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between border-b border-white/[0.07] px-4 py-3", children: [
@@ -172335,7 +176163,7 @@
       "div",
       {
         className: "absolute inset-y-0 right-0 z-40 flex w-[340px] flex-col overflow-hidden",
-        style: { background: "rgba(7, 11, 26, 0.96)", backdropFilter: "blur(12px)", borderLeft: "1px solid rgba(255,255,255,0.07)" },
+        style: { background: "rgb(var(--base-950) / 0.96)", backdropFilter: "blur(12px)", borderLeft: "1px solid rgba(255,255,255,0.07)" },
         onClick: (e) => e.stopPropagation(),
         children: [
           /* @__PURE__ */ jsxs("div", { className: "flex flex-shrink-0 items-center justify-between border-b border-white/[0.07] px-4 py-3", children: [
@@ -172454,6 +176282,46 @@
       payload: { sessionId, reason }
     });
     return Boolean(result?.closed);
+  }
+
+  // lib/keyboard-shortcuts.ts
+  var KEY5 = "keyboard_shortcuts";
+  var SHORTCUT_COMMANDS = [
+    { id: "playPause", category: "player", defaultKey: " ", labelKey: "shortcutsPlayPause" },
+    { id: "seekBack", category: "player", defaultKey: "ArrowLeft", labelKey: "shortcutsSeekBackward" },
+    { id: "seekForward", category: "player", defaultKey: "ArrowRight", labelKey: "shortcutsSeekForward" },
+    { id: "mute", category: "player", defaultKey: "m", labelKey: "shortcutsMute" },
+    { id: "fullscreen", category: "player", defaultKey: "f", labelKey: "shortcutsToggleFullscreen" },
+    { id: "subtitleCycle", category: "tracks", defaultKey: "s", labelKey: "shortcutsSubtitleCycle" },
+    { id: "subtitleDelayBack", category: "tracks", defaultKey: "z", labelKey: "shortcutsSubtitleDelayBack" },
+    { id: "subtitleDelayForward", category: "tracks", defaultKey: "x", labelKey: "shortcutsSubtitleDelayForward" },
+    { id: "focusSearch", category: "global", defaultKey: "0", labelKey: "shortcutsGoToSearch" }
+  ];
+  var SUBTITLE_DELAY_STEP_SECONDS = 0.1;
+  var DEFAULTS = SHORTCUT_COMMANDS.reduce(
+    (acc, command) => ({ ...acc, [command.id]: command.defaultKey }),
+    {}
+  );
+  function readOverrides() {
+    if (typeof window === "undefined") return {};
+    try {
+      const raw = getScopedStorageItem(KEY5);
+      if (!raw) return {};
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+  function getShortcutKey(commandId) {
+    return readOverrides()[commandId] ?? DEFAULTS[commandId];
+  }
+  function normalizeShortcutKey(rawKey) {
+    if (rawKey === "Spacebar") return " ";
+    return rawKey.length === 1 ? rawKey.toLowerCase() : rawKey;
+  }
+  function matchesShortcut(commandId, eventKey) {
+    return normalizeShortcutKey(eventKey) === getShortcutKey(commandId);
   }
 
   // lib/lan-streaming-settings.ts
@@ -173314,13 +177182,86 @@ ${cue.text}`).join("\n\n")}
         if (!paused) setControlsVisible(false);
       }, 3e3);
     }
+    const suppressNextOverlayToggleRef = useRef(false);
     function showControlsPermanent() {
       if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
       setControlsVisible(true);
     }
     const [playing, setPlaying] = useState(false);
     const [hasStarted, setHasStarted] = useState(false);
+    const [showStartTitle, setShowStartTitle] = useState(false);
     const [hasEverStarted, setHasEverStarted] = useState(false);
+    const [playerLayout, setPlayerLayout] = useState(() => getPlayerLayout());
+    useEffect(() => onPlayerLayoutChanged(() => setPlayerLayout(getPlayerLayout())), []);
+    const [videoTuning, setVideoTuningState] = useState(() => getVideoTuning());
+    useEffect(() => onVideoTuningChanged(() => setVideoTuningState(getVideoTuning())), []);
+    const [streamQualityLabel, setStreamQualityLabel] = useState(null);
+    useEffect(() => {
+      if (!hasStarted || !getShowStreamQuality()) {
+        setStreamQualityLabel(null);
+        return;
+      }
+      if (useMpv) {
+        let cancelled = false;
+        const probe = async () => {
+          try {
+            const [w, h, codec] = await Promise.all([
+              mpvCommand2(["get_property", "video-params/w"]),
+              mpvCommand2(["get_property", "video-params/h"]),
+              mpvCommand2(["get_property", "video-codec"])
+            ]);
+            if (cancelled) return;
+            const height = Number(h);
+            if (Number.isFinite(height) && height > 0) {
+              const codecName = typeof codec === "string" ? codec.split(" ")[0] : "";
+              setStreamQualityLabel(`${Number(w)}\xD7${height}${codecName ? ` \xB7 ${codecName}` : ""}`);
+            }
+          } catch {
+          }
+        };
+        const timer = window.setTimeout(() => {
+          void probe();
+        }, 1200);
+        return () => {
+          cancelled = true;
+          window.clearTimeout(timer);
+        };
+      }
+      const v = videoRef.current;
+      if (v && v.videoHeight > 0) setStreamQualityLabel(`${v.videoWidth}\xD7${v.videoHeight}`);
+      return void 0;
+    }, [hasStarted, useMpv, videoSrc]);
+    const [audioTuning, setAudioTuningState] = useState(() => getAudioTuning());
+    useEffect(() => onAudioTuningChanged(() => setAudioTuningState(getAudioTuning())), []);
+    useEffect(() => {
+      if (!useMpv) return;
+      void mpvCommand2(["set_property", "audio-channels", audioTuning.downmixStereo ? "stereo" : "auto-safe"]);
+    }, [useMpv, audioTuning.downmixStereo, hasStarted]);
+    useEffect(() => {
+      if (!useMpv) return;
+      const renderTuning = getRenderTuning();
+      for (const [prop, value] of renderTuningProperties(renderTuning)) {
+        void mpvCommand2(["set_property", prop, value]);
+      }
+      if (isMpvEngine) {
+        if (renderTuning.anime4k) {
+          void fetch("/api/anime4k-shaders").then((r) => r.json()).then(({ paths }) => {
+            if (paths && paths.length > 0) void mpvCommand2(["set_property", "glsl-shaders", paths.join(":")]);
+          }).catch(() => {
+          });
+        } else {
+          void mpvCommand2(["set_property", "glsl-shaders", ""]);
+        }
+      }
+      for (const [prop, value] of parseRawMpvConf(getRawMpvConf())) {
+        void mpvCommand2(["set_property", prop, value]);
+      }
+      void mpvCommand2(["set_property", "brightness", videoTuning.brightness]);
+      void mpvCommand2(["set_property", "contrast", videoTuning.contrast]);
+      void mpvCommand2(["set_property", "saturation", videoTuning.saturation]);
+      void mpvCommand2(["set_property", "gamma", videoTuning.gamma]);
+      void mpvCommand2(["set_property", "sharpen", videoTuning.sharpen]);
+    }, [useMpv, videoTuning, hasStarted]);
     const [requiresUserStart, setRequiresUserStart] = useState(false);
     const [hasEnded, setHasEnded] = useState(false);
     const [mpvStartupHoldReady, setMpvStartupHoldReady] = useState(false);
@@ -173343,6 +177284,7 @@ ${cue.text}`).join("\n\n")}
     const [buffered, setBuffered] = useState(0);
     const [showWiki, setShowWiki] = useState(false);
     const [showSoundtrack, setShowSoundtrack] = useState(false);
+    const [showTuningPanel, setShowTuningPanel] = useState(false);
     const [audioTracks, setAudioTracks] = useState([]);
     const [embeddedSubtitleTracks, setEmbeddedSubtitleTracks] = useState([]);
     const [mpvSubtitleTracks, setMpvSubtitleTracks] = useState([]);
@@ -173581,7 +177523,8 @@ ${cue.text}`).join("\n\n")}
       language: t2.lang || null,
       title: t2.title || null,
       external: false,
-      selected: t2.id === droid.sid
+      selected: t2.id === droid.sid,
+      forced: false
     })) : getMpvSubtitleTracks;
     const getMpvSid2 = isDroidEngine ? async () => droid.sid : getMpvSid;
     const mpvSetBounds2 = isDroidEngine ? nativeSetBounds : mpvSetBounds;
@@ -173743,7 +177686,10 @@ ${cue.text}`).join("\n\n")}
       }
       const splashLoading = useMpv ? !mpvStartupHoldReady || !mpvRevealPlaybackReady : startError || !hasStarted || preparingProxySource || isServerStreamUrl(videoSrc) && !proxyBufferReady;
       if (splashLoading) return;
-      if (splashFading) return;
+      if (splashFading) {
+        const finish = window.setTimeout(() => setHasEverStarted(true), SPLASH_FADE_MS);
+        return () => window.clearTimeout(finish);
+      }
       const REVEAL_GUARD_MS = 60;
       const fadeStart = window.setTimeout(() => {
         setSplashFading(true);
@@ -173924,13 +177870,18 @@ ${cue.text}`).join("\n\n")}
       const filter2 = nightMode === "off" ? null : nightMode === "mild" ? "lavfi=[acompressor=threshold=0.25:ratio=2.5:attack=20:release=250,alimiter=limit=0.63:level=0]" : "lavfi=[acompressor=threshold=0.125:ratio=4:attack=10:release=300,alimiter=limit=0.4:level=0]";
       void (async () => {
         await mpvCommand2(["af", "clr", ""]);
+        for (const tuningFilter of audioTuningFilters(audioTuning)) {
+          await mpvCommand2(["af", "add", tuningFilter]);
+        }
         if (filter2) {
           await mpvCommand2(["af", "add", filter2]);
+        }
+        if (filter2 || audioTuningFilters(audioTuning).length > 0) {
           const chain = await mpvGetAudioFilterChain2();
           airplayLog(`nightmode: ${nightMode}, mpv af-kedja: ${chain}`);
         }
       })();
-    }, [useMpv, nightMode, mpv.fileLoaded, mpv.fileLoadedToken]);
+    }, [useMpv, nightMode, audioTuning, mpv.fileLoaded, mpv.fileLoadedToken]);
     const onTimeUpdateRef = useRef(onTimeUpdate);
     onTimeUpdateRef.current = onTimeUpdate;
     useEffect(() => {
@@ -174304,6 +178255,16 @@ ${cue.text}`).join("\n\n")}
       onFirstPlay?.();
     }, [hasStarted, mpv.timePos, mpvRevealPlaybackReady, mpvStartupHoldReady, onFirstPlay, useMpv]);
     useEffect(() => {
+      if (!hasStarted || !getShowTitleOnStart()) return;
+      setShowStartTitle(true);
+      const timer = window.setTimeout(() => setShowStartTitle(false), 4e3);
+      return () => window.clearTimeout(timer);
+    }, [hasStarted, title]);
+    useEffect(() => {
+      setAutoplayDurationHint(totalDuration > 0 ? totalDuration : null);
+      return () => setAutoplayDurationHint(null);
+    }, [totalDuration]);
+    useEffect(() => {
       notifyLanPlaybackState(true);
       if (!isTauriEnv) return;
       let cancelled = false;
@@ -174475,6 +178436,7 @@ ${cue.text}`).join("\n\n")}
         const fullscreenSyncTimeout = window.setTimeout(finishClose, 1500);
         void syncDesktopFullscreenState().then((fullscreen) => {
           if (!fullscreen) return;
+          if (getStayFullscreenOnClose()) return fullscreen;
           return setWindowNativeFullscreen2(false);
         }).then((fullscreen) => {
           if (typeof fullscreen !== "boolean") return;
@@ -174487,7 +178449,7 @@ ${cue.text}`).join("\n\n")}
         });
         return;
       }
-      if (!isTauriEnv && document.fullscreenElement) {
+      if (!isTauriEnv && document.fullscreenElement && !getStayFullscreenOnClose()) {
         void document.exitFullscreen().catch(() => {
         });
       }
@@ -174553,7 +178515,8 @@ ${cue.text}`).join("\n\n")}
     const handleDownload = useCallback(async () => {
       setDownloadState({ type: "picking-folder" });
       try {
-        const folderPath = isTauriEnv ? await invoke("pick_folder") : await (async () => {
+        const presetDir = getDownloadDir();
+        const folderPath = presetDir ? presetDir : isTauriEnv ? await invoke("pick_folder") : await (async () => {
           const folderRes = await fetch("/api/pick-folder", { method: "POST" });
           if (!folderRes.ok) throw new Error("Folder picker failed");
           const folderData = await folderRes.json();
@@ -174747,25 +178710,44 @@ ${cue.text}`).join("\n\n")}
           handleClose();
           return;
         }
-        if (e.key === " " || e.key === "k") {
+        if (matchesShortcut("playPause", e.key) || e.key === "k") {
           e.preventDefault();
           togglePlay();
           return;
         }
-        if (e.key === "ArrowRight") {
+        if (matchesShortcut("seekForward", e.key)) {
           seek(10);
           return;
         }
-        if (e.key === "ArrowLeft") {
+        if (matchesShortcut("seekBack", e.key)) {
           seek(-10);
           return;
         }
-        if (e.key === "m") {
+        if (matchesShortcut("mute", e.key)) {
           toggleMute();
           return;
         }
-        if (e.key === "f") {
+        if (matchesShortcut("fullscreen", e.key)) {
           toggleFullscreen();
+          return;
+        }
+        if (matchesShortcut("subtitleCycle", e.key)) {
+          if (subtitleOptions.length > 0) {
+            const currentIndex = subtitleOptions.findIndex((option) => option.id === activeSubId);
+            const nextIndex = currentIndex + 1;
+            void selectSubtitle(
+              nextIndex >= subtitleOptions.length ? null : subtitleOptions[nextIndex],
+              { manual: true }
+            );
+          }
+          return;
+        }
+        if (matchesShortcut("subtitleDelayBack", e.key)) {
+          setSubDelay((value) => Number((value - SUBTITLE_DELAY_STEP_SECONDS).toFixed(2)));
+          return;
+        }
+        if (matchesShortcut("subtitleDelayForward", e.key)) {
+          setSubDelay((value) => Number((value + SUBTITLE_DELAY_STEP_SECONDS).toFixed(2)));
         }
       }
       window.addEventListener("keydown", onKey);
@@ -174957,6 +178939,39 @@ ${cue.text}`).join("\n\n")}
     useEffect(() => {
       progressSnapshotRef.current = { realTime, totalDuration };
     }, [realTime, totalDuration]);
+    const scrobbleIdentityRef = useRef({ mediaType: "movie", tmdbId: null, imdbId: null, season: null, episode: null });
+    useEffect(() => {
+      scrobbleIdentityRef.current = {
+        mediaType: mediaType === "tv" ? "episode" : "movie",
+        tmdbId: wikiTmdbId ?? null,
+        imdbId: imdbId ?? null,
+        season: season ?? null,
+        episode: episode ?? null
+      };
+    }, [mediaType, wikiTmdbId, imdbId, season, episode]);
+    const scrobbleProgress = useCallback(() => {
+      const snapshot = progressSnapshotRef.current;
+      if (snapshot.totalDuration <= 0) return 0;
+      return snapshot.realTime / snapshot.totalDuration * 100;
+    }, []);
+    const scrobbleStartedRef = useRef(false);
+    useEffect(() => {
+      if (!hasStarted) return;
+      if (isPlaying) {
+        scrobbleStartedRef.current = true;
+        void scrobble("start", scrobbleIdentityRef.current, scrobbleProgress());
+      } else if (scrobbleStartedRef.current) {
+        void scrobble("pause", scrobbleIdentityRef.current, scrobbleProgress());
+      }
+    }, [isPlaying, hasStarted, scrobbleProgress]);
+    useEffect(() => {
+      if (!wikiTmdbId && !imdbId) return;
+      return () => {
+        if (!scrobbleStartedRef.current) return;
+        scrobbleStartedRef.current = false;
+        void scrobble("stop", scrobbleIdentityRef.current, scrobbleProgress());
+      };
+    }, [wikiTmdbId, imdbId, season, episode]);
     useEffect(() => {
       if (!mediaId || !url) return;
       function save() {
@@ -175246,6 +179261,8 @@ ${cue.text}`).join("\n\n")}
         setIntroKind(null);
         setOutroSegment(null);
         outroFiredRef.current = false;
+        markOutroFired(false);
+        markOutroFired(false);
         setIntroDataReady(true);
         return;
       }
@@ -175254,6 +179271,8 @@ ${cue.text}`).join("\n\n")}
         setIntroKind(null);
         setOutroSegment(null);
         outroFiredRef.current = false;
+        markOutroFired(false);
+        markOutroFired(false);
         setIntroDataReady(true);
         return;
       }
@@ -175269,6 +179288,7 @@ ${cue.text}`).join("\n\n")}
       setIntroKind(null);
       setOutroSegment(null);
       outroFiredRef.current = false;
+      markOutroFired(false);
       const cachedIntroDb = introDbCacheRef.current.get(introDbCacheKey);
       if (cachedIntroDb) {
         applyIntroDbPayload(cachedIntroDb);
@@ -175295,6 +179315,22 @@ ${cue.text}`).join("\n\n")}
         }
         const isRemoteUrl = /^https?:\/\//i.test(url) && !/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])([:/])/i.test(url);
         if (isRemoteUrl) {
+          if (mediaType === "tv" && introDbImdbId && episode != null) {
+            try {
+              const aniParams = new URLSearchParams({ imdb_id: introDbImdbId, episode: String(episode) });
+              if (season != null) aniParams.set("season", String(season));
+              const aniData = await fetch(`/api/aniskip?${aniParams.toString()}`).then((r) => r.json());
+              if (cancelled) return;
+              if (aniData.intro != null || aniData.outro != null) {
+                introDbCacheRef.current.set(introDbCacheKey, aniData);
+                applyIntroDbPayload(aniData);
+                if (aniData.outro != null) setOutroSegment(aniData.outro);
+                setIntroDataReady(true);
+                return;
+              }
+            } catch {
+            }
+          }
           const cachedPayload = introDbCacheRef.current.get(introDbCacheKey);
           if (cachedPayload) {
             applyIntroDbPayload(cachedPayload);
@@ -175346,6 +179382,51 @@ ${cue.text}`).join("\n\n")}
         cancelled = true;
       };
     }, [wikiTmdbId, resolvedImdbId, imdbId, mediaType, season, episode, url]);
+    const chapterProbeKeyRef = useRef(null);
+    useEffect(() => {
+      if (!isMpvEngine || !mpv.fileLoaded || !introDataReady || introSegment) return;
+      if (chapterProbeKeyRef.current === url) return;
+      chapterProbeKeyRef.current = url;
+      let cancelled = false;
+      void (async () => {
+        try {
+          const count = Number(await mpvCommand2(["get_property", "chapter-list/count"]));
+          if (cancelled || !Number.isFinite(count) || count < 1) return;
+          const chapters = [];
+          for (let i = 0; i < Math.min(count, 40); i++) {
+            const [chapterTitle, chapterTime] = await Promise.all([
+              mpvCommand2(["get_property", `chapter-list/${i}/title`]).catch(() => ""),
+              mpvCommand2(["get_property", `chapter-list/${i}/time`])
+            ]);
+            const time2 = Number(chapterTime);
+            if (Number.isFinite(time2)) chapters.push({ title: String(chapterTitle ?? ""), time: time2 });
+          }
+          if (cancelled || chapters.length === 0) return;
+          const INTRO_RE = /\b(intro|opening|op ?\d*|förtexter)\b/i;
+          const OUTRO_RE = /\b(credits|outro|ending|ed ?\d*|eftertexter|sluttexter)\b/i;
+          const introIndex = chapters.findIndex((c) => INTRO_RE.test(c.title));
+          if (introIndex >= 0) {
+            const start2 = chapters[introIndex].time;
+            const end = introIndex + 1 < chapters.length ? chapters[introIndex + 1].time : start2 + 90;
+            if (end > start2 && end - start2 <= 240) {
+              setIntroSegment({ startMs: Math.round(start2 * 1e3), endMs: Math.round(end * 1e3) });
+              setIntroKind("intro");
+            }
+          }
+          const outroChapter = [...chapters].reverse().find((c) => OUTRO_RE.test(c.title));
+          if (outroChapter) {
+            setOutroSegment((prev) => prev ?? {
+              startMs: Math.round(outroChapter.time * 1e3),
+              endMs: Math.round((outroChapter.time + 600) * 1e3)
+            });
+          }
+        } catch {
+        }
+      })();
+      return () => {
+        cancelled = true;
+      };
+    }, [isMpvEngine, mpv.fileLoaded, introDataReady, introSegment, url]);
     function handleStillWatchingContinue() {
       registerPlaybackInteraction();
       setShowStillWatchingPrompt(false);
@@ -175442,11 +179523,24 @@ ${cue.text}`).join("\n\n")}
         disableSubtitlesWhenAudioMatches && defaultAudioLanguage && activeTrackLanguage && activeTrackLanguage === defaultAudioLanguage
       );
       autoSubtitleSuppressedRef.current = shouldSuppressAutoSubtitles;
-      if (!shouldSuppressAutoSubtitles || manualSubtitleOverrideRef.current || activeSubId === null) return;
+      if (!shouldSuppressAutoSubtitles || manualSubtitleOverrideRef.current) return;
+      if (getForcedSubtitlesWhenAudioMatches() && useMpv) {
+        const forcedTrack = mpvSubtitleTracks.find((track) => track.forced && toAudioLangGroup(track.language) === defaultAudioLanguage) ?? mpvSubtitleTracks.find((track) => track.forced);
+        if (forcedTrack) {
+          const forcedId = `embedded:${forcedTrack.sid}`;
+          if (activeSubId !== forcedId) {
+            setActiveSubId(forcedId);
+            setCues([]);
+            void setMpvSubtitleTrack2(forcedTrack.sid);
+          }
+          return;
+        }
+      }
+      if (activeSubId === null) return;
       setActiveSubId(null);
       setCues([]);
       if (useMpv) void setMpvSubtitleTrack2(null);
-    }, [activeAudioTrack, activeSubId, audioTracks, defaultAudioLanguage, disableSubtitlesWhenAudioMatches, useMpv]);
+    }, [activeAudioTrack, activeSubId, audioTracks, defaultAudioLanguage, disableSubtitlesWhenAudioMatches, useMpv, mpvSubtitleTracks]);
     useEffect(() => {
       setSubtitleClientDebugInfo({
         imdbProp: imdbId ?? null,
@@ -175727,13 +179821,25 @@ ${cue.text}`).join("\n\n")}
       if (subtitleOptions.length === 0) return;
       if (subtitlePreferenceRef.current.mode === "off") return;
       if (autoSubtitleSuppressedRef.current) return;
+      if (getSubtitlesOffByDefault()) return;
       if (useMpv && !mpv.fileLoaded) return;
-      const preferredLanguages = [defaultSubtitleLang, fallbackSubtitleLang, selectedLang].map((lang2) => normalizeLanguageCode(lang2)).filter((lang2, index3, values) => Boolean(lang2) && values.indexOf(lang2) === index3);
+      const preferredLanguages = [defaultSubtitleLang, fallbackSubtitleLang, ...getExtraSubtitleLanguages(), selectedLang].map((lang2) => normalizeLanguageCode(lang2)).filter((lang2, index3, values) => Boolean(lang2) && values.indexOf(lang2) === index3);
       if (preferredLanguages.length === 0) return;
       const preferredLanguage = subtitlePreferenceRef.current.mode === "language" ? normalizeLanguageCode(subtitlePreferenceRef.current.language) : null;
       const orderedPreferredLanguages = preferredLanguage ? [preferredLanguage, ...preferredLanguages.filter((lang2) => lang2 !== preferredLanguage)] : preferredLanguages;
-      const match = orderedPreferredLanguages.map((preferredLanguage2) => subtitleOptions.find((subtitle) => normalizeLanguageCode(subtitle.language) === preferredLanguage2 || subtitleOptionMatchesLanguage(subtitle, preferredLanguage2))).find((subtitle) => Boolean(subtitle));
+      const blockWords = getTrackBlockWords();
+      const isBlocked = (subtitle) => {
+        if (blockWords.length === 0) return false;
+        const name = `${subtitle.label ?? ""} ${subtitle.language ?? ""}`.toLowerCase();
+        return blockWords.some((word) => name.includes(word));
+      };
+      const searchOrder = getPreferEmbeddedSubtitles() ? [
+        ...subtitleOptions.filter((subtitle) => subtitle.id.startsWith("embedded:")),
+        ...subtitleOptions.filter((subtitle) => !subtitle.id.startsWith("embedded:"))
+      ] : subtitleOptions;
+      const match = orderedPreferredLanguages.map((preferredLanguage2) => searchOrder.find((subtitle) => !isBlocked(subtitle) && (normalizeLanguageCode(subtitle.language) === preferredLanguage2 || subtitleOptionMatchesLanguage(subtitle, preferredLanguage2)))).find((subtitle) => Boolean(subtitle));
       if (match && match.id !== activeSubId) {
+        if (activeSubId != null && !getUpgradeSubtitleWhenBetter()) return;
         void selectSubtitle(match);
         return;
       }
@@ -175790,6 +179896,20 @@ ${cue.text}`).join("\n\n")}
       const targetTime = (e.clientX - rect.left) / rect.width * totalDuration;
       seekToAbsolute(targetTime);
     }
+    function applyVolume(raw) {
+      const val = Math.min(1, Math.max(0, raw));
+      setVolume(val);
+      setMuted(val === 0);
+      if (useMpv) {
+        void mpvCommand2(["set_property", "volume", Math.round(val * 100)]);
+        void mpvCommand2(["set_property", "mute", val === 0 ? "yes" : "no"]);
+        return;
+      }
+      const v = videoRef.current;
+      if (!v) return;
+      v.volume = val;
+      v.muted = val === 0;
+    }
     function handleVolumeChange(e) {
       const val = Number(e.target.value);
       setVolume(val);
@@ -175804,11 +179924,19 @@ ${cue.text}`).join("\n\n")}
       v.volume = val;
       v.muted = val === 0;
     }
+    const episodeCode = season != null && episode != null ? `S${String(season).padStart(2, "0")}E${String(episode).padStart(2, "0")}` : null;
+    const headerTitle = episodeCode ? getSeriesNameFirst() ? `${title} \xB7 ${episodeCode}` : `${episodeCode} \xB7 ${title}` : title;
     const progress2 = totalDuration > 0 ? realTime / totalDuration * 100 : 0;
     const hasSubtitles = subtitleOptions.length > 0;
     const activeIntro = introSegment ? realTime >= introSegment.startMs / 1e3 && realTime < introSegment.endMs / 1e3 ? introSegment : null : null;
-    const shouldShowSkipIntroButton = Boolean(hasStarted && !autoSkipIntro && activeIntro && introDataReady);
-    const controlsReady = useMpv ? hasEverStarted || hasStarted || mpv.firstFrameRendered || mpvRevealPlaybackReady : hasEverStarted;
+    const skipButtonAutoHideSeconds = getHideSkipButtonAfterSeconds();
+    const skipButtonExpired = Boolean(
+      skipButtonAutoHideSeconds > 0 && activeIntro && realTime - activeIntro.startMs / 1e3 > skipButtonAutoHideSeconds
+    );
+    const shouldShowSkipIntroButton = Boolean(
+      hasStarted && !autoSkipIntro && activeIntro && introDataReady && !skipButtonExpired
+    );
+    const controlsReady = useMpv ? hasEverStarted || hasStarted || mpv.firstFrameRendered || mpvRevealPlaybackReady : hasEverStarted || hasStarted;
     const collapseMpvTopBar = useMpv && !controlsVisible && !desktopFullscreen;
     useEffect(() => {
       if (!autoSkipIntro || !activeIntro || !hasStarted || autoSkippedIntroRef.current) return;
@@ -175820,6 +179948,7 @@ ${cue.text}`).join("\n\n")}
       if (outroFiredRef.current || !outroSegment) return;
       if (realTime < outroSegment.startMs / 1e3) return;
       outroFiredRef.current = true;
+      markOutroFired(true);
       if (mediaType === "tv" && wikiTmdbId && season != null && episode != null && !watchedMarkedRef.current) {
         setWatched(wikiTmdbId, season, episode, true, { imdbId: imdbId ?? null });
         removeStreamProgress(`tv-${wikiTmdbId}`, season, episode);
@@ -176061,7 +180190,7 @@ ${cue.text}`).join("\n\n")}
       lastAutoSyncedDelayRef.current = null;
       setSubtitleAutoSyncState({ type: "idle" });
     }, []);
-    const content = /* @__PURE__ */ jsxs("div", { "data-lumio-player-open": "1", className: `fixed inset-0 z-[60] flex flex-col !mt-0 ${useMpv ? "" : "bg-black"}`, children: [
+    const content = /* @__PURE__ */ jsxs("div", { "data-lumio-player-open": "1", className: `fixed inset-x-0 top-0 z-[60] flex h-[100dvh] flex-col !mt-0 ${useMpv ? "" : "bg-black"}`, children: [
       !hasEverStarted && (!hideStartSplash || clientOwnsSplash) && /* @__PURE__ */ jsxs(
         "div",
         {
@@ -176126,7 +180255,7 @@ ${cue.text}`).join("\n\n")}
       !(useMpv && desktopFullscreen) && /* @__PURE__ */ jsxs(
         "div",
         {
-          className: `absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-4 overflow-hidden transition-[height,padding,opacity,background-color] duration-300 ${collapseMpvTopBar || cssFullscreen && !controlsVisible ? "h-0 px-4 py-0 opacity-0" : "min-h-[44px] px-4 py-2.5"}`,
+          className: `absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-4 overflow-hidden transition-[height,padding,opacity,background-color] duration-300 ${collapseMpvTopBar || cssFullscreen && !controlsVisible ? "h-0 px-4 py-0 opacity-0" : "min-h-[44px] px-4 pb-2.5 pt-[max(0.625rem,env(safe-area-inset-top))]"}`,
           style: {
             backgroundColor: useMpv ? "#000" : controlsVisible ? "rgba(0,0,0,0.8)" : "transparent",
             pointerEvents: controlsVisible ? "auto" : "none"
@@ -176139,12 +180268,15 @@ ${cue.text}`).join("\n\n")}
                 style: { opacity: controlsVisible ? 1 : 0 }
               }
             ),
-            /* @__PURE__ */ jsx(
+            /* @__PURE__ */ jsxs(
               "span",
               {
-                className: "relative truncate text-sm text-slate-300 transition-opacity duration-300",
+                className: "relative flex min-w-0 flex-col transition-opacity duration-300",
                 style: { opacity: controlsVisible ? 1 : 0 },
-                children: title
+                children: [
+                  /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-300", children: headerTitle }),
+                  streamQualityLabel ? /* @__PURE__ */ jsx("span", { className: "truncate text-[10.5px] uppercase tracking-[0.14em] text-slate-500", children: streamQualityLabel }) : null
+                ]
               }
             ),
             /* @__PURE__ */ jsxs(
@@ -176236,7 +180368,7 @@ ${cue.text}`).join("\n\n")}
                 autoPlay: true,
                 playsInline: true,
                 className: "block",
-                style: { ...videoPresentation.videoStyle, ...cropZoomVideoStyle },
+                style: { ...videoPresentation.videoStyle, ...cropZoomVideoStyle, filter: tuningToCssFilter(videoTuning) || void 0 },
                 ...{ "x-webkit-airplay": "allow" },
                 onLoadedMetadata: () => {
                   if (!hasStarted) void attemptHtml5Start(false);
@@ -176363,7 +180495,24 @@ ${cue.text}`).join("\n\n")}
                 }
               }
             ) }) }) : /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-black" }),
-            /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-10", onClick: togglePlay, onMouseMove: onMouseActivity }),
+            /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: "absolute inset-0 z-10",
+                onPointerDown: (e) => {
+                  suppressNextOverlayToggleRef.current = e.pointerType !== "mouse" && !controlsVisible;
+                  if (suppressNextOverlayToggleRef.current) onMouseActivity();
+                },
+                onClick: () => {
+                  if (suppressNextOverlayToggleRef.current) {
+                    suppressNextOverlayToggleRef.current = false;
+                    return;
+                  }
+                  togglePlay();
+                },
+                onMouseMove: onMouseActivity
+              }
+            ),
             hasStarted && !isPlaying && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 z-20 flex items-center justify-center", children: /* @__PURE__ */ jsx("div", { className: "rounded-full bg-black/40 p-5 backdrop-blur-sm", children: /* @__PURE__ */ jsx("svg", { className: "h-12 w-12 text-white", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }) }) }),
             seekingProxy && hasEverStarted && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 z-30 flex items-center justify-center", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-full bg-black/55 px-5 py-3 backdrop-blur-md", children: [
               /* @__PURE__ */ jsx("svg", { className: "h-6 w-6 animate-spin text-white", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }),
@@ -176730,6 +180879,8 @@ ${cue.text}`).join("\n\n")}
                 )
               ] })
             ] }) }),
+            showStartTitle && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute left-8 top-10 z-[55] max-w-[70%]", children: /* @__PURE__ */ jsx("p", { className: "text-2xl font-semibold text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] sm:text-3xl", children: title }) }),
+            showTuningPanel && /* @__PURE__ */ jsx(PlayerTuningPanel, { onClose: () => setShowTuningPanel(false) }),
             shouldShowSkipIntroButton && activeIntro && /* @__PURE__ */ jsx("div", { className: "absolute bottom-24 right-4 z-[55]", onClick: (e) => e.stopPropagation(), children: /* @__PURE__ */ jsx(
               "button",
               {
@@ -176743,252 +180894,285 @@ ${cue.text}`).join("\n\n")}
               "div",
               {
                 ref: controlsRef,
-                className: "vp-controls absolute inset-x-0 bottom-0 z-40 bg-gradient-to-t from-black/80 via-black/30 to-transparent px-4 pb-3 pt-10",
+                className: "vp-controls absolute inset-x-0 bottom-0 z-40 bg-gradient-to-t from-black/80 via-black/30 to-transparent px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-10",
                 style: { opacity: controlsVisible && controlsReady ? 1 : 0, pointerEvents: controlsVisible && controlsReady ? "auto" : "none" },
                 onMouseMove: onMouseActivity,
+                onPointerDown: onMouseActivity,
                 onClick: (e) => e.stopPropagation(),
                 children: [
-                  /* @__PURE__ */ jsxs("div", { className: "relative mb-3 h-1.5 cursor-pointer rounded-full bg-white/20", onClick: handleSeekClick, children: [
-                    !useMpv && !isServerStreamUrl(videoSrc) && /* @__PURE__ */ jsx("div", { className: "absolute inset-y-0 left-0 rounded-full bg-white/30", style: { width: `${buffered}%` } }),
-                    totalDuration > 0 && /* @__PURE__ */ jsxs(Fragment2, { children: [
-                      /* @__PURE__ */ jsx("div", { className: "absolute inset-y-0 left-0 rounded-full bg-aurora-400", style: { width: `${progress2}%` } }),
-                      /* @__PURE__ */ jsx("div", { className: "absolute top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-white shadow", style: { left: `calc(${progress2}% - 7px)` } })
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ jsxs("div", { className: "vp-controls-row flex items-center gap-4 overflow-x-auto whitespace-nowrap", children: [
-                    /* @__PURE__ */ jsx("button", { type: "button", onClick: togglePlay, className: "text-white hover:text-aurora-300", children: isPlaying ? /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M6 19h4V5H6v14zm8-14v14h4V5h-4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }) }),
-                    /* @__PURE__ */ jsx("button", { type: "button", onClick: () => seek(-10), className: "text-xs text-slate-300 hover:text-white", children: "\u221210s" }),
-                    /* @__PURE__ */ jsx("button", { type: "button", onClick: () => seek(10), className: "text-xs text-slate-300 hover:text-white", children: "+10s" }),
-                    /* @__PURE__ */ jsxs("span", { className: "text-xs tabular-nums text-slate-300", children: [
-                      fmt(realTime),
-                      " / ",
-                      fmt(totalDuration)
-                    ] }),
-                    /* @__PURE__ */ jsx(
-                      "button",
-                      {
-                        type: "button",
-                        ref: subTriggerRef,
-                        onClick: () => {
-                          if (!showSubMenu) {
-                            const activeLang = activeSubId ? toSubtitleLangGroup(subtitleOptions.find((s) => s.id === activeSubId)?.language ?? null) : null;
-                            setSelectedLang(activeLang);
+                  (() => {
+                    const heightClass = playerLayout.seekBarHeight === "slim" ? "h-1" : playerLayout.seekBarHeight === "chunky" ? "h-2.5" : "h-1.5";
+                    const fillColorClass = playerLayout.seekBarColor === "white" ? "bg-white" : playerLayout.seekBarColor === "red" ? "bg-red-500" : playerLayout.seekBarColor === "amber" ? "bg-amber-400" : "bg-aurora-400";
+                    const styleClass = playerLayout.seekBarStyle === "glass" ? "opacity-80 backdrop-blur-sm shadow-[0_0_12px_rgba(255,255,255,0.25)]" : playerLayout.seekBarStyle === "pinstripe" ? "bg-[repeating-linear-gradient(45deg,transparent,transparent_4px,rgba(0,0,0,0.25)_4px,rgba(0,0,0,0.25)_8px)]" : "";
+                    return /* @__PURE__ */ jsxs("div", { className: `relative mb-3 cursor-pointer rounded-full bg-white/20 ${heightClass}`, onClick: handleSeekClick, children: [
+                      !useMpv && !isServerStreamUrl(videoSrc) && /* @__PURE__ */ jsx("div", { className: "absolute inset-y-0 left-0 rounded-full bg-white/30", style: { width: `${buffered}%` } }),
+                      totalDuration > 0 && /* @__PURE__ */ jsxs(Fragment2, { children: [
+                        /* @__PURE__ */ jsx("div", { className: `absolute inset-y-0 left-0 rounded-full ${fillColorClass}`, style: { width: `${progress2}%` }, children: styleClass ? /* @__PURE__ */ jsx("div", { className: `absolute inset-0 rounded-full ${styleClass}` }) : null }),
+                        playerLayout.seekBarDot ? /* @__PURE__ */ jsx("div", { className: "absolute top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-white shadow", style: { left: `calc(${progress2}% - 7px)` } }) : null
+                      ] })
+                    ] });
+                  })(),
+                  /* @__PURE__ */ jsx("div", { className: "vp-controls-row flex items-center gap-4 overflow-x-auto whitespace-nowrap", children: (() => {
+                    const controls = {
+                      playPause: /* @__PURE__ */ jsx("button", { type: "button", onClick: togglePlay, className: "text-white hover:text-aurora-300", children: isPlaying ? /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M6 19h4V5H6v14zm8-14v14h4V5h-4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }) }),
+                      seekBack: /* @__PURE__ */ jsx("button", { type: "button", onClick: () => seek(-10), className: "text-xs text-slate-300 hover:text-white", children: "\u221210s" }),
+                      seekForward: /* @__PURE__ */ jsx("button", { type: "button", onClick: () => seek(10), className: "text-xs text-slate-300 hover:text-white", children: "+10s" }),
+                      time: /* @__PURE__ */ jsx("span", { className: "text-xs tabular-nums text-slate-300", children: playerLayout.timeFormat === "remaining" ? `-${fmt(Math.max(0, totalDuration - realTime))}` : playerLayout.timeFormat === "elapsed" ? fmt(realTime) : `${fmt(realTime)} / ${fmt(totalDuration)}` }),
+                      spacer: /* @__PURE__ */ jsx("span", { "aria-hidden": true, className: "flex-1" }),
+                      subtitles: /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          ref: subTriggerRef,
+                          onClick: () => {
+                            if (!showSubMenu) {
+                              const activeLang = activeSubId ? toSubtitleLangGroup(subtitleOptions.find((s) => s.id === activeSubId)?.language ?? null) : null;
+                              setSelectedLang(activeLang);
+                            }
+                            setShowSubMenu((v) => !v);
+                          },
+                          title: t("subtitlesLabel"),
+                          className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${activeSubId ? "bg-aurora-400 text-black" : hasSubtitles || loadingSub || subtitleLoadError || resolvedImdbId ? "text-slate-300 hover:text-white" : "text-slate-500"}`,
+                          children: "CC"
+                        }
+                      ),
+                      cast: !isClientSession() && /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          onClick: () => {
+                            const opening = !showCastMenu;
+                            setShowCastMenu(opening);
+                            if (opening && castDevices.length === 0) void scanCastDevices();
+                            if (opening && isMpvEngine && !airplaySession) void prepareAirplaySession();
+                          },
+                          title: t("castTitle"),
+                          className: `shrink-0 rounded px-1 py-0.5 transition ${castTarget ? "text-aurora-300" : "text-slate-300 hover:text-white"}`,
+                          children: /* @__PURE__ */ jsxs("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
+                            /* @__PURE__ */ jsx("path", { d: "M2 16.1a5 5 0 0 1 5.9 5.9" }),
+                            /* @__PURE__ */ jsx("path", { d: "M2 12.05a9 9 0 0 1 9.95 9.95" }),
+                            /* @__PURE__ */ jsx("path", { d: "M2 8.05a13 13 0 0 1 13.95 13.95" }),
+                            /* @__PURE__ */ jsx("path", { d: "M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5" })
+                          ] })
+                        }
+                      ),
+                      audioTrack: audioTracks.length > 0 && /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          ref: audioTriggerRef,
+                          onClick: () => setShowAudioMenu((v) => !v),
+                          title: t("audioLanguage"),
+                          className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showAudioMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
+                          children: toAudioLangGroup((audioTracks.find((t2) => t2.index === activeAudioTrack) ?? audioTracks[0])?.language)?.toUpperCase() ?? "AUD"
+                        }
+                      ),
+                      aspect: /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          ref: aspectTriggerRef,
+                          onClick: () => setShowAspectMenu((value) => !value),
+                          title: t("aspectRatio"),
+                          className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showAspectMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
+                          children: aspectLabel
+                        }
+                      ),
+                      cropZoom: /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          ref: cropTriggerRef,
+                          onClick: () => setShowCropZoomMenu((value) => !value),
+                          title: t("cropZoom"),
+                          className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showCropZoomMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
+                          children: cropZoomLabel
+                        }
+                      ),
+                      audioOutput: /* @__PURE__ */ jsx(
+                        "span",
+                        {
+                          title: t("currentAudioOutput"),
+                          className: "shrink-0 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300",
+                          children: audioIndicator
+                        }
+                      ),
+                      segmentBadges: mediaType === "tv" ? /* @__PURE__ */ jsxs(Fragment2, { children: [
+                        /* @__PURE__ */ jsx("span", { className: `rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${introSegment ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-white/5 text-slate-300"}`, children: introSegment ? `${introKind === "recap" ? "Recap" : "Intro"} found` : t("introDebugMissing") }),
+                        /* @__PURE__ */ jsx("span", { className: `rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${outroSegment ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-white/5 text-slate-300"}`, children: outroSegment ? "Outro found" : "Outro missing" })
+                      ] }) : null,
+                      mute: /* @__PURE__ */ jsx("button", { type: "button", onClick: toggleMute, className: "text-slate-300 hover:text-white", children: muted || volume === 0 ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) }),
+                      volume: /* @__PURE__ */ jsx(Fragment2, { children: playerLayout.volumeStyle === "icon" ? null : playerLayout.volumeStyle === "stepper" ? /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1.5", children: [
+                        /* @__PURE__ */ jsx("button", { type: "button", onClick: () => applyVolume((muted ? 0 : volume) - 0.05), className: "flex h-5 w-5 items-center justify-center rounded-full border border-white/10 text-xs text-slate-300 hover:text-white", children: "\u2212" }),
+                        /* @__PURE__ */ jsxs("span", { className: "min-w-[2.5rem] text-center text-xs tabular-nums text-slate-300", children: [
+                          Math.round((muted ? 0 : volume) * 100),
+                          "%"
+                        ] }),
+                        /* @__PURE__ */ jsx("button", { type: "button", onClick: () => applyVolume((muted ? 0 : volume) + 0.05), className: "flex h-5 w-5 items-center justify-center rounded-full border border-white/10 text-xs text-slate-300 hover:text-white", children: "+" })
+                      ] }) : (
+                        /* Explicit track styling — the bare native range was invisible
+                            against the black controls bar (only the thumb showed). */
+                        /* @__PURE__ */ jsx(
+                          "input",
+                          {
+                            type: "range",
+                            min: 0,
+                            max: 1,
+                            step: 0.05,
+                            value: muted ? 0 : volume,
+                            onChange: handleVolumeChange,
+                            className: "h-1 w-20 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/20 accent-aurora-400"
                           }
-                          setShowSubMenu((v) => !v);
-                        },
-                        title: t("subtitlesLabel"),
-                        className: `ml-auto shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${activeSubId ? "bg-aurora-400 text-black" : hasSubtitles || loadingSub || subtitleLoadError || resolvedImdbId ? "text-slate-300 hover:text-white" : "text-slate-500"}`,
-                        children: "CC"
-                      }
-                    ),
-                    !isClientSession() && /* @__PURE__ */ jsx(
-                      "button",
-                      {
-                        type: "button",
-                        onClick: () => {
-                          const opening = !showCastMenu;
-                          setShowCastMenu(opening);
-                          if (opening && castDevices.length === 0) void scanCastDevices();
-                          if (opening && isMpvEngine && !airplaySession) void prepareAirplaySession();
-                        },
-                        title: t("castTitle"),
-                        className: `shrink-0 rounded px-1 py-0.5 transition ${castTarget ? "text-aurora-300" : "text-slate-300 hover:text-white"}`,
-                        children: /* @__PURE__ */ jsxs("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
-                          /* @__PURE__ */ jsx("path", { d: "M2 16.1a5 5 0 0 1 5.9 5.9" }),
-                          /* @__PURE__ */ jsx("path", { d: "M2 12.05a9 9 0 0 1 9.95 9.95" }),
-                          /* @__PURE__ */ jsx("path", { d: "M2 8.05a13 13 0 0 1 13.95 13.95" }),
-                          /* @__PURE__ */ jsx("path", { d: "M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5" })
-                        ] })
-                      }
-                    ),
-                    audioTracks.length > 0 && /* @__PURE__ */ jsx(
-                      "button",
-                      {
-                        type: "button",
-                        ref: audioTriggerRef,
-                        onClick: () => setShowAudioMenu((v) => !v),
-                        title: t("audioLanguage"),
-                        className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showAudioMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
-                        children: toAudioLangGroup((audioTracks.find((t2) => t2.index === activeAudioTrack) ?? audioTracks[0])?.language)?.toUpperCase() ?? "AUD"
-                      }
-                    ),
-                    /* @__PURE__ */ jsx(
-                      "button",
-                      {
-                        type: "button",
-                        ref: aspectTriggerRef,
-                        onClick: () => setShowAspectMenu((value) => !value),
-                        title: t("aspectRatio"),
-                        className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showAspectMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
-                        children: aspectLabel
-                      }
-                    ),
-                    /* @__PURE__ */ jsx(
-                      "button",
-                      {
-                        type: "button",
-                        ref: cropTriggerRef,
-                        onClick: () => setShowCropZoomMenu((value) => !value),
-                        title: t("cropZoom"),
-                        className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showCropZoomMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
-                        children: cropZoomLabel
-                      }
-                    ),
-                    /* @__PURE__ */ jsx(
-                      "span",
-                      {
-                        title: t("currentAudioOutput"),
-                        className: "shrink-0 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300",
-                        children: audioIndicator
-                      }
-                    ),
-                    mediaType === "tv" ? /* @__PURE__ */ jsxs(Fragment2, { children: [
-                      /* @__PURE__ */ jsx("span", { className: `rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${introSegment ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-white/5 text-slate-300"}`, children: introSegment ? `${introKind === "recap" ? "Recap" : "Intro"} found` : t("introDebugMissing") }),
-                      /* @__PURE__ */ jsx("span", { className: `rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${outroSegment ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-white/5 text-slate-300"}`, children: outroSegment ? "Outro found" : "Outro missing" })
-                    ] }) : null,
-                    /* @__PURE__ */ jsx("button", { type: "button", onClick: toggleMute, className: "text-slate-300 hover:text-white", children: muted || volume === 0 ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) }),
-                    /* @__PURE__ */ jsx(
-                      "input",
-                      {
-                        type: "range",
-                        min: 0,
-                        max: 1,
-                        step: 0.05,
-                        value: muted ? 0 : volume,
-                        onChange: handleVolumeChange,
-                        className: "h-1 w-20 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/20 accent-aurora-400"
-                      }
-                    ),
-                    (wikiTmdbId || resolvedImdbId) && /* @__PURE__ */ jsx(
-                      "button",
-                      {
-                        type: "button",
-                        onClick: () => {
-                          setShowWiki((v) => !v);
-                          setShowSoundtrack(false);
-                        },
-                        title: t("info"),
-                        className: `rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showWiki ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
-                        children: "Wiki"
-                      }
-                    ),
-                    Boolean(title) && /* @__PURE__ */ jsx(
-                      "button",
-                      {
-                        type: "button",
-                        onClick: () => {
-                          setShowSoundtrack((v) => !v);
-                          setShowWiki(false);
-                        },
-                        title: t("soundtrack"),
-                        className: `rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showSoundtrack ? "bg-green-500 text-black" : "text-slate-300 hover:text-white"}`,
-                        children: t("soundtrack")
-                      }
-                    ),
-                    /* @__PURE__ */ jsx(
-                      "button",
-                      {
-                        ref: moreTriggerRef,
-                        type: "button",
-                        onClick: () => setShowMoreMenu((value) => !value),
-                        title: t("moreActions"),
-                        className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showMoreMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
-                        children: "\u2022\u2022\u2022"
-                      }
-                    ),
-                    showMoreMenu && /* @__PURE__ */ jsxs(
-                      "div",
-                      {
-                        ref: moreMenuRef,
-                        style: getAnchoredMenuStyle(moreTriggerRef.current),
-                        className: "z-50 w-64 rounded-[1.6rem] border border-white/10 bg-[#121022]/95 p-2.5 shadow-2xl backdrop-blur-md",
-                        onClick: (e) => e.stopPropagation(),
-                        children: [
-                          isMpvEngine && /* @__PURE__ */ jsxs(
-                            "button",
-                            {
-                              type: "button",
-                              onClick: () => {
-                                const next2 = nightMode === "off" ? "mild" : nightMode === "mild" ? "strong" : "off";
-                                setNightMode(next2);
-                              },
-                              className: "flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-left text-slate-100 transition hover:bg-white/5",
-                              children: [
-                                /* @__PURE__ */ jsx("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z", strokeLinecap: "round", strokeLinejoin: "round" }) }),
-                                /* @__PURE__ */ jsxs("span", { className: "text-[15px] leading-tight", children: [
-                                  t("nightModeMenuLabel"),
-                                  ": ",
-                                  t(nightMode === "off" ? "nightModeOff" : nightMode === "mild" ? "nightModeMenuMild" : "nightModeMenuStrong")
-                                ] })
-                              ]
-                            }
-                          ),
-                          /* @__PURE__ */ jsxs(
-                            "button",
-                            {
-                              type: "button",
-                              onClick: () => void handleCopyStreamLink(),
-                              className: "flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-left text-slate-100 transition hover:bg-white/5",
-                              children: [
-                                /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
-                                  /* @__PURE__ */ jsx("path", { d: "M10 13a5 5 0 0 0 7.07 0l3.54-3.54a5 5 0 1 0-7.07-7.07L11 4", strokeLinecap: "round", strokeLinejoin: "round" }),
-                                  /* @__PURE__ */ jsx("path", { d: "M14 11a5 5 0 0 0-7.07 0L3.39 14.54a5 5 0 1 0 7.07 7.07L13 20", strokeLinecap: "round", strokeLinejoin: "round" })
-                                ] }),
-                                /* @__PURE__ */ jsx("span", { className: "text-[15px] leading-tight", children: copiedLink ? t("copied") : t("copyStreamLink") })
-                              ]
-                            }
-                          ),
-                          !isClientSession() && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 rounded-[1.15rem] transition hover:bg-white/5", children: [
-                            /* @__PURE__ */ jsxs(
-                              "button",
-                              {
-                                type: "button",
-                                onClick: () => void handleDownload(),
-                                disabled: downloadState.type === "picking-folder" || downloadState.type === "downloading",
-                                className: "flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left text-slate-100 disabled:cursor-wait disabled:opacity-70",
-                                children: [
-                                  /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
-                                    /* @__PURE__ */ jsx("path", { d: "M12 3v12", strokeLinecap: "round" }),
-                                    /* @__PURE__ */ jsx("path", { d: "m7 10 5 5 5-5", strokeLinecap: "round", strokeLinejoin: "round" }),
-                                    /* @__PURE__ */ jsx("path", { d: "M5 21h14", strokeLinecap: "round" })
-                                  ] }),
-                                  /* @__PURE__ */ jsx("span", { className: "text-[15px] leading-tight", children: downloadState.type === "picking-folder" ? t("preparingDownload") : downloadState.type === "downloading" ? `${t("downloading")} ${downloadState.progress}%` : downloadState.type === "done" ? t("downloadComplete") : downloadState.type === "cancelled" ? t("cancel") : t("downloadThisVideo") })
-                                ]
-                              }
-                            ),
-                            downloadState.type === "downloading" && /* @__PURE__ */ jsx(
-                              "button",
-                              {
-                                type: "button",
-                                onClick: () => void handleCancelDownload(),
-                                className: "mr-3 flex h-7 w-7 flex-none items-center justify-center rounded-full border border-white/10 text-slate-300 transition hover:border-red-400/40 hover:text-red-300",
-                                title: t("cancel"),
-                                children: /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12", strokeLinecap: "round" }) })
-                              }
-                            )
-                          ] }),
-                          !isClientSession() && /* @__PURE__ */ jsxs(
-                            "button",
-                            {
-                              type: "button",
-                              onClick: () => void handleOpenExternal(),
-                              onMouseDown: (e) => e.stopPropagation(),
-                              className: "relative z-10 mt-1 flex w-full items-center gap-3 rounded-[1.15rem] bg-white/5 px-4 py-3 text-left text-slate-100 transition hover:bg-white/10",
-                              children: [
-                                /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "currentColor", children: [
-                                  /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }),
-                                  /* @__PURE__ */ jsx("path", { d: "M4 5h3v14H4z", opacity: ".55" })
-                                ] }),
-                                /* @__PURE__ */ jsx("span", { className: "text-[15px] leading-tight", children: isDesktopTauriEnv ? `${t("openInExternalPrefix")} ${getExternalPlayerApp()}` : t("openInExternalPlayer") })
-                              ]
-                            }
-                          ),
-                          downloadState.type === "error" && /* @__PURE__ */ jsx("div", { className: "px-4 pb-1 pt-3 text-xs text-red-300", children: downloadState.message })
-                        ]
-                      }
-                    ),
-                    (!isTauriEnv || isDesktopTauriEnv) && /* @__PURE__ */ jsx("button", { type: "button", onClick: toggleFullscreen, className: "shrink-0 text-slate-300 hover:text-white", children: cssFullscreen ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" }) }) })
-                  ] }),
+                        )
+                      ) }),
+                      wiki: (wikiTmdbId || resolvedImdbId) && /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          onClick: () => {
+                            setShowWiki((v) => !v);
+                            setShowSoundtrack(false);
+                          },
+                          title: t("info"),
+                          className: `rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showWiki ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
+                          children: "Wiki"
+                        }
+                      ),
+                      soundtrack: Boolean(title) && /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          onClick: () => {
+                            setShowSoundtrack((v) => !v);
+                            setShowWiki(false);
+                          },
+                          title: t("soundtrack"),
+                          className: `rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showSoundtrack ? "bg-green-500 text-black" : "text-slate-300 hover:text-white"}`,
+                          children: t("soundtrack")
+                        }
+                      ),
+                      tuning: /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          onClick: () => setShowTuningPanel((v) => !v),
+                          title: t("vtTitle"),
+                          className: `transition ${showTuningPanel ? "text-aurora-300" : "text-slate-300 hover:text-white"}`,
+                          children: /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", children: [
+                            /* @__PURE__ */ jsx("path", { d: "M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3" }),
+                            /* @__PURE__ */ jsx("path", { d: "M1 14h6M9 8h6M17 16h6" })
+                          ] })
+                        }
+                      ),
+                      more: /* @__PURE__ */ jsxs(Fragment2, { children: [
+                        /* @__PURE__ */ jsx(
+                          "button",
+                          {
+                            ref: moreTriggerRef,
+                            type: "button",
+                            onClick: () => setShowMoreMenu((value) => !value),
+                            title: t("moreActions"),
+                            className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showMoreMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
+                            children: "\u2022\u2022\u2022"
+                          }
+                        ),
+                        showMoreMenu && /* @__PURE__ */ jsxs(
+                          "div",
+                          {
+                            ref: moreMenuRef,
+                            style: getAnchoredMenuStyle(moreTriggerRef.current),
+                            className: "z-50 w-64 rounded-[1.6rem] border border-white/10 bg-base-800/95 p-2.5 shadow-2xl backdrop-blur-md",
+                            onClick: (e) => e.stopPropagation(),
+                            children: [
+                              isMpvEngine && /* @__PURE__ */ jsxs(
+                                "button",
+                                {
+                                  type: "button",
+                                  onClick: () => {
+                                    const next2 = nightMode === "off" ? "mild" : nightMode === "mild" ? "strong" : "off";
+                                    setNightMode(next2);
+                                  },
+                                  className: "flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-left text-slate-100 transition hover:bg-white/5",
+                                  children: [
+                                    /* @__PURE__ */ jsx("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z", strokeLinecap: "round", strokeLinejoin: "round" }) }),
+                                    /* @__PURE__ */ jsxs("span", { className: "text-[15px] leading-tight", children: [
+                                      t("nightModeMenuLabel"),
+                                      ": ",
+                                      t(nightMode === "off" ? "nightModeOff" : nightMode === "mild" ? "nightModeMenuMild" : "nightModeMenuStrong")
+                                    ] })
+                                  ]
+                                }
+                              ),
+                              /* @__PURE__ */ jsxs(
+                                "button",
+                                {
+                                  type: "button",
+                                  onClick: () => void handleCopyStreamLink(),
+                                  className: "flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-left text-slate-100 transition hover:bg-white/5",
+                                  children: [
+                                    /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
+                                      /* @__PURE__ */ jsx("path", { d: "M10 13a5 5 0 0 0 7.07 0l3.54-3.54a5 5 0 1 0-7.07-7.07L11 4", strokeLinecap: "round", strokeLinejoin: "round" }),
+                                      /* @__PURE__ */ jsx("path", { d: "M14 11a5 5 0 0 0-7.07 0L3.39 14.54a5 5 0 1 0 7.07 7.07L13 20", strokeLinecap: "round", strokeLinejoin: "round" })
+                                    ] }),
+                                    /* @__PURE__ */ jsx("span", { className: "text-[15px] leading-tight", children: copiedLink ? t("copied") : t("copyStreamLink") })
+                                  ]
+                                }
+                              ),
+                              !isClientSession() && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 rounded-[1.15rem] transition hover:bg-white/5", children: [
+                                /* @__PURE__ */ jsxs(
+                                  "button",
+                                  {
+                                    type: "button",
+                                    onClick: () => void handleDownload(),
+                                    disabled: downloadState.type === "picking-folder" || downloadState.type === "downloading",
+                                    className: "flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left text-slate-100 disabled:cursor-wait disabled:opacity-70",
+                                    children: [
+                                      /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
+                                        /* @__PURE__ */ jsx("path", { d: "M12 3v12", strokeLinecap: "round" }),
+                                        /* @__PURE__ */ jsx("path", { d: "m7 10 5 5 5-5", strokeLinecap: "round", strokeLinejoin: "round" }),
+                                        /* @__PURE__ */ jsx("path", { d: "M5 21h14", strokeLinecap: "round" })
+                                      ] }),
+                                      /* @__PURE__ */ jsx("span", { className: "text-[15px] leading-tight", children: downloadState.type === "picking-folder" ? t("preparingDownload") : downloadState.type === "downloading" ? `${t("downloading")} ${downloadState.progress}%` : downloadState.type === "done" ? t("downloadComplete") : downloadState.type === "cancelled" ? t("cancel") : t("downloadThisVideo") })
+                                    ]
+                                  }
+                                ),
+                                downloadState.type === "downloading" && /* @__PURE__ */ jsx(
+                                  "button",
+                                  {
+                                    type: "button",
+                                    onClick: () => void handleCancelDownload(),
+                                    className: "mr-3 flex h-7 w-7 flex-none items-center justify-center rounded-full border border-white/10 text-slate-300 transition hover:border-red-400/40 hover:text-red-300",
+                                    title: t("cancel"),
+                                    children: /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12", strokeLinecap: "round" }) })
+                                  }
+                                )
+                              ] }),
+                              !isClientSession() && /* @__PURE__ */ jsxs(
+                                "button",
+                                {
+                                  type: "button",
+                                  onClick: () => void handleOpenExternal(),
+                                  onMouseDown: (e) => e.stopPropagation(),
+                                  className: "relative z-10 mt-1 flex w-full items-center gap-3 rounded-[1.15rem] bg-white/5 px-4 py-3 text-left text-slate-100 transition hover:bg-white/10",
+                                  children: [
+                                    /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "currentColor", children: [
+                                      /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }),
+                                      /* @__PURE__ */ jsx("path", { d: "M4 5h3v14H4z", opacity: ".55" })
+                                    ] }),
+                                    /* @__PURE__ */ jsx("span", { className: "text-[15px] leading-tight", children: isDesktopTauriEnv ? `${t("openInExternalPrefix")} ${getExternalPlayerApp()}` : t("openInExternalPlayer") })
+                                  ]
+                                }
+                              ),
+                              downloadState.type === "error" && /* @__PURE__ */ jsx("div", { className: "px-4 pb-1 pt-3 text-xs text-red-300", children: downloadState.message })
+                            ]
+                          }
+                        )
+                      ] }),
+                      fullscreen: (!isTauriEnv || isDesktopTauriEnv) && /* @__PURE__ */ jsx("button", { type: "button", onClick: toggleFullscreen, className: "shrink-0 text-slate-300 hover:text-white", children: cssFullscreen ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" }) }) })
+                    };
+                    const hiddenControls = new Set(playerLayout.hidden);
+                    return playerLayout.order.filter((id4) => !hiddenControls.has(id4)).map((id4) => /* @__PURE__ */ jsx(react_shim_default.Fragment, { children: controls[id4] }, id4));
+                  })() }),
                   showAudioMenu && audioTracks.length > 0 && /* @__PURE__ */ jsxs(
                     "div",
                     {
@@ -177106,8 +181290,77 @@ ${cue.text}`).join("\n\n")}
     return portalEl ? (0, import_react_dom.createPortal)(content, portalEl) : content;
   }
 
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/video-player-modal-shim.ts
+  function VideoPlayerModal2(props) {
+    const hostComponent = globalThis.__lumioPluginRuntime?.components?.VideoPlayerModal;
+    return createElement(hostComponent ?? VideoPlayerModal, props);
+  }
+
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/next-episode-card-shim.ts
+  init_react_shim();
+
   // components/player/next-episode-card.tsx
   init_react_shim();
+
+  // lib/spoiler-settings.ts
+  var KEY_ENABLED = "spoiler_blurEnabled";
+  var KEY_BLUR_THUMBNAILS = "spoiler_blurThumbnails";
+  var KEY_BLUR_TITLES = "spoiler_blurTitles";
+  var KEY_BLUR_DESCRIPTIONS = "spoiler_blurDescriptions";
+  var KEY_KEEP_NEXT_VISIBLE = "spoiler_keepNextVisible";
+  var DEFAULT_ENABLED = false;
+  var DEFAULT_BLUR_THUMBNAILS = true;
+  var DEFAULT_BLUR_TITLES = true;
+  var DEFAULT_BLUR_DESCRIPTIONS = true;
+  var DEFAULT_KEEP_NEXT_VISIBLE = true;
+  function getStoredBool(key, fallback) {
+    if (typeof window === "undefined") return fallback;
+    const raw = getScopedStorageItem(key);
+    if (raw === "1") return true;
+    if (raw === "0") return false;
+    return fallback;
+  }
+  function getSpoilerBlurEnabled() {
+    return getStoredBool(KEY_ENABLED, DEFAULT_ENABLED);
+  }
+  function getSpoilerBlurThumbnails() {
+    return getStoredBool(KEY_BLUR_THUMBNAILS, DEFAULT_BLUR_THUMBNAILS);
+  }
+  function getSpoilerBlurTitles() {
+    return getStoredBool(KEY_BLUR_TITLES, DEFAULT_BLUR_TITLES);
+  }
+  function getSpoilerBlurDescriptions() {
+    return getStoredBool(KEY_BLUR_DESCRIPTIONS, DEFAULT_BLUR_DESCRIPTIONS);
+  }
+  function getSpoilerKeepNextVisible() {
+    return getStoredBool(KEY_KEEP_NEXT_VISIBLE, DEFAULT_KEEP_NEXT_VISIBLE);
+  }
+  function getSpoilerMaskSettings() {
+    return {
+      enabled: getSpoilerBlurEnabled(),
+      blurThumbnails: getSpoilerBlurThumbnails(),
+      blurTitles: getSpoilerBlurTitles(),
+      blurDescriptions: getSpoilerBlurDescriptions(),
+      keepNextVisible: getSpoilerKeepNextVisible()
+    };
+  }
+
+  // lib/spoilers.ts
+  var CLEAR = { thumb: false, title: false, desc: false };
+  var SPOILER_THUMB_CLASS = "blur-[14px] scale-[1.04] transition-[filter,transform] duration-200 group-hover:blur-[0px] group-hover:scale-100";
+  var SPOILER_TEXT_CLASS = "blur-[5px] select-none transition-[filter] duration-200 group-hover:blur-[0px]";
+  function spoilerMaskFor(s, opts) {
+    if (!s.enabled) return CLEAR;
+    if (opts.watched) return CLEAR;
+    if (s.keepNextVisible && opts.isNextUp) return CLEAR;
+    return {
+      thumb: s.blurThumbnails,
+      title: s.blurTitles,
+      desc: s.blurDescriptions
+    };
+  }
+
+  // components/player/next-episode-card.tsx
   // eslint-disable-next-line @next/next/no-img-element
   init_jsx_runtime_shim();
   function NextEpisodeCard({
@@ -177123,12 +181376,24 @@ ${cue.text}`).join("\n\n")}
     onPlayNow
   }) {
     const { t } = useLang();
+    const [skipStraightToNext] = useState(
+      () => getAdvanceAtOutro() && getAutoPlayNextEpisode() && hasOutroFired()
+    );
+    const [spoilerMask] = useState(
+      () => spoilerMaskFor(getSpoilerMaskSettings(), { watched: false, isNextUp: true })
+    );
     const [visible, setVisible] = useState(false);
     const [countdown, setCountdown] = useState(null);
     const intervalRef = useRef(null);
     const onPlayNowRef = useRef(onPlayNow);
     const didAutoPlayRef = useRef(false);
     onPlayNowRef.current = onPlayNow;
+    useEffect(() => {
+      if (!skipStraightToNext || didAutoPlayRef.current) return;
+      if (!urlReady && !allowManualPlayWhenNotReady) return;
+      didAutoPlayRef.current = true;
+      onPlayNowRef.current();
+    }, [skipStraightToNext, urlReady, allowManualPlayWhenNotReady]);
     useEffect(() => {
       const t2 = setTimeout(() => setVisible(true), 10);
       return () => clearTimeout(t2);
@@ -177165,10 +181430,11 @@ ${cue.text}`).join("\n\n")}
       if (intervalRef.current) clearInterval(intervalRef.current);
       onPlayNow();
     }
+    if (skipStraightToNext) return null;
     return /* @__PURE__ */ jsxs(
       "div",
       {
-        className: `absolute bottom-6 right-6 z-[300] w-80 overflow-hidden rounded-2xl border border-white/10 bg-slate-900/95 shadow-2xl backdrop-blur-sm transition-transform duration-500 ${visible ? "translate-x-0" : "translate-x-[120%]"}`,
+        className: `group absolute bottom-6 right-6 z-[300] w-80 overflow-hidden rounded-2xl border border-white/10 bg-slate-900/95 shadow-2xl backdrop-blur-sm transition-transform duration-500 ${visible ? "translate-x-0" : "translate-x-[120%]"}`,
         children: [
           /* @__PURE__ */ jsxs("div", { className: "flex gap-3 p-3", children: [
             /* @__PURE__ */ jsx("div", { className: "h-[72px] w-[128px] flex-shrink-0 overflow-hidden rounded-xl bg-white/5", children: stillUrl ? /* @__PURE__ */ jsx(
@@ -177176,7 +181442,7 @@ ${cue.text}`).join("\n\n")}
               {
                 src: stillUrl,
                 alt: episodeTitle,
-                className: "h-full w-full object-cover"
+                className: `h-full w-full object-cover ${spoilerMask.thumb ? SPOILER_THUMB_CLASS : ""}`
               }
             ) : /* @__PURE__ */ jsx("div", { className: "flex h-full w-full items-center justify-center", children: /* @__PURE__ */ jsxs("svg", { width: "24", height: "24", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", className: "text-slate-600", children: [
               /* @__PURE__ */ jsx("rect", { x: "2", y: "3", width: "20", height: "14", rx: "2" }),
@@ -177199,7 +181465,7 @@ ${cue.text}`).join("\n\n")}
                   ")"
                 ] })
               ] }),
-              /* @__PURE__ */ jsx("p", { className: "mt-0.5 line-clamp-1 text-[11px] text-slate-500", children: episodeTitle })
+              /* @__PURE__ */ jsx("p", { className: `mt-0.5 line-clamp-1 text-[11px] text-slate-500 ${spoilerMask.title ? SPOILER_TEXT_CLASS : ""}`, children: episodeTitle })
             ] })
           ] }),
           /* @__PURE__ */ jsx("div", { className: "relative h-1 w-full bg-white/5", children: urlReady && countdown !== null ? /* @__PURE__ */ jsx(
@@ -177251,6 +181517,12 @@ ${cue.text}`).join("\n\n")}
         ]
       }
     );
+  }
+
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/next-episode-card-shim.ts
+  function NextEpisodeCard2(props) {
+    const hostComponent = globalThis.__lumioPluginRuntime?.components?.NextEpisodeCard;
+    return createElement(hostComponent ?? NextEpisodeCard, props);
   }
 
   // lib/plugin-sdk.ts
@@ -177330,2136 +181602,7 @@ ${cue.text}`).join("\n\n")}
     }
   }
 
-  // lib/stream-provider-runtime/real-debrid/rd-client.ts
-  var RD_PROXY = "/api/stream-providers/realdebrid";
-  var RD_API_BASE_URL = "https://api.real-debrid.com/rest/1.0";
-  function getRdApiKey() {
-    if (typeof window === "undefined") return null;
-    const key = getGlobalStreamProviderAccessKey("realdebrid").trim();
-    return key || null;
-  }
-  async function rdFetch(path, options = {}) {
-    const key = getRdApiKey();
-    const headers = {
-      ...options.headers
-    };
-    if (key) headers["x-stream-provider-token"] = key;
-    return fetch(`${RD_PROXY}${path}`, { ...options, headers });
-  }
-  async function rdDesktopJson(path, method = "GET", body) {
-    const token = getRdApiKey();
-    if (!token) throw new Error("No Real-Debrid API key configured");
-    const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
-    const headers = [`Authorization: Bearer ${token}`];
-    if (body && body.trim().length > 0) {
-      headers.push("Content-Type: application/x-www-form-urlencoded");
-    }
-    return invoke2("desktop_external_api_request", {
-      baseUrl: RD_API_BASE_URL,
-      path,
-      method,
-      headers,
-      body: body ?? null,
-      timeoutMs: 12e3
-    });
-  }
-  function isTransientDesktopRdError(error) {
-    const message = error instanceof Error ? error.message : String(error);
-    const normalized = message.toLowerCase();
-    return normalized.includes("timeout") || normalized.includes("timed out") || normalized.includes("failed to fetch") || normalized.includes("connection") || normalized.includes("network") || normalized.includes("reset by peer") || normalized.includes("could not resolve host") || normalized.includes("empty reply");
-  }
-  async function rdDesktopJsonWithRetry(path, method = "GET", body, attempts = 3) {
-    let lastError = null;
-    for (let attempt = 1; attempt <= attempts; attempt += 1) {
-      try {
-        return await rdDesktopJson(path, method, body);
-      } catch (error) {
-        lastError = error;
-        if (attempt >= attempts || !isTransientDesktopRdError(error)) break;
-        await new Promise((resolve) => setTimeout(resolve, 350 * attempt));
-      }
-    }
-    throw lastError instanceof Error ? lastError : new Error(String(lastError));
-  }
-  async function rdJson(path, options) {
-    if (isPluginDesktopHost()) {
-      const method = (options?.method ?? "GET").toUpperCase();
-      const rawBody = options?.body;
-      const body = typeof rawBody === "string" ? rawBody : rawBody instanceof URLSearchParams ? rawBody.toString() : void 0;
-      return rdDesktopJsonWithRetry(path, method, body, 3);
-    }
-    const res = await rdFetch(path, options);
-    const data = await res.json();
-    if (!res.ok) {
-      const msg = data.error ?? `HTTP ${res.status}`;
-      throw new Error(msg);
-    }
-    return data;
-  }
-  async function rdUnrestrictLink(link) {
-    return rdJson("/unrestrict/link", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ link }).toString()
-    });
-  }
-  async function rdAddMagnet(magnet) {
-    return rdJson("/torrents/addMagnet", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ magnet }).toString()
-    });
-  }
-  async function rdGetTorrentInfo(id4) {
-    return rdJson(`/torrents/info/${id4}`);
-  }
-  async function rdGetInstantAvailability(hashes) {
-    const cleaned = hashes.map((hash) => hash.trim().toLowerCase()).filter(Boolean);
-    if (cleaned.length === 0) return {};
-    return rdJson(
-      `/torrents/instantAvailability/${cleaned.join("/")}`
-    );
-  }
-  async function rdSelectFiles(id4, files = "all") {
-    if (isPluginDesktopHost()) {
-      await rdDesktopJsonWithRetry(
-        `/torrents/selectFiles/${id4}`,
-        "POST",
-        new URLSearchParams({ files }).toString(),
-        3
-      );
-      return;
-    }
-    const res = await rdFetch(`/torrents/selectFiles/${id4}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ files }).toString()
-    });
-    if (!res.ok && res.status !== 204) {
-      const data = await res.json();
-      throw new Error(data.error ?? `HTTP ${res.status}`);
-    }
-  }
-  function isMagnetLink(input) {
-    return input.trim().toLowerCase().startsWith("magnet:");
-  }
-
-  // lib/stream-provider-runtime/playback/providers/legacy-playback-provider.ts
-  function chunk(items, size) {
-    const result = [];
-    for (let index3 = 0; index3 < items.length; index3 += size) {
-      result.push(items.slice(index3, index3 + size));
-    }
-    return result;
-  }
-  async function lookupCachedStreams3(candidates) {
-    const cachedHashes = /* @__PURE__ */ new Set();
-    const cachedTitles = /* @__PURE__ */ new Set();
-    const downloadableHashes = /* @__PURE__ */ new Set();
-    const downloadableTitles = /* @__PURE__ */ new Set();
-    const cachedStreamKeys = /* @__PURE__ */ new Set();
-    const downloadableStreamKeys = /* @__PURE__ */ new Set();
-    const byHash = /* @__PURE__ */ new Map();
-    for (const candidate of candidates) {
-      const hash = candidate.infoHash.trim().toLowerCase();
-      if (!hash) continue;
-      const bucket = byHash.get(hash);
-      if (bucket) {
-        bucket.push(candidate);
-      } else {
-        byHash.set(hash, [candidate]);
-      }
-    }
-    const chunks = chunk([...byHash.keys()], 40);
-    const chunkResults = await Promise.all(
-      chunks.map(async (hashes) => {
-        try {
-          return await rdGetInstantAvailability(hashes);
-        } catch {
-          return {};
-        }
-      })
-    );
-    for (let i = 0; i < chunks.length; i++) {
-      const hashes = chunks[i];
-      const availability = chunkResults[i];
-      for (const hash of hashes) {
-        const relatedCandidates = byHash.get(hash) ?? [];
-        const availabilityEntry = availability[hash];
-        const rdEntries = Array.isArray(availabilityEntry) ? availabilityEntry : availabilityEntry?.rd;
-        const cachedFileIds = /* @__PURE__ */ new Set();
-        for (const rdVariant of rdEntries ?? []) {
-          if (!rdVariant || typeof rdVariant !== "object") continue;
-          for (const fileIdRaw of Object.keys(rdVariant)) {
-            const fileId = Number.parseInt(fileIdRaw, 10);
-            if (!Number.isNaN(fileId) && fileId >= 0) cachedFileIds.add(fileId);
-          }
-        }
-        const hasPerFileAvailability = cachedFileIds.size > 0;
-        const isCached = hasPerFileAvailability || (rdEntries?.length ?? 0) > 0;
-        downloadableHashes.add(hash);
-        downloadableStreamKeys.add(`${hash}@*`);
-        if (isCached) cachedHashes.add(hash);
-        if (isCached && !hasPerFileAvailability) cachedStreamKeys.add(`${hash}@*`);
-        for (const candidate of relatedCandidates) {
-          const title = candidate.title.trim();
-          const fileIdx = Number.isFinite(candidate.fileIdx) ? Math.trunc(candidate.fileIdx) : null;
-          const streamKey = `${hash}@${fileIdx != null ? fileIdx : "*"}`;
-          downloadableStreamKeys.add(streamKey);
-          if (title) downloadableTitles.add(title);
-          const candidateCached = hasPerFileAvailability ? fileIdx != null ? cachedFileIds.has(fileIdx) || cachedFileIds.has(fileIdx + 1) : true : isCached;
-          if (candidateCached) {
-            cachedStreamKeys.add(streamKey);
-            if (title) cachedTitles.add(title);
-          }
-        }
-      }
-    }
-    return {
-      cachedHashes,
-      cachedTitles,
-      downloadableHashes,
-      downloadableTitles,
-      cachedStreamKeys,
-      downloadableStreamKeys
-    };
-  }
-  var legacyPlaybackProvider = {
-    id: "legacy",
-    label: "Legacy playback provider",
-    getAccessKey() {
-      return getRdApiKey();
-    },
-    buildConfigSegment(accessKey, qualityFilter = "") {
-      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
-      segments.push(`realdebrid=${accessKey}`);
-      return segments.join("|");
-    },
-    lookupCachedStreams: lookupCachedStreams3,
-    hideUnknownStreamsFromList() {
-      return false;
-    },
-    isMagnetSource(input) {
-      return isMagnetLink(input);
-    },
-    addMagnet(magnet) {
-      return rdAddMagnet(magnet);
-    },
-    getSourceInfo(id4) {
-      return rdGetTorrentInfo(id4);
-    },
-    selectFiles(id4, files = "all") {
-      return rdSelectFiles(id4, files);
-    },
-    resolveLink(link) {
-      return rdUnrestrictLink(link);
-    }
-  };
-
-  // lib/stream-provider-runtime/playback/providers/offcloud-playback-provider.ts
-  var OFFCLOUD_PROXY = "/api/stream-providers/offcloud";
-  var sourceState2 = /* @__PURE__ */ new Map();
-  var linkCache = /* @__PURE__ */ new Map();
-  function getAccessKey2() {
-    const key = getStreamProviderAccessKey("offcloud").trim();
-    return key || null;
-  }
-  async function offcloudJson(path, init = {}) {
-    const token = getAccessKey2();
-    if (!token) throw new Error("Offcloud API key missing");
-    const headers = new Headers(init.headers);
-    headers.set("x-offcloud-key", token);
-    headers.set("Accept", "application/json");
-    if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
-    const response = await fetch(`${OFFCLOUD_PROXY}${path}`, {
-      ...init,
-      headers
-    });
-    const data = await response.json().catch(() => null);
-    if (!response.ok) {
-      const message = data?.error || data?.not_available || `Offcloud request failed (${response.status})`;
-      throw new Error(message);
-    }
-    if (data && typeof data === "object" && ("error" in data || "not_available" in data)) {
-      const message = data.error || data.not_available;
-      if (message) throw new Error(message);
-    }
-    return data;
-  }
-  function extractInfoHash2(input) {
-    const match = input.match(/btih:([a-f0-9]+)/i);
-    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
-  }
-  function buildSourceId2(requestId) {
-    return `oc-${requestId}`;
-  }
-  function getSourceState2(id4) {
-    const state = sourceState2.get(id4);
-    if (!state) throw new Error("Offcloud source not found");
-    return state;
-  }
-  function parseFilenameFromUrl(link) {
-    try {
-      const url = new URL(link);
-      const lastSegment = url.pathname.split("/").filter(Boolean).pop();
-      return decodeURIComponent(lastSegment || "download");
-    } catch {
-      return link.split("/").pop()?.split("?")[0] ?? "download";
-    }
-  }
-  function toTrimmedString(value) {
-    if (typeof value === "string") return value.trim();
-    if (typeof value === "number" || typeof value === "boolean") return String(value).trim();
-    return "";
-  }
-  function toTorrentFile(link, index3, path, bytes = 0) {
-    return {
-      id: index3 + 1,
-      path: path || parseFilenameFromUrl(link),
-      bytes,
-      selected: 1
-    };
-  }
-  function mapStatus(status) {
-    switch (toTrimmedString(status).toLowerCase()) {
-      case "downloaded":
-        return "downloaded";
-      case "downloading":
-        return "downloading";
-      case "error":
-      case "canceled":
-        return "error";
-      case "queued":
-      case "created":
-      default:
-        return "queued";
-    }
-  }
-  async function getCloudStatus(requestId) {
-    return offcloudJson("/cloud/status", {
-      method: "POST",
-      body: JSON.stringify({ requestId })
-    });
-  }
-  async function getCacheEntry(magnet) {
-    const data = await offcloudJson("/cache", {
-      method: "POST",
-      body: JSON.stringify({
-        urls: [magnet],
-        includeFiles: true
-      })
-    });
-    if (!Array.isArray(data)) return null;
-    const entry = data[0];
-    if (!entry || typeof entry !== "object") return null;
-    return entry;
-  }
-  async function lookupCachedStreams4(candidates) {
-    const data = await offcloudJson("/cache", {
-      method: "POST",
-      body: JSON.stringify({
-        urls: candidates.map((candidate) => `magnet:?xt=urn:btih:${candidate.infoHash}`),
-        includeFiles: false
-      })
-    });
-    const cachedHashes = /* @__PURE__ */ new Set();
-    const cachedTitles = /* @__PURE__ */ new Set();
-    const downloadableHashes = /* @__PURE__ */ new Set();
-    const downloadableTitles = /* @__PURE__ */ new Set();
-    if (!Array.isArray(data)) {
-      return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
-    }
-    for (const [index3, entry] of data.entries()) {
-      if (!entry || typeof entry !== "object") continue;
-      if (!entry.cached) continue;
-      const candidate = candidates[index3];
-      if (!candidate) continue;
-      cachedHashes.add(candidate.infoHash);
-      if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
-    }
-    return { cachedHashes, cachedTitles, downloadableHashes, downloadableTitles };
-  }
-  async function getExploreFiles(requestId) {
-    const data = await offcloudJson(`/cloud/explore/${encodeURIComponent(requestId)}`);
-    return Array.isArray(data.files) ? data.files : [];
-  }
-  async function buildTorrentInfo2(id4) {
-    const state = getSourceState2(id4);
-    const status = await getCloudStatus(state.requestId);
-    const normalizedStatus = mapStatus(status.status);
-    const statusLabel = toTrimmedString(status.status) || normalizedStatus;
-    const fileName = toTrimmedString(status.fileName);
-    const createdOn = toTrimmedString(status.createdOn);
-    const directUrl = toTrimmedString(status.url);
-    const exploreFiles = normalizedStatus === "downloaded" ? await getExploreFiles(state.requestId) : [];
-    const directLinks = exploreFiles.map((file) => toTrimmedString(file.url)).filter(Boolean);
-    if (normalizedStatus === "downloaded" && directLinks.length === 0 && directUrl) {
-      directLinks.push(directUrl);
-    }
-    for (const file of exploreFiles) {
-      const link = toTrimmedString(file.url);
-      if (link && !linkCache.has(link)) {
-        linkCache.set(link, {
-          filename: toTrimmedString(file.path) || toTrimmedString(file.name) || parseFilenameFromUrl(link),
-          filesize: typeof file.size === "number" ? file.size : 0
-        });
-      }
-    }
-    if (normalizedStatus === "downloaded" && directUrl && !linkCache.has(directUrl)) {
-      linkCache.set(directUrl, {
-        filename: fileName || parseFilenameFromUrl(directUrl),
-        filesize: 0
-      });
-    }
-    const files = directLinks.map((link, index3) => {
-      const cached = linkCache.get(link);
-      return toTorrentFile(link, index3, cached?.filename, cached?.filesize ?? 0);
-    });
-    const totalBytes = files.reduce((sum, file) => sum + file.bytes, 0);
-    return {
-      id: id4,
-      filename: fileName || files[0]?.path || state.hash,
-      hash: state.hash,
-      bytes: totalBytes,
-      host: "offcloud",
-      split: 0,
-      progress: normalizedStatus === "downloaded" ? 100 : normalizedStatus === "downloading" ? 50 : 0,
-      status: normalizedStatus,
-      statusLabel,
-      added: createdOn || state.addedAt,
-      links: directLinks,
-      original_filename: fileName || state.hash,
-      original_bytes: totalBytes,
-      files
-    };
-  }
-  var offcloudPlaybackProvider = {
-    id: "offcloud",
-    label: "Offcloud playback provider",
-    getAccessKey: getAccessKey2,
-    buildConfigSegment(accessKey, qualityFilter = "") {
-      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
-      segments.push(`offcloud=${accessKey}`);
-      return segments.join("|");
-    },
-    lookupCachedStreams: lookupCachedStreams4,
-    hideUncachedStreamsFromList() {
-      return true;
-    },
-    hideUnknownStreamsFromList() {
-      return true;
-    },
-    isMagnetSource(input) {
-      return input.trim().toLowerCase().startsWith("magnet:");
-    },
-    async addMagnet(magnet) {
-      const cacheEntry = await getCacheEntry(magnet);
-      if (!cacheEntry?.cached) {
-        throw new Error("Not cached on Offcloud");
-      }
-      const data = await offcloudJson("/cloud", {
-        method: "POST",
-        body: JSON.stringify({ url: magnet })
-      });
-      const requestId = toTrimmedString(data.requestId);
-      if (!requestId) throw new Error("Offcloud did not return a request ID");
-      const id4 = buildSourceId2(requestId);
-      sourceState2.set(id4, {
-        requestId,
-        magnet,
-        hash: extractInfoHash2(magnet),
-        addedAt: toTrimmedString(data.createdOn) || (/* @__PURE__ */ new Date()).toISOString()
-      });
-      return {
-        id: id4,
-        uri: magnet,
-        hash: extractInfoHash2(magnet)
-      };
-    },
-    async getSourceInfo(id4) {
-      return buildTorrentInfo2(id4);
-    },
-    async selectFiles() {
-    },
-    async resolveLink(link) {
-      const cached = linkCache.get(link);
-      return {
-        id: link,
-        filename: cached?.filename ?? parseFilenameFromUrl(link),
-        mimeType: "application/octet-stream",
-        filesize: cached?.filesize ?? 0,
-        link,
-        host: "offcloud",
-        chunks: 1,
-        crc: 0,
-        download: link,
-        streamable: 0
-      };
-    }
-  };
-
-  // lib/stream-provider-runtime/playback/providers/torbox-playback-provider.ts
-  var TORBOX_PROXY = "/api/stream-providers/torbox";
-  var INFO_CACHE_TTL_MS = 1500;
-  var VIDEO_EXT_RE = /\.(mkv|mp4|avi|m4v|mov|webm|ts|m2ts|wmv|flv)$/i;
-  var sourceState3 = /* @__PURE__ */ new Map();
-  var directLinkCache2 = /* @__PURE__ */ new Map();
-  function getAccessKey3() {
-    const key = getStreamProviderAccessKey("torbox").trim();
-    return key || null;
-  }
-  function extractInfoHash3(input) {
-    const match = input.match(/btih:([a-f0-9]+)/i);
-    return match?.[1]?.toLowerCase() ?? input.trim().toLowerCase();
-  }
-  function buildSourceId3(magnet) {
-    return `tb-${extractInfoHash3(magnet)}`;
-  }
-  function getSourceState3(id4) {
-    const state = sourceState3.get(id4);
-    if (!state) throw new Error("TorBox source not found");
-    return state;
-  }
-  async function torboxJson(path, init = {}) {
-    const token = getAccessKey3();
-    if (!token) throw new Error("TorBox key missing");
-    const headers = new Headers(init.headers);
-    headers.set("x-tb-token", token);
-    headers.set("Accept", "application/json");
-    const response = await fetch(`${TORBOX_PROXY}${path}`, { ...init, headers });
-    const data = await response.json().catch(() => null);
-    if (!response.ok) {
-      const message = data && typeof data === "object" && "error" in data && typeof data.error === "string" && data.error || data && typeof data === "object" && "detail" in data && typeof data.detail === "string" && data.detail || `TorBox request failed (${response.status})`;
-      throw new Error(message);
-    }
-    return data;
-  }
-  async function torboxCreateTorrent(magnet) {
-    const formData = new FormData();
-    formData.append("magnet", magnet);
-    formData.append("seed", "3");
-    formData.append("allow_zip", "false");
-    const data = await torboxJson(
-      "/torrents/createtorrent",
-      { method: "POST", body: formData }
-    );
-    if (!data.success || typeof data.data?.torrent_id !== "number") {
-      throw new Error(data.detail || data.error || "TorBox createtorrent failed");
-    }
-    return {
-      torrent_id: data.data.torrent_id,
-      hash: (data.data.hash ?? "").toLowerCase()
-    };
-  }
-  async function torboxGetInfo(torrentId) {
-    const data = await torboxJson(
-      `/torrents/mylist?bypass_cache=true&id=${torrentId}`
-    );
-    if (!data.success || !data.data) return null;
-    if (Array.isArray(data.data)) return data.data[0] ?? null;
-    return data.data;
-  }
-  async function prefetchVideoFileUrls(state) {
-    if (state.torrentId == null || !state.pendingInfo) return;
-    const info = await state.pendingInfo;
-    if (!info?.files || state.torrentId == null) return;
-    for (const file of info.files) {
-      const name = file.short_name?.trim() || file.name.trim();
-      if (!VIDEO_EXT_RE.test(name)) continue;
-      if (state.pendingDlUrls.has(file.id)) continue;
-      state.pendingDlUrls.set(file.id, torboxRequestDl(state.torrentId, file.id).catch(() => null));
-    }
-  }
-  async function torboxRequestDl(torrentId, fileId) {
-    const token = getAccessKey3();
-    if (!token) return null;
-    const data = await torboxJson(
-      `/torrents/requestdl?token=${encodeURIComponent(token)}&torrent_id=${torrentId}&file_id=${fileId}&redirect=false`
-    );
-    if (!data.success || typeof data.data !== "string") return null;
-    return data.data;
-  }
-  async function torboxCheckCached(hashes) {
-    const result = /* @__PURE__ */ new Set();
-    if (hashes.length === 0) return result;
-    const params = new URLSearchParams();
-    for (const h of hashes) params.append("hash", h);
-    params.set("format", "list");
-    params.set("list_files", "false");
-    try {
-      const data = await torboxJson(
-        `/torrents/checkcached?${params}`
-      );
-      if (!data.success || !data.data) return result;
-      if (Array.isArray(data.data)) {
-        for (const entry of data.data) {
-          if (typeof entry?.hash === "string") result.add(entry.hash.toLowerCase());
-        }
-      } else if (typeof data.data === "object") {
-        for (const [hash, value] of Object.entries(data.data)) {
-          if (value) result.add(hash.toLowerCase());
-        }
-      }
-    } catch {
-    }
-    return result;
-  }
-  function toTorrentFiles2(files, isSelected) {
-    return files.map((file) => ({
-      id: file.id,
-      path: file.short_name?.trim() || file.name.trim(),
-      bytes: file.size,
-      selected: isSelected(file.id) ? 1 : 0
-    }));
-  }
-  function mapStatus2(info) {
-    if (info.download_finished) return "downloaded";
-    const state = info.download_state?.toLowerCase() ?? "";
-    if (state.includes("cached")) return "downloaded";
-    if (state.includes("error") || state.includes("failed") || state.includes("dead")) return "error";
-    if (state.includes("queue")) return "queued";
-    if (state.includes("upload")) return "uploading";
-    if (state.includes("processing")) return "magnet_conversion";
-    return "downloading";
-  }
-  function buildTorrentInfo3(state, info, status, files, links = [], statusLabel) {
-    const totalBytes = info?.size ?? files.reduce((sum, file) => sum + file.bytes, 0);
-    const selectedFiles = files.filter((file) => file.selected === 1);
-    return {
-      id: buildSourceId3(state.magnet),
-      filename: selectedFiles[0]?.path ?? files[0]?.path ?? info?.name ?? state.hash,
-      hash: state.hash,
-      bytes: totalBytes,
-      host: "torbox",
-      split: 0,
-      progress: status === "downloaded" ? 100 : 0,
-      status,
-      statusLabel,
-      added: state.addedAt,
-      links,
-      original_filename: info?.name ?? files[0]?.path ?? state.hash,
-      original_bytes: totalBytes,
-      files
-    };
-  }
-  var torboxPlaybackProvider = {
-    id: "torbox",
-    label: "TorBox playback provider",
-    getAccessKey: getAccessKey3,
-    // Torrentio's config segment for TorBox addons is `torbox=<api_key>`,
-    // analogous to `realdebrid=<api_key>` / `easydebrid=<api_key>` etc.
-    buildConfigSegment(accessKey, qualityFilter = "") {
-      const segments = qualityFilter ? [`qualityfilter=${qualityFilter}`] : [];
-      segments.push(`torbox=${accessKey}`);
-      return segments.join("|");
-    },
-    async lookupCachedStreams(candidates) {
-      const hashes = candidates.map((candidate) => candidate.infoHash?.toLowerCase()).filter((hash) => Boolean(hash));
-      if (hashes.length === 0) {
-        return {
-          cachedHashes: /* @__PURE__ */ new Set(),
-          cachedTitles: /* @__PURE__ */ new Set(),
-          downloadableHashes: /* @__PURE__ */ new Set(),
-          downloadableTitles: /* @__PURE__ */ new Set()
-        };
-      }
-      const cached = await torboxCheckCached(hashes);
-      const cachedHashes = /* @__PURE__ */ new Set();
-      const cachedTitles = /* @__PURE__ */ new Set();
-      for (const candidate of candidates) {
-        const hash = candidate.infoHash?.toLowerCase();
-        if (hash && cached.has(hash)) {
-          cachedHashes.add(candidate.infoHash);
-          if (candidate.title.trim()) cachedTitles.add(candidate.title.trim());
-        }
-      }
-      return {
-        cachedHashes,
-        cachedTitles,
-        downloadableHashes: /* @__PURE__ */ new Set(),
-        downloadableTitles: /* @__PURE__ */ new Set()
-      };
-    },
-    hideUncachedStreamsFromList() {
-      return false;
-    },
-    hideUnknownStreamsFromList() {
-      return false;
-    },
-    isMagnetSource(input) {
-      return input.trim().toLowerCase().startsWith("magnet:");
-    },
-    async addMagnet(magnet) {
-      const id4 = buildSourceId3(magnet);
-      const hash = extractInfoHash3(magnet);
-      const existing = sourceState3.get(id4);
-      if (existing && existing.torrentId != null) {
-        existing.pendingInfo = torboxGetInfo(existing.torrentId).catch(() => null);
-        existing.pendingDlUrls = /* @__PURE__ */ new Map();
-        void prefetchVideoFileUrls(existing);
-        return { id: id4, uri: magnet, hash: existing.hash };
-      }
-      const created = await torboxCreateTorrent(magnet);
-      const pendingInfo = torboxGetInfo(created.torrent_id).catch(() => null);
-      const state = {
-        magnet,
-        hash: created.hash || hash,
-        addedAt: (/* @__PURE__ */ new Date()).toISOString(),
-        torrentId: created.torrent_id,
-        selectedFileIds: null,
-        pendingInfo,
-        lastInfo: null,
-        lastInfoAt: 0,
-        pendingDlUrls: /* @__PURE__ */ new Map()
-      };
-      sourceState3.set(id4, state);
-      void prefetchVideoFileUrls(state);
-      return { id: id4, uri: magnet, hash: created.hash || hash };
-    },
-    async getSourceInfo(id4) {
-      const state = getSourceState3(id4);
-      if (state.torrentId == null) {
-        throw new Error("TorBox torrent id not yet known");
-      }
-      let info;
-      if (state.pendingInfo) {
-        info = await state.pendingInfo;
-        state.pendingInfo = null;
-        state.lastInfo = info;
-        state.lastInfoAt = Date.now();
-      } else if (state.lastInfo && Date.now() - state.lastInfoAt < INFO_CACHE_TTL_MS) {
-        info = state.lastInfo;
-      } else {
-        info = await torboxGetInfo(state.torrentId);
-        state.lastInfo = info;
-        state.lastInfoAt = Date.now();
-      }
-      if (!info) {
-        return buildTorrentInfo3(state, null, "magnet_conversion", [], [], "Looking up on TorBox\u2026");
-      }
-      const isSelected = (fileId) => state.selectedFileIds === "all" || state.selectedFileIds instanceof Set && state.selectedFileIds.has(fileId);
-      const status = mapStatus2(info);
-      const files = toTorrentFiles2(info.files ?? [], isSelected);
-      if (status !== "downloaded") {
-        return buildTorrentInfo3(state, info, status, files, [], info.download_state);
-      }
-      if (state.selectedFileIds === null) {
-        return buildTorrentInfo3(state, info, "waiting_files_selection", files, [], "Select files");
-      }
-      const selectedFiles = files.filter((file) => file.selected === 1);
-      const resolvedLinks = await Promise.all(
-        selectedFiles.map(async (file) => {
-          const pending = state.pendingDlUrls.get(file.id);
-          const url = pending != null ? await pending : await torboxRequestDl(state.torrentId, file.id);
-          return url ? { url, file } : null;
-        })
-      );
-      const links = [];
-      for (const entry of resolvedLinks) {
-        if (!entry) continue;
-        links.push(entry.url);
-        directLinkCache2.set(entry.url, { filename: entry.file.path, filesize: entry.file.bytes });
-      }
-      if (links.length === 0) {
-        return buildTorrentInfo3(state, info, "error", files, [], "No playable links from TorBox");
-      }
-      return buildTorrentInfo3(state, info, "downloaded", files, links, "Ready");
-    },
-    async selectFiles(id4, files = "all") {
-      const state = getSourceState3(id4);
-      state.selectedFileIds = files === "all" ? "all" : new Set(
-        files.split(",").map((value) => Number.parseInt(value.trim(), 10)).filter((value) => Number.isFinite(value))
-      );
-    },
-    async resolveLink(link) {
-      const cached = directLinkCache2.get(link);
-      return {
-        id: link,
-        filename: cached?.filename ?? link.split("/").pop()?.split("?")[0] ?? "download",
-        mimeType: "application/octet-stream",
-        filesize: cached?.filesize ?? 0,
-        link,
-        host: "torbox",
-        chunks: 1,
-        crc: 0,
-        download: link,
-        streamable: 1
-      };
-    }
-  };
-
-  // lib/stream-provider-runtime/playback/stream-provider-playback.ts
-  var playbackProviders = /* @__PURE__ */ new Map([
-    ["alldebrid", alldebridPlaybackProvider],
-    ["easydebrid", easyDebridPlaybackProvider],
-    ["offcloud", offcloudPlaybackProvider],
-    ["realdebrid", legacyPlaybackProvider],
-    ["torbox", torboxPlaybackProvider]
-  ]);
-  function getPlaybackProviderOverride() {
-    if (typeof window === "undefined") return null;
-    return window.__lumioPluginRuntime?.playbackProviderOverride ?? null;
-  }
-  function resolveActiveProviderId() {
-    return getPlaybackProviderOverride() ?? getActiveStreamProvider().trim().toLowerCase();
-  }
-  function getActivePlaybackProvider() {
-    const providerId = resolveActiveProviderId();
-    const provider = playbackProviders.get(providerId);
-    if (!provider) throw new Error(`Playback provider "${providerId}" is not supported`);
-    return provider;
-  }
-  function findActivePlaybackProvider() {
-    const providerId = resolveActiveProviderId();
-    return playbackProviders.get(providerId) ?? null;
-  }
-  function getPlaybackAccessKey() {
-    return findActivePlaybackProvider()?.getAccessKey() ?? null;
-  }
-  function buildPlaybackProviderConfigSegment(qualityFilter = "") {
-    const accessKey = getPlaybackAccessKey();
-    if (!accessKey) return null;
-    const provider = findActivePlaybackProvider();
-    if (!provider) return null;
-    return provider.buildConfigSegment(accessKey, qualityFilter);
-  }
-  var cacheProbeTtlMs = 6e4;
-  var cacheProbeMemo = /* @__PURE__ */ new Map();
-  function buildCacheProbeKey(providerId, candidates) {
-    const hashes = candidates.map((c) => c.infoHash?.toLowerCase() ?? "").filter(Boolean).sort().join(",");
-    return `${providerId}|${hashes}`;
-  }
-  async function lookupPlaybackCachedStreams(candidates) {
-    const provider = findActivePlaybackProvider();
-    if (!provider?.lookupCachedStreams) return null;
-    const key = buildCacheProbeKey(provider.id, candidates);
-    const now3 = Date.now();
-    const cached = cacheProbeMemo.get(key);
-    if (cached && cached.expiresAt > now3) return cached.result;
-    const result = await provider.lookupCachedStreams(candidates);
-    cacheProbeMemo.set(key, { expiresAt: now3 + cacheProbeTtlMs, result });
-    return result;
-  }
-  function hideUncachedPlaybackStreamsFromList() {
-    return findActivePlaybackProvider()?.hideUncachedStreamsFromList?.() ?? false;
-  }
-  function hideUnknownPlaybackStreamsFromList() {
-    return findActivePlaybackProvider()?.hideUnknownStreamsFromList?.() ?? false;
-  }
-  function isMagnetPlaybackSource(input) {
-    return getActivePlaybackProvider().isMagnetSource(input);
-  }
-  async function queueMagnetForPlayback(magnet) {
-    return getActivePlaybackProvider().addMagnet(magnet);
-  }
-  async function getPlaybackSourceInfo(id4) {
-    return getActivePlaybackProvider().getSourceInfo(id4);
-  }
-  async function selectPlaybackFiles(id4, files = "all") {
-    return getActivePlaybackProvider().selectFiles(id4, files);
-  }
-  async function resolvePlaybackLink(link) {
-    return getActivePlaybackProvider().resolveLink(link);
-  }
-
-  // lib/stream-provider-runtime/playback/resolve-stream-url.ts
-  var RESOLVE_URL_RE = /\/resolve\/(torbox|realdebrid|alldebrid|easydebrid|offcloud)\/[^/]+\/([a-f0-9]{40})\//i;
-  var VIDEO_EXT_RE2 = /\.(mkv|mp4|avi|m4v|mov|webm|ts|m2ts|wmv|flv)$/i;
-  function sleep3(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-  async function resolvePlayableStreamUrl(url) {
-    const match = url.match(RESOLVE_URL_RE);
-    if (!match) return url;
-    const provider = match[1].toLowerCase();
-    if (provider !== getActiveStreamProvider().trim().toLowerCase()) return url;
-    const infoHash = match[2].toLowerCase();
-    const wantedName = decodeURIComponent(url.split("/").pop()?.split("?")[0] ?? "").trim().toLowerCase();
-    try {
-      const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${infoHash}`);
-      const pollSchedule = [250, 500, 1e3, 1500, 1500, 2e3, 2e3, 2500, 2500];
-      for (let attempt = 0; attempt < pollSchedule.length; attempt += 1) {
-        const info = await getPlaybackSourceInfo(added.id);
-        if (info.status === "waiting_files_selection") {
-          const videoFiles = info.files.filter((file) => VIDEO_EXT_RE2.test(file.path));
-          const byName = wantedName ? videoFiles.find((file) => file.path.trim().toLowerCase().endsWith(wantedName)) : void 0;
-          const best = byName ?? [...videoFiles].sort((a, b) => b.bytes - a.bytes)[0];
-          if (!best) return url;
-          await selectPlaybackFiles(added.id, String(best.id));
-        } else if (info.status === "downloaded") {
-          if (info.links.length === 0) return url;
-          const link = await resolvePlaybackLink(info.links[0]);
-          return link.download || url;
-        } else if (info.status === "error" || info.status === "magnet_error" || info.status === "dead" || info.status === "virus" || info.status === "downloading") {
-          return url;
-        }
-        await sleep3(pollSchedule[attempt]);
-      }
-    } catch {
-    }
-    return url;
-  }
-
-  // lib/tauri-mpv.ts
-  function detectTauriEnv() {
-    if (typeof window === "undefined") return false;
-    const maybeTauriWindow = window;
-    if (maybeTauriWindow.__TAURI_INTERNALS__ || maybeTauriWindow.__TAURI__) {
-      return true;
-    }
-    const userAgent = typeof navigator !== "undefined" ? navigator.userAgent : "";
-    if (userAgent.includes("Tauri")) return true;
-    const host = window.location.hostname;
-    const port = window.location.port;
-    return isLocalAppHost(host) && port === "3011";
-  }
-  var isTauriEnv = detectTauriEnv();
-  var isDesktopTauriEnv = isTauriEnv && !(typeof navigator !== "undefined" && /android/i.test(navigator.userAgent));
-  function isLiveStreamUrl(url) {
-    const lower = url.toLowerCase();
-    const pathOnly = lower.split("?")[0].split("#")[0];
-    if (pathOnly.endsWith(".m3u8") || pathOnly.endsWith(".mpd")) return true;
-    return lower.includes("/live/") || lower.includes("hls/") || lower.includes("/dash/");
-  }
-  function sourceCacheUrl(originalUrl) {
-    if (!/^https?:\/\//i.test(originalUrl)) return null;
-    if (isLiveStreamUrl(originalUrl)) return null;
-    try {
-      if (isLocalAppHost(new URL(originalUrl).hostname)) return null;
-    } catch {
-      return null;
-    }
-    return `${window.location.origin}/api/source-cache?u=${encodeURIComponent(originalUrl)}`;
-  }
-  function warmSourceCache(originalUrl) {
-    const wrapped = sourceCacheUrl(originalUrl);
-    if (!wrapped) return;
-    void fetch(wrapped, { headers: { Range: "bytes=0-1" } }).then((r) => r.body?.cancel()).catch(() => {
-    });
-  }
-  function releaseSourceCache(originalUrl) {
-    if (!sourceCacheUrl(originalUrl)) return;
-    void fetch("/api/source-cache/release", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ u: originalUrl }),
-      keepalive: true
-    }).catch(() => {
-    });
-  }
-  async function openMpvPlayer(args) {
-    const { shouldAbort: _ignored, ...rest } = args;
-    const cached = sourceCacheUrl(args.url);
-    if (cached) {
-      if (args.shouldAbort?.()) return;
-      return invoke("mpv_open", { args: { ...rest, url: cached } });
-    }
-    const url = await resolvePlayableStreamUrl(args.url).catch(() => args.url);
-    if (args.shouldAbort?.()) return;
-    return invoke("mpv_open", { args: { ...rest, url } });
-  }
-  async function closeMpvPlayer() {
-    return invoke("mpv_close");
-  }
-  async function setMpvPause(paused) {
-    return invoke("mpv_set_pause", { paused });
-  }
-  async function setMpvAudioTrack(aid) {
-    return invoke("mpv_set_audio_track", { aid });
-  }
-  async function setMpvVideoGeometry(args) {
-    try {
-      return await invoke("mpv_set_video_geometry", {
-        aspectOverride: args.aspectOverride ?? null,
-        panscan: args.panscan,
-        videoZoom: args.videoZoom
-      });
-    } catch (error) {
-      const message = String(error ?? "");
-      if (!/mpv not initialized/i.test(message)) {
-        console.warn("[mpv] set video geometry error:", error);
-      }
-    }
-  }
-  async function setMpvSubtitleTrack(sid) {
-    return invoke("mpv_set_subtitle_track", { sid });
-  }
-  async function getMpvSid() {
-    return invoke("mpv_get_sid");
-  }
-  async function getMpvSubtitleTracks() {
-    return invoke("mpv_get_subtitle_tracks");
-  }
-  async function getMpvAudioTracks() {
-    return invoke("mpv_get_audio_tracks");
-  }
-  async function toggleWindowFullscreen() {
-    return invoke("toggle_window_fullscreen");
-  }
-  async function getWindowFullscreen() {
-    return invoke("get_window_fullscreen");
-  }
-  async function getWindowNativeFullscreen() {
-    return invoke("get_window_native_fullscreen");
-  }
-  async function setWindowFullscreen(fullscreen) {
-    return invoke("set_window_fullscreen", { fullscreen });
-  }
-  async function setWindowNativeFullscreen(fullscreen) {
-    return invoke("set_window_native_fullscreen", { fullscreen });
-  }
-  async function mpvGetAudioFilterChain() {
-    try {
-      return await invoke("mpv_get_af") || "(tom)";
-    } catch (e) {
-      return `(ol\xE4sbar: ${String(e)})`;
-    }
-  }
-  async function mpvCommand(args) {
-    try {
-      return await invoke("mpv_command_ts", { args });
-    } catch (e) {
-      console.warn("[mpv] command error:", args, e);
-    }
-  }
-  async function mpvSetPropertyStrings(props) {
-    try {
-      return await invoke("mpv_set_property_strings", { props });
-    } catch (e) {
-      console.warn("[mpv] set property error:", props, e);
-    }
-  }
-  async function mpvApplySubtitleStyle(args) {
-    try {
-      return await invoke("mpv_apply_subtitle_style", { args });
-    } catch (e) {
-      console.warn("[mpv] apply subtitle style error:", args, e);
-    }
-  }
-  function mpvSetBounds(rect) {
-    if (rect.width <= 0 || rect.height <= 0) return;
-    void invoke("mpv_set_bounds", {
-      x: rect.left,
-      y: rect.top,
-      w: rect.width,
-      h: rect.height,
-      windowHeight: window.innerHeight,
-      scale: window.devicePixelRatio
-    });
-  }
-  function useMpvPlayer(enabled = true) {
-    const [timePos, setTimePos] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [paused, setPaused] = useState(false);
-    const [ended, setEnded] = useState(false);
-    const [sid, setSid] = useState(null);
-    const [fileLoaded, setFileLoaded] = useState(false);
-    const [fileLoadedToken, setFileLoadedToken] = useState(0);
-    const [playbackRestarted, setPlaybackRestarted] = useState(false);
-    const [playbackRestartedToken, setPlaybackRestartedToken] = useState(0);
-    const [pausedForCache, setPausedForCache] = useState(false);
-    const [coreIdle, setCoreIdle] = useState(true);
-    const [firstFrameRendered, setFirstFrameRendered] = useState(false);
-    const [loadFailed, setLoadFailed] = useState(false);
-    const [loadFailedToken, setLoadFailedToken] = useState(0);
-    const [loadFailedError, setLoadFailedError] = useState(null);
-    useEffect(() => {
-      if (!isTauriEnv || !enabled) return;
-      const cleanups = [];
-      void listen("mpv://time-pos", (e) => setTimePos(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://duration", (e) => setDuration(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://paused", (e) => setPaused(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://ended", () => setEnded(true)).then((u) => cleanups.push(u));
-      void listen("mpv://sid", (e) => setSid(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://file-loaded", () => {
-        setFileLoaded(true);
-        setFileLoadedToken((t) => t + 1);
-      }).then((u) => cleanups.push(u));
-      void listen("mpv://playback-restart", () => {
-        setPlaybackRestarted(true);
-        setPlaybackRestartedToken((t) => t + 1);
-      }).then((u) => cleanups.push(u));
-      void listen("mpv://paused-for-cache", (e) => setPausedForCache(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://core-idle", (e) => setCoreIdle(e.payload)).then((u) => cleanups.push(u));
-      void listen("mpv://first-frame-rendered", () => {
-        void fetch(`/api/debug-log?msg=${encodeURIComponent(`${performance.now().toFixed(0)} first-frame-rendered received`)}`);
-        setFirstFrameRendered(true);
-      }).then((u) => cleanups.push(u));
-      void listen("mpv://load-failed", (e) => {
-        setLoadFailedError(typeof e.payload === "number" ? e.payload : null);
-        setLoadFailed(true);
-        setLoadFailedToken((t) => t + 1);
-      }).then((u) => cleanups.push(u));
-      return () => cleanups.forEach((fn) => fn());
-    }, [enabled]);
-    const seek = useCallback((time2) => {
-      void mpvCommand(["seek", time2, "absolute"]);
-    }, []);
-    const seekRelative = useCallback((delta) => {
-      void mpvCommand(["seek", delta, "relative"]);
-    }, []);
-    const setPlayPause = useCallback((pause) => {
-      void mpvCommand(["set_property", "pause", pause]);
-    }, []);
-    const setVolume = useCallback((vol) => {
-      void mpvSetPropertyStrings([{ name: "volume", value: String(Math.round(vol * 100)) }]);
-    }, []);
-    const setMuted = useCallback((muted) => {
-      void mpvSetPropertyStrings([{ name: "mute", value: muted ? "yes" : "no" }]);
-    }, []);
-    const setAudioTrack = useCallback((aid) => {
-      void setMpvAudioTrack(aid);
-    }, []);
-    const resetFileLoaded = useCallback(() => {
-      setFileLoaded(false);
-    }, []);
-    const resetEnded = useCallback(() => {
-      setEnded(false);
-    }, []);
-    const resetPlaybackRestarted = useCallback(() => {
-      setPlaybackRestarted(false);
-    }, []);
-    const resetFirstFrameRendered = useCallback(() => {
-      setFirstFrameRendered(false);
-    }, []);
-    const resetLoadFailed = useCallback(() => {
-      setLoadFailed(false);
-      setLoadFailedError(null);
-    }, []);
-    return {
-      timePos,
-      duration,
-      paused,
-      ended,
-      sid,
-      fileLoaded,
-      fileLoadedToken,
-      resetEnded,
-      playbackRestarted,
-      playbackRestartedToken,
-      pausedForCache,
-      coreIdle,
-      firstFrameRendered,
-      loadFailed,
-      loadFailedToken,
-      loadFailedError,
-      seek,
-      seekRelative,
-      setPlayPause,
-      setVolume,
-      setMuted,
-      setAudioTrack,
-      resetFileLoaded,
-      resetPlaybackRestarted,
-      resetFirstFrameRendered,
-      resetLoadFailed
-    };
-  }
-
-  // lib/open-external.ts
-  async function openExternalUrl(url) {
-    if (!url) return;
-    if (isTauriEnv) {
-      try {
-        const { invoke: invoke2 } = await Promise.resolve().then(() => (init_core(), core_exports));
-        await invoke2("open_external_url", { url });
-        return;
-      } catch {
-      }
-    }
-    if (typeof window !== "undefined") {
-      window.open(url, "_blank", "noopener,noreferrer");
-    }
-  }
-
-  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
-  init_jsx_runtime_shim();
-  var TORRENTIO_QUALITY_OPTIONS = [
-    { id: "brremux", label: "BluRay REMUX" },
-    { id: "hdrall", label: "HDR/HDR10+/Dolby Vision" },
-    { id: "dolbyvision", label: "Dolby Vision" },
-    { id: "dolbyvisionwithhdr", label: "Dolby Vision + HDR" },
-    { id: "threed", label: "3D" },
-    { id: "4k", label: "4K" },
-    { id: "1080p", label: "1080p" },
-    { id: "720p", label: "720p" },
-    { id: "480p", label: "480p" },
-    { id: "other", label: "Other (DVDRip/HDRip/BDRip\u2026)" },
-    { id: "scr", label: "Screener" },
-    { id: "cam", label: "Cam" },
-    { id: "unknown", label: "Unknown" }
-  ];
-  function toOptionItems(raw) {
-    if (!Array.isArray(raw)) return [];
-    return raw.map((entry) => {
-      const value = String(entry.value ?? "").trim();
-      const label = String(entry.label ?? "").trim() || value;
-      return { id: value, label };
-    }).filter((item) => item.id.length > 0);
-  }
-  var cachedCatalogs = null;
-  async function fetchScraperOptionCatalogs() {
-    if (cachedCatalogs) return cachedCatalogs;
-    try {
-      const res = await fetch("/api/scraper-options");
-      if (!res.ok) return null;
-      const data = await res.json();
-      const catalogs = {
-        qualities: toOptionItems(data.qualities),
-        languages: toOptionItems(data.languages),
-        providers: toOptionItems(data.providers),
-        sort: toOptionItems(data.sort)
-      };
-      if (catalogs.qualities.length === 0) return null;
-      cachedCatalogs = catalogs;
-      return catalogs;
-    } catch {
-      return null;
-    }
-  }
-  var COMET_QUALITY_OPTIONS = ["240p", "360p", "480p", "576p", "720p", "1080p", "1440p", "2160p", "unknown"];
-  var JACKETTIO_QUALITY_OPTIONS = ["360p", "480p", "720p", "1080p", "2160p", "unknown"];
-  var TORRENTIO_LANGUAGE_OPTIONS = [
-    { id: "swedish", label: "Svenska" },
-    { id: "english", label: "English" },
-    { id: "danish", label: "Dansk" },
-    { id: "norwegian", label: "Norsk" },
-    { id: "finnish", label: "Suomi" },
-    { id: "german", label: "Deutsch" },
-    { id: "french", label: "Fran\xE7ais" },
-    { id: "spanish", label: "Espa\xF1ol" },
-    { id: "portuguese", label: "Portugu\xEAs" },
-    { id: "italian", label: "Italiano" },
-    { id: "dutch", label: "Nederlands" },
-    { id: "polish", label: "Polski" },
-    { id: "russian", label: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439" },
-    { id: "japanese", label: "\u65E5\u672C\u8A9E" },
-    { id: "korean", label: "\uD55C\uAD6D\uC5B4" },
-    { id: "chinese", label: "\u4E2D\u6587" },
-    { id: "arabic", label: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" },
-    { id: "hindi", label: "\u0939\u093F\u0928\u094D\u0926\u0940" },
-    { id: "turkish", label: "T\xFCrk\xE7e" },
-    { id: "ukrainian", label: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430" },
-    { id: "romanian", label: "Rom\xE2n\u0103" },
-    { id: "hungarian", label: "Magyar" },
-    { id: "czech", label: "\u010Ce\u0161tina" },
-    { id: "greek", label: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC" },
-    { id: "bulgarian", label: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438" },
-    { id: "serbian", label: "Srpski" },
-    { id: "croatian", label: "Hrvatski" },
-    { id: "hebrew", label: "\u05E2\u05D1\u05E8\u05D9\u05EA" },
-    { id: "vietnamese", label: "Ti\u1EBFng Vi\u1EC7t" },
-    { id: "thai", label: "\u0E20\u0E32\u0E29\u0E32\u0E44\u0E17\u0E22" },
-    { id: "indonesian", label: "Bahasa Indonesia" },
-    { id: "malay", label: "Bahasa Melayu" },
-    { id: "catalan", label: "Catal\xE0" },
-    { id: "latin", label: "Latina" }
-  ];
-  var ISO_LANGUAGE_OPTIONS = [
-    { code: "sv", label: "Svenska" },
-    { code: "en", label: "English" },
-    { code: "da", label: "Dansk" },
-    { code: "no", label: "Norsk" },
-    { code: "fi", label: "Suomi" },
-    { code: "de", label: "Deutsch" },
-    { code: "fr", label: "Fran\xE7ais" },
-    { code: "es", label: "Espa\xF1ol" },
-    { code: "pt", label: "Portugu\xEAs" },
-    { code: "it", label: "Italiano" },
-    { code: "nl", label: "Nederlands" },
-    { code: "pl", label: "Polski" },
-    { code: "ru", label: "\u0420\u0443\u0441\u0441\u043A\u0438\u0439" },
-    { code: "ja", label: "\u65E5\u672C\u8A9E" },
-    { code: "ko", label: "\uD55C\uAD6D\uC5B4" },
-    { code: "zh", label: "\u4E2D\u6587" },
-    { code: "ar", label: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" },
-    { code: "hi", label: "\u0939\u093F\u0928\u094D\u0926\u0940" },
-    { code: "tr", label: "T\xFCrk\xE7e" },
-    { code: "uk", label: "\u0423\u043A\u0440\u0430\u0457\u043D\u0441\u044C\u043A\u0430" },
-    { code: "ro", label: "Rom\xE2n\u0103" },
-    { code: "hu", label: "Magyar" },
-    { code: "cs", label: "\u010Ce\u0161tina" },
-    { code: "el", label: "\u0395\u03BB\u03BB\u03B7\u03BD\u03B9\u03BA\u03AC" },
-    { code: "bg", label: "\u0411\u044A\u043B\u0433\u0430\u0440\u0441\u043A\u0438" },
-    { code: "sr", label: "Srpski" },
-    { code: "hr", label: "Hrvatski" },
-    { code: "he", label: "\u05E2\u05D1\u05E8\u05D9\u05EA" },
-    { code: "vi", label: "Ti\u1EBFng Vi\u1EC7t" },
-    { code: "th", label: "\u0E20\u0E32\u0E29\u0E32\u0E44\u0E17\u0E22" },
-    { code: "id", label: "Bahasa Indonesia" },
-    { code: "ms", label: "Bahasa Melayu" }
-  ];
-  var TORRENTIO_PROVIDERS = [
-    "YTS",
-    "EZTV",
-    "RARBG",
-    "ThePirateBay",
-    "1337x",
-    "KickassTorrents",
-    "TorrentGalaxy",
-    "MagnetDL",
-    "HorribleSubs",
-    "NyaaSi",
-    "TokyoTosho",
-    "AniDex",
-    "Rutor",
-    "Rutracker",
-    "Comando",
-    "CineCalidad",
-    "FilmeHD",
-    "BitSearch",
-    "ETTV",
-    "TorrentDownloads",
-    "TheRarbg",
-    "TGx",
-    "Zooqle",
-    "AnimeTosho"
-  ];
-  var TORRENTIO_SORT_OPTIONS = [
-    { id: "quality", label: "Quality" },
-    { id: "qualitysize", label: "Quality + Size" },
-    { id: "seeders", label: "Seeders" },
-    { id: "size", label: "Size" }
-  ];
-  var DEBRID_PROVIDER_LABELS = {
-    none: "None",
-    realdebrid: "RealDebrid",
-    alldebrid: "AllDebrid",
-    easydebrid: "EasyDebrid",
-    offcloud: "Offcloud",
-    torbox: "TorBox",
-    putio: "Put.io"
-  };
-  var DEBRID_PROVIDERS = [
-    { id: "none", label: "None" },
-    { id: "realdebrid", label: "RealDebrid" },
-    { id: "alldebrid", label: "AllDebrid" },
-    { id: "offcloud", label: "Offcloud" },
-    { id: "torbox", label: "TorBox" },
-    { id: "putio", label: "Put.io" }
-  ];
-  function getDebridProviderLabel(id4) {
-    return DEBRID_PROVIDER_LABELS[id4] ?? id4;
-  }
-  var PRESET_NAMES = {
-    torrentio: "Torrentio",
-    torrentsdb: "TorrentsDB",
-    comet: "Comet",
-    jackettio: "Jackettio",
-    aiostreams: "AIOStreams",
-    orion: "Orion",
-    custom: "Custom URL"
-  };
-  var heroInputClassNames = {
-    inputWrapper: "border border-white/10 bg-white/[0.03] hover:border-white/20 h-12 focus-within:outline-none focus-within:ring-0",
-    input: "text-sm text-white placeholder:text-slate-600 outline-none ring-0 focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 shadow-none"
-  };
-  async function fetchScraperManifest(preset, customUrl) {
-    const params = new URLSearchParams();
-    if ((preset === "custom" || preset === "aiostreams") && customUrl) {
-      params.set("url", customUrl);
-    } else {
-      params.set("preset", preset);
-    }
-    const res = await fetch(`/api/stream-providers/manifest?${params.toString()}`);
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error ?? `HTTP ${res.status}`);
-    return data;
-  }
-  function SectionLabel({ children }) {
-    return /* @__PURE__ */ jsx("p", { className: "text-[11px] uppercase tracking-[0.12em] text-slate-500", children });
-  }
-  function FieldHeader({ label }) {
-    return /* @__PURE__ */ jsx(SectionLabel, { children: label });
-  }
-  function MultiSelectDropdown({
-    value,
-    onChange,
-    placeholder,
-    options
-  }) {
-    const [open, setOpen] = useState(false);
-    const rootRef = useRef(null);
-    useEffect(() => {
-      if (!open) return;
-      function onDocPointer(event) {
-        if (rootRef.current && !rootRef.current.contains(event.target)) {
-          setOpen(false);
-        }
-      }
-      document.addEventListener("mousedown", onDocPointer);
-      return () => document.removeEventListener("mousedown", onDocPointer);
-    }, [open]);
-    const selectedLabels = options.filter((option) => value.includes(option.id)).map((option) => option.label);
-    const summary = selectedLabels.length > 0 ? selectedLabels.join(", ") : placeholder;
-    return /* @__PURE__ */ jsxs("div", { ref: rootRef, className: "relative", children: [
-      /* @__PURE__ */ jsxs(
-        "button",
-        {
-          type: "button",
-          onClick: () => setOpen((current2) => !current2),
-          className: "flex h-12 w-full items-center justify-between rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-left text-sm text-white outline-none transition hover:border-white/20",
-          children: [
-            /* @__PURE__ */ jsx("span", { className: `truncate ${selectedLabels.length === 0 ? "text-slate-500" : ""}`, children: summary }),
-            /* @__PURE__ */ jsx("span", { className: `ml-2 flex-none text-slate-500 transition-transform ${open ? "rotate-180" : ""}`, children: "\u25BE" })
-          ]
-        }
-      ),
-      open ? /* @__PURE__ */ jsx(
-        "div",
-        {
-          className: "absolute left-0 right-0 top-full z-50 mt-1 max-h-72 overflow-y-auto rounded-[1.1rem] border border-white/10 p-1.5 shadow-2xl",
-          style: { backgroundColor: "#10162a" },
-          children: options.map(({ id: id4, label }) => {
-            const checked = value.includes(id4);
-            return /* @__PURE__ */ jsxs(
-              "button",
-              {
-                type: "button",
-                onClick: () => onChange(checked ? value.filter((v) => v !== id4) : [...value, id4]),
-                className: "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm text-slate-100 transition hover:bg-white/5",
-                children: [
-                  /* @__PURE__ */ jsx(
-                    "span",
-                    {
-                      "aria-hidden": "true",
-                      className: `flex h-4 w-4 flex-none items-center justify-center rounded-[3px] border text-[10px] ${checked ? "border-aurora-400/80 bg-aurora-500/20 text-aurora-200" : "border-white/15 bg-white/[0.02] text-transparent"}`,
-                      children: "\u2713"
-                    }
-                  ),
-                  /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate", children: label })
-                ]
-              },
-              id4
-            );
-          })
-        }
-      ) : null
-    ] });
-  }
-  function DebridSelect({
-    value,
-    onChange
-  }) {
-    return /* @__PURE__ */ jsx(
-      "select",
-      {
-        value,
-        onChange: (event) => onChange(event.target.value),
-        className: "h-12 w-full rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition hover:border-white/20 focus:border-white/20",
-        children: DEBRID_PROVIDERS.map(({ id: id4, label }) => /* @__PURE__ */ jsx("option", { value: id4, className: "bg-slate-900 text-white", children: label }, id4))
-      }
-    );
-  }
-  function DebridKeyField({
-    debridProvider,
-    onProviderChange
-  }) {
-    const { t } = useLang();
-    const [keyValue, setKeyValue] = useState(() => getStreamProviderAccessKey(debridProvider));
-    useEffect(() => {
-      setKeyValue(getStreamProviderAccessKey(debridProvider));
-    }, [debridProvider]);
-    if (debridProvider === "none") return null;
-    return /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-      /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-        /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderSelection") }),
-        /* @__PURE__ */ jsx(
-          DebridSelect,
-          {
-            value: debridProvider,
-            onChange: (v) => {
-              onProviderChange(v);
-              setKeyValue(getStreamProviderAccessKey(v));
-            }
-          }
-        )
-      ] }),
-      /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-        /* @__PURE__ */ jsx(SectionLabel, { children: `${getDebridProviderLabel(debridProvider)} ${t("apiKeyLabel")}` }),
-        /* @__PURE__ */ jsx(
-          import_react64.Input,
-          {
-            type: "password",
-            value: keyValue,
-            onValueChange: (v) => {
-              setKeyValue(v);
-              setStreamProviderAccessKey(debridProvider, v);
-            },
-            placeholder: t("streamProviderApiKeyPlaceholder"),
-            radius: "lg",
-            classNames: heroInputClassNames
-          }
-        )
-      ] })
-    ] });
-  }
-  function getScraperSnapshot(config) {
-    const debridProvider = config.options.streamProvider?.trim().toLowerCase() ?? config.options.debridProvider?.trim().toLowerCase() ?? "";
-    const providerKey = debridProvider && debridProvider !== "none" ? getStreamProviderAccessKey(debridProvider).trim() : "";
-    return JSON.stringify({
-      config,
-      debridProvider,
-      providerKey
-    });
-  }
-  function ScraperCard({
-    config,
-    onChange,
-    onRemove,
-    onMoveUp,
-    onMoveDown,
-    isFirst,
-    isLast
-  }) {
-    const { t } = useLang();
-    const [catalogs, setCatalogs] = useState(cachedCatalogs);
-    useEffect(() => {
-      let cancelled = false;
-      void fetchScraperOptionCatalogs().then((result) => {
-        if (!cancelled && result) setCatalogs(result);
-      });
-      return () => {
-        cancelled = true;
-      };
-    }, []);
-    const [manifest, setManifest] = useState({ state: "idle" });
-    const [expanded, setExpanded] = useState(false);
-    const [saveState, setSaveState] = useState("idle");
-    const [savedSnapshot, setSavedSnapshot] = useState(() => getScraperSnapshot(config));
-    const saveTimerRef = useRef(null);
-    const fetchedRef = useRef(false);
-    useEffect(() => {
-      if (fetchedRef.current) return;
-      fetchedRef.current = true;
-      const customUrl = config.preset === "custom" ? config.options.rawUrl : config.preset === "aiostreams" ? config.options.manifestUrl : void 0;
-      if ((config.preset === "custom" || config.preset === "aiostreams") && !customUrl) return;
-      setManifest({ state: "loading" });
-      void fetchScraperManifest(config.preset, customUrl).then((data) => setManifest({ state: "ok", name: data.name, version: data.version })).catch((err) => setManifest({ state: "error", error: String(err) }));
-    }, [config.preset, config.options]);
-    const currentSnapshot = getScraperSnapshot(config);
-    const hasPendingChanges = currentSnapshot !== savedSnapshot;
-    useEffect(() => {
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current);
-        saveTimerRef.current = null;
-      }
-      setSaveState("idle");
-      setSavedSnapshot(getScraperSnapshot(config));
-    }, [config.id]);
-    useEffect(() => {
-      return () => {
-        if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      };
-    }, []);
-    function refresh() {
-      fetchedRef.current = false;
-      const customUrl = config.preset === "custom" ? config.options.rawUrl : config.preset === "aiostreams" ? config.options.manifestUrl : void 0;
-      if ((config.preset === "custom" || config.preset === "aiostreams") && !customUrl) return;
-      setManifest({ state: "loading" });
-      void fetchScraperManifest(config.preset, customUrl).then((data) => setManifest({ state: "ok", name: data.name, version: data.version })).catch((err) => setManifest({ state: "error", error: String(err) }));
-    }
-    function persistCard() {
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current);
-        saveTimerRef.current = null;
-      }
-      try {
-        const debridProvider = config.options.debridProvider?.trim().toLowerCase();
-        if (debridProvider && debridProvider !== "none") {
-          const key = getStreamProviderAccessKey(debridProvider);
-          setStreamProviderAccessKey(debridProvider, key);
-        }
-        setSavedSnapshot(getScraperSnapshot(config));
-        setSaveState("saved");
-        saveTimerRef.current = setTimeout(() => {
-          setSaveState("idle");
-          saveTimerRef.current = null;
-        }, 1800);
-      } catch {
-        setSaveState("error");
-        saveTimerRef.current = setTimeout(() => {
-          setSaveState("idle");
-          saveTimerRef.current = null;
-        }, 2200);
-      }
-    }
-    function updateOptions(patch) {
-      onChange({ ...config, options: { ...config.options, ...patch } });
-    }
-    const isCustom = config.preset === "custom";
-    const title = isCustom ? manifest.state === "ok" && manifest.name ? manifest.name : t("streamProviderCustomUrl") : PRESET_NAMES[config.preset];
-    return /* @__PURE__ */ jsxs("div", { className: `rounded-xl border transition ${config.enabled ? "border-aurora-400/30 bg-aurora-400/5" : "border-white/10 bg-slate-900/60"}`, children: [
-      /* @__PURE__ */ jsxs(
-        "div",
-        {
-          className: "flex cursor-pointer items-center justify-between gap-3 px-4 py-3 select-none",
-          onClick: () => setExpanded((v) => !v),
-          children: [
-            /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-2", children: [
-              /* @__PURE__ */ jsx(
-                "input",
-                {
-                  type: "checkbox",
-                  checked: config.enabled,
-                  onChange: (e) => {
-                    e.stopPropagation();
-                    onChange({ ...config, enabled: e.target.checked });
-                  },
-                  onClick: (e) => e.stopPropagation(),
-                  className: "h-3.5 w-3.5 cursor-pointer rounded accent-aurora-400"
-                }
-              ),
-              /* @__PURE__ */ jsx("p", { className: `text-sm font-medium ${config.enabled ? "text-white" : "text-slate-500"}`, children: title }),
-              manifest.state === "ok" && manifest.version && /* @__PURE__ */ jsxs("span", { className: "text-[10px] text-slate-600", children: [
-                "v",
-                manifest.version
-              ] }),
-              /* @__PURE__ */ jsx(
-                "span",
-                {
-                  className: `h-1.5 w-1.5 flex-shrink-0 rounded-full ${!config.enabled ? "bg-red-500" : manifest.state === "loading" ? "bg-amber-400 animate-pulse" : manifest.state === "ok" ? "bg-emerald-400" : manifest.state === "error" ? "bg-red-400" : "bg-slate-700"}`,
-                  title: manifest.state === "error" ? manifest.error : manifest.state
-                }
-              ),
-              isCustom && /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-600", children: (() => {
-                const rawUrl = config.options.rawUrl;
-                if (!rawUrl) return t("streamProviderNoUrl");
-                try {
-                  return new URL(rawUrl.replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "")).hostname;
-                } catch {
-                  return rawUrl.slice(0, 40);
-                }
-              })() })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-1.5", onClick: (e) => e.stopPropagation(), children: [
-              /* @__PURE__ */ jsx(
-                "button",
-                {
-                  type: "button",
-                  onClick: onMoveUp,
-                  disabled: isFirst,
-                  className: "rounded-md border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 transition hover:border-white/20 hover:text-slate-300 disabled:opacity-30",
-                  children: "\u2191"
-                }
-              ),
-              /* @__PURE__ */ jsx(
-                "button",
-                {
-                  type: "button",
-                  onClick: onMoveDown,
-                  disabled: isLast,
-                  className: "rounded-md border border-white/10 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-500 transition hover:border-white/20 hover:text-slate-300 disabled:opacity-30",
-                  children: "\u2193"
-                }
-              ),
-              onRemove && /* @__PURE__ */ jsx(
-                "button",
-                {
-                  type: "button",
-                  onClick: onRemove,
-                  className: "text-[10px] uppercase tracking-[0.1em] text-red-400/70 transition hover:text-red-300",
-                  children: t("remove")
-                }
-              ),
-              /* @__PURE__ */ jsx("span", { className: "ml-1 text-[10px] text-slate-600", children: expanded ? "\u25B2" : "\u25BC" })
-            ] })
-          ]
-        }
-      ),
-      expanded && /* @__PURE__ */ jsxs("div", { className: "space-y-4 border-t border-white/5 px-4 pb-4 pt-4", children: [
-        config.preset === "torrentio" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsx(
-              DebridKeyField,
-              {
-                debridProvider: opts.debridProvider,
-                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
-              }
-            ),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.qualityFilter,
-                  onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t("streamProviderSelectQualities"),
-                  options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.languages,
-                  onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t("streamProviderSelectLanguages"),
-                  options: catalogs?.languages ?? TORRENTIO_LANGUAGE_OPTIONS
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderSources") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.providers,
-                  onChange: (v) => updateOptions({ providers: v }),
-                  placeholder: t("streamProviderSelectSources"),
-                  options: catalogs?.providers ?? TORRENTIO_PROVIDERS.map((p) => ({ id: p, label: p }))
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Sort" }),
-                /* @__PURE__ */ jsx(
-                  "select",
-                  {
-                    value: opts.sort,
-                    onChange: (event) => updateOptions({ sort: event.target.value }),
-                    className: "h-12 w-full rounded-[1.1rem] border border-white/10 bg-white/[0.03] px-4 text-sm text-white outline-none transition hover:border-white/20 focus:border-white/20",
-                    children: (catalogs?.sort ?? TORRENTIO_SORT_OPTIONS).map(({ id: id4, label }) => /* @__PURE__ */ jsx("option", { value: id4, className: "bg-slate-900 text-white", children: label }, id4))
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Max results (0 = no limit)" }),
-                /* @__PURE__ */ jsx(
-                  import_react64.Input,
-                  {
-                    type: "number",
-                    value: String(opts.limit),
-                    onValueChange: (v) => updateOptions({ limit: Math.max(0, Number(v) || 0) }),
-                    radius: "lg",
-                    classNames: heroInputClassNames
-                  }
-                )
-              ] })
-            ] })
-          ] });
-        })(),
-        config.preset === "torrentsdb" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsx(
-              DebridKeyField,
-              {
-                debridProvider: opts.debridProvider,
-                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
-              }
-            ),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.qualityFilter,
-                  onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t("streamProviderSelectQualities"),
-                  options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.languages,
-                  onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t("streamProviderSelectLanguages"),
-                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
-                }
-              )
-            ] })
-          ] });
-        })(),
-        config.preset === "comet" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsx(
-              DebridKeyField,
-              {
-                debridProvider: opts.debridProvider,
-                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
-              }
-            ),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.qualityFilter,
-                  onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t("streamProviderSelectQualities"),
-                  options: COMET_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.languages,
-                  onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t("streamProviderSelectLanguages"),
-                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderMaxResults") }),
-                /* @__PURE__ */ jsx(
-                  import_react64.Input,
-                  {
-                    type: "number",
-                    value: String(opts.maxResults),
-                    onValueChange: (v) => updateOptions({ maxResults: Number(v) || 5 }),
-                    radius: "lg",
-                    classNames: heroInputClassNames
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Max size (GB, 0 = no limit)" }),
-                /* @__PURE__ */ jsx(
-                  import_react64.Input,
-                  {
-                    type: "number",
-                    value: String(opts.maxSize),
-                    onValueChange: (v) => updateOptions({ maxSize: Math.max(0, Number(v) || 0) }),
-                    radius: "lg",
-                    classNames: heroInputClassNames
-                  }
-                )
-              ] })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3", children: [
-              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
-                /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsx("p", { className: "text-sm text-white", children: "Cached only" }),
-                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: "Only show cached (instant) results" })
-                ] }),
-                /* @__PURE__ */ jsx(
-                  import_react64.Switch,
-                  {
-                    isSelected: opts.cachedOnly,
-                    onValueChange: (v) => updateOptions({ cachedOnly: v }),
-                    size: "sm",
-                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
-                /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsx("p", { className: "text-sm text-white", children: "Mix cached & uncached" }),
-                  /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: "Sort cached and uncached results together" })
-                ] }),
-                /* @__PURE__ */ jsx(
-                  import_react64.Switch,
-                  {
-                    isSelected: opts.sortCachedUncachedTogether,
-                    onValueChange: (v) => updateOptions({ sortCachedUncachedTogether: v }),
-                    size: "sm",
-                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
-                  }
-                )
-              ] })
-            ] })
-          ] });
-        })(),
-        config.preset === "jackettio" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsx(
-              DebridKeyField,
-              {
-                debridProvider: opts.debridProvider,
-                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
-              }
-            ),
-            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: "Jackettio st\xF6djer Real-Debrid och AllDebrid \u2014 andra val faller tillbaka till Real-Debrid." }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.qualityFilter,
-                  onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t("streamProviderSelectQualities"),
-                  options: JACKETTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
-              /* @__PURE__ */ jsx(
-                MultiSelectDropdown,
-                {
-                  value: opts.languages,
-                  onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t("streamProviderSelectLanguages"),
-                  options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
-              /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Max torrents (0 = default 8)" }),
-                /* @__PURE__ */ jsx(
-                  import_react64.Input,
-                  {
-                    type: "number",
-                    value: String(opts.maxTorrents),
-                    onValueChange: (v) => updateOptions({ maxTorrents: Math.max(0, Number(v) || 0) }),
-                    radius: "lg",
-                    classNames: heroInputClassNames
-                  }
-                )
-              ] }),
-              /* @__PURE__ */ jsxs("div", { className: "flex items-end justify-between gap-3 pb-1", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: "Endast cachade" }),
-                /* @__PURE__ */ jsx(
-                  import_react64.Switch,
-                  {
-                    isSelected: opts.hideUncached,
-                    onValueChange: (v) => updateOptions({ hideUncached: v }),
-                    size: "sm",
-                    classNames: { wrapper: "bg-white/10 group-data-[selected=true]:bg-aurora-500/70" }
-                  }
-                )
-              ] })
-            ] })
-          ] });
-        })(),
-        config.preset === "aiostreams" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: t("aiostreamsHint") }),
-            /* @__PURE__ */ jsx(
-              "button",
-              {
-                type: "button",
-                onClick: () => void openExternalUrl("https://aiostreams-nightly.fortheweak.cloud/stremio/configure"),
-                className: "inline-flex rounded-full border border-white/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-slate-300 transition hover:border-white/30 hover:text-white",
-                children: t("aiostreamsOpenConfig")
-              }
-            ),
-            /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t("aiostreamsManifestLabel") }),
-              /* @__PURE__ */ jsx(
-                import_react64.Input,
-                {
-                  type: "text",
-                  value: opts.manifestUrl,
-                  onValueChange: (v) => updateOptions({ manifestUrl: v }),
-                  placeholder: "https://aiostreams-nightly.fortheweak.cloud/stremio/<uuid>/<l\xF6senord>/manifest.json",
-                  radius: "lg",
-                  classNames: heroInputClassNames
-                }
-              )
-            ] })
-          ] });
-        })(),
-        config.preset === "orion" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsx(SectionLabel, { children: "Orion API Key" }),
-              /* @__PURE__ */ jsx(
-                import_react64.Input,
-                {
-                  type: "password",
-                  value: opts.orionKey,
-                  onValueChange: (v) => updateOptions({ orionKey: v.trim() }),
-                  placeholder: "Klistra in din Orion API-nyckel",
-                  radius: "lg",
-                  classNames: heroInputClassNames
-                }
-              )
-            ] }),
-            /* @__PURE__ */ jsx(
-              DebridKeyField,
-              {
-                debridProvider: opts.debridProvider,
-                onProviderChange: (v) => updateOptions({ streamProvider: v, debridProvider: v })
-              }
-            )
-          ] });
-        })(),
-        config.preset === "custom" && (() => {
-          const opts = config.options;
-          return /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx(SectionLabel, { children: t("streamProviderManifestUrl") }),
-            /* @__PURE__ */ jsx(
-              import_react64.Input,
-              {
-                type: "text",
-                value: opts.rawUrl,
-                onValueChange: (v) => updateOptions({ rawUrl: v.trim() }),
-                placeholder: t("streamProviderManifestPlaceholder"),
-                radius: "lg",
-                classNames: heroInputClassNames
-              }
-            )
-          ] });
-        })(),
-        /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-3 border-t border-white/5 pt-3", children: [
-          /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-500", children: saveState === "saved" ? /* @__PURE__ */ jsx("span", { className: "text-emerald-300", children: "Sparat!" }) : saveState === "error" ? /* @__PURE__ */ jsx("span", { className: "text-rose-300", children: "Kunde inte spara" }) : hasPendingChanges ? /* @__PURE__ */ jsx("span", { children: "Osparade \xE4ndringar" }) : /* @__PURE__ */ jsx("span", { children: "\xA0" }) }),
-          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-            /* @__PURE__ */ jsx(
-              "button",
-              {
-                type: "button",
-                onClick: persistCard,
-                className: "rounded-md border border-white/10 px-3 py-1 text-[10px] uppercase tracking-[0.16em] text-slate-300 transition hover:border-white/20 hover:text-white",
-                children: saveState === "saved" ? "Sparat" : "Spara"
-              }
-            ),
-            /* @__PURE__ */ jsx(
-              "button",
-              {
-                type: "button",
-                onClick: refresh,
-                disabled: manifest.state === "loading",
-                className: "text-[10px] uppercase tracking-[0.1em] text-slate-500 transition hover:text-slate-300 disabled:opacity-40",
-                children: manifest.state === "loading" ? "..." : "Refresh manifest"
-              }
-            )
-          ] })
-        ] })
-      ] })
-    ] });
-  }
-  function defaultOptions(preset) {
-    switch (preset) {
-      case "torrentio":
-        return {
-          streamProvider: "realdebrid",
-          debridProvider: "realdebrid",
-          qualityFilter: [],
-          languages: [],
-          providers: [],
-          sort: "quality",
-          limit: 0
-        };
-      case "torrentsdb":
-        return {
-          streamProvider: "realdebrid",
-          debridProvider: "realdebrid",
-          qualityFilter: [],
-          languages: []
-        };
-      case "comet":
-        return {
-          streamProvider: "realdebrid",
-          debridProvider: "realdebrid",
-          languages: [],
-          qualityFilter: [],
-          maxResults: 5,
-          maxSize: 0,
-          cachedOnly: false,
-          sortCachedUncachedTogether: true
-        };
-      case "jackettio":
-        return {
-          streamProvider: "realdebrid",
-          debridProvider: "realdebrid",
-          languages: [],
-          qualityFilter: [],
-          maxTorrents: 0,
-          hideUncached: false
-        };
-      case "aiostreams":
-        return { manifestUrl: "" };
-      case "orion":
-        return {
-          orionKey: "",
-          streamProvider: "realdebrid",
-          debridProvider: "realdebrid"
-        };
-      case "custom":
-        return { rawUrl: "" };
-    }
-  }
-  var ADDABLE_PRESETS = [
-    "torrentio",
-    "comet",
-    "jackettio",
-    "aiostreams",
-    "orion",
-    "custom"
-  ];
-  function ScrapersSettingsSection() {
-    const { t } = useLang();
-    const [configs, setConfigsState] = useState(() => getStreamProviderConfigs());
-    const configsRef = useRef(configs);
-    configsRef.current = configs;
-    const addedPresets = new Set(configs.map((c) => c.preset));
-    const availableToAdd = ADDABLE_PRESETS.filter((preset) => !addedPresets.has(preset) || preset === "custom");
-    function saveConfigs(next2) {
-      configsRef.current = next2;
-      setConfigsState(next2);
-      setStreamProviderConfigs(next2);
-    }
-    function handleConfigChange(updated) {
-      saveConfigs(configsRef.current.map((c) => c.id === updated.id ? updated : c));
-    }
-    function handleRemove(id4) {
-      saveConfigs(configsRef.current.filter((c) => c.id !== id4));
-    }
-    function handleMoveByOffset(id4, offset) {
-      const current2 = configsRef.current;
-      const idx = current2.findIndex((c) => c.id === id4);
-      if (idx < 0) return;
-      const next2 = [...current2];
-      const target = idx + offset;
-      if (target < 0 || target >= next2.length) return;
-      [next2[idx], next2[target]] = [next2[target], next2[idx]];
-      saveConfigs(next2);
-    }
-    function handleAddPreset(preset) {
-      const id4 = preset === "custom" ? `custom-${Date.now()}` : preset;
-      const newConfig = { id: id4, preset, enabled: true, options: defaultOptions(preset) };
-      saveConfigs([...configsRef.current, newConfig]);
-    }
-    return /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
-      configs.map((config, idx) => /* @__PURE__ */ jsx(
-        ScraperCard,
-        {
-          config,
-          onChange: handleConfigChange,
-          onRemove: () => handleRemove(config.id),
-          onMoveUp: () => handleMoveByOffset(config.id, -1),
-          onMoveDown: () => handleMoveByOffset(config.id, 1),
-          isFirst: idx === 0,
-          isLast: idx === configs.length - 1
-        },
-        config.id
-      )),
-      availableToAdd.length > 0 && /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-2", children: availableToAdd.map((preset) => /* @__PURE__ */ jsx(
-        "button",
-        {
-          type: "button",
-          onClick: () => handleAddPreset(preset),
-          className: "rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs text-slate-500 transition hover:border-white/30 hover:text-slate-300",
-          children: preset === "torrentio" ? t("streamProviderAddStandard") : preset === "torrentsdb" ? t("streamProviderAddIndexed") : preset === "comet" ? t("streamProviderAddComet") : preset === "jackettio" ? t("streamProviderAddJackettio") : preset === "aiostreams" ? t("streamProviderAddAiostreams") : preset === "orion" ? "+ Orion" : t("streamProviderAddCustom")
-        },
-        preset
-      )) })
-    ] });
-  }
-
-  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
-  init_react_shim();
-  var import_react_dom2 = __toESM(require_react_dom());
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
   init_jsx_runtime_shim();
   function qualityRank(name) {
     const n = name.toLowerCase();
@@ -179473,7 +181616,7 @@ ${cue.text}`).join("\n\n")}
     return m2 ? `${m2[1]} ${m2[2].toUpperCase()}` : null;
   }
   var VIDEO_EXTS = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
-  function sleep4(ms) {
+  function sleep3(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
   function triggerBrowserDownload(url, filename) {
@@ -179495,7 +181638,7 @@ ${cue.text}`).join("\n\n")}
     if (!stream.infoHash) throw new Error(t("noPlayableStream"));
     const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${stream.infoHash}`);
     for (let attempt = 0; attempt < 60; attempt += 1) {
-      if (attempt > 0) await sleep4(3e3);
+      if (attempt > 0) await sleep3(3e3);
       const info = await getPlaybackSourceInfo(added.id);
       if (info.status === "waiting_files_selection") {
         await selectPlaybackFiles(info.id, "all");
@@ -179669,18 +181812,20 @@ ${cue.text}`).join("\n\n")}
     const btnBase = `flex h-9 items-center rounded-full border border-white/10 text-xs text-slate-300 transition hover:border-white/30 hover:text-white ${effectiveIconOnly ? "w-9 justify-center px-0" : "gap-1.5 px-3.5"} ${className ?? ""}`;
     if (state.type === "picking-stream") {
       const vw2 = typeof window !== "undefined" ? window.innerWidth : 1024;
+      const vh2 = typeof window !== "undefined" ? window.innerHeight : 768;
       const isNarrow = vw2 < 480;
       const ddWidth = Math.min(320, vw2 - 16);
       const ddRight = Math.min(Math.max(posRef.current.right, 8), Math.max(8, vw2 - ddWidth - 8));
-      const dropdownStyle = isNarrow ? { left: 8, right: 8, bottom: 8, width: "auto", zIndex: 9999 } : { top: posRef.current.top, right: ddRight, width: ddWidth, zIndex: 9999 };
+      const maxHeight = Math.max(160, vh2 - posRef.current.top - 8);
+      const dropdownStyle = isNarrow ? { left: 8, right: 8, top: posRef.current.top, width: "auto", maxHeight, zIndex: 9999 } : { top: posRef.current.top, right: ddRight, width: ddWidth, maxHeight, zIndex: 9999 };
       const dropdown = /* @__PURE__ */ jsxs(
         "div",
         {
-          className: "fixed rounded-2xl border border-white/10 bg-[#0d1220] p-2 shadow-2xl",
+          className: "fixed flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0d1220] p-2 shadow-2xl",
           style: dropdownStyle,
           children: [
             /* @__PURE__ */ jsx("p", { className: "mb-2 px-2 text-[10px] uppercase tracking-[0.2em] text-slate-500", children: t("pickStreamToDownload") }),
-            /* @__PURE__ */ jsx("div", { className: "max-h-72 overflow-y-auto space-y-1", children: state.streams.map((s, i) => /* @__PURE__ */ jsxs(
+            /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-y-auto space-y-1", children: state.streams.map((s, i) => /* @__PURE__ */ jsxs(
               "button",
               {
                 type: "button",
@@ -179787,7 +181932,7 @@ ${cue.text}`).join("\n\n")}
     );
   }
 
-  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/instant-play-provider.ts
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/instant-play-provider.ts
   var VIDEO_EXTS2 = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
   function toMediaItem(movie) {
     return {
@@ -179998,7 +182143,7 @@ ${cue.text}`).join("\n\n")}
     }
   };
 
-  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/stream-availability-provider.ts
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/stream-availability-provider.ts
   var movieInFlight = /* @__PURE__ */ new Map();
   var episodeInFlight = /* @__PURE__ */ new Map();
   function getMovieCacheKey(imdbId) {
@@ -180180,7 +182325,7 @@ ${cue.text}`).join("\n\n")}
     }
   };
 
-  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/playback-capability-provider.ts
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/playback-capability-provider.ts
   var streamsScraperPlaybackCapabilityProvider = {
     id: "streams-scraper-playback",
     pluginId: "com.lumio.streams-scraper",
@@ -180242,7 +182387,7 @@ ${cue.text}`).join("\n\n")}
     }
   };
 
-  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/streams-sidebar-section.tsx
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/streams-sidebar-section.tsx
   init_react_shim();
   var import_react_dom3 = __toESM(require_react_dom());
 
@@ -180261,6 +182406,15 @@ ${cue.text}`).join("\n\n")}
     if (normalized.includes("1080p")) return 3;
     if (normalized.includes("720p")) return 2;
     return 1;
+  }
+  function streamResolution(name) {
+    const normalized = name.toLowerCase();
+    if (normalized.includes("2160p") || /\b4k\b|\buhd\b/.test(normalized)) return 2160;
+    if (normalized.includes("1440p")) return 1440;
+    if (normalized.includes("1080p")) return 1080;
+    if (normalized.includes("720p")) return 720;
+    if (normalized.includes("480p")) return 480;
+    return null;
   }
   function escapeRegExp(value) {
     return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -180384,6 +182538,13 @@ ${cue.text}`).join("\n\n")}
         return sizeBytes == null || sizeBytes <= maxSizeBytes;
       });
     }
+    if (options.maxResolution) {
+      const cap = options.maxResolution;
+      candidates = candidates.filter((stream) => {
+        const resolution = streamResolution(`${stream.name} ${stream.title}`);
+        return resolution == null || resolution <= cap;
+      });
+    }
     if (preferredAudioLanguage) {
       const matches = candidates.filter((stream) => {
         const languages = getStreamAudioLanguages(stream);
@@ -180435,7 +182596,7 @@ ${cue.text}`).join("\n\n")}
     return [...pool].sort((a, b) => b.filesize - a.filesize)[0] ?? null;
   }
 
-  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/streams-sidebar-section.tsx
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/streams-sidebar-section.tsx
   init_jsx_runtime_shim();
   var LAST_PLAYED_KEY = "streams_last_played_v1";
   var LAST_PLAYED_MAX_ENTRIES = 120;
@@ -182759,7 +184920,7 @@ ${cue.text}`).join("\n\n")}
         ] })
       ] }),
       playerUrl && /* @__PURE__ */ jsx(
-        VideoPlayerModal,
+        VideoPlayerModal2,
         {
           url: playerUrl,
           filename: playerFilename,
@@ -182814,7 +184975,7 @@ ${cue.text}`).join("\n\n")}
           skipHomeKitOnOpen: playerSkipHomeKitOpen,
           autoFullscreen: playerAutoFullscreen,
           overlayContent: nextEpCard ? /* @__PURE__ */ jsx(
-            NextEpisodeCard,
+            NextEpisodeCard2,
             {
               seriesTitle: title,
               season: nextEpCard.season,
@@ -183037,7 +185198,169 @@ ${cue.text}`).join("\n\n")}
     ] });
   }
 
-  // ../../../Lumio-scraper/plugins/streams-scraper/runtime/index.ts
+  // lib/stream-provider-runtime/resume-resolver.ts
+  var VIDEO_EXTS4 = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
+  function isLikelySamplePath2(path) {
+    const value = path.toLowerCase();
+    return /\bsample\b/.test(value) || /\btrailer\b/.test(value) || /\bfeaturette\b/.test(value) || /\bextras?\b/.test(value);
+  }
+  function episodeTag(season, episode) {
+    if (season == null || episode == null) return null;
+    const s = String(season).padStart(2, "0");
+    const e = String(episode).padStart(2, "0");
+    return new RegExp(`s${s}\\s*e${e}|${season}x${e}`, "i");
+  }
+  async function resolveFreshLinkFromHash(infoHash, season, episode) {
+    const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${infoHash}`);
+    const epTag = episodeTag(season, episode);
+    const pollDelays = [0, 300, 400, 600, 900, 1200, 1500, 1500, 1500, 2e3, 2e3, 2e3];
+    for (const delay2 of pollDelays) {
+      if (delay2 > 0) await new Promise((resolve) => setTimeout(resolve, delay2));
+      const info = await getPlaybackSourceInfo(added.id);
+      if (info.status === "waiting_files_selection") {
+        const videoFiles = info.files.filter((file) => VIDEO_EXTS4.test(file.path));
+        const byEpisode = epTag ? videoFiles.filter((file) => epTag.test(file.path)) : [];
+        const preferred = (byEpisode.length > 0 ? byEpisode : videoFiles).filter((file) => !isLikelySamplePath2(file.path)).sort((left, right) => right.bytes - left.bytes);
+        const best = preferred[0] ?? videoFiles.sort((left, right) => right.bytes - left.bytes)[0];
+        if (!best) return null;
+        await selectPlaybackFiles(added.id, String(best.id));
+        continue;
+      }
+      if (info.status === "downloaded" && info.links.length > 0) {
+        const unrestricted = await Promise.all(
+          info.links.map(async (link) => {
+            try {
+              return await resolvePlaybackLink(link);
+            } catch {
+              return null;
+            }
+          })
+        );
+        const candidates = unrestricted.filter((entry) => Boolean(entry));
+        const byEpisode = epTag ? candidates.filter((entry) => epTag.test(entry.filename)) : [];
+        const pool = byEpisode.length > 0 ? byEpisode : candidates;
+        const preferred = pool.filter((entry) => VIDEO_EXTS4.test(entry.filename) && !isLikelySamplePath2(entry.filename)).sort((left, right) => right.filesize - left.filesize);
+        const videos = pool.filter((entry) => VIDEO_EXTS4.test(entry.filename)).sort((left, right) => right.filesize - left.filesize);
+        const chosen = preferred[0] ?? videos[0] ?? pool[0];
+        if (!chosen) return null;
+        return { url: chosen.download, filename: chosen.filename, refreshed: true };
+      }
+      if (["error", "magnet_error", "dead", "virus", "downloading"].includes(info.status)) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  // lib/stream-provider-runtime/playback/resolve-stream-url.ts
+  var RESOLVE_URL_RE = /\/resolve\/(torbox|realdebrid|alldebrid|easydebrid|offcloud)\/[^/]+\/([a-f0-9]{40})\//i;
+  var VIDEO_EXT_RE2 = /\.(mkv|mp4|avi|m4v|mov|webm|ts|m2ts|wmv|flv)$/i;
+  function sleep4(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+  async function resolvePlayableStreamUrl(url) {
+    const match = url.match(RESOLVE_URL_RE);
+    if (!match) return url;
+    const provider = match[1].toLowerCase();
+    if (provider !== getActiveStreamProvider().trim().toLowerCase()) return url;
+    const infoHash = match[2].toLowerCase();
+    const wantedName = decodeURIComponent(url.split("/").pop()?.split("?")[0] ?? "").trim().toLowerCase();
+    try {
+      const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${infoHash}`);
+      const pollSchedule = [250, 500, 1e3, 1500, 1500, 2e3, 2e3, 2500, 2500];
+      for (let attempt = 0; attempt < pollSchedule.length; attempt += 1) {
+        const info = await getPlaybackSourceInfo(added.id);
+        if (info.status === "waiting_files_selection") {
+          const videoFiles = info.files.filter((file) => VIDEO_EXT_RE2.test(file.path));
+          const byName = wantedName ? videoFiles.find((file) => file.path.trim().toLowerCase().endsWith(wantedName)) : void 0;
+          const best = byName ?? [...videoFiles].sort((a, b) => b.bytes - a.bytes)[0];
+          if (!best) return url;
+          await selectPlaybackFiles(added.id, String(best.id));
+        } else if (info.status === "downloaded") {
+          if (info.links.length === 0) return url;
+          const link = await resolvePlaybackLink(info.links[0]);
+          return link.download || url;
+        } else if (info.status === "error" || info.status === "magnet_error" || info.status === "dead" || info.status === "virus" || info.status === "downloading") {
+          return url;
+        }
+        await sleep4(pollSchedule[attempt]);
+      }
+    } catch {
+    }
+    return url;
+  }
+
+  // lib/stream-provider-runtime/debrid-settings-section.tsx
+  init_react_shim();
+  var import_react69 = __toESM(require_dist89());
+  init_jsx_runtime_shim();
+  var DEBRID_SERVICES = [
+    { id: "realdebrid", label: "RealDebrid", signupUrl: "https://real-debrid.com" },
+    { id: "alldebrid", label: "AllDebrid", signupUrl: "https://alldebrid.com" },
+    { id: "easydebrid", label: "EasyDebrid", signupUrl: "https://easydebrid.com" },
+    { id: "offcloud", label: "Offcloud", signupUrl: "https://offcloud.com" },
+    { id: "torbox", label: "TorBox", signupUrl: "https://torbox.app" },
+    { id: "putio", label: "Put.io", signupUrl: "https://put.io" }
+  ];
+  function DebridServiceRow({
+    service,
+    isLast
+  }) {
+    const { t } = useLang();
+    const [value, setValue] = useState(() => getStreamProviderAccessKey(service.id));
+    const hasKey = value.trim().length > 0;
+    return /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3 rounded-[14px] border border-[var(--tk-border)] bg-[var(--tk-surface1)] px-5 py-4 sm:flex-row sm:items-center", children: [
+      /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsx("p", { className: "text-[15px] font-medium leading-tight text-white", children: service.label }),
+          /* @__PURE__ */ jsx(
+            "span",
+            {
+              className: `rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.14em] ${hasKey ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-300" : "border-amber-400/40 bg-amber-400/10 text-amber-300"}`,
+              children: hasKey ? t("debridKeySaved") : t("debridNoKeyBadge")
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsx("p", { className: "mt-1 text-[13px] leading-snug text-slate-400", children: service.signupUrl.replace("https://", "") })
+      ] }),
+      /* @__PURE__ */ jsx("div", { className: "w-full sm:w-72", children: /* @__PURE__ */ jsx(
+        import_react69.Input,
+        {
+          type: "password",
+          value,
+          onValueChange: (next2) => {
+            setValue(next2);
+            setStreamProviderAccessKey(service.id, next2.trim());
+          },
+          placeholder: t("debridKeyPlaceholder"),
+          radius: "lg",
+          autoComplete: "off",
+          classNames: {
+            base: "w-full",
+            inputWrapper: "bg-white/[0.06] border border-white/10 !shadow-none rounded-xl hover:bg-white/[0.09] min-h-11",
+            input: "text-sm text-slate-50 placeholder:text-slate-500"
+          }
+        }
+      ) })
+    ] });
+  }
+  function DebridSettingsSection() {
+    const { t } = useLang();
+    return /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
+      /* @__PURE__ */ jsx("p", { className: "px-1 text-sm leading-relaxed text-slate-400", children: t("debridSectionDesc") }),
+      /* @__PURE__ */ jsx("div", { className: "overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.025]", children: DEBRID_SERVICES.map((service, index3) => /* @__PURE__ */ jsx(
+        DebridServiceRow,
+        {
+          service,
+          isLast: index3 === DEBRID_SERVICES.length - 1
+        },
+        service.id
+      )) }),
+      /* @__PURE__ */ jsx("p", { className: "px-1 text-[12.5px] leading-relaxed text-slate-500", children: t("debridPerScraperHint") })
+    ] });
+  }
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/index.ts
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
@@ -183058,6 +185381,19 @@ ${cue.text}`).join("\n\n")}
       ctx.registerPlaybackCapabilityProvider(streamsScraperPlaybackCapabilityProvider);
       ctx.registerMediaStreamAvailabilityProvider(streamsScraperMediaStreamAvailabilityProvider);
       ctx.registerInstantPlayProvider(streamsScraperInstantPlayProvider);
+      ctx.registerResumeRefreshProvider?.({
+        id: "streams-scraper-resume",
+        pluginId: "com.lumio.streams-scraper",
+        refresh: (entry) => entry.sourceId ? resolveFreshLinkFromHash(entry.sourceId, entry.season, entry.episode) : Promise.resolve(null)
+      });
+      ctx.registerPlayableUrlRewriter?.({
+        id: "streams-scraper-url-rewrite",
+        pluginId: "com.lumio.streams-scraper",
+        rewrite: async (url) => {
+          const rewritten = await resolvePlayableStreamUrl(url);
+          return rewritten === url ? null : rewritten;
+        }
+      });
       ctx.registerMediaDownloadAction({
         id: "streams-scraper-download",
         pluginId: "com.lumio.streams-scraper",
@@ -183069,10 +185405,15 @@ ${cue.text}`).join("\n\n")}
         label: { en: "Scrapers", sv: "Scrapers" },
         Section: ScrapersSettingsSection
       });
+      ctx.registerSettingsSection({
+        id: "debrid",
+        label: { en: "Debrid", sv: "Debrid" },
+        Section: DebridSettingsSection
+      });
     }
   };
 
-  // ../../../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-1wQrP1/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-TfBE1J/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

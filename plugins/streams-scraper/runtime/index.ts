@@ -9,6 +9,9 @@ import { streamsScraperInstantPlayProvider } from './instant-play-provider'
 import { streamsScraperPlaybackCapabilityProvider } from './playback-capability-provider'
 import { streamsScraperMediaStreamAvailabilityProvider } from './stream-availability-provider'
 import { StreamsSidebarSection } from './streams-sidebar-section'
+import { resolveFreshLinkFromHash } from '@/lib/stream-provider-runtime/resume-resolver'
+import { resolvePlayableStreamUrl } from '@/lib/stream-provider-runtime/playback/resolve-stream-url'
+import { DebridSettingsSection } from '@/lib/stream-provider-runtime/debrid-settings-section'
 
 export const StreamsScraperPlugin: LumioPlugin = {
   id: 'com.lumio.streams-scraper',
@@ -31,6 +34,25 @@ export const StreamsScraperPlugin: LumioPlugin = {
     ctx.registerPlaybackCapabilityProvider(streamsScraperPlaybackCapabilityProvider)
     ctx.registerMediaStreamAvailabilityProvider(streamsScraperMediaStreamAvailabilityProvider)
     ctx.registerInstantPlayProvider(streamsScraperInstantPlayProvider)
+    // Optional-chained: these context methods only exist on hosts that ship
+    // the neutral resume/rewrite seams — the plugin must still load on older
+    // hosts where they are absent.
+    ctx.registerResumeRefreshProvider?.({
+      id: 'streams-scraper-resume',
+      pluginId: 'com.lumio.streams-scraper',
+      refresh: (entry) =>
+        entry.sourceId
+          ? resolveFreshLinkFromHash(entry.sourceId, entry.season, entry.episode)
+          : Promise.resolve(null),
+    })
+    ctx.registerPlayableUrlRewriter?.({
+      id: 'streams-scraper-url-rewrite',
+      pluginId: 'com.lumio.streams-scraper',
+      rewrite: async (url) => {
+        const rewritten = await resolvePlayableStreamUrl(url)
+        return rewritten === url ? null : rewritten
+      },
+    })
     ctx.registerMediaDownloadAction({
       id: 'streams-scraper-download',
       pluginId: 'com.lumio.streams-scraper',
@@ -42,6 +64,11 @@ export const StreamsScraperPlugin: LumioPlugin = {
       id: 'scrapers',
       label: { en: 'Scrapers', sv: 'Scrapers' },
       Section: ScrapersSettingsSection,
+    })
+    ctx.registerSettingsSection({
+      id: 'debrid',
+      label: { en: 'Debrid', sv: 'Debrid' },
+      Section: DebridSettingsSection,
     })
   },
 }

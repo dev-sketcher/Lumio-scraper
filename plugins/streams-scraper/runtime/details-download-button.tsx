@@ -273,25 +273,29 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
 
   if (state.type === 'picking-stream') {
     // The dropdown is portaled to <body> so `position: fixed` is viewport-relative
-    // regardless of any transformed ancestor on the details panel. On narrow
-    // phones, anchoring a 320px panel at the trigger's right edge could still run
-    // off the left edge, so switch to a full-width bottom sheet there (left/right
-    // pinned to 8px, no dependency on the trigger position). Desktop keeps the
-    // anchored dropdown, clamped so its left edge always stays ≥ 8px.
+    // regardless of any transformed ancestor on the details panel. It always
+    // hangs from the trigger's bottom edge so the list reads as belonging to the
+    // button that opened it. On narrow phones a 320px panel anchored at the
+    // trigger's right edge could run off the left edge, so it spans the viewport
+    // (left/right pinned to 8px) while keeping the trigger's vertical anchor;
+    // desktop keeps the anchored width, clamped so its left edge stays ≥ 8px.
     const vw = typeof window !== 'undefined' ? window.innerWidth : 1024
+    const vh = typeof window !== 'undefined' ? window.innerHeight : 768
     const isNarrow = vw < 480
     const ddWidth = Math.min(320, vw - 16)
     const ddRight = Math.min(Math.max(posRef.current.right, 8), Math.max(8, vw - ddWidth - 8))
+    // Never let the panel run past the bottom of the viewport.
+    const maxHeight = Math.max(160, vh - posRef.current.top - 8)
     const dropdownStyle: CSSProperties = isNarrow
-      ? { left: 8, right: 8, bottom: 8, width: 'auto', zIndex: 9999 }
-      : { top: posRef.current.top, right: ddRight, width: ddWidth, zIndex: 9999 }
+      ? { left: 8, right: 8, top: posRef.current.top, width: 'auto', maxHeight, zIndex: 9999 }
+      : { top: posRef.current.top, right: ddRight, width: ddWidth, maxHeight, zIndex: 9999 }
     const dropdown = (
       <div
-        className="fixed rounded-2xl border border-white/10 bg-[#0d1220] p-2 shadow-2xl"
+        className="fixed flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0d1220] p-2 shadow-2xl"
         style={dropdownStyle}
       >
         <p className="mb-2 px-2 text-[10px] uppercase tracking-[0.2em] text-slate-500">{t('pickStreamToDownload')}</p>
-        <div className="max-h-72 overflow-y-auto space-y-1">
+        <div className="min-h-0 flex-1 overflow-y-auto space-y-1">
           {state.streams.map((s, i) => (
             <button
               key={`${s.infoHash || s.directUrl || ''}-${i}`}
