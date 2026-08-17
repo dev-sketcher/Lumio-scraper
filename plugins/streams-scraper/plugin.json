@@ -21,5 +21,6 @@
     "playback-capability",
     "instant-play",
     "media-stream-availability"
-  ]
+  ],
+  "runtimeBundleUrl": "https://github.com/dev-sketcher/Lumio-scraper/releases/download/plugin-v1.0.99/runtime.js"
 }

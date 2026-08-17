@@ -23,7 +23,8 @@
       "changelogPath": "plugins/streams-scraper/CHANGELOG.md",
       "official": false,
       "bundled": false,
-      "removable": true
+      "removable": true,
+      "runtimeBundleUrl": "https://github.com/dev-sketcher/Lumio-scraper/releases/download/plugin-v1.0.99/runtime.js"
     }
   ]
 }
