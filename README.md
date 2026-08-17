@@ -14,8 +14,26 @@ the app.
 - focused on scraper-oriented and streaming-related plugins
 - works with Lumio's GitHub source flow
 - works with ZIP import and release assets
-- publishes metadata and docs now, with runtime bundles added plugin-by-plugin later
 - currently includes `streams-scraper`
+
+## Reference implementation
+
+`streams-scraper` owns the entire stream/scraper engine — the Lumio app core
+contains none of it. It is the reference for how a source plugin uses the
+Lumio plugin contracts:
+
+- registers the **Scrapers** and **Debrid** settings sections that Lumio slots
+  into Settings → Sources & catalogs (claimed sections; the tabs take their
+  labels from the plugin and disappear when the plugin is absent)
+- registers the stream sidebar, availability checks, playback capabilities,
+  instant play (Zapp), continue-watching refresh, playable-URL rewriting and
+  request-config seams
+- ships every playback provider inside the plugin bundle
+- keeps all of its UI strings plugin-local (`runtime/local-strings.ts`)
+
+The full contract reference for plugin authors lives in the official plugin
+repository: `docs/plugin-contracts.md` in
+[lumio-official-plugins](https://github.com/lumiomedia/lumio-official-plugins).
 
 ## Quick start
 
