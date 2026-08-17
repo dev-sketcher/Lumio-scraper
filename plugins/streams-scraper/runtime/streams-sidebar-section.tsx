@@ -322,6 +322,11 @@ export function StreamsSidebarSection({
   // Playback state machine
   const [step, setStep] = useState<PlayStep>({ type: 'idle' })
   const [playerUrl, setPlayerUrl] = useState<string | null>(null)
+  // Torrent hash of the stream behind the current player session. Threaded to
+  // the player so progress entries carry it — resume can then re-resolve a
+  // fresh debrid link when the cached URL has expired.
+  const [playerInfoHash, setPlayerInfoHash] = useState<string | null>(null)
+  const playAttemptInfoHashRef = useRef<string | null>(null)
   const [playerFilename, setPlayerFilename] = useState<string | undefined>(undefined)
   const [playerTitle, setPlayerTitle] = useState('')
   const [playerSeason, setPlayerSeason] = useState<number | undefined>(undefined)
@@ -1619,6 +1624,7 @@ function scraperInCooldown(configId: string): boolean {
   async function handlePlayStream(stream: StreamResult) {
     const attemptId = playAttemptRef.current + 1
     playAttemptRef.current = attemptId
+    playAttemptInfoHashRef.current = stream.infoHash ?? null
     sendTelemetry('playback.attempt', 'start', 'play stream requested', {
       mediaType,
       title,
@@ -1708,6 +1714,7 @@ function scraperInCooldown(configId: string): boolean {
         episode: selectedEpisode?.episode_number,
         initialTime: undefined,
         forceProxy: false,
+        infoHash: selectedStream.infoHash ?? null,
       }, attemptId)
       return
     }
@@ -1730,6 +1737,7 @@ function scraperInCooldown(configId: string): boolean {
   function openDirectUrl(url: string) {
     const attemptId = playAttemptRef.current + 1
     playAttemptRef.current = attemptId
+    playAttemptInfoHashRef.current = null
     const urlFilename = url.split('/').pop()?.split('?')[0]
     beginPlayerSession({
       url,
@@ -1756,6 +1764,7 @@ function scraperInCooldown(configId: string): boolean {
       try {
         const resolved = await resolveAutoplayCandidate(candidate)
         if (resolved) {
+          playAttemptInfoHashRef.current = candidate.infoHash ?? null
           beginPlayerSession({
             url: resolved.url,
             filename: resolved.filename,
@@ -1924,6 +1933,7 @@ function scraperInCooldown(configId: string): boolean {
           continue
         }
 
+        playAttemptInfoHashRef.current = candidate.infoHash ?? null
         firstPlaySeenRef.current = false
         autoplayLoadFailedRef.current = false
         setPlayerHideStartSplash(true)
@@ -2144,6 +2154,7 @@ function scraperInCooldown(configId: string): boolean {
     playAttemptRef.current = attemptId
     const value = manualInput.trim()
     if (!value) return
+    playAttemptInfoHashRef.current = /btih:([a-fA-F0-9]{40})/.exec(value)?.[1]?.toLowerCase() ?? null
     setStep({ type: 'processing', message: isMagnetPlaybackSource(value) ? 'Adding magnet…' : 'Unrestricting link…' })
     try {
       if (isMagnetPlaybackSource(value)) {
@@ -2168,6 +2179,7 @@ function scraperInCooldown(configId: string): boolean {
     episode?: number
     initialTime?: number
     forceProxy?: boolean
+    infoHash?: string | null
   }, attemptId?: number) {
     if (!isPlayAttemptActive(attemptId)) return
     // Never open a player session without a resolved source. Opening an empty
@@ -2212,6 +2224,7 @@ function scraperInCooldown(configId: string): boolean {
     setPlayerForceProxy(config.forceProxy ?? false)
     setPlayerHideStartSplash(true)
     setPlayerSplashFading(false)
+    setPlayerInfoHash(config.infoHash !== undefined ? config.infoHash : playAttemptInfoHashRef.current)
     setPlayerUrl(config.url)
     setStep({ type: 'idle' })
   }
@@ -3060,6 +3073,7 @@ function scraperInCooldown(configId: string): boolean {
           url={playerUrl}
           filename={playerFilename}
           title={playerTitle}
+          sourceInfoHash={playerInfoHash ?? undefined}
           onClose={handlePlayerClose}
           onLoadFailed={() => {
             // mpv rejected the source before first frame. While the autoplay

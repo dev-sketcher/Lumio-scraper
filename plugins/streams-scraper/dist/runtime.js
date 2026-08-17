@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DRCRgf/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QIDBUC/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DRCRgf/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QIDBUC/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DRCRgf/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QIDBUC/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DRCRgf/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QIDBUC/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -166143,7 +166143,7 @@
     StreamsScraperPlugin: () => StreamsScraperPlugin
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DRCRgf/profile-storage-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QIDBUC/profile-storage-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
   var getActiveProfileId = () => sdk.getActiveProfileId();
   var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
@@ -167115,6 +167115,9 @@
       homeRowLiveTv: "Live TV",
       homeRowTraktCollection: "Watchlist",
       homeRowCustom1: "Custom section 1",
+      homeRowCustomN: "Custom section {n}",
+      hpAddCustomRow: "Add row",
+      hpRemoveCustomRow: "Remove row",
       homeRowCustom2: "Custom section 2",
       homeRowCustom3: "Custom section 3",
       homeSearchTitle: "Homepage search",
@@ -167320,6 +167323,10 @@
       homeSourceStreamingMovies: "Trending movies (streaming)",
       homeSourceStreamingSeries: "Trending series (streaming)",
       homeSourceAiringTodaySeries: "Airing today",
+      homeSourceTraktRecommendations: "Recommended for you",
+      homeSourceFilmCollections: "Film collections",
+      collectionsBackLabel: "Collections",
+      collectionsHeroActive: "Featured on Home",
       homeAiringTodaySubtitle: "New episodes today on your streaming services",
       airingTodayProvidersLabel: "Streaming services",
       homeLayout: "Layout",
@@ -168978,6 +168985,9 @@
       homeRowLiveTv: "Live TV",
       homeRowTraktCollection: "Watchlist",
       homeRowCustom1: "Egen rad 1",
+      homeRowCustomN: "Egen rad {n}",
+      hpAddCustomRow: "L\xE4gg till rad",
+      hpRemoveCustomRow: "Ta bort rad",
       homeRowCustom2: "Egen rad 2",
       homeRowCustom3: "Egen rad 3",
       homeSearchTitle: "S\xF6kf\xE4lt p\xE5 startsidan",
@@ -169183,6 +169193,10 @@
       homeSourceStreamingMovies: "Trendande filmer (streaming)",
       homeSourceStreamingSeries: "Trendande serier (streaming)",
       homeSourceAiringTodaySeries: "Visas idag",
+      homeSourceTraktRecommendations: "Rekommenderat f\xF6r dig",
+      homeSourceFilmCollections: "Filmserier",
+      collectionsBackLabel: "Filmserier",
+      collectionsHeroActive: "Visas p\xE5 startsidan",
       homeAiringTodaySubtitle: "Nya avsnitt idag p\xE5 dina streamingtj\xE4nster",
       airingTodayProvidersLabel: "Streamingtj\xE4nster",
       homeLayout: "Layout",
@@ -172823,7 +172837,7 @@
   var import_react58 = __toESM(require_dist89());
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DRCRgf/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QIDBUC/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/utils/scroll-lock.ts
@@ -172893,7 +172907,7 @@
     return FIXED_NEXT_EP_PRELOAD_LEAD_SECONDS;
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DRCRgf/video-player-modal-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QIDBUC/video-player-modal-shim.ts
   init_react_shim();
 
   // components/player/video-player-modal.tsx
@@ -179993,13 +180007,13 @@ ${cue.text}`).join("\n\n")}
     return portalEl ? (0, import_react_dom.createPortal)(content, portalEl) : content;
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DRCRgf/video-player-modal-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QIDBUC/video-player-modal-shim.ts
   function VideoPlayerModal2(props) {
     const hostComponent = globalThis.__lumioPluginRuntime?.components?.VideoPlayerModal;
     return createElement(hostComponent ?? VideoPlayerModal, props);
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DRCRgf/next-episode-card-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QIDBUC/next-episode-card-shim.ts
   init_react_shim();
 
   // components/player/next-episode-card.tsx
@@ -180222,7 +180236,7 @@ ${cue.text}`).join("\n\n")}
     );
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DRCRgf/next-episode-card-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QIDBUC/next-episode-card-shim.ts
   function NextEpisodeCard2(props) {
     const hostComponent = globalThis.__lumioPluginRuntime?.components?.NextEpisodeCard;
     return createElement(hostComponent ?? NextEpisodeCard, props);
@@ -182250,7 +182264,8 @@ ${cue.text}`).join("\n\n")}
             return {
               mediaItem: fallbackItem,
               streamUrl: directUrl,
-              forceProxy: true
+              forceProxy: true,
+              infoHash: infoHash ?? null
             };
           }
           if (!infoHash) continue;
@@ -182260,7 +182275,8 @@ ${cue.text}`).join("\n\n")}
               mediaItem: fallbackItem,
               streamUrl: resolved.url,
               filename: resolved.filename,
-              forceProxy: true
+              forceProxy: true,
+              infoHash
             };
           }
         } catch {
@@ -182878,6 +182894,8 @@ ${cue.text}`).join("\n\n")}
     const [showManual, setShowManual] = useState(false);
     const [step, setStep] = useState({ type: "idle" });
     const [playerUrl, setPlayerUrl] = useState(null);
+    const [playerInfoHash, setPlayerInfoHash] = useState(null);
+    const playAttemptInfoHashRef = useRef(null);
     const [playerFilename, setPlayerFilename] = useState(void 0);
     const [playerTitle, setPlayerTitle] = useState("");
     const [playerSeason, setPlayerSeason] = useState(void 0);
@@ -183885,6 +183903,7 @@ ${cue.text}`).join("\n\n")}
     async function handlePlayStream(stream) {
       const attemptId = playAttemptRef.current + 1;
       playAttemptRef.current = attemptId;
+      playAttemptInfoHashRef.current = stream.infoHash ?? null;
       sendTelemetry("playback.attempt", "start", "play stream requested", {
         mediaType,
         title,
@@ -183941,7 +183960,8 @@ ${cue.text}`).join("\n\n")}
           season: selectedSeason?.season_number,
           episode: selectedEpisode?.episode_number,
           initialTime: void 0,
-          forceProxy: false
+          forceProxy: false,
+          infoHash: selectedStream.infoHash ?? null
         }, attemptId);
         return;
       }
@@ -183964,6 +183984,7 @@ ${cue.text}`).join("\n\n")}
     function openDirectUrl(url) {
       const attemptId = playAttemptRef.current + 1;
       playAttemptRef.current = attemptId;
+      playAttemptInfoHashRef.current = null;
       const urlFilename = url.split("/").pop()?.split("?")[0];
       beginPlayerSession({
         url,
@@ -183986,6 +184007,7 @@ ${cue.text}`).join("\n\n")}
         try {
           const resolved = await resolveAutoplayCandidate(candidate);
           if (resolved) {
+            playAttemptInfoHashRef.current = candidate.infoHash ?? null;
             beginPlayerSession({
               url: resolved.url,
               filename: resolved.filename,
@@ -184106,6 +184128,7 @@ ${cue.text}`).join("\n\n")}
             });
             continue;
           }
+          playAttemptInfoHashRef.current = candidate.infoHash ?? null;
           firstPlaySeenRef.current = false;
           autoplayLoadFailedRef.current = false;
           setPlayerHideStartSplash(true);
@@ -184333,6 +184356,7 @@ ${cue.text}`).join("\n\n")}
       playAttemptRef.current = attemptId;
       const value = manualInput.trim();
       if (!value) return;
+      playAttemptInfoHashRef.current = /btih:([a-fA-F0-9]{40})/.exec(value)?.[1]?.toLowerCase() ?? null;
       setStep({ type: "processing", message: isMagnetPlaybackSource(value) ? "Adding magnet\u2026" : "Unrestricting link\u2026" });
       try {
         if (isMagnetPlaybackSource(value)) {
@@ -184384,6 +184408,7 @@ ${cue.text}`).join("\n\n")}
       setPlayerForceProxy(config.forceProxy ?? false);
       setPlayerHideStartSplash(true);
       setPlayerSplashFading(false);
+      setPlayerInfoHash(config.infoHash !== void 0 ? config.infoHash : playAttemptInfoHashRef.current);
       setPlayerUrl(config.url);
       setStep({ type: "idle" });
     }
@@ -185055,6 +185080,7 @@ ${cue.text}`).join("\n\n")}
           url: playerUrl,
           filename: playerFilename,
           title: playerTitle,
+          sourceInfoHash: playerInfoHash ?? void 0,
           onClose: handlePlayerClose,
           onLoadFailed: () => {
             if (!autoplayLoopActiveRef.current) {
@@ -185486,7 +185512,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.98",
+    version: "1.0.99",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
@@ -185540,7 +185566,7 @@ ${cue.text}`).join("\n\n")}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-DRCRgf/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-QIDBUC/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

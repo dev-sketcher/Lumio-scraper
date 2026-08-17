@@ -236,6 +236,7 @@ export const streamsScraperInstantPlayProvider: InstantPlayProvider = {
             mediaItem: fallbackItem,
             streamUrl: directUrl,
             forceProxy: true,
+            infoHash: infoHash ?? null,
           }
         }
         if (!infoHash) continue
@@ -247,6 +248,7 @@ export const streamsScraperInstantPlayProvider: InstantPlayProvider = {
             streamUrl: resolved.url,
             filename: resolved.filename,
             forceProxy: true,
+            infoHash,
           }
         }
       } catch {

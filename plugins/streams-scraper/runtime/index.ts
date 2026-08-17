@@ -17,7 +17,7 @@ import { DebridSettingsSection } from './debrid-settings-section'
 export const StreamsScraperPlugin: LumioPlugin = {
   id: 'com.lumio.streams-scraper',
   name: { en: 'Stream Scraper', sv: 'Stream Scraper' },
-  version: '1.0.98',
+  version: '1.0.99',
   description: {
     en: 'Adds streaming sources via multiple scrapers and plugin-managed playback.',
     sv: 'Lägger till strömningskällor via flera scrapers och pluginhanterad uppspelning.',
