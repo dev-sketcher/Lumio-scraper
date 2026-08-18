@@ -59,6 +59,9 @@ import {
   buildAutoplayCandidates,
   cachedFromStreamLabel,
   filterVisibleStreams,
+  setDeviceLacksDolbyVision as setDeviceLacksDolbyVisionCache,
+  setDeviceLacksLosslessAudio,
+  streamUnsupportedOnDevice,
   getPreferredTorrentFileIds,
   getStreamSizeBytes,
   looksLikeSampleOrExtra,
@@ -305,6 +308,35 @@ export function StreamsSidebarSection({
   // Streams
   const [streams, setStreams] = useState<StreamResult[] | null>(null)
   const [loadingStreams, setLoadingStreams] = useState(false)
+  // Enheten saknar DV-avkodare (äldre telefoner/headset): DV-strömmar sorteras
+  // sist och märks. Läses en gång från värdappens kapabilitets-endpoint;
+  // false på plattformar utan den (desktop klarar allt via mpv).
+  const [deviceLacksDolbyVision, setDeviceLacksDolbyVision] = useState(false)
+  useEffect(() => {
+    let cancelled = false
+    void (async () => {
+      try {
+        const response = await fetch('/api/native-player', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ cmd: 'getCapabilities' }),
+        })
+        if (!response.ok) return
+        const caps = (await response.json()) as
+          { dolbyVision?: boolean; trueHd?: boolean; dts?: boolean } | null
+        if (cancelled || !caps) return
+        if (caps.dolbyVision === false) setDeviceLacksDolbyVisionCache(true)
+        if (caps.trueHd === false && caps.dts === false) setDeviceLacksLosslessAudio(true)
+        // Flaggan styr sortering + märkning i listan.
+        if (caps.dolbyVision === false || (caps.trueHd === false && caps.dts === false)) {
+          setDeviceLacksDolbyVision(true)
+        }
+      } catch {
+        // Ingen brygga (desktop/webbklient) — behåll false.
+      }
+    })()
+    return () => { cancelled = true }
+  }, [])
   const [streamsError, setStreamsError] = useState<string | null>(null)
 
   // Tell the host how many streams the settled search found (0 = none) so it
@@ -1095,6 +1127,12 @@ function scraperInCooldown(configId: string): boolean {
 
       const sortByPriority = (items: StreamResult[]): StreamResult[] =>
         [...items].sort((a, b) => {
+          // Format enheten inte kan avkoda (DV utan DV-stöd) sist — de är
+          // dömda att misslyckas och ska inte ligga där användaren klickar
+          // först. De filtreras aldrig bort, bara nedprioriteras + märks.
+          const aBad = deviceLacksDolbyVision && streamUnsupportedOnDevice(a)
+          const bBad = deviceLacksDolbyVision && streamUnsupportedOnDevice(b)
+          if (aBad !== bBad) return aBad ? 1 : -1
           if (a.cached !== b.cached) return a.cached ? -1 : 1
           if (Boolean(a.downloadable) !== Boolean(b.downloadable)) return a.downloadable ? -1 : 1
           return qualityRank(b.name) - qualityRank(a.name)
@@ -3006,7 +3044,7 @@ function scraperInCooldown(configId: string): boolean {
             <>
               {filtered.length === 0
                 ? <p className="text-sm text-slate-400">{t('allFiltered')}</p>
-                : <StreamList streams={filtered} onPlay={handlePlayStream} />
+                : <StreamList deviceLacksDolbyVision={deviceLacksDolbyVision} streams={filtered} onPlay={handlePlayStream} />
               }
               {hiddenCount > 0 && (
                 <p className="text-xs text-slate-600">{hiddenCount} stream{hiddenCount > 1 ? 's' : ''} hidden by quality filters</p>
@@ -3177,19 +3215,32 @@ function scraperInCooldown(configId: string): boolean {
 
 // ---- sub-components ----
 
-function StreamList({ streams, onPlay }: { streams: StreamResult[]; onPlay: (s: StreamResult) => void }) {
-  const cached = streams.filter((s) => s.cached)
-  const uncached = streams.filter((s) => !s.cached)
+function StreamList({
+  streams,
+  onPlay,
+  deviceLacksDolbyVision = false,
+}: {
+  streams: StreamResult[]
+  onPlay: (s: StreamResult) => void
+  deviceLacksDolbyVision?: boolean
+}) {
+  const unsupported = (s: StreamResult) => deviceLacksDolbyVision && streamUnsupportedOnDevice(s)
+  // Ospelbara sist inom varje grupp — annars kan en cachad DV-ström ligga
+  // överst bland de cachade och bli det första man klickar.
+  const byPlayability = (items: StreamResult[]) =>
+    [...items].sort((a, b) => Number(unsupported(a)) - Number(unsupported(b)))
+  const cached = byPlayability(streams.filter((s) => s.cached))
+  const uncached = byPlayability(streams.filter((s) => !s.cached))
   return (
     <div className="space-y-2">
       {cached.length > 0 && (
         <>
-          {cached.map((s, i) => <StreamRow key={`${s.infoHash}-${i}`} stream={s} onPlay={onPlay} />)}
+          {cached.map((s, i) => <StreamRow key={`${s.infoHash}-${i}`} stream={s} onPlay={onPlay} unsupported={unsupported(s)} />)}
         </>
       )}
       {uncached.length > 0 && (
         <>
-          {uncached.map((s, i) => <StreamRow key={`${s.infoHash}-${i}`} stream={s} onPlay={onPlay} />)}
+          {uncached.map((s, i) => <StreamRow key={`${s.infoHash}-${i}`} stream={s} onPlay={onPlay} unsupported={unsupported(s)} />)}
         </>
       )}
     </div>
@@ -3245,18 +3296,35 @@ function streamHttpUrl(stream: StreamResult): string | null {
   return null
 }
 
-function StreamRow({ stream, onPlay }: { stream: StreamResult; onPlay: (s: StreamResult) => void }) {
+function StreamRow({ stream, onPlay, unsupported = false }: { stream: StreamResult; onPlay: (s: StreamResult) => void; unsupported?: boolean }) {
   const { t } = useLang()
   const [copied, setCopied] = useState(false)
   const url = streamHttpUrl(stream)
+  const sizeBytes = getStreamSizeBytes(stream)
+  const sizeLabel = sizeBytes && sizeBytes > 0
+    ? sizeBytes >= 1024 ** 3
+      ? `${(sizeBytes / 1024 ** 3).toFixed(sizeBytes >= 10 * 1024 ** 3 ? 1 : 2)} GB`
+      : `${Math.round(sizeBytes / 1024 ** 2)} MB`
+    : null
   return (
     <div className="rounded-xl border border-white/10 bg-slate-900 px-4 py-3 space-y-2">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 min-w-0">
-          <span className="text-sm font-medium text-white">{stream.name}</span>
+      <div className="flex items-start justify-between gap-2">
+        {/* flex-wrap + min-w-0: med tre taggar (källa/cachad/stöds ej) tog
+            raden mer plats än bredden och den externa spelarikonen la sig
+            över "cachad"-taggen. */}
+        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
+          <span className="min-w-0 break-words text-sm font-medium text-white">{stream.name}</span>
           {stream.source ? (
             <span className="max-w-[120px] truncate rounded-full border border-white/10 bg-white/5 px-1.5 py-0.5 text-[8px] uppercase tracking-[0.14em] text-slate-300">
               {stream.source}
+            </span>
+          ) : null}
+          {unsupported ? (
+            <span
+              className="flex-shrink-0 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-amber-300"
+              title={t('streamDeviceUnsupportedHint')}
+            >
+              {t('streamDeviceUnsupported')}
             </span>
           ) : null}
           {stream.cached ? (
@@ -3336,7 +3404,17 @@ function StreamRow({ stream, onPlay }: { stream: StreamResult; onPlay: (s: Strea
           {t('play')}
         </button>
       </div>
-      <p className="text-xs text-slate-400 break-all">{stream.title}</p>
+      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+        {/* Storleken beräknas från cachade filer eller släppnamnet, så den
+            visas oavsett scraper/debrid — förut syntes den bara i fil- och
+            länklistorna längre ner. */}
+        {sizeLabel ? (
+          <span className="shrink-0 rounded bg-white/5 px-1.5 py-0.5 text-[11px] font-medium tabular-nums text-slate-300">
+            {sizeLabel}
+          </span>
+        ) : null}
+        <p className="min-w-0 flex-1 break-all text-xs text-slate-400">{stream.title}</p>
+      </div>
     </div>
   )
 }

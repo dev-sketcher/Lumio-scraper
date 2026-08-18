@@ -299,6 +299,11 @@ export function buildAutoplayCandidates(
   // front so autoplay tries them first and only falls back to uncached if
   // every cached attempt fails.
   candidates = [...candidates].sort((a, b) => {
+    // Format enheten inte kan avkoda sist — autoplay ska aldrig lägga sina
+    // tre försök på strömmar som är dömda att misslyckas.
+    const aBad = streamUnsupportedOnDevice(a) ? 1 : 0
+    const bBad = streamUnsupportedOnDevice(b) ? 1 : 0
+    if (aBad !== bBad) return aBad - bBad
     const aCached = a.cached ? 1 : 0
     const bCached = b.cached ? 1 : 0
     if (bCached !== aCached) return bCached - aCached
@@ -364,4 +369,56 @@ export function pickBestUnrestrictedLink(
     ? withinLimit
     : (meaningful.length > 0 ? meaningful : playable)
   return [...pool].sort((a, b) => b.filesize - a.filesize)[0] ?? null
+}
+
+/**
+ * Dolby Vision-markörer i släppnamn ("DV", "DoVi", "Dolby.Vision").
+ * Enheter utan DV-avkodare (äldre telefoner, de flesta headset) dör på
+ * profil-taggen eller får förvrängda färger — sådana strömmar sorteras sist
+ * och märks i listan istället för att ligga överst där de klickas först.
+ */
+export function streamLooksDolbyVision(stream: StreamResult): boolean {
+  const text = `${stream.name} ${stream.title}`
+  const separated = /(?:^|[.\s_\-\[(])(dv|dovi)(?:$|[.\s_\-\])])/i
+  return separated.test(text) || /dolby[.\s_-]?vision/i.test(text)
+}
+
+/**
+ * Förlustfritt ljud (TrueHD/DTS-HD/DTS-X) som mobiler sällan avkodar. Detta
+ * är den VANLIGA fällan för BluRay-remuxar: videon är spelbar men ljudspåret
+ * fäller uppspelningen (eller spelas utan ljud). Kodeken står nästan alltid i
+ * releasenamnet, så heuristiken är träffsäker.
+ */
+export function streamLooksLosslessAudio(stream: StreamResult): boolean {
+  return /(true[.\s_-]?hd|atmos|dts[.\s_-]?hd|dts[.\s_-]?x|\bdtsma\b)/i.test(
+    `${stream.name} ${stream.title}`)
+}
+
+/** Enhetens saknade avkodare, satt av värdappens kapabilitetsprobe. */
+let deviceLacksLosslessAudioCache = false
+export function setDeviceLacksLosslessAudio(value: boolean): void {
+  deviceLacksLosslessAudioCache = value
+}
+export function deviceLacksLosslessAudioSync(): boolean {
+  return deviceLacksLosslessAudioCache
+}
+
+/** Sann när enheten saknar avkodare för strömmens spår (ljud eller DV). */
+export function streamUnsupportedOnDevice(stream: StreamResult): boolean {
+  if (deviceLacksLosslessAudioSync() && streamLooksLosslessAudio(stream)) return true
+  if (deviceLacksDolbyVisionSync() && streamLooksDolbyVision(stream)) return true
+  return false
+}
+
+/**
+ * Enhetens DV-stöd, cachat synkront så sorteringsfunktioner kan läsa det.
+ * Sätts av streams-sidebaren när den frågat värdappens brygga; default
+ * "enheten klarar allt" (desktop/mpv).
+ */
+let deviceLacksDvCache = false
+export function setDeviceLacksDolbyVision(value: boolean): void {
+  deviceLacksDvCache = value
+}
+export function deviceLacksDolbyVisionSync(): boolean {
+  return deviceLacksDvCache
 }
