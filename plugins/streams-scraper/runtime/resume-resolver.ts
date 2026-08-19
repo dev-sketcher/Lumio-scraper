@@ -1,17 +1,19 @@
 // Resume ("Fortsätt") stream resolution.
 //
 // Progress entries cache the CDN URL that played last time, but debrid links
-// expire — feeding a dead URL to mpv costs a ~10 s network timeout before
-// anything else happens. This helper probes the stored URL quickly and, when
-// it is dead, re-resolves a fresh link from the stored torrent hash through
-// the active debrid provider (cached torrents settle in a poll or two).
+// expire — and an expired one answers 200 with a "Link expired" HTML page, so
+// feeding it to mpv yields a dead player rather than a clean error. Deciding
+// *whether* the stored URL is still good belongs to the host
+// (`lib/resume-playback.ts` → `/api/stream-alive`); this module owns the part
+// only the provider can do: turning a stored torrent hash back into a fresh
+// playable link through the active debrid provider (cached torrents settle in
+// a poll or two).
 import {
   getPlaybackSourceInfo,
   queueMagnetForPlayback,
   resolvePlaybackLink,
   selectPlaybackFiles,
 } from './playback/stream-provider-playback'
-import type { StreamProgressEntry } from '@/lib/video-progress'
 
 const VIDEO_EXTS = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i
 
@@ -25,24 +27,6 @@ function episodeTag(season?: number, episode?: number): RegExp | null {
   const s = String(season).padStart(2, '0')
   const e = String(episode).padStart(2, '0')
   return new RegExp(`s${s}\\s*e${e}|${season}x${e}`, 'i')
-}
-
-async function probeStoredUrl(url: string, timeoutMs: number): Promise<boolean> {
-  const controller = new AbortController()
-  const timer = window.setTimeout(() => controller.abort(), timeoutMs)
-  try {
-    const response = await fetch(`/api/probe-streams?url=${encodeURIComponent(url)}`, {
-      signal: controller.signal,
-    })
-    if (!response.ok) return false
-    const data = await response.json().catch(() => null) as { ok?: boolean; reachable?: boolean } | null
-    if (data && (data.ok === false || data.reachable === false)) return false
-    return true
-  } catch {
-    return false
-  } finally {
-    window.clearTimeout(timer)
-  }
 }
 
 export interface ResumeStream {
@@ -106,30 +90,4 @@ export async function resolveFreshLinkFromHash(
     }
   }
   return null
-}
-
-/**
- * Returns the fastest playable URL for a continue-watching entry: the stored
- * URL when it still answers, otherwise a freshly resolved debrid link from
- * the stored torrent hash. Falls back to the stored URL as a last resort so
- * behaviour is never worse than before.
- */
-export async function resolveResumeStream(entry: StreamProgressEntry): Promise<ResumeStream | null> {
-  const storedUrl = entry.url ?? null
-
-  if (storedUrl) {
-    const alive = await probeStoredUrl(storedUrl, 1500)
-    if (alive) return { url: storedUrl, refreshed: false }
-  }
-
-  if (entry.infoHash) {
-    try {
-      const fresh = await resolveFreshLinkFromHash(entry.infoHash, entry.season, entry.episode)
-      if (fresh) return fresh
-    } catch {
-      // fall through to the stored URL
-    }
-  }
-
-  return storedUrl ? { url: storedUrl, refreshed: false } : null
 }

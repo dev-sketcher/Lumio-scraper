@@ -46,7 +46,7 @@
   var __privateAdd = (obj, member, value) => member.has(obj) ? __typeError("Cannot add the same private member more than once") : member instanceof WeakSet ? member.add(obj) : member.set(obj, value);
   var __privateSet = (obj, member, value, setter) => (__accessCheck(obj, member, "write to private field"), setter ? setter.call(obj, value) : member.set(obj, value), value);
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-YvqTIv/react-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0XgrhI/react-shim.ts
   var react_shim_exports = {};
   __export(react_shim_exports, {
     Activity: () => Activity,
@@ -95,7 +95,7 @@
   });
   var react, react_shim_default, Activity, Children, Component, Fragment, Profiler, PureComponent, StrictMode, Suspense, act, cache, cacheSignal, captureOwnerStack, cloneElement, createContext2, createElement, createRef, forwardRef2, isValidElement, lazy, memo, startTransition, unstable_useCacheRefresh, use, useActionState, useCallback, useContext, useDebugValue, useDeferredValue, useEffect, useEffectEvent, useId, useImperativeHandle, useInsertionEffect, useLayoutEffect, useMemo, useOptimistic, useReducer, useRef, useState, useSyncExternalStore, useTransition, version;
   var init_react_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-YvqTIv/react-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0XgrhI/react-shim.ts"() {
       react = globalThis.__lumioPluginRuntime?.react ?? globalThis.React;
       react_shim_default = react;
       Activity = react.Activity;
@@ -29688,7 +29688,7 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-YvqTIv/jsx-runtime-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0XgrhI/jsx-runtime-shim.ts
   var jsx_runtime_shim_exports = {};
   __export(jsx_runtime_shim_exports, {
     Fragment: () => Fragment2,
@@ -29698,7 +29698,7 @@
   });
   var runtime, Fragment2, jsx, jsxs, jsxDEV;
   var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-YvqTIv/jsx-runtime-shim.ts"() {
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0XgrhI/jsx-runtime-shim.ts"() {
       runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
       Fragment2 = runtime.Fragment;
       jsx = runtime.jsx;
@@ -166164,7 +166164,7 @@
     StreamsScraperPlugin: () => StreamsScraperPlugin
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-YvqTIv/profile-storage-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0XgrhI/profile-storage-shim.ts
   var sdk = globalThis.__lumioPluginRuntime?.sdk;
   var getActiveProfileId = () => sdk.getActiveProfileId();
   var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
@@ -166188,6 +166188,7 @@
       debridKeyMissing: "Debrid key missing",
       streamProviderAddIndexed: "+ TorrentsDB",
       streamProviderAddStandard: "+ Torrentio",
+      sourceNotServingMedia: "This source no longer serves the film \u2014 the link has expired or is locked to the network it was fetched on. Search again or pick another stream.",
       aiostreamsHint: "AIOStreams is configured on its own site (UUID + password, debrid keys and filters live there). Configure once, then paste the manifest URL from the Save & Install page here."
     },
     sv: {
@@ -166204,6 +166205,7 @@
       debridKeyMissing: "Debrid-nyckel saknas",
       streamProviderAddIndexed: "+ TorrentsDB",
       streamProviderAddStandard: "+ Torrentio",
+      sourceNotServingMedia: "K\xE4llan levererar inte filmen l\xE4ngre \u2014 l\xE4nken har g\xE5tt ut eller \xE4r l\xE5st till n\xE4tverket den h\xE4mtades p\xE5. S\xF6k om eller v\xE4lj en annan stream.",
       aiostreamsHint: "AIOStreams konfigureras p\xE5 sin egen sida (UUID + l\xF6senord \u2014 debrid-nycklar och filter bor d\xE4r). Konfigurera en g\xE5ng, klistra sedan in manifest-URL:en fr\xE5n Save & Install-sidan h\xE4r."
     }
   };
@@ -171772,7 +171774,13 @@
   function read() {
     if (typeof window === "undefined") return {};
     try {
-      return JSON.parse(getScopedStorageItem(KEY) ?? "{}");
+      const parsed = JSON.parse(getScopedStorageItem(KEY) ?? "{}");
+      const out = {};
+      for (const [key, value] of Object.entries(parsed)) {
+        if (typeof value === "string" && value.trim().length > 0) out[key] = value;
+        else if (value) out[key] = true;
+      }
+      return out;
     } catch {
       return {};
     }
@@ -171783,16 +171791,24 @@
       window.dispatchEvent(new CustomEvent(EVENT2));
     }
   }
+  function timestampOf(value) {
+    return typeof value === "string" ? value : void 0;
+  }
   function isWatched(tmdbId, season, episode) {
     return !!read()[epKey(tmdbId, season, episode)];
   }
   function setWatched(tmdbId, season, episode, watched, options) {
     const data = read();
+    const key = epKey(tmdbId, season, episode);
+    const previous = data[key];
+    const source = options?.source ?? "local";
+    let next2;
     if (watched) {
-      data[epKey(tmdbId, season, episode)] = true;
-    } else {
-      delete data[epKey(tmdbId, season, episode)];
+      next2 = options?.watchedAt ?? (source === "trakt" ? previous ?? true : (/* @__PURE__ */ new Date()).toISOString());
     }
+    if (previous === next2 || !watched && previous === void 0) return;
+    if (next2 === void 0) delete data[key];
+    else data[key] = next2;
     write(data);
     if (typeof window !== "undefined") {
       window.dispatchEvent(new CustomEvent(DETAIL_EVENT, {
@@ -171802,7 +171818,8 @@
           season,
           episode,
           watched,
-          source: options?.source ?? "local"
+          source,
+          watchedAt: timestampOf(next2)
         }
       }));
     }
@@ -171819,12 +171836,18 @@
   }
   function markSeasonWatched(tmdbId, season, episodeCount, options) {
     const data = read();
+    const watchedAt = (/* @__PURE__ */ new Date()).toISOString();
+    const added = [];
     for (let e = 1; e <= episodeCount; e++) {
-      data[epKey(tmdbId, season, e)] = true;
+      const key = epKey(tmdbId, season, e);
+      if (data[key]) continue;
+      data[key] = watchedAt;
+      added.push(e);
     }
+    if (added.length === 0) return;
     write(data);
     if (typeof window !== "undefined") {
-      for (let e = 1; e <= episodeCount; e++) {
+      for (const e of added) {
         window.dispatchEvent(new CustomEvent(DETAIL_EVENT, {
           detail: {
             tmdbId,
@@ -171832,7 +171855,8 @@
             season,
             episode: e,
             watched: true,
-            source: options?.source ?? "local"
+            source: options?.source ?? "local",
+            watchedAt
           }
         }));
       }
@@ -172879,7 +172903,7 @@
   init_react_shim();
   init_jsx_runtime_shim();
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-YvqTIv/auth-capabilities-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0XgrhI/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
 
   // lib/utils/scroll-lock.ts
@@ -172949,7 +172973,7 @@
     return FIXED_NEXT_EP_PRELOAD_LEAD_SECONDS;
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-YvqTIv/video-player-modal-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0XgrhI/video-player-modal-shim.ts
   init_react_shim();
 
   // components/player/video-player-modal.tsx
@@ -180166,13 +180190,13 @@ ${cue.text}`).join("\n\n")}
     return portalEl ? (0, import_react_dom.createPortal)(content, portalEl) : content;
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-YvqTIv/video-player-modal-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0XgrhI/video-player-modal-shim.ts
   function VideoPlayerModal2(props) {
     const hostComponent = globalThis.__lumioPluginRuntime?.components?.VideoPlayerModal;
     return createElement(hostComponent ?? VideoPlayerModal, props);
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-YvqTIv/next-episode-card-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0XgrhI/next-episode-card-shim.ts
   init_react_shim();
 
   // components/player/next-episode-card.tsx
@@ -180395,7 +180419,7 @@ ${cue.text}`).join("\n\n")}
     );
   }
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-YvqTIv/next-episode-card-shim.ts
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0XgrhI/next-episode-card-shim.ts
   function NextEpisodeCard2(props) {
     const hostComponent = globalThis.__lumioPluginRuntime?.components?.NextEpisodeCard;
     return createElement(hostComponent ?? NextEpisodeCard, props);
@@ -182279,13 +182303,16 @@ ${cue.text}`).join("\n\n")}
   }
   async function probeDirectUrl(inputUrl) {
     const controller = new AbortController();
-    const timer = window.setTimeout(() => controller.abort(), 6e3);
+    const timer = window.setTimeout(() => controller.abort(), 1e4);
     try {
       const response = await fetch(
-        `/api/probe-streams?url=${encodeURIComponent(inputUrl)}`,
+        `/api/stream-alive?url=${encodeURIComponent(inputUrl)}`,
         { signal: controller.signal }
       );
-      return response.ok;
+      if (response.status === 404 || !response.ok) return true;
+      const data = await response.json().catch(() => null);
+      if (!data) return true;
+      return data.ok !== false && data.reachable !== false;
     } catch {
       return false;
     } finally {
@@ -182335,7 +182362,7 @@ ${cue.text}`).join("\n\n")}
         const ok = await probeDirectUrl(candidate.directUrl);
         if (ok) {
           selectedDirect = candidate.directUrl;
-          selectedHash = candidate.infoHash || null;
+          selectedHash = candidate.infoHash || candidate.directUrl.match(/\b([a-f0-9]{40})\b/i)?.[1]?.toLowerCase() || null;
           break;
         }
       }
@@ -182694,6 +182721,60 @@ ${cue.text}`).join("\n\n")}
     }
   };
 
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/resume-resolver.ts
+  var VIDEO_EXTS3 = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
+  function isLikelySamplePath2(path) {
+    const value = path.toLowerCase();
+    return /\bsample\b/.test(value) || /\btrailer\b/.test(value) || /\bfeaturette\b/.test(value) || /\bextras?\b/.test(value);
+  }
+  function episodeTag(season, episode) {
+    if (season == null || episode == null) return null;
+    const s = String(season).padStart(2, "0");
+    const e = String(episode).padStart(2, "0");
+    return new RegExp(`s${s}\\s*e${e}|${season}x${e}`, "i");
+  }
+  async function resolveFreshLinkFromHash(infoHash, season, episode) {
+    const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${infoHash}`);
+    const epTag = episodeTag(season, episode);
+    const pollDelays = [0, 300, 400, 600, 900, 1200, 1500, 1500, 1500, 2e3, 2e3, 2e3];
+    for (const delay2 of pollDelays) {
+      if (delay2 > 0) await new Promise((resolve) => setTimeout(resolve, delay2));
+      const info = await getPlaybackSourceInfo(added.id);
+      if (info.status === "waiting_files_selection") {
+        const videoFiles = info.files.filter((file) => VIDEO_EXTS3.test(file.path));
+        const byEpisode = epTag ? videoFiles.filter((file) => epTag.test(file.path)) : [];
+        const preferred = (byEpisode.length > 0 ? byEpisode : videoFiles).filter((file) => !isLikelySamplePath2(file.path)).sort((left, right) => right.bytes - left.bytes);
+        const best = preferred[0] ?? videoFiles.sort((left, right) => right.bytes - left.bytes)[0];
+        if (!best) return null;
+        await selectPlaybackFiles(added.id, String(best.id));
+        continue;
+      }
+      if (info.status === "downloaded" && info.links.length > 0) {
+        const unrestricted = await Promise.all(
+          info.links.map(async (link) => {
+            try {
+              return await resolvePlaybackLink(link);
+            } catch {
+              return null;
+            }
+          })
+        );
+        const candidates = unrestricted.filter((entry) => Boolean(entry));
+        const byEpisode = epTag ? candidates.filter((entry) => epTag.test(entry.filename)) : [];
+        const pool = byEpisode.length > 0 ? byEpisode : candidates;
+        const preferred = pool.filter((entry) => VIDEO_EXTS3.test(entry.filename) && !isLikelySamplePath2(entry.filename)).sort((left, right) => right.filesize - left.filesize);
+        const videos = pool.filter((entry) => VIDEO_EXTS3.test(entry.filename)).sort((left, right) => right.filesize - left.filesize);
+        const chosen = preferred[0] ?? videos[0] ?? pool[0];
+        if (!chosen) return null;
+        return { url: chosen.download, filename: chosen.filename, refreshed: true };
+      }
+      if (["error", "magnet_error", "dead", "virus", "downloading"].includes(info.status)) {
+        return null;
+      }
+    }
+    return null;
+  }
+
   // ../Lumio-scraper/plugins/streams-scraper/runtime/streams-sidebar-section.tsx
   init_react_shim();
   var import_react_dom3 = __toESM(require_react_dom());
@@ -182706,7 +182787,7 @@ ${cue.text}`).join("\n\n")}
   }
 
   // ../Lumio-scraper/plugins/streams-scraper/runtime/stream-provider-stream-utils.ts
-  var VIDEO_EXTS3 = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i;
+  var VIDEO_EXTS4 = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i;
   function qualityRank3(name) {
     const normalized = name.toLowerCase();
     if (normalized.includes("4k") || normalized.includes("2160p")) return 4;
@@ -182875,7 +182956,7 @@ ${cue.text}`).join("\n\n")}
     return candidates.slice(0, 3);
   }
   function getPreferredTorrentFileIds(info, options) {
-    const videoFiles = info.files.filter((file) => VIDEO_EXTS3.test(file.path));
+    const videoFiles = info.files.filter((file) => VIDEO_EXTS4.test(file.path));
     if (options.seasonNumber != null && options.episodeNumber != null) {
       const match = videoFiles.find(
         (file) => matchesEpisodeIdentifier(file.path, options.seasonNumber, options.episodeNumber)
@@ -182892,7 +182973,7 @@ ${cue.text}`).join("\n\n")}
   }
   function pickBestUnrestrictedLink(links, options) {
     if (links.length === 0) return null;
-    const videoLinks = links.filter((link) => VIDEO_EXTS3.test(link.filename) && !looksLikeSampleOrExtra(link.filename));
+    const videoLinks = links.filter((link) => VIDEO_EXTS4.test(link.filename) && !looksLikeSampleOrExtra(link.filename));
     const playable = videoLinks.length > 0 ? videoLinks : links;
     if (options.seasonNumber != null && options.episodeNumber != null) {
       return playable.find(
@@ -182970,9 +183051,16 @@ ${cue.text}`).join("\n\n")}
     }
     setScopedStorageItem(LAST_PLAYED_KEY, JSON.stringify(Object.fromEntries(entries)));
   }
+  var INFO_HASH_IN_URL = /\b([a-f0-9]{40})\b/i;
+  function playbackInfoHash(explicit, url) {
+    const fromField = explicit?.trim().toLowerCase();
+    if (fromField) return fromField;
+    const fromUrl = url?.match(INFO_HASH_IN_URL)?.[1];
+    return fromUrl ? fromUrl.toLowerCase() : null;
+  }
   function streamIdentity(stream) {
     const hashFromField = stream.infoHash?.trim().toLowerCase() || null;
-    const hashFromUrl = stream.directUrl?.match(/\b([a-f0-9]{40})\b/i)?.[1]?.toLowerCase() ?? null;
+    const hashFromUrl = stream.directUrl?.match(INFO_HASH_IN_URL)?.[1]?.toLowerCase() ?? null;
     const release = `${stream.name ?? ""} ${stream.title ?? ""}`.toLowerCase().replace(/\s+/g, " ").trim() || null;
     return {
       hash: hashFromField || hashFromUrl,
@@ -182987,6 +183075,27 @@ ${cue.text}`).join("\n\n")}
     if (a.hash && b.hash) return a.hash === b.hash;
     if (a.url && b.url && a.url === b.url) return true;
     return Boolean(a.release && b.release && a.release === b.release);
+  }
+  function isExpirableStreamUrl(url) {
+    return /^https?:\/\//i.test(url) && !/^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])/i.test(url);
+  }
+  async function streamUrlServesMedia(url, timeoutMs = 13e3) {
+    if (typeof window === "undefined") return true;
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetch(`/api/stream-alive?url=${encodeURIComponent(url)}`, {
+        signal: controller.signal
+      });
+      if (response.status === 404 || !response.ok) return true;
+      const data = await response.json().catch(() => null);
+      if (!data) return true;
+      return data.ok !== false && data.reachable !== false;
+    } catch {
+      return true;
+    } finally {
+      window.clearTimeout(timer);
+    }
   }
   var EPISODE_STREAM_STATUS_CONCURRENCY = 4;
   var MIN_EPISODE_AUTOPLAY_BYTES = 120 * 1024 * 1024;
@@ -183400,7 +183509,7 @@ ${cue.text}`).join("\n\n")}
             if (fileIds.length > 0) {
               await selectPlaybackFiles(info.id, fileIds.join(","));
             } else {
-              const videoFiles = info.files.filter((f) => VIDEO_EXTS3.test(f.path));
+              const videoFiles = info.files.filter((f) => VIDEO_EXTS4.test(f.path));
               if (videoFiles.length === 0) return null;
               await selectPlaybackFiles(info.id, String(videoFiles[0].id));
             }
@@ -183442,7 +183551,7 @@ ${cue.text}`).join("\n\n")}
         try {
           const info = await getPlaybackSourceInfo(torrentId);
           if (info.status === "waiting_files_selection") {
-            const videoFiles = info.files.filter((f) => VIDEO_EXTS3.test(f.path));
+            const videoFiles = info.files.filter((f) => VIDEO_EXTS4.test(f.path));
             const match = videoFiles.find((f) => matchesEpisodeIdentifier(f.path, targetSeason, targetEpisode)) ?? videoFiles[0];
             if (!match) return null;
             await selectPlaybackFiles(info.id, String(match.id));
@@ -183456,7 +183565,7 @@ ${cue.text}`).join("\n\n")}
               } catch {
               }
             }
-            const videoLinks = results.filter((l) => VIDEO_EXTS3.test(l.filename));
+            const videoLinks = results.filter((l) => VIDEO_EXTS4.test(l.filename));
             const epRe = new RegExp(
               `[Ss]0*${targetSeason}[Ee]0*${targetEpisode}(?![0-9])`
             );
@@ -184052,7 +184161,8 @@ ${cue.text}`).join("\n\n")}
               nextEpUrlRef.current = {
                 url: candidate.directUrl,
                 filename: filenameForPlayback(urlFilename, candidate.title),
-                forceProxy: false
+                forceProxy: false,
+                infoHash: candidate.infoHash ?? null
               };
               setNextEpUrlReady(true);
               return;
@@ -184066,7 +184176,8 @@ ${cue.text}`).join("\n\n")}
                 nextEpUrlRef.current = {
                   url: nextLink.url,
                   filename: nextLink.filename,
-                  forceProxy: false
+                  forceProxy: false,
+                  infoHash: candidate.infoHash ?? null
                 };
                 setNextEpUrlReady(true);
                 return;
@@ -184096,7 +184207,8 @@ ${cue.text}`).join("\n\n")}
             nextEpUrlRef.current = {
               url: candidate.directUrl,
               filename: urlFilename,
-              forceProxy: false
+              forceProxy: false,
+              infoHash: candidate.infoHash ?? null
             };
             setNextEpUrlReady(true);
             return;
@@ -184110,7 +184222,8 @@ ${cue.text}`).join("\n\n")}
               nextEpUrlRef.current = {
                 url: nextLink.url,
                 filename: nextLink.filename,
-                forceProxy: false
+                forceProxy: false,
+                infoHash: candidate.infoHash ?? null
               };
               setNextEpUrlReady(true);
               return;
@@ -184175,7 +184288,7 @@ ${cue.text}`).join("\n\n")}
       }
       if (selectedStream.directUrl) {
         const urlFilename = filenameForPlayback(selectedStream.directUrl.split("/").pop()?.split("?")[0], selectedStream.title);
-        beginPlayerSession({
+        await beginPlayerSession({
           url: selectedStream.directUrl,
           filename: urlFilename,
           season: selectedSeason?.season_number,
@@ -184207,7 +184320,7 @@ ${cue.text}`).join("\n\n")}
       playAttemptRef.current = attemptId;
       playAttemptInfoHashRef.current = null;
       const urlFilename = url.split("/").pop()?.split("?")[0];
-      beginPlayerSession({
+      void beginPlayerSession({
         url,
         filename: urlFilename,
         season: selectedSeason?.season_number,
@@ -184229,15 +184342,17 @@ ${cue.text}`).join("\n\n")}
           const resolved = await resolveAutoplayCandidate(candidate);
           if (resolved) {
             playAttemptInfoHashRef.current = candidate.infoHash ?? null;
-            beginPlayerSession({
+            const opened = await beginPlayerSession({
               url: resolved.url,
               filename: resolved.filename,
               season: selectedSeason.season_number,
               episode: selectedEpisode.episode_number,
               initialTime: playRequestInitialTime ?? void 0,
-              forceProxy: resolved.forceProxy
+              forceProxy: resolved.forceProxy,
+              infoHash: candidate.infoHash ?? null
             });
-            return true;
+            if (opened) return true;
+            setStep({ type: "processing", message: mediaType === "tv" ? t("startingEpisode") : t("startingMovie") });
           }
         } catch {
         }
@@ -184353,14 +184468,23 @@ ${cue.text}`).join("\n\n")}
           firstPlaySeenRef.current = false;
           autoplayLoadFailedRef.current = false;
           setPlayerHideStartSplash(true);
-          beginPlayerSession({
+          const opened = await beginPlayerSession({
             url: resolved.url,
             filename: resolved.filename,
             season: selectedSeason?.season_number,
             episode: selectedEpisode?.episode_number,
             initialTime: initialTimeOverride ?? playRequestInitialTime ?? void 0,
-            forceProxy: resolved.forceProxy
+            forceProxy: resolved.forceProxy,
+            infoHash: candidate.infoHash ?? null
           }, attemptId);
+          if (!opened) {
+            if (attemptId !== playAttemptRef.current) return false;
+            sendTelemetry("playback.autoplay", "info", "candidate rejected by liveness gate -> next", {
+              directUrl: Boolean(candidate.directUrl),
+              infoHash: Boolean(candidate.infoHash)
+            });
+            continue;
+          }
           const started = await waitForFirstPlay(attemptId, 2e4);
           sendTelemetry("playback.autoplay", started ? "ok" : "info", started ? "candidate playing" : "candidate did not start -> next", {
             directUrl: Boolean(candidate.directUrl),
@@ -184409,7 +184533,7 @@ ${cue.text}`).join("\n\n")}
           }
           if (info.status === "waiting_files_selection") {
             stopPolling();
-            const videoFiles = info.files.filter((f) => VIDEO_EXTS3.test(f.path));
+            const videoFiles = info.files.filter((f) => VIDEO_EXTS4.test(f.path));
             if (selectedEpisode && selectedSeason) {
               const match = videoFiles.find(
                 (f) => matchesEpisodeIdentifier(f.path, selectedSeason.season_number, selectedEpisode.episode_number)
@@ -184512,11 +184636,10 @@ ${cue.text}`).join("\n\n")}
         if (!isPlayAttemptActive(attemptId)) return;
         const resolved = results.filter((r) => r !== null);
         if (resolved.length === 0) throw new Error("No playable links returned");
-        const videoLinks = resolved.filter((l) => VIDEO_EXTS3.test(l.filename) && !/^sample\b/i.test(l.filename));
+        const videoLinks = resolved.filter((l) => VIDEO_EXTS4.test(l.filename) && !/^sample\b/i.test(l.filename));
         const playable = videoLinks.length > 0 ? videoLinks : resolved;
         if (playable.length === 1) {
-          openPlayer(playable[0], attemptId);
-          setStep({ type: "idle" });
+          if (await openPlayer(playable[0], attemptId)) setStep({ type: "idle" });
           return;
         }
         if (selectedEpisode && selectedSeason && playable.length > 1) {
@@ -184527,8 +184650,7 @@ ${cue.text}`).join("\n\n")}
           const matchPool = reliableEpisodeMatches.length > 0 ? reliableEpisodeMatches : episodeMatches;
           const match = [...matchPool].sort((a, b) => b.filesize - a.filesize)[0] ?? null;
           if (match) {
-            openPlayer(match, attemptId);
-            setStep({ type: "idle" });
+            if (await openPlayer(match, attemptId)) setStep({ type: "idle" });
             return;
           }
         }
@@ -184540,8 +184662,7 @@ ${cue.text}`).join("\n\n")}
           const pool = withinLimit.length > 0 ? withinLimit : filtered.length > 0 ? filtered : playable;
           const best = [...pool].sort((a, b) => b.filesize - a.filesize)[0];
           if (best) {
-            openPlayer(best, attemptId);
-            setStep({ type: "idle" });
+            if (await openPlayer(best, attemptId)) setStep({ type: "idle" });
             return;
           }
         }
@@ -184585,8 +184706,7 @@ ${cue.text}`).join("\n\n")}
           await selectPlaybackFiles(res.id, "all");
           await pollTorrent(res.id, false, attemptId);
         } else {
-          openPlayer(await resolvePlaybackLink(value), attemptId);
-          setStep({ type: "idle" });
+          if (await openPlayer(await resolvePlaybackLink(value), attemptId)) setStep({ type: "idle" });
         }
       } catch (err) {
         if (!isPlayAttemptActive(attemptId)) return;
@@ -184597,20 +184717,65 @@ ${cue.text}`).join("\n\n")}
         setStep({ type: "error", message: err instanceof Error ? err.message : "Error" });
       }
     }
-    function beginPlayerSession(config, attemptId) {
-      if (!isPlayAttemptActive(attemptId)) return;
+    async function ensurePlayableSource(url, hints) {
+      if (!isExpirableStreamUrl(url)) return { url, filename: hints.filename, refreshed: false };
+      if (await streamUrlServesMedia(url)) return { url, filename: hints.filename, refreshed: false };
+      const hash = hints.infoHash?.trim().toLowerCase() || url.match(INFO_HASH_IN_URL)?.[1]?.toLowerCase() || null;
+      sendTelemetry("playback.validate", "info", "source not serving media -> re-resolve", {
+        mediaType,
+        title,
+        hasHash: Boolean(hash),
+        url: url.slice(0, 80)
+      });
+      if (!hash) return null;
+      try {
+        const fresh = await resolveFreshLinkFromHash(
+          hash,
+          selectedSeason?.season_number,
+          selectedEpisode?.episode_number
+        );
+        if (!fresh?.url) return null;
+        if (fresh.url === url || !await streamUrlServesMedia(fresh.url)) return null;
+        sendTelemetry("playback.validate", "ok", "source re-resolved", { mediaType, title });
+        return { url: fresh.url, filename: fresh.filename ?? hints.filename, refreshed: true };
+      } catch {
+        return null;
+      }
+    }
+    async function beginPlayerSession(config, attemptId) {
+      if (!isPlayAttemptActive(attemptId)) return false;
       if (!config.url) {
         sendTelemetry("playback.open", "error", "no playable source resolved", { mediaType, title });
         setPlayerHideStartSplash(false);
         setPlayerSplashFading(false);
         setStep({ type: "idle" });
         onAutoPlayFallback?.();
-        return;
+        return false;
       }
-      if (isRemoteSession() && prefersVlc() && openInVlc(config.url)) {
+      const source = await ensurePlayableSource(config.url, {
+        filename: config.filename,
+        infoHash: config.infoHash !== void 0 ? config.infoHash : playAttemptInfoHashRef.current
+      });
+      if (!isPlayAttemptActive(attemptId)) return false;
+      if (!source) {
+        sendTelemetry("playback.open", "error", "source rejected: not serving media", {
+          mediaType,
+          title,
+          url: config.url.slice(0, 80)
+        });
+        if (autoplayLoopActiveRef.current) {
+          autoplayLoadFailedRef.current = true;
+          return false;
+        }
+        setPlayerHideStartSplash(false);
+        setPlayerSplashFading(false);
+        setStep({ type: "error", message: lt("sourceNotServingMedia") });
+        return false;
+      }
+      if (isRemoteSession() && prefersVlc() && openInVlc(source.url)) {
         setStep({ type: "idle" });
         onOpenedInVlc?.();
-        return;
+        return true;
       }
       nextEpTransitionRef.current = false;
       nextEpAutoplayPendingRef.current = false;
@@ -184619,22 +184784,27 @@ ${cue.text}`).join("\n\n")}
         mediaType,
         title,
         season: config.season ?? null,
-        episode: config.episode ?? null
+        episode: config.episode ?? null,
+        refreshed: source.refreshed
       });
       setPlayerTitle(title);
-      setPlayerFilename(config.filename);
+      setPlayerFilename(source.filename);
       setPlayerSeason(config.season);
       setPlayerEpisode(config.episode);
       setPlayerInitialTime(config.initialTime);
       setPlayerForceProxy(config.forceProxy ?? false);
       setPlayerHideStartSplash(true);
       setPlayerSplashFading(false);
-      setPlayerInfoHash(config.infoHash !== void 0 ? config.infoHash : playAttemptInfoHashRef.current);
-      setPlayerUrl(config.url);
+      setPlayerInfoHash(playbackInfoHash(
+        config.infoHash !== void 0 ? config.infoHash : playAttemptInfoHashRef.current,
+        source.url
+      ));
+      setPlayerUrl(source.url);
       setStep({ type: "idle" });
+      return true;
     }
-    function openPlayer(link, attemptId) {
-      beginPlayerSession({
+    async function openPlayer(link, attemptId) {
+      const opened = await beginPlayerSession({
         url: link.download,
         filename: link.filename,
         season: selectedSeason?.season_number,
@@ -184652,6 +184822,7 @@ ${cue.text}`).join("\n\n")}
       setNextEpUrlReady(false);
       setPlayerSkipHomeKitClose(false);
       setPlayerSkipHomeKitOpen(false);
+      return opened;
     }
     useEffect(() => {
       cancelPlayAttempt();
@@ -184977,7 +185148,11 @@ ${cue.text}`).join("\n\n")}
         setWatched(numericTmdbId, activeSeasonNumber, activeEpisodeNumber, true, { imdbId: effectiveImdbId });
         setWatchedEps(getWatchedForSeries(numericTmdbId));
       }
-      if (!nextItem) {
+      const nextSource = nextItem ? await ensurePlayableSource(nextItem.url, {
+        filename: nextItem.filename,
+        infoHash: nextItem.infoHash ?? null
+      }) : null;
+      if (!nextSource) {
         if (!targetSeason) {
           nextEpAutoplayPendingRef.current = false;
           setPlayerSkipHomeKitOpen(false);
@@ -185014,10 +185189,11 @@ ${cue.text}`).join("\n\n")}
       setSelectedEpisode(targetEpisode);
       setPlayerSeason(cardInfo.season);
       setPlayerEpisode(cardInfo.episode);
-      setPlayerFilename(nextItem.filename);
+      setPlayerFilename(nextSource.filename);
       setPlayerInitialTime(void 0);
-      setPlayerForceProxy(nextItem.forceProxy);
-      setPlayerUrl(nextItem.url);
+      setPlayerForceProxy(nextItem?.forceProxy ?? false);
+      setPlayerInfoHash(playbackInfoHash(nextItem?.infoHash ?? null, nextSource.url));
+      setPlayerUrl(nextSource.url);
     }
     if (!hasPlaybackAccess) {
       return /* @__PURE__ */ jsxs("section", { children: [
@@ -185314,6 +185490,29 @@ ${cue.text}`).join("\n\n")}
                 void tryPlayRequestAutoplay(lastAutoplayStreamsRef.current, attemptId, resumeAt);
                 return true;
               }
+              if (playbackRecoveryAttemptsRef.current === 0 && playerUrl) {
+                playbackRecoveryAttemptsRef.current += 1;
+                const deadUrl = playerUrl;
+                const deadFilename = playerFilename;
+                const deadInfoHash = playerInfoHash;
+                const resumeAt = Math.max(0, lastPlaybackTimeRef.current - 5);
+                void (async () => {
+                  const source = await ensurePlayableSource(deadUrl, {
+                    filename: deadFilename,
+                    infoHash: deadInfoHash
+                  });
+                  if (source && source.url !== deadUrl) {
+                    sendTelemetry("playback.validate", "ok", "player load failed -> swapped fresh source");
+                    setPlayerFilename(source.filename);
+                    setPlayerInitialTime(resumeAt > 0 ? resumeAt : void 0);
+                    setPlayerUrl(source.url);
+                    return;
+                  }
+                  setPlayerUrl(null);
+                  if (!source) setStep({ type: "error", message: lt("sourceNotServingMedia") });
+                })();
+                return true;
+              }
               return false;
             }
             autoplayLoadFailedRef.current = true;
@@ -185526,7 +185725,7 @@ ${cue.text}`).join("\n\n")}
   }
   function SelectFiles({ info, onSelect, onCancel }) {
     const { t } = useLang();
-    const videoFiles = info.files.filter((f) => VIDEO_EXTS3.test(f.path));
+    const videoFiles = info.files.filter((f) => VIDEO_EXTS4.test(f.path));
     return /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
       /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-300", children: t("selectFile") }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-1 rounded-xl border border-white/10 bg-slate-900 p-3", children: [
@@ -185592,60 +185791,6 @@ ${cue.text}`).join("\n\n")}
       ] }, link.id)),
       /* @__PURE__ */ jsx("button", { type: "button", onClick: onBack, className: "text-xs text-slate-500 hover:text-slate-300", children: t("backToStreams") })
     ] });
-  }
-
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/resume-resolver.ts
-  var VIDEO_EXTS4 = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
-  function isLikelySamplePath2(path) {
-    const value = path.toLowerCase();
-    return /\bsample\b/.test(value) || /\btrailer\b/.test(value) || /\bfeaturette\b/.test(value) || /\bextras?\b/.test(value);
-  }
-  function episodeTag(season, episode) {
-    if (season == null || episode == null) return null;
-    const s = String(season).padStart(2, "0");
-    const e = String(episode).padStart(2, "0");
-    return new RegExp(`s${s}\\s*e${e}|${season}x${e}`, "i");
-  }
-  async function resolveFreshLinkFromHash(infoHash, season, episode) {
-    const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${infoHash}`);
-    const epTag = episodeTag(season, episode);
-    const pollDelays = [0, 300, 400, 600, 900, 1200, 1500, 1500, 1500, 2e3, 2e3, 2e3];
-    for (const delay2 of pollDelays) {
-      if (delay2 > 0) await new Promise((resolve) => setTimeout(resolve, delay2));
-      const info = await getPlaybackSourceInfo(added.id);
-      if (info.status === "waiting_files_selection") {
-        const videoFiles = info.files.filter((file) => VIDEO_EXTS4.test(file.path));
-        const byEpisode = epTag ? videoFiles.filter((file) => epTag.test(file.path)) : [];
-        const preferred = (byEpisode.length > 0 ? byEpisode : videoFiles).filter((file) => !isLikelySamplePath2(file.path)).sort((left, right) => right.bytes - left.bytes);
-        const best = preferred[0] ?? videoFiles.sort((left, right) => right.bytes - left.bytes)[0];
-        if (!best) return null;
-        await selectPlaybackFiles(added.id, String(best.id));
-        continue;
-      }
-      if (info.status === "downloaded" && info.links.length > 0) {
-        const unrestricted = await Promise.all(
-          info.links.map(async (link) => {
-            try {
-              return await resolvePlaybackLink(link);
-            } catch {
-              return null;
-            }
-          })
-        );
-        const candidates = unrestricted.filter((entry) => Boolean(entry));
-        const byEpisode = epTag ? candidates.filter((entry) => epTag.test(entry.filename)) : [];
-        const pool = byEpisode.length > 0 ? byEpisode : candidates;
-        const preferred = pool.filter((entry) => VIDEO_EXTS4.test(entry.filename) && !isLikelySamplePath2(entry.filename)).sort((left, right) => right.filesize - left.filesize);
-        const videos = pool.filter((entry) => VIDEO_EXTS4.test(entry.filename)).sort((left, right) => right.filesize - left.filesize);
-        const chosen = preferred[0] ?? videos[0] ?? pool[0];
-        if (!chosen) return null;
-        return { url: chosen.download, filename: chosen.filename, refreshed: true };
-      }
-      if (["error", "magnet_error", "dead", "virus", "downloading"].includes(info.status)) {
-        return null;
-      }
-    }
-    return null;
   }
 
   // ../Lumio-scraper/plugins/streams-scraper/runtime/playback/resolve-stream-url.ts
@@ -185752,7 +185897,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.100",
+    version: "1.0.101",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
@@ -185772,7 +185917,10 @@ ${cue.text}`).join("\n\n")}
       ctx.registerResumeRefreshProvider?.({
         id: "streams-scraper-resume",
         pluginId: "com.lumio.streams-scraper",
-        refresh: (entry) => entry.sourceId ? resolveFreshLinkFromHash(entry.sourceId, entry.season, entry.episode) : Promise.resolve(null)
+        refresh: (entry) => {
+          const hash = entry.sourceId?.trim().toLowerCase() || entry.url?.match(/\b([a-f0-9]{40})\b/i)?.[1]?.toLowerCase() || null;
+          return hash ? resolveFreshLinkFromHash(hash, entry.season, entry.episode) : Promise.resolve(null);
+        }
       });
       ctx.registerPlayableUrlRewriter?.({
         id: "streams-scraper-url-rewrite",
@@ -185806,7 +185954,7 @@ ${cue.text}`).join("\n\n")}
     }
   };
 
-  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-YvqTIv/wrapper-entry.ts
+  // ../../../../private/var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build-0XgrhI/wrapper-entry.ts
   var plugin = Reflect.get(runtime_exports, "default") ?? Object.values(runtime_exports).find((value) => value && typeof value === "object" && "id" in value && "register" in value);
   if (!plugin) {
     throw new Error("Could not find a Lumio plugin export in runtime entry.");

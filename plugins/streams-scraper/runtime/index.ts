@@ -17,7 +17,7 @@ import { DebridSettingsSection } from './debrid-settings-section'
 export const StreamsScraperPlugin: LumioPlugin = {
   id: 'com.lumio.streams-scraper',
   name: { en: 'Stream Scraper', sv: 'Stream Scraper' },
-  version: '1.0.100',
+  version: '1.0.101',
   description: {
     en: 'Adds streaming sources via multiple scrapers and plugin-managed playback.',
     sv: 'Lägger till strömningskällor via flera scrapers och pluginhanterad uppspelning.',
@@ -41,10 +41,18 @@ export const StreamsScraperPlugin: LumioPlugin = {
     ctx.registerResumeRefreshProvider?.({
       id: 'streams-scraper-resume',
       pluginId: 'com.lumio.streams-scraper',
-      refresh: (entry) =>
-        entry.sourceId
-          ? resolveFreshLinkFromHash(entry.sourceId, entry.season, entry.episode)
-          : Promise.resolve(null),
+      refresh: (entry) => {
+        // Progress entries written before the hash was persisted for url-only
+        // scraper results have no sourceId, but their expired URL still embeds
+        // the torrent hash. Digging it out here is what lets those entries
+        // resume at all instead of replaying a dead link.
+        const hash = entry.sourceId?.trim().toLowerCase()
+          || entry.url?.match(/\b([a-f0-9]{40})\b/i)?.[1]?.toLowerCase()
+          || null
+        return hash
+          ? resolveFreshLinkFromHash(hash, entry.season, entry.episode)
+          : Promise.resolve(null)
+      },
     })
     ctx.registerPlayableUrlRewriter?.({
       id: 'streams-scraper-url-rewrite',

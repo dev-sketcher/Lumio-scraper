@@ -1,6 +1,7 @@
 'use client'
 
 import { lt } from './local-strings'
+import { resolveFreshLinkFromHash } from './resume-resolver'
 import React, { useEffect, useRef, useState, type MutableRefObject } from 'react'
 import { createPortal } from 'react-dom'
 import { mapWithConcurrency } from '@/lib/async-utils'
@@ -119,6 +120,24 @@ function saveLastPlayedStream(key: string, stream: StreamResult): void {
   setScopedStorageItem(LAST_PLAYED_KEY, JSON.stringify(Object.fromEntries(entries)))
 }
 
+/// A bare torrent hash as it appears inside a scraper/debrid URL.
+const INFO_HASH_IN_URL = /\b([a-f0-9]{40})\b/i
+
+/// The torrent hash to persist with playback progress, so a later resume can
+/// re-resolve a fresh link when the played URL has expired.
+///
+/// The URL fallback is what makes resume work for url-only results
+/// (AIOStreams/ElfHosted and other pre-configured scrapers): those carry no
+/// `infoHash` field, so storing only the field left the progress entry with
+/// `infoHash: null` — and a resume with no identifier can do nothing but
+/// re-use the expired URL.
+function playbackInfoHash(explicit: string | null | undefined, url: string | null | undefined): string | null {
+  const fromField = explicit?.trim().toLowerCase()
+  if (fromField) return fromField
+  const fromUrl = url?.match(INFO_HASH_IN_URL)?.[1]
+  return fromUrl ? fromUrl.toLowerCase() : null
+}
+
 /// Stable identity for a stream across separate searches. Scrapers hand back
 /// url-only results (no infoHash field) whose URLs still embed the torrent
 /// hash, so pull that out; fall back to the release name, which survives token
@@ -129,7 +148,7 @@ function streamIdentity(stream: { infoHash?: string | null; directUrl?: string |
   release: string | null
 } {
   const hashFromField = stream.infoHash?.trim().toLowerCase() || null
-  const hashFromUrl = stream.directUrl?.match(/\b([a-f0-9]{40})\b/i)?.[1]?.toLowerCase() ?? null
+  const hashFromUrl = stream.directUrl?.match(INFO_HASH_IN_URL)?.[1]?.toLowerCase() ?? null
   const release = `${stream.name ?? ''} ${stream.title ?? ''}`
     .toLowerCase()
     .replace(/\s+/g, ' ')
@@ -148,6 +167,58 @@ function matchesLastPlayed(stream: StreamResult, saved: LastPlayedStream | null)
   if (a.hash && b.hash) return a.hash === b.hash
   if (a.url && b.url && a.url === b.url) return true
   return Boolean(a.release && b.release && a.release === b.release)
+}
+
+/// Can this URL go stale? Local files, app-served endpoints and LAN sources are
+/// stable and need no round trip; remote http(s) links are the expiring kind.
+function isExpirableStreamUrl(url: string): boolean {
+  return /^https?:\/\//i.test(url)
+    && !/^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])/i.test(url)
+}
+
+/// Does this URL serve media RIGHT NOW?
+///
+/// A scraper result is only as fresh as the list it came from. Aggregators like
+/// AIOStreams hand back ready-made playback links (no `infoHash` at all — the
+/// torrent hash only survives inside the URL), and every one of them is a
+/// redirect chain that ends at the debrid CDN, which binds the download to the
+/// IP that fetched it. Search on one network, play on another — or leave a
+/// details view open across a network change — and the exact same URL answers
+/// 200 with a landing page instead of the film:
+///
+///   Wrong IP — This stream can only be played from the same IP address that
+///   first requested it. Expected IP: … Current IP: …
+///
+/// Expiry ("Link expired"), a deleted file and an exhausted account produce the
+/// same shape. Because the status is 200, anything that checks only reachability
+/// passes the page straight to mpv, which plays it as a dead 0-byte source.
+/// `/api/stream-alive` does a ranged 2-byte GET and applies the same
+/// content-type/body judgement `source_cache` uses upstream, so it recognises
+/// the whole family. Measured cost on live debrid links: 0.5–2.3 s.
+///
+/// An inconclusive answer (endpoint missing on an older host, a hiccup against
+/// our own loopback, a slow verdict) counts as ALIVE — this gate must never be
+/// the reason playback fails to start.
+async function streamUrlServesMedia(url: string, timeoutMs = 13_000): Promise<boolean> {
+  if (typeof window === 'undefined') return true
+  const controller = new AbortController()
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    const response = await fetch(`/api/stream-alive?url=${encodeURIComponent(url)}`, {
+      signal: controller.signal,
+    })
+    // 404 = host predates the endpoint. Don't punish the URL for that.
+    if (response.status === 404 || !response.ok) return true
+    const data = (await response.json().catch(() => null)) as
+      | { ok?: boolean; reachable?: boolean; reason?: string }
+      | null
+    if (!data) return true
+    return data.ok !== false && data.reachable !== false
+  } catch {
+    return true
+  } finally {
+    window.clearTimeout(timer)
+  }
 }
 
 const EPISODE_STREAM_STATUS_CONCURRENCY = 4
@@ -377,6 +448,9 @@ export function StreamsSidebarSection({
     url: string
     filename?: string
     forceProxy: boolean
+    /// Kept so the preloaded link can be re-resolved if it has died by the
+    /// time the episode actually starts (it is minted up to an hour ahead).
+    infoHash?: string | null
   } | null>(null)
   const pendingCardInfo = useRef<{
     season: number
@@ -1575,6 +1649,7 @@ function scraperInCooldown(configId: string): boolean {
               url: candidate.directUrl,
               filename: filenameForPlayback(urlFilename, candidate.title),
               forceProxy: false,
+              infoHash: candidate.infoHash ?? null,
             }
             setNextEpUrlReady(true)
             return
@@ -1590,6 +1665,7 @@ function scraperInCooldown(configId: string): boolean {
                 url: nextLink.url,
                 filename: nextLink.filename,
                 forceProxy: false,
+                infoHash: candidate.infoHash ?? null,
               }
               setNextEpUrlReady(true)
               return
@@ -1627,6 +1703,7 @@ function scraperInCooldown(configId: string): boolean {
             url: candidate.directUrl,
             filename: urlFilename,
             forceProxy: false,
+            infoHash: candidate.infoHash ?? null,
           }
           setNextEpUrlReady(true)
           return
@@ -1643,6 +1720,7 @@ function scraperInCooldown(configId: string): boolean {
               url: nextLink.url,
               filename: nextLink.filename,
               forceProxy: false,
+              infoHash: candidate.infoHash ?? null,
             }
             setNextEpUrlReady(true)
             return
@@ -1745,7 +1823,7 @@ function scraperInCooldown(configId: string): boolean {
     // Pre-configured scrapers (Comet/Jackettio) may return a direct play URL
     if (selectedStream.directUrl) {
       const urlFilename = filenameForPlayback(selectedStream.directUrl.split('/').pop()?.split('?')[0], selectedStream.title)
-      beginPlayerSession({
+      await beginPlayerSession({
         url: selectedStream.directUrl,
         filename: urlFilename,
         season: selectedSeason?.season_number,
@@ -1777,7 +1855,7 @@ function scraperInCooldown(configId: string): boolean {
     playAttemptRef.current = attemptId
     playAttemptInfoHashRef.current = null
     const urlFilename = url.split('/').pop()?.split('?')[0]
-    beginPlayerSession({
+    void beginPlayerSession({
       url,
       filename: urlFilename,
       season: selectedSeason?.season_number,
@@ -1803,15 +1881,22 @@ function scraperInCooldown(configId: string): boolean {
         const resolved = await resolveAutoplayCandidate(candidate)
         if (resolved) {
           playAttemptInfoHashRef.current = candidate.infoHash ?? null
-          beginPlayerSession({
+          // Only claim success when a session actually opened: a candidate whose
+          // link no longer serves media is rejected in there, and this loop must
+          // then try the next release rather than reporting autoplay as started.
+          const opened = await beginPlayerSession({
             url: resolved.url,
             filename: resolved.filename,
             season: selectedSeason.season_number,
             episode: selectedEpisode.episode_number,
             initialTime: playRequestInitialTime ?? undefined,
             forceProxy: resolved.forceProxy,
+            infoHash: candidate.infoHash ?? null,
           })
-          return true
+          if (opened) return true
+          // Rejected source: stay in the loading state while the next candidate
+          // is tried, instead of leaving the rejection's error step on screen.
+          setStep({ type: 'processing', message: mediaType === 'tv' ? t('startingEpisode') : t('startingMovie') })
         }
       } catch {
         // Silently try the next stream candidate.
@@ -1975,14 +2060,25 @@ function scraperInCooldown(configId: string): boolean {
         firstPlaySeenRef.current = false
         autoplayLoadFailedRef.current = false
         setPlayerHideStartSplash(true)
-        beginPlayerSession({
+        const opened = await beginPlayerSession({
           url: resolved.url,
           filename: resolved.filename,
           season: selectedSeason?.season_number,
           episode: selectedEpisode?.episode_number,
           initialTime: initialTimeOverride ?? playRequestInitialTime ?? undefined,
           forceProxy: resolved.forceProxy,
+          infoHash: candidate.infoHash ?? null,
         }, attemptId)
+        if (!opened) {
+          // Rejected before the player ever saw it (dead/IP-bound link that
+          // could not be re-resolved). Nothing to wait for — next release.
+          if (attemptId !== playAttemptRef.current) return false
+          sendTelemetry('playback.autoplay', 'info', 'candidate rejected by liveness gate -> next', {
+            directUrl: Boolean(candidate.directUrl),
+            infoHash: Boolean(candidate.infoHash),
+          })
+          continue
+        }
 
         // 20 s, not 12: torrentio /resolve URLs routinely need 10-15 s TTFB
         // and PLAY manually on them works — the 12 s window abandoned the
@@ -2134,7 +2230,9 @@ function scraperInCooldown(configId: string): boolean {
       const videoLinks = resolved.filter((l) => VIDEO_EXTS.test(l.filename) && !/^sample\b/i.test(l.filename))
       const playable = videoLinks.length > 0 ? videoLinks : resolved
       // Single file → auto-play
-      if (playable.length === 1) { openPlayer(playable[0], attemptId); setStep({ type: 'idle' }); return }
+      // Keep the gate's error step when the source was rejected — only a session
+      // that actually opened returns the UI to idle.
+      if (playable.length === 1) { if (await openPlayer(playable[0], attemptId)) setStep({ type: 'idle' }); return }
       // TV episode → try to auto-match by S##E## in filename
       if (selectedEpisode && selectedSeason && playable.length > 1) {
         const episodeMatches = playable
@@ -2145,7 +2243,7 @@ function scraperInCooldown(configId: string): boolean {
         const reliableEpisodeMatches = episodeMatches.filter((l) => l.filesize >= MIN_EPISODE_AUTOPLAY_BYTES)
         const matchPool = reliableEpisodeMatches.length > 0 ? reliableEpisodeMatches : episodeMatches
         const match = [...matchPool].sort((a, b) => b.filesize - a.filesize)[0] ?? null
-        if (match) { openPlayer(match, attemptId); setStep({ type: 'idle' }); return }
+        if (match) { if (await openPlayer(match, attemptId)) setStep({ type: 'idle' }); return }
       }
       // Movie with multiple files → pick a meaningful main file, but avoid huge/remux
       // options when a good smaller file exists (faster startup, fewer stalls).
@@ -2162,7 +2260,7 @@ function scraperInCooldown(configId: string): boolean {
           ? withinLimit
           : (filtered.length > 0 ? filtered : playable)
         const best = [...pool].sort((a, b) => b.filesize - a.filesize)[0]
-        if (best) { openPlayer(best, attemptId); setStep({ type: 'idle' }); return }
+        if (best) { if (await openPlayer(best, attemptId)) setStep({ type: 'idle' }); return }
       }
       if (!isPlayAttemptActive(attemptId)) return
       setStep({ type: 'links', links: playable })
@@ -2200,8 +2298,7 @@ function scraperInCooldown(configId: string): boolean {
         await selectPlaybackFiles(res.id, 'all')
         await pollTorrent(res.id, false, attemptId)
       } else {
-        openPlayer(await resolvePlaybackLink(value), attemptId)
-        setStep({ type: 'idle' })
+        if (await openPlayer(await resolvePlaybackLink(value), attemptId)) setStep({ type: 'idle' })
       }
     } catch (err) {
       if (!isPlayAttemptActive(attemptId)) return
@@ -2210,7 +2307,58 @@ function scraperInCooldown(configId: string): boolean {
     }
   }
 
-  function beginPlayerSession(config: {
+  /// The liveness gate every player session passes through.
+  ///
+  /// Validates the URL and, on a dead verdict, re-resolves a fresh link from the
+  /// torrent hash through the debrid provider — the same recovery the base app's
+  /// resume path uses (`lib/resume-playback.ts`), which is the only path that
+  /// had one. The hash is read from the stream when it has one and out of the
+  /// URL otherwise: aggregator results carry no `infoHash` field at all, and
+  /// they are exactly the ones whose links are IP-bound.
+  ///
+  /// Returns null when nothing playable can be produced — callers must then NOT
+  /// open a session with the original URL, because "not playable" here means the
+  /// host answers with an error PAGE, and mpv would happily load it.
+  async function ensurePlayableSource(
+    url: string,
+    hints: { filename?: string; infoHash?: string | null },
+  ): Promise<{ url: string; filename?: string; refreshed: boolean } | null> {
+    if (!isExpirableStreamUrl(url)) return { url, filename: hints.filename, refreshed: false }
+    if (await streamUrlServesMedia(url)) return { url, filename: hints.filename, refreshed: false }
+
+    const hash = hints.infoHash?.trim().toLowerCase()
+      || url.match(INFO_HASH_IN_URL)?.[1]?.toLowerCase()
+      || null
+    sendTelemetry('playback.validate', 'info', 'source not serving media -> re-resolve', {
+      mediaType,
+      title,
+      hasHash: Boolean(hash),
+      url: url.slice(0, 80),
+    })
+    if (!hash) return null
+    try {
+      const fresh = await resolveFreshLinkFromHash(
+        hash,
+        selectedSeason?.season_number,
+        selectedEpisode?.episode_number,
+      )
+      if (!fresh?.url) return null
+      // A debrid hands back the SAME download handle for a file it has already
+      // minted one for, so the re-resolve can legitimately return the dead URL
+      // verbatim. Only a link that differs AND serves media is an improvement;
+      // anything else means this release cannot play from here and the caller
+      // has to move on to another release.
+      if (fresh.url === url || !(await streamUrlServesMedia(fresh.url))) return null
+      sendTelemetry('playback.validate', 'ok', 'source re-resolved', { mediaType, title })
+      return { url: fresh.url, filename: fresh.filename ?? hints.filename, refreshed: true }
+    } catch {
+      return null
+    }
+  }
+
+  /// Opens the player on a source. Returns true when a session was actually
+  /// started (or handed to VLC), false when the source was rejected.
+  async function beginPlayerSession(config: {
     url: string
     filename?: string
     season?: number
@@ -2218,8 +2366,8 @@ function scraperInCooldown(configId: string): boolean {
     initialTime?: number
     forceProxy?: boolean
     infoHash?: string | null
-  }, attemptId?: number) {
-    if (!isPlayAttemptActive(attemptId)) return
+  }, attemptId?: number): Promise<boolean> {
+    if (!isPlayAttemptActive(attemptId)) return false
     // Never open a player session without a resolved source. Opening an empty
     // session flashed a dead player that immediately tore down and dropped the
     // user out of the detail view (to the home page on the desktop handoff).
@@ -2230,7 +2378,44 @@ function scraperInCooldown(configId: string): boolean {
       setPlayerSplashFading(false)
       setStep({ type: 'idle' })
       onAutoPlayFallback?.()
-      return
+      return false
+    }
+    // Every playback path in this section ends here — manual stream click,
+    // initial autoplay, the play-request candidate loop, next episode, a
+    // freshly unrestricted debrid link, a pasted URL — so this is the one place
+    // that has to prove the source is alive. Doing it here rather than at each
+    // call site is the whole point: a link fetched before a network change is
+    // dead no matter which of those paths carries it, and the sidebar paths
+    // previously carried it to mpv unchecked (only resume had a gate).
+    //
+    // Ahead of the VLC intercept on purpose: VLC on a phone streams the URL
+    // itself, so a dead link there is exactly as broken as one in mpv.
+    const source = await ensurePlayableSource(config.url, {
+      filename: config.filename,
+      infoHash: config.infoHash !== undefined ? config.infoHash : playAttemptInfoHashRef.current,
+    })
+    if (!isPlayAttemptActive(attemptId)) return false
+    if (!source) {
+      sendTelemetry('playback.open', 'error', 'source rejected: not serving media', {
+        mediaType,
+        title,
+        url: config.url.slice(0, 80),
+      })
+      // The candidate loop's own recovery is the right one here: a different
+      // release means a different debrid link. Flagging the load failure makes
+      // waitForFirstPlay return immediately, so it advances now instead of
+      // burning its 20 s window on a source we already know is a landing page.
+      // Leave the splash alone — the loop keeps it up across candidates.
+      if (autoplayLoopActiveRef.current) {
+        autoplayLoadFailedRef.current = true
+        return false
+      }
+      // A manual pick has nowhere to advance to, so say what happened instead
+      // of dropping the user into a player that will never show a frame.
+      setPlayerHideStartSplash(false)
+      setPlayerSplashFading(false)
+      setStep({ type: 'error', message: lt('sourceNotServingMedia') })
+      return false
     }
     // Remote session with "always open in VLC" on: hand the resolved URL
     // straight to VLC instead of opening the in-browser player. This is the
@@ -2240,10 +2425,10 @@ function scraperInCooldown(configId: string): boolean {
     // they all funnel through here. Desktop is never affected: isRemoteSession()
     // is false there. Falls through to the normal player when there's no direct
     // http(s) URL to give VLC (openInVlc returns false, e.g. a local file).
-    if (isRemoteSession() && prefersVlc() && openInVlc(config.url)) {
+    if (isRemoteSession() && prefersVlc() && openInVlc(source.url)) {
       setStep({ type: 'idle' })
       onOpenedInVlc?.()
-      return
+      return true
     }
     nextEpTransitionRef.current = false
     nextEpAutoplayPendingRef.current = false
@@ -2253,22 +2438,30 @@ function scraperInCooldown(configId: string): boolean {
       title,
       season: config.season ?? null,
       episode: config.episode ?? null,
+      refreshed: source.refreshed,
     })
     setPlayerTitle(title)
-    setPlayerFilename(config.filename)
+    setPlayerFilename(source.filename)
     setPlayerSeason(config.season)
     setPlayerEpisode(config.episode)
     setPlayerInitialTime(config.initialTime)
     setPlayerForceProxy(config.forceProxy ?? false)
     setPlayerHideStartSplash(true)
     setPlayerSplashFading(false)
-    setPlayerInfoHash(config.infoHash !== undefined ? config.infoHash : playAttemptInfoHashRef.current)
-    setPlayerUrl(config.url)
+    // Every player session goes through here (manual pick, autoplay, next
+    // episode, unrestricted debrid link), so this is the single place that has
+    // to get the resume identifier right.
+    setPlayerInfoHash(playbackInfoHash(
+      config.infoHash !== undefined ? config.infoHash : playAttemptInfoHashRef.current,
+      source.url,
+    ))
+    setPlayerUrl(source.url)
     setStep({ type: 'idle' })
+    return true
   }
 
-  function openPlayer(link: RdUnrestrictedLink, attemptId?: number) {
-    beginPlayerSession({
+  async function openPlayer(link: RdUnrestrictedLink, attemptId?: number): Promise<boolean> {
+    const opened = await beginPlayerSession({
       url: link.download,
       filename: link.filename,
       season: selectedSeason?.season_number,
@@ -2287,6 +2480,7 @@ function scraperInCooldown(configId: string): boolean {
     setNextEpUrlReady(false)
     setPlayerSkipHomeKitClose(false)
     setPlayerSkipHomeKitOpen(false)
+    return opened
   }
 
   useEffect(() => {
@@ -2727,7 +2921,20 @@ function scraperInCooldown(configId: string): boolean {
       setWatchedEps(getWatchedForSeries(numericTmdbId))
     }
 
-    if (!nextItem) {
+    // The preloaded link was minted while the PREVIOUS episode was playing —
+    // up to an hour earlier, possibly on another network. It goes to the player
+    // by URL swap (to keep fullscreen/track state), which is the one playback
+    // path that does not run through beginPlayerSession, so it needs the same
+    // gate here. A source that cannot be revived is treated exactly like having
+    // no preload at all: fall through to a fresh search for the episode.
+    const nextSource = nextItem
+      ? await ensurePlayableSource(nextItem.url, {
+          filename: nextItem.filename,
+          infoHash: nextItem.infoHash ?? null,
+        })
+      : null
+
+    if (!nextSource) {
       if (!targetSeason) {
         nextEpAutoplayPendingRef.current = false
         setPlayerSkipHomeKitOpen(false)
@@ -2771,10 +2978,11 @@ function scraperInCooldown(configId: string): boolean {
     setSelectedEpisode(targetEpisode)
     setPlayerSeason(cardInfo.season)
     setPlayerEpisode(cardInfo.episode)
-    setPlayerFilename(nextItem.filename)
+    setPlayerFilename(nextSource.filename)
     setPlayerInitialTime(undefined)
-    setPlayerForceProxy(nextItem.forceProxy)
-    setPlayerUrl(nextItem.url)
+    setPlayerForceProxy(nextItem?.forceProxy ?? false)
+    setPlayerInfoHash(playbackInfoHash(nextItem?.infoHash ?? null, nextSource.url))
+    setPlayerUrl(nextSource.url)
   }
 
   // ---- render ----
@@ -3138,6 +3346,43 @@ function scraperInCooldown(configId: string): boolean {
                 playAttemptRef.current = attemptId
                 sendTelemetry('playback.autoplay', 'info', 'post-start death -> recovery', { resumeAt })
                 void tryPlayRequestAutoplay(lastAutoplayStreamsRef.current, attemptId, resumeAt)
+                return true
+              }
+              // Pre-first-frame death on a source no candidate loop is driving
+              // (manual stream click, next-episode swap, pasted link). The
+              // liveness gate should have caught a dead link before the session
+              // opened, but a link can also die between the probe and mpv's
+              // first read — and a source that answers with a landing page can
+              // only ever produce this exact failure. So re-resolve once and
+              // swap the source in place, mirroring the base app's resume
+              // recovery (`handleResumeLoadFailed`). Keeping the modal open
+              // while that runs is what lets the swap be invisible.
+              if (playbackRecoveryAttemptsRef.current === 0 && playerUrl) {
+                playbackRecoveryAttemptsRef.current += 1
+                const deadUrl = playerUrl
+                const deadFilename = playerFilename
+                const deadInfoHash = playerInfoHash
+                const resumeAt = Math.max(0, lastPlaybackTimeRef.current - 5)
+                void (async () => {
+                  const source = await ensurePlayableSource(deadUrl, {
+                    filename: deadFilename,
+                    infoHash: deadInfoHash,
+                  })
+                  if (source && source.url !== deadUrl) {
+                    sendTelemetry('playback.validate', 'ok', 'player load failed -> swapped fresh source')
+                    setPlayerFilename(source.filename)
+                    setPlayerInitialTime(resumeAt > 0 ? resumeAt : undefined)
+                    setPlayerUrl(source.url)
+                    return
+                  }
+                  // Nothing better to offer. Close rather than leave the user on
+                  // a player that will never show a frame, and — when the source
+                  // is provably not serving media — say why instead of failing
+                  // silently. A source the probe considers alive is mpv's own
+                  // problem (codec, container), so that keeps the old silence.
+                  setPlayerUrl(null)
+                  if (!source) setStep({ type: 'error', message: lt('sourceNotServingMedia') })
+                })()
                 return true
               }
               return false

@@ -20,6 +20,7 @@ const STRINGS = {
     debridKeyMissing: 'Debrid key missing',
     streamProviderAddIndexed: '+ TorrentsDB',
     streamProviderAddStandard: '+ Torrentio',
+    sourceNotServingMedia: 'This source no longer serves the film — the link has expired or is locked to the network it was fetched on. Search again or pick another stream.',
     aiostreamsHint: 'AIOStreams is configured on its own site (UUID + password, debrid keys and filters live there). Configure once, then paste the manifest URL from the Save & Install page here.',
   },
   sv: {
@@ -36,6 +37,7 @@ const STRINGS = {
     debridKeyMissing: 'Debrid-nyckel saknas',
     streamProviderAddIndexed: '+ TorrentsDB',
     streamProviderAddStandard: '+ Torrentio',
+    sourceNotServingMedia: 'Källan levererar inte filmen längre — länken har gått ut eller är låst till nätverket den hämtades på. Sök om eller välj en annan stream.',
     aiostreamsHint: 'AIOStreams konfigureras på sin egen sida (UUID + lösenord — debrid-nycklar och filter bor där). Konfigurera en gång, klistra sedan in manifest-URL:en från Save & Install-sidan här.',
   },
 } as const

@@ -59,15 +59,25 @@ async function fetchWithTimeout(input: string, init: RequestInit = {}, ms = 8_00
   }
 }
 
+/// Is this direct URL actually serving media right now?
+///
+/// `/api/stream-alive` is the check that recognises an expired debrid link:
+/// those answer 200 with a small "Link expired" HTML page, so any check that
+/// only looks at the HTTP status (or at whether our own probe endpoint replied)
+/// accepts them. Missing endpoint / network noise counts as playable so the
+/// guard can never be the reason a good candidate is skipped.
 async function probeDirectUrl(inputUrl: string): Promise<boolean> {
   const controller = new AbortController()
-  const timer = window.setTimeout(() => controller.abort(), 6_000)
+  const timer = window.setTimeout(() => controller.abort(), 10_000)
   try {
     const response = await fetch(
-      `/api/probe-streams?url=${encodeURIComponent(inputUrl)}`,
+      `/api/stream-alive?url=${encodeURIComponent(inputUrl)}`,
       { signal: controller.signal },
     )
-    return response.ok
+    if (response.status === 404 || !response.ok) return true
+    const data = await response.json().catch(() => null) as { ok?: boolean; reachable?: boolean } | null
+    if (!data) return true
+    return data.ok !== false && data.reachable !== false
   } catch {
     return false
   } finally {
@@ -131,7 +141,12 @@ async function tryResolveDirectOrHash(imdbId: string): Promise<{ infoHash: strin
       const ok = await probeDirectUrl(candidate.directUrl)
       if (ok) {
         selectedDirect = candidate.directUrl
-        selectedHash = candidate.infoHash || null
+        // Keep a hash even for url-only results (the URL embeds it) so the
+        // progress entry this playback writes can be resumed after the link
+        // expires instead of replaying the dead URL.
+        selectedHash = candidate.infoHash
+          || candidate.directUrl.match(/\b([a-f0-9]{40})\b/i)?.[1]?.toLowerCase()
+          || null
         break
       }
     }
