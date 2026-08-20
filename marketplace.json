@@ -11,7 +11,7 @@
         "en": "Streams Scraper",
         "sv": "Stream-scraper"
       },
-      "version": "1.0.101",
+      "version": "1.0.102",
       "minAppVersion": "0.1.39",
       "description": {
         "en": "Adds streaming sources through multiple scraper backends and plugin-managed playback.",

@@ -12,12 +12,19 @@ import { StreamsSidebarSection } from './streams-sidebar-section'
 import { resolveFreshLinkFromHash } from './resume-resolver'
 import { resolvePlayableStreamUrl } from './playback/resolve-stream-url'
 import { buildPlaybackProviderConfigSegment } from './playback/stream-provider-playback'
-import { DebridSettingsSection } from './debrid-settings-section'
+import { DebridSettingsSection, DEBRID_SERVICES } from './debrid-settings-section'
+import { getStreamProviderConfigs } from '@/lib/media-stream/config'
+import { getStreamProviderAccessKey } from '@/lib/media-stream/storage'
+
+/// Etiketterna, inte id:na: översikten visar dem för användaren ("TorBox",
+/// inte "torbox").
+const DEBRID_SERVICE_IDS = DEBRID_SERVICES.map((service) => service.id)
+const DEBRID_LABEL_BY_ID = new Map(DEBRID_SERVICES.map((service) => [service.id, service.label]))
 
 export const StreamsScraperPlugin: LumioPlugin = {
   id: 'com.lumio.streams-scraper',
   name: { en: 'Stream Scraper', sv: 'Stream Scraper' },
-  version: '1.0.101',
+  version: '1.0.102',
   description: {
     en: 'Adds streaming sources via multiple scrapers and plugin-managed playback.',
     sv: 'Lägger till strömningskällor via flera scrapers och pluginhanterad uppspelning.',
@@ -83,6 +90,62 @@ export const StreamsScraperPlugin: LumioPlugin = {
       id: 'debrid',
       label: { en: 'Debrid', sv: 'Debrid' },
       Section: DebridSettingsSection,
+    })
+
+    // Översiktskort (Inställningar → Översikt). Rapporterar bara AKTIVA
+    // tjänster: en lista över allt som kan konfigureras hör hemma i sektionen,
+    // medan översikten ska svara på vad som faktiskt är igång. getStatus läser
+    // enbart lokal konfiguration — ingen nätverkskoll, eftersom översikten
+    // renderar korten varje gång den öppnas.
+    ctx.registerOverviewStatusProvider?.({
+      id: 'streams-scraper-scrapers',
+      label: { en: 'Scrapers', sv: 'Scrapers' },
+      order: 100,
+      getStatus: () => {
+        const active = getStreamProviderConfigs().filter((config) => config.enabled)
+        return {
+          ok: active.length > 0,
+          detail: active.length > 0
+            ? {
+                en: `${active.length} active`,
+                sv: `${active.length} aktiva`,
+              }
+            : {
+                en: 'No scraper is enabled — nothing can find streams.',
+                sv: 'Ingen scraper är påslagen — inget kan hitta strömmar.',
+              },
+          accountLabel: active.length > 0
+            ? active.map((config) => config.name || config.type).join(', ')
+            : null,
+          settingsTarget: 'scrapers',
+        }
+      },
+    })
+
+    ctx.registerOverviewStatusProvider?.({
+      id: 'streams-scraper-debrid',
+      label: { en: 'Debrid', sv: 'Debrid' },
+      order: 101,
+      getStatus: () => {
+        // En sparad nyckel är det enda lokala beviset på att tjänsten är
+        // upplagd. Att validera den mot tjänsten hör till debrid-sektionen.
+        const connected = DEBRID_SERVICE_IDS.filter(
+          (id) => (getStreamProviderAccessKey(id) ?? '').trim().length > 0,
+        )
+        return {
+          ok: connected.length > 0,
+          detail: connected.length > 0
+            ? null
+            : {
+                en: 'No debrid service connected. Most streams need one to play.',
+                sv: 'Ingen debridtjänst ansluten. De flesta strömmar kräver en för att spelas.',
+              },
+          accountLabel: connected.length > 0
+            ? connected.map((id) => DEBRID_LABEL_BY_ID.get(id) ?? id).join(', ')
+            : null,
+          settingsTarget: 'debrid',
+        }
+      },
     })
   },
 }

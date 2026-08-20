@@ -13,7 +13,7 @@ import {
 // given scraper resolves through stays in that scraper's own config (the
 // DebridKeyField in scrapers-settings-section). This page is the one place
 // the shared keys are entered.
-const DEBRID_SERVICES: Array<{ id: string; label: string; signupUrl: string }> = [
+export const DEBRID_SERVICES: Array<{ id: string; label: string; signupUrl: string }> = [
   { id: 'realdebrid', label: 'RealDebrid', signupUrl: 'https://real-debrid.com' },
   { id: 'alldebrid', label: 'AllDebrid', signupUrl: 'https://alldebrid.com' },
   { id: 'easydebrid', label: 'EasyDebrid', signupUrl: 'https://easydebrid.com' },
