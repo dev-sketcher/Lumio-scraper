@@ -13,7 +13,7 @@ import { resolveFreshLinkFromHash } from './resume-resolver'
 import { resolvePlayableStreamUrl } from './playback/resolve-stream-url'
 import { buildPlaybackProviderConfigSegment } from './playback/stream-provider-playback'
 import { DebridSettingsSection, DEBRID_SERVICES } from './debrid-settings-section'
-import { getStreamProviderConfigs } from '@/lib/media-stream/config'
+import { getStreamProviderConfigs, loadPresetUrl } from '@/lib/media-stream/config'
 import { getStreamProviderAccessKey } from '@/lib/media-stream/storage'
 
 /// Etiketterna, inte id:na: översikten visar dem för användaren ("TorBox",
@@ -24,7 +24,7 @@ const DEBRID_LABEL_BY_ID = new Map(DEBRID_SERVICES.map((service) => [service.id,
 export const StreamsScraperPlugin: LumioPlugin = {
   id: 'com.lumio.streams-scraper',
   name: { en: 'Stream Scraper', sv: 'Stream Scraper' },
-  version: '1.0.102',
+  version: '1.0.103',
   description: {
     en: 'Adds streaming sources via multiple scrapers and plugin-managed playback.',
     sv: 'Lägger till strömningskällor via flera scrapers och pluginhanterad uppspelning.',
@@ -103,19 +103,37 @@ export const StreamsScraperPlugin: LumioPlugin = {
       order: 100,
       getStatus: () => {
         const active = getStreamProviderConfigs().filter((config) => config.enabled)
+        // "Påslagen" räcker inte: torrentio levereras PÅSLAGEN som standard,
+        // pekad mot RealDebrid, utan nyckel. Ett grönt kort på en orörd
+        // installation är sämre än inget kort — det säger att allt är klart
+        // medan ingenting kan spelas. Samma villkor som appens
+        // hasAnyStreamSource: torrentio behöver en debridnyckel, övriga presets
+        // behöver användarens egen URL (som bär nycklarna).
+        const configured = active.filter((config) => {
+          if (config.preset === 'torrentio') {
+            const debrid = (config.options as { debridProvider?: string }).debridProvider
+            return Boolean(debrid) && getStreamProviderAccessKey(debrid as string).trim().length > 0
+          }
+          return loadPresetUrl(config.preset).trim().length > 0
+        })
         return {
-          ok: active.length > 0,
-          detail: active.length > 0
+          ok: configured.length > 0,
+          detail: configured.length > 0
             ? {
-                en: `${active.length} active`,
-                sv: `${active.length} aktiva`,
+                en: `${configured.length} configured`,
+                sv: `${configured.length} konfigurerade`,
               }
-            : {
-                en: 'No scraper is enabled — nothing can find streams.',
-                sv: 'Ingen scraper är påslagen — inget kan hitta strömmar.',
-              },
-          accountLabel: active.length > 0
-            ? active.map((config) => config.name || config.type).join(', ')
+            : active.length > 0
+              ? {
+                  en: 'A scraper is enabled but not configured — add a debrid key or your own URL.',
+                  sv: 'En scraper är påslagen men inte konfigurerad — lägg till en debridnyckel eller egen URL.',
+                }
+              : {
+                  en: 'No scraper is enabled — nothing can find streams.',
+                  sv: 'Ingen scraper är påslagen — inget kan hitta strömmar.',
+                },
+          accountLabel: configured.length > 0
+            ? configured.map((config) => config.preset).join(', ')
             : null,
           settingsTarget: 'scrapers',
         }
