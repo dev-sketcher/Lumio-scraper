@@ -183980,7 +183980,7 @@ ${cue.text}`).join("\n\n")}
   function isExpirableStreamUrl(url) {
     return /^https?:\/\//i.test(url) && !/^https?:\/\/(127\.0\.0\.1|localhost|\[::1\])/i.test(url);
   }
-  async function streamUrlServesMedia(url, timeoutMs = 13e3, minBytes = SLATE_MIN_BYTES) {
+  async function streamUrlServesMedia(url, timeoutMs = 3e3, minBytes = SLATE_MIN_BYTES) {
     if (typeof window === "undefined") return true;
     if (isClientSession()) return true;
     const controller = new AbortController();
@@ -185334,7 +185334,7 @@ ${cue.text}`).join("\n\n")}
         }
       }
       sendTelemetry("playback.autoplay", "info", "autoplay resolve start", {
-        pluginVersion: "1.0.106",
+        pluginVersion: "1.0.107",
         streamCount: streamList.length,
         candidateCount: pool.length,
         withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,

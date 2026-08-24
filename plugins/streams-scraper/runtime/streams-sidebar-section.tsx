@@ -204,7 +204,22 @@ function isExpirableStreamUrl(url: string): boolean {
 ///
 /// `minBytes` adds the size floor that catches the playable "Link expired"
 /// slate — see SLATE_MIN_BYTES.
-async function streamUrlServesMedia(url: string, timeoutMs = 13_000, minBytes = SLATE_MIN_BYTES): Promise<boolean> {
+/// Budget: 3 s, inte 13.
+///
+/// Uppmätt på ett riktigt klick: 12 999 ms från "play stream requested" till
+/// att spelarsessionen öppnades — exakt den gamla timeouten. Strömmen var
+/// cachad och hade direkt-URL; det var kollen själv som stod och väntade.
+///
+/// Tretton sekunder köpte ingenting, för vid timeout blir svaret ALIVE ändå
+/// (se kontraktet ovan). Vi betalade alltså full väntan för ett besked som
+/// per definition inte kan stoppa uppspelningen. Endpointen gör en range-GET
+/// på två byte och svarar normalt på ett par hundra millisekunder — de
+/// friska svaren i samma logg låg på 1,8–2,5 s inklusive allt runtomkring.
+///
+/// Tre sekunder ger alltså gott om marginal för ett äkta svar och kapar
+/// stallet. En källa som är långsammare än så hinner ändå fångas: spelarens
+/// laddfel och första-bildrutan-vakten går båda vidare till nästa release.
+async function streamUrlServesMedia(url: string, timeoutMs = 3_000, minBytes = SLATE_MIN_BYTES): Promise<boolean> {
   if (typeof window === 'undefined') return true
   /// CLIENT SESSION (LAN/remote): the host must not judge the link.
   ///
@@ -2049,7 +2064,7 @@ function scraperInCooldown(configId: string): boolean {
       }
     }
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.106',
+      pluginVersion: '1.0.107',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
