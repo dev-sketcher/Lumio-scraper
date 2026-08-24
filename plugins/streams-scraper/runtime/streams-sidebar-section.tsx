@@ -35,6 +35,7 @@ import {
   setScopedStorageItem,
   lookupPluginStreams,
   lookupPluginStreamsBatchRanked,
+  useTvMode,
 } from '@/lib/plugin-sdk'
 import {
   getStreamProviderConfigs,
@@ -69,6 +70,7 @@ import {
   matchesEpisodeIdentifier,
   pickBestUnrestrictedLink,
   qualityRank,
+  SLATE_MIN_BYTES,
   VIDEO_EXTS,
 } from '@/lib/stream-provider-runtime/stream-provider-stream-utils'
 
@@ -199,12 +201,30 @@ function isExpirableStreamUrl(url: string): boolean {
 /// An inconclusive answer (endpoint missing on an older host, a hiccup against
 /// our own loopback, a slow verdict) counts as ALIVE — this gate must never be
 /// the reason playback fails to start.
-async function streamUrlServesMedia(url: string, timeoutMs = 13_000): Promise<boolean> {
+///
+/// `minBytes` adds the size floor that catches the playable "Link expired"
+/// slate — see SLATE_MIN_BYTES.
+async function streamUrlServesMedia(url: string, timeoutMs = 13_000, minBytes = SLATE_MIN_BYTES): Promise<boolean> {
   if (typeof window === 'undefined') return true
+  /// CLIENT SESSION (LAN/remote): the host must not judge the link.
+  ///
+  /// Outside Tauri, rd-client resolves the link with a plain browser fetch, so
+  /// it is bound to the CLIENT's outbound IP. `/api/stream-alive` runs on the
+  /// HOST, from the host's IP — the source then answers with the "Wrong IP"
+  /// page and this gate condemns every stream as dead. On 5G that left NO
+  /// stream playable: "the link has expired, or is bound to the network it was
+  /// fetched on".
+  ///
+  /// The client cannot probe for itself (CORS), so the verdict is skipped here.
+  /// The protection remains where it is caught anyway: the player's load error
+  /// and the first-frame watchdog both move on to the next release by
+  /// themselves.
+  if (isClientSession()) return true
   const controller = new AbortController()
   const timer = window.setTimeout(() => controller.abort(), timeoutMs)
   try {
-    const response = await fetch(`/api/stream-alive?url=${encodeURIComponent(url)}`, {
+    const sizeFloor = minBytes > 0 ? `&minBytes=${Math.round(minBytes)}` : ''
+    const response = await fetch(`/api/stream-alive?url=${encodeURIComponent(url)}${sizeFloor}`, {
       signal: controller.signal,
     })
     // 404 = host predates the endpoint. Don't punish the URL for that.
@@ -1983,8 +2003,29 @@ function scraperInCooldown(configId: string): boolean {
         return (getStreamSizeBytes(a) ?? Number.POSITIVE_INFINITY) - (getStreamSizeBytes(b) ?? Number.POSITIVE_INFINITY)
       })
     }
+    /// Cachade kandidater först — på ALLA sessioner, inte bara fjärr.
+    ///
+    /// Rangordningen ovan (1080p, x264) är fjärrspecifik och ska förbli det:
+    /// den handlar om vad webbläsaren orkar avkoda. Men cachestatus handlar om
+    /// STARTTID och gäller överallt. Att den låg inne i fjärrgrenen betydde att
+    /// skrivbordet valde utan att bry sig, och en icke-cachad release tvingar
+    /// debriden att hämta hem filen först: resolveFreshLinkFromHash pollar då
+    /// igenom hela sin stege, 13,5 s, innan spelaren ens får en URL. Uppmätt
+    /// på ett riktigt play: 12 997 ms.
+    ///
+    /// Sorteringen är stabil, så ordningen inom varje grupp — inklusive
+    /// fjärrgrenens rangordning — står kvar orörd.
+    ordered.sort((a, b) => (a.cached === b.cached ? 0 : a.cached ? -1 : 1))
+
     const rememberedIndex = ordered.findIndex((stream) => matchesLastPlayed(stream, remembered))
-    if (rememberedIndex > 0) {
+    /// Den ihågkomna releasen får gå före — men inte förbi en cachad.
+    ///
+    /// Debridcachen är ett rullande fönster: det du såg igår kan ha fallit ur
+    /// den. Att ändå lyfta den till plats noll bytte en start på under en
+    /// sekund mot en på tretton, för att slippa byta release. Är inget
+    /// cachat spelar det ingen roll — då är minnet fortfarande bästa gissning.
+    const hasCachedCandidate = ordered.some((stream) => stream.cached)
+    if (rememberedIndex > 0 && (ordered[rememberedIndex].cached || !hasCachedCandidate)) {
       const [hit] = ordered.splice(rememberedIndex, 1)
       ordered.unshift(hit)
     }
@@ -2008,11 +2049,17 @@ function scraperInCooldown(configId: string): boolean {
       }
     }
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.97',
+      pluginVersion: '1.0.105',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
       withInfoHash: pool.filter((c) => Boolean(c.infoHash)).length,
+      // Startade vi på en cachad? En icke-cachad förstahandsval betyder att
+      // debriden måste hämta hem filen, och då är den långa pollstegen
+      // förväntad — inte ett fel att jaga.
+      cachedInPool: pool.filter((c) => c.cached).length,
+      firstIsCached: Boolean(pool[0]?.cached),
+      rememberedWasHeld: rememberedIndex > 0 && pool[0] !== ordered[0],
     })
     if (pool.length === 0) {
       if (attemptId !== playAttemptRef.current) return false
@@ -3542,6 +3589,10 @@ function streamHttpUrl(stream: StreamResult): string | null {
 }
 
 function StreamRow({ stream, onPlay, unsupported = false }: { stream: StreamResult; onPlay: (s: StreamResult) => void; unsupported?: boolean }) {
+  // Every row's Play button is a focus station in TV mode. Without them the
+  // panel opens but cannot be used — the list is visible and nothing in it is
+  // selectable.
+  const isTvMode = useTvMode()
   const { t } = useLang()
   const [copied, setCopied] = useState(false)
   const url = streamHttpUrl(stream)
@@ -3643,8 +3694,11 @@ function StreamRow({ stream, onPlay, unsupported = false }: { stream: StreamResu
         )}
         <button
           type="button"
+          {...(isTvMode ? { 'data-f': '' } : {})}
           onClick={() => onPlay(stream)}
-          className="flex-shrink-0 rounded-full bg-aurora-500/80 px-3 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-white transition hover:bg-aurora-400/80"
+          className={isTvMode
+            ? 'min-h-[44px] flex-shrink-0 rounded-full bg-aurora-500/80 px-5 text-sm font-medium text-white transition hover:bg-aurora-400/80'
+            : 'flex-shrink-0 rounded-full bg-aurora-500/80 px-3 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-white transition hover:bg-aurora-400/80'}
         >
           {t('play')}
         </button>

@@ -9,6 +9,7 @@ import {
   resolvePlaybackLink,
   selectPlaybackFiles,
 } from '@/lib/stream-provider-runtime/playback/stream-provider-playback'
+import { SLATE_MIN_BYTES } from '@/lib/stream-provider-runtime/stream-provider-stream-utils'
 
 const VIDEO_EXTS = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i
 
@@ -71,7 +72,7 @@ async function probeDirectUrl(inputUrl: string): Promise<boolean> {
   const timer = window.setTimeout(() => controller.abort(), 10_000)
   try {
     const response = await fetch(
-      `/api/stream-alive?url=${encodeURIComponent(inputUrl)}`,
+      `/api/stream-alive?url=${encodeURIComponent(inputUrl)}&minBytes=${SLATE_MIN_BYTES}`,
       { signal: controller.signal },
     )
     if (response.status === 404 || !response.ok) return true

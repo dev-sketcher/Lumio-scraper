@@ -3,6 +3,19 @@ import type { RdTorrentInfo, RdUnrestrictedLink } from '@/lib/stream-provider-ru
 
 export const VIDEO_EXTS = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i
 
+/**
+ * Golv för "det här kan inte vara filmen".
+ *
+ * En utgången debrid-länk omdirigerar till en RIKTIG spelbar notisvideo
+ * (slate.elfhosted.com/…/slate.mp4, mätt till 2,3 MB): 206, video/mp4, riktiga
+ * bytes — den klarar status, innehållstyp OCH kroppssniffning, och nådde därför
+ * mpv som "Link expired" i fullskärm. Ingen verklig film- eller avsnittsfil
+ * ligger under 20 MB, så golvet skiljer familjen utan att kunna underkänna
+ * något spelbart. Skickas som `minBytes` till /api/stream-alive, som läser
+ * totallängden ur Content-Range/Content-Length.
+ */
+export const SLATE_MIN_BYTES = 20 * 1024 * 1024
+
 export function qualityRank(name: string): number {
   const normalized = name.toLowerCase()
   if (normalized.includes('4k') || normalized.includes('2160p')) return 4

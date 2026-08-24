@@ -71,7 +71,19 @@ async function fetchJsonWithTimeout<T>(
   }
 }
 
-async function fetchMovieStreamResults(imdbId: string): Promise<StreamResult[]> {
+/**
+ * `null` = INGEN källa svarade. `[]` = en källa svarade, och den hade inget.
+ *
+ * Skillnaden är hela poängen. Faller varje misslyckad väg — tidsgräns,
+ * nätverksfel, saknad direktadress — ned i ett tomt `[]` läser anroparen det som
+ * "titeln har ingen ström", och Spela-knappen försvinner mitt framför ögonen:
+ * först "söker strömmar", sedan ingenting, trots att detaljpanelen hittar samma
+ * ström en stund senare.
+ *
+ * Tidsgränserna här är 2,5 sekunder, vilket sällan räcker för en scraper under
+ * belastning — utfallet är vanligt, inte exotiskt.
+ */
+async function fetchMovieStreamResults(imdbId: string): Promise<StreamResult[] | null> {
   const requestContext = getPrimaryStreamProviderRequestContext()
   const params = new URLSearchParams({ imdbId, type: 'movie' })
   const directUrl = buildDirectStreamProviderUrl(imdbId, 'movie')
@@ -100,7 +112,8 @@ async function fetchMovieStreamResults(imdbId: string): Promise<StreamResult[]> 
     // Fall through to direct browser fetch.
   }
 
-  if (!directUrl) return []
+  // Ingen direktadress kvar att fråga: vi VET inte, vi har bara slut på vägar.
+  if (!directUrl) return null
 
   try {
     const data = await fetchJsonWithTimeout<{ streams?: Array<{ name: string; title: string; infoHash?: string; url?: string }> }>(
@@ -121,11 +134,12 @@ async function fetchMovieStreamResults(imdbId: string): Promise<StreamResult[]> 
         directUrl: stream.url || undefined,
       }))
   } catch {
-    return []
+    return null
   }
 }
 
-async function fetchEpisodeStreamResults(imdbId: string, season: number, episode: number): Promise<StreamResult[]> {
+/** Samma null-kontrakt som `fetchMovieStreamResults` — se det för varför. */
+async function fetchEpisodeStreamResults(imdbId: string, season: number, episode: number): Promise<StreamResult[] | null> {
   const requestContext = getPrimaryStreamProviderRequestContext()
   const params = new URLSearchParams({
     imdbId,
@@ -159,7 +173,8 @@ async function fetchEpisodeStreamResults(imdbId: string, season: number, episode
     // Fall through to direct browser fetch.
   }
 
-  if (!directUrl) return []
+  // Ingen direktadress kvar att fråga: vi VET inte, vi har bara slut på vägar.
+  if (!directUrl) return null
 
   try {
     const data = await fetchJsonWithTimeout<{ streams?: Array<{ name: string; title: string; infoHash?: string; url?: string }> }>(
@@ -180,7 +195,7 @@ async function fetchEpisodeStreamResults(imdbId: string, season: number, episode
         directUrl: stream.url || undefined,
       }))
   } catch {
-    return []
+    return null
   }
 }
 
@@ -194,6 +209,8 @@ export async function checkStreamsScraperMovieHasStream(imdbId: string | null): 
   const filters = getStreamFilterSettings()
   const request = (async () => {
     const streams = await fetchMovieStreamResults(imdbId)
+    // Okänt förblir okänt. Bara ett faktiskt svar får bli "nej".
+    if (streams === null) return null
     const visibility = applyStreamVisibilityFilters(streams, filters)
     return streams.some((_, index) => visibility[index])
   })()
@@ -220,6 +237,7 @@ export async function checkStreamsScraperEpisodeHasStream(
   const filters = getStreamFilterSettings()
   const request = (async () => {
     const streams = await fetchEpisodeStreamResults(imdbId, season, episode)
+    if (streams === null) return null
     const visibility = applyStreamVisibilityFilters(streams, filters)
     return streams.some((_, index) => visibility[index])
   })()
