@@ -2049,7 +2049,7 @@ function scraperInCooldown(configId: string): boolean {
       }
     }
     sendTelemetry('playback.autoplay', 'info', 'autoplay resolve start', {
-      pluginVersion: '1.0.105',
+      pluginVersion: '1.0.106',
       streamCount: streamList.length,
       candidateCount: pool.length,
       withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,

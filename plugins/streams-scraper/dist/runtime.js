@@ -166505,6 +166505,9 @@
       copyStreamLink: "Copy stream link",
       downloadThisVideo: "Download this video",
       openInVlc: "Play in VLC",
+      vlcToggleOn: "VLC on",
+      vlcToggleOff: "VLC off",
+      vlcToggleTitle: "Open streams directly in VLC",
       openInExternalPrefix: "Play in",
       openInExternalPlayer: "Open in external player",
       externalPlayerToggle: "External player",
@@ -168609,6 +168612,9 @@
       copyStreamLink: "Kopiera streaml\xE4nk",
       downloadThisVideo: "Ladda ner videon",
       openInVlc: "Spela i VLC",
+      vlcToggleOn: "VLC p\xE5",
+      vlcToggleOff: "VLC av",
+      vlcToggleTitle: "\xD6ppna streams direkt i VLC",
       openInExternalPrefix: "Spela i",
       openInExternalPlayer: "\xD6ppna i extern spelare",
       externalPlayerToggle: "Extern spelare",
@@ -185328,7 +185334,7 @@ ${cue.text}`).join("\n\n")}
         }
       }
       sendTelemetry("playback.autoplay", "info", "autoplay resolve start", {
-        pluginVersion: "1.0.105",
+        pluginVersion: "1.0.106",
         streamCount: streamList.length,
         candidateCount: pool.length,
         withDirectUrl: pool.filter((c) => Boolean(c.directUrl)).length,
