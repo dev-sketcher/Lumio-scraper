@@ -291,6 +291,11 @@ function formatStreamProviderLabel(provider: string): string {
 
 function getEnabledScraperAccessState(): {
   hasPlaybackAccess: boolean
+  // Skild från hasPlaybackAccess: BÅDA är false när ingen scraper är påslagen
+  // OCH när en påslagen scraper saknar nyckel, men åtgärden skiljer sig — slå
+  // på en scraper respektive lägg in en nyckel. Utan det här fältet fick båda
+  // lägena samma "koppla en debrid-tjänst", vilket är fel råd i det första.
+  hasEnabledScraper: boolean
   missingProviderLabels: string[]
   primaryProviderLabel: string
 } {
@@ -298,6 +303,7 @@ function getEnabledScraperAccessState(): {
   if (enabledConfigs.length === 0) {
     return {
       hasPlaybackAccess: false,
+      hasEnabledScraper: false,
       missingProviderLabels: [],
       primaryProviderLabel: 'Stream provider',
     }
@@ -328,6 +334,7 @@ function getEnabledScraperAccessState(): {
 
   return {
     hasPlaybackAccess,
+    hasEnabledScraper: true,
     missingProviderLabels: [...missingProviderLabels],
     primaryProviderLabel,
   }
@@ -392,6 +399,7 @@ export function StreamsSidebarSection({
 }: RdStreamingSectionProps) {
   const { t, lang } = useLang()
   const [hasPlaybackAccess, setHasPlaybackAccess] = useState(() => getEnabledScraperAccessState().hasPlaybackAccess)
+  const [hasEnabledScraper] = useState(() => getEnabledScraperAccessState().hasEnabledScraper)
   const [missingProviderLabels, setMissingProviderLabels] = useState<string[]>(() => getEnabledScraperAccessState().missingProviderLabels)
   const [primaryProviderLabel, setPrimaryProviderLabel] = useState(() => getEnabledScraperAccessState().primaryProviderLabel)
   const [streamFilters, setStreamFilters] = useState(DEFAULT_FILTERS)
@@ -3052,10 +3060,15 @@ function scraperInCooldown(configId: string): boolean {
   if (!hasPlaybackAccess) {
     return (
       <section>
-        <p className="text-xs uppercase tracking-[0.24em] text-slate-400">Debrid-tjänst saknas</p>
+        <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+          {lt(hasEnabledScraper ? 'debridMissingTitle' : 'noScraperTitle')}
+        </p>
+        {/* Vägen byggs av värdens egna sidnamn, inte av en översatt kopia här:
+            heter sidan om i appen följer texten med, och den kan aldrig peka
+            på en rubrik som inte längre finns. */}
         <p className="mt-3 text-sm text-slate-400">
-          Koppla en debrid-tjänst (Real-Debrid, TorBox, AllDebrid m.fl.) under
-          Inställningar → Källor för att kunna hämta streams.
+          {lt(hasEnabledScraper ? 'debridMissingBody' : 'noScraperBody')
+            .replace('{path}', `${t('settings')} → ${t('settingsPageSources')}`)}
         </p>
       </section>
     )
@@ -3698,8 +3711,8 @@ function StreamRow({ stream, onPlay, unsupported = false }: { stream: StreamResu
           <button
             type="button"
             onClick={() => openInVlc(url)}
-            title="Öppna i VLC"
-            aria-label="Öppna i VLC"
+            title={t('openInVlc')}
+            aria-label={t('openInVlc')}
             className="flex-shrink-0 rounded-full bg-orange-500/90 p-2 text-white transition hover:bg-orange-500"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">

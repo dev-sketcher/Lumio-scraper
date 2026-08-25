@@ -1,9 +1,9 @@
 // Plugin-local UI strings. These moved out of the app's i18n catalogue in
 // separation phase 2 — the base app carries no torrent/debrid vocabulary, so
-// every string the scraper UI needs lives here. The language is read from the
-// same per-profile storage the app i18n uses ('app_lang', via the host's
-// profile-storage bridge), so `lt` works in any context — component or not.
-import { getScopedStorageItem } from '@/lib/profile-storage'
+// every string the scraper UI needs lives here. The language comes from the
+// host's own resolver (readStoredLang), which is storage-backed and therefore
+// works in any context — component or not, host copy or plugin copy.
+import { readStoredLang } from '@/lib/i18n'
 
 const STRINGS = {
   en: {
@@ -18,6 +18,10 @@ const STRINGS = {
     debridPerScraperHint: 'A key entered here is used by every scraper configured for that service.',
     torrentFailed: 'The torrent failed: {status}',
     debridKeyMissing: 'Debrid key missing',
+    debridMissingTitle: 'No debrid service',
+    debridMissingBody: 'Connect a debrid service (Real-Debrid, TorBox, AllDebrid and others) under {path} to fetch streams.',
+    noScraperTitle: 'No scraper enabled',
+    noScraperBody: 'No scraper is enabled — nothing can find streams. Turn one on under {path}.',
     streamProviderAddIndexed: '+ TorrentsDB',
     streamProviderAddStandard: '+ Torrentio',
     sourceNotServingMedia: 'This source no longer serves the film — the link has expired or is locked to the network it was fetched on. Search again or pick another stream.',
@@ -35,6 +39,10 @@ const STRINGS = {
     debridPerScraperHint: 'En nyckel här används av alla scrapers som är konfigurerade för den tjänsten.',
     torrentFailed: 'Torrenten misslyckades: {status}',
     debridKeyMissing: 'Debrid-nyckel saknas',
+    debridMissingTitle: 'Debrid-tjänst saknas',
+    debridMissingBody: 'Koppla en debrid-tjänst (Real-Debrid, TorBox, AllDebrid m.fl.) under {path} för att kunna hämta streams.',
+    noScraperTitle: 'Ingen scraper påslagen',
+    noScraperBody: 'Ingen scraper är påslagen — inget kan hitta strömmar. Slå på en under {path}.',
     streamProviderAddIndexed: '+ TorrentsDB',
     streamProviderAddStandard: '+ Torrentio',
     sourceNotServingMedia: 'Källan levererar inte filmen längre — länken har gått ut eller är låst till nätverket den hämtades på. Sök om eller välj en annan stream.',
@@ -44,10 +52,14 @@ const STRINGS = {
 
 export type LocalStringKey = keyof typeof STRINGS.en
 
+// Värdens egen upplösning, inte en kopia: den läser profilscopat 'app_lang'
+// FÖRST och faller tillbaka på den legacy-ounscopade nyckeln. En egen kopia
+// missade fallbacken, så gamla installationer fick engelska plugin-strängar i
+// en svensk app.
 function currentLang(): 'en' | 'sv' {
   if (typeof window === 'undefined') return 'en'
   try {
-    return getScopedStorageItem('app_lang') === 'sv' ? 'sv' : 'en'
+    return readStoredLang()
   } catch {
     return 'en'
   }

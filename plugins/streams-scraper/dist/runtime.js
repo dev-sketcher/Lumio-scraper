@@ -143,6 +143,25 @@
     }
   });
 
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build/jsx-runtime-shim.ts
+  var jsx_runtime_shim_exports = {};
+  __export(jsx_runtime_shim_exports, {
+    Fragment: () => Fragment2,
+    jsx: () => jsx,
+    jsxDEV: () => jsxDEV,
+    jsxs: () => jsxs
+  });
+  var runtime, Fragment2, jsx, jsxs, jsxDEV;
+  var init_jsx_runtime_shim = __esm({
+    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build/jsx-runtime-shim.ts"() {
+      runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
+      Fragment2 = runtime.Fragment;
+      jsx = runtime.jsx;
+      jsxs = runtime.jsxs;
+      jsxDEV = runtime.jsxDEV;
+    }
+  });
+
   // node_modules/tailwind-variants/dist/chunk-2JY7EID6.cjs
   var require_chunk_2JY7EID6 = __commonJS({
     "node_modules/tailwind-variants/dist/chunk-2JY7EID6.cjs"(exports) {
@@ -29688,25 +29707,6 @@
     }
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build/jsx-runtime-shim.ts
-  var jsx_runtime_shim_exports = {};
-  __export(jsx_runtime_shim_exports, {
-    Fragment: () => Fragment2,
-    jsx: () => jsx,
-    jsxDEV: () => jsxDEV,
-    jsxs: () => jsxs
-  });
-  var runtime, Fragment2, jsx, jsxs, jsxDEV;
-  var init_jsx_runtime_shim = __esm({
-    "../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build/jsx-runtime-shim.ts"() {
-      runtime = globalThis.__lumioPluginRuntime?.jsxRuntime;
-      Fragment2 = runtime.Fragment;
-      jsx = runtime.jsx;
-      jsxs = runtime.jsxs;
-      jsxDEV = runtime.jsxDEV;
-    }
-  });
-
   // node_modules/motion-utils/dist/cjs/index.js
   var require_cjs2 = __commonJS({
     "node_modules/motion-utils/dist/cjs/index.js"(exports) {
@@ -48702,7 +48702,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_system_rsc = require_dist4();
-      var import_i18n12 = require_main5();
+      var import_i18n13 = require_main5();
       var import_react73 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_framer_motion2 = require_cjs4();
       var import_utils8 = require_main4();
@@ -48758,7 +48758,7 @@
           labelPlacement,
           spinnerVariant
         ]);
-        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(ProviderContext, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_i18n12.I18nProvider, { locale, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_framer_motion2.MotionConfig, { reducedMotion, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_overlays.OverlayProvider, { ...otherProps, children: contents }) }) }) });
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(ProviderContext, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_i18n13.I18nProvider, { locale, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_framer_motion2.MotionConfig, { reducedMotion, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_overlays.OverlayProvider, { ...otherProps, children: contents }) }) }) });
       };
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useLabelPlacement(props) {
@@ -71752,7 +71752,7 @@
     if (arr.indexOf(item) === -1)
       arr.push(item);
   }
-  function removeItem(arr, item) {
+  function removeItem2(arr, item) {
     const index3 = arr.indexOf(item);
     if (index3 > -1)
       arr.splice(index3, 1);
@@ -71904,7 +71904,7 @@
         }
         add(handler) {
           addUniqueItem(this.subscriptions, handler);
-          return () => removeItem(this.subscriptions, handler);
+          return () => removeItem2(this.subscriptions, handler);
         }
         notify(a, b, c) {
           const numSubscriptions = this.subscriptions.length;
@@ -77623,7 +77623,7 @@
       start(nextBuilder);
   }
   function start(builder) {
-    removeItem(builders, builder);
+    removeItem2(builders, builder);
     current = builder;
     startViewAnimation(builder).then((animation) => {
       builder.notifyReady(animation);
@@ -79622,7 +79622,7 @@
           this.isDirty = true;
         }
         remove(child) {
-          removeItem(this.children, child);
+          removeItem2(this.children, child);
           this.isDirty = true;
         }
         forEach(callback) {
@@ -79685,14 +79685,14 @@
               continue;
             const inst = member.instance;
             if ((!inst || inst.isConnected === false) && !member.snapshot) {
-              removeItem(this.members, member);
+              removeItem2(this.members, member);
               member.unmount();
             }
           }
           node.scheduleRender();
         }
         remove(node) {
-          removeItem(this.members, node);
+          removeItem2(this.members, node);
           if (node === this.prevLead)
             this.prevLead = void 0;
           if (node === this.lead) {
@@ -84179,7 +84179,7 @@
   // node_modules/framer-motion/dist/es/render/dom/scroll/info.mjs
   function updateAxisInfo(element, axisName, info, time2) {
     const axis = info[axisName];
-    const { length, position } = keys[axisName];
+    const { length, position } = keys2[axisName];
     const prev = axis.current;
     const prevTime = info.time;
     axis.current = Math.abs(element[`scroll${position}`]);
@@ -84196,7 +84196,7 @@
     updateAxisInfo(element, "y", info, time2);
     info.time = time2;
   }
-  var maxElapsed2, createAxisInfo, createScrollInfo, keys;
+  var maxElapsed2, createAxisInfo, createScrollInfo, keys2;
   var init_info = __esm({
     "node_modules/framer-motion/dist/es/render/dom/scroll/info.mjs"() {
       init_es();
@@ -84216,7 +84216,7 @@
         x: createAxisInfo(),
         y: createAxisInfo()
       });
-      keys = {
+      keys2 = {
         x: {
           length: "Width",
           position: "Left"
@@ -85285,7 +85285,7 @@
     for (let i = 0; i < sequence.length; i++) {
       const keyframe = sequence[i];
       if (keyframe.at > startTime && keyframe.at < endTime) {
-        removeItem(sequence, keyframe);
+        removeItem2(sequence, keyframe);
         i--;
       }
     }
@@ -85652,7 +85652,7 @@
       if (scope) {
         scope.animations.push(animation);
         animation.finished.then(() => {
-          removeItem(scope.animations, animation);
+          removeItem2(scope.animations, animation);
         });
       }
       return animation;
@@ -87055,7 +87055,7 @@
     removeAxisDelta: () => removeAxisDelta,
     removeAxisTransforms: () => removeAxisTransforms,
     removeBoxTransforms: () => removeBoxTransforms,
-    removeItem: () => removeItem,
+    removeItem: () => removeItem2,
     removePointDelta: () => removePointDelta,
     renderHTML: () => renderHTML,
     renderSVG: () => renderSVG,
@@ -109948,7 +109948,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_react73 = (init_react_shim(), __toCommonJS(react_shim_exports));
-      var import_i18n12 = require_main5();
+      var import_i18n13 = require_main5();
       var import_shared_utils = require_dist2();
       var PaginationItemType2 = /* @__PURE__ */ ((PaginationItemType22) => {
         PaginationItemType22["DOTS"] = "dots";
@@ -109967,7 +109967,7 @@
           onChange
         } = props;
         const [activePage, setActivePage] = (0, import_react73.useState)(page || initialPage);
-        const { direction } = (0, import_i18n12.useLocale)();
+        const { direction } = (0, import_i18n13.useLocale)();
         const isRTL = direction === "rtl";
         const onChangeActivePage = (newPage) => {
           setActivePage(newPage);
@@ -110277,7 +110277,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_react310 = (init_react_shim(), __toCommonJS(react_shim_exports));
-      var import_i18n12 = require_main5();
+      var import_i18n13 = require_main5();
       var import_system4 = require_dist11();
       var import_use_pagination3 = require_dist38();
       var import_shared_icons = require_dist17();
@@ -110629,7 +110629,7 @@
           getItemProps,
           getCursorProps
         } = usePagination({ ...props, ref });
-        const { direction } = (0, import_i18n12.useLocale)();
+        const { direction } = (0, import_i18n13.useLocale)();
         const isRTL = direction === "rtl";
         const renderChevronIcon = (0, import_react310.useCallback)(
           (key) => {
@@ -138906,7 +138906,7 @@
         useMultiSelectState: () => useMultiSelectState
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_i18n12 = require_main5();
+      var import_i18n13 = require_main5();
       var import_interactions = require_main59();
       var import_label = require_main60();
       var import_menu = require_main61();
@@ -138915,7 +138915,7 @@
       var import_react73 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useMultiSelect(props, state, ref) {
         const { disallowEmptySelection, isDisabled } = props;
-        const collator = (0, import_i18n12.useCollator)({ usage: "search", sensitivity: "base" });
+        const collator = (0, import_i18n13.useCollator)({ usage: "search", sensitivity: "base" });
         const delegate = (0, import_react73.useMemo)(
           () => new import_selection.ListKeyboardDelegate(state.collection, state.disabledKeys, null, collator),
           [state.collection, state.disabledKeys, collator]
@@ -140524,7 +140524,7 @@
       var import_interactions = require_main17();
       var import_focus2 = require_main18();
       var import_shared_utils = require_dist2();
-      var import_i18n12 = require_main5();
+      var import_i18n13 = require_main5();
       function useSliderThumb(props) {
         const {
           ref,
@@ -140545,7 +140545,7 @@
         const Component2 = as || "div";
         const domRef = (0, import_react_utils.useDOMRef)(ref);
         const inputRef = (0, import_react73.useRef)(null);
-        const numberFormatter = (0, import_i18n12.useNumberFormatter)(formatOptions);
+        const numberFormatter = (0, import_i18n13.useNumberFormatter)(formatOptions);
         const { thumbProps, inputProps, isDragging: isDragging2, isFocused } = (0, import_slider.useSliderThumb)(
           {
             index: index3,
@@ -145768,7 +145768,7 @@
       var import_react73 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_react_utils = require_dist10();
       var import_combobox = require_main67();
-      var import_i18n12 = require_main5();
+      var import_i18n13 = require_main5();
       var import_theme = require_dist12();
       var import_use_safe_layout_effect = require_dist21();
       var import_system = require_dist11();
@@ -145820,7 +145820,7 @@
           isReadOnly = false,
           ...otherProps
         } = props;
-        const { contains } = (0, import_i18n12.useFilter)(filterOptions);
+        const { contains } = (0, import_i18n13.useFilter)(filterOptions);
         const { onChange: _onChange, ...restProps } = originalProps;
         let state = (0, import_combobox.useComboBoxState)({
           ...restProps,
@@ -150834,13 +150834,13 @@
       var import_theme = require_dist12();
       var import_utils8 = require_main38();
       var import_react_utils = require_dist10();
-      var import_i18n12 = require_main5();
+      var import_i18n13 = require_main5();
       var import_shared_utils = require_dist2();
       function useCalendarBase(originalProps) {
         var _a, _b, _c, _d, _e, _f, _g;
         const [props, variantProps2] = (0, import_system.mapPropsVariants)(originalProps, import_theme.calendar.variantKeys);
         const globalContext = (0, import_system.useProviderContext)();
-        const { locale, direction } = (0, import_i18n12.useLocale)();
+        const { locale, direction } = (0, import_i18n13.useLocale)();
         const isRTL = direction === "rtl";
         const calendarProp = (0, import_date.createCalendar)(
           new import_date.DateFormatter(locale).resolvedOptions().calendar
@@ -156801,7 +156801,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_system4 = require_dist11();
-      var import_i18n12 = require_main5();
+      var import_i18n13 = require_main5();
       var import_date = require_main74();
       var import_system = require_dist11();
       var import_system2 = require_dist11();
@@ -156817,7 +156817,7 @@
         const globalContext = (0, import_system.useProviderContext)();
         const { validationBehavior: formValidationBehavior } = (0, import_form.useSlottedContext)(import_form.FormContext) || {};
         const [props, variantProps2] = (0, import_system2.mapPropsVariants)(originalProps, import_theme.dateInput.variantKeys);
-        const { locale } = (0, import_i18n12.useLocale)();
+        const { locale } = (0, import_i18n13.useLocale)();
         const calendarProp = (0, import_date.createCalendar)(
           new import_date.DateFormatter(locale).resolvedOptions().calendar
         );
@@ -157378,7 +157378,7 @@
       var import_react73 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system = require_dist11();
       var import_react_utils = require_dist10();
-      var import_i18n12 = require_main5();
+      var import_i18n13 = require_main5();
       var import_utils8 = require_main38();
       var messages_default = {
         "ar-AE": {
@@ -157599,7 +157599,7 @@
         const [isCalendarHeaderExpanded, setIsCalendarHeaderExpanded] = (0, import_utils8.useControlledState)(isHeaderExpanded, isHeaderDefaultExpanded != null ? isHeaderDefaultExpanded : false, handleHeaderExpandedChange);
         const domRef = (0, import_react_utils.useDOMRef)(ref);
         const disableAnimation = (_b = (_a = originalProps.disableAnimation) != null ? _a : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _b : false;
-        let stringFormatter = (0, import_i18n12.useLocalizedStringFormatter)(messages_default);
+        let stringFormatter = (0, import_i18n13.useLocalizedStringFormatter)(messages_default);
         const isDefaultColor = originalProps.color === "default" || !originalProps.color;
         const hasMultipleMonths = visibleMonths > 1;
         const placeholder = originalProps == null ? void 0 : originalProps.placeholderValue;
@@ -160237,7 +160237,7 @@
       var import_theme = require_dist12();
       var import_react_utils = require_dist10();
       var import_interactions = require_main17();
-      var import_i18n12 = require_main5();
+      var import_i18n13 = require_main5();
       var import_shared_utils = require_dist2();
       var import_numberfield = require_main78();
       var import_numberfield2 = require_main79();
@@ -160276,7 +160276,7 @@
         const baseDomRef = (0, import_react_utils.useDOMRef)(baseRef);
         const inputWrapperRef = (0, import_react_utils.useDOMRef)(wrapperRef);
         const innerWrapperRef = (0, import_react_utils.useDOMRef)(innerWrapperRefProp);
-        const { locale } = (0, import_i18n12.useLocale)();
+        const { locale } = (0, import_i18n13.useLocale)();
         const state = (0, import_numberfield.useNumberFieldState)({
           ...originalProps,
           validationBehavior,
@@ -166173,67 +166173,6 @@
     StreamsScraperPlugin: () => StreamsScraperPlugin
   });
 
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build/profile-storage-shim.ts
-  var sdk = globalThis.__lumioPluginRuntime?.sdk;
-  var getActiveProfileId = () => sdk.getActiveProfileId();
-  var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
-  var setScopedStorageItem = (baseKey, value) => sdk.setScopedStorageItem(baseKey, value);
-  var removeScopedStorageItem = (baseKey) => sdk.removeScopedStorageItem(baseKey);
-  var onProfileChanged = (listener) => sdk.onProfileChanged(listener);
-
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/local-strings.ts
-  var STRINGS = {
-    en: {
-      convertingMagnet: "Converting magnet\u2026",
-      addManually: "Add magnet / direct link manually",
-      pasteManual: "Paste magnet link manually",
-      manualPlaceholder: "magnet:? or https://\u2026",
-      debridSectionDesc: "API keys are shared across every scraper. Which service a scraper resolves through is set on that scraper under Scrapers.",
-      debridKeySaved: "Key saved",
-      debridNoKeyBadge: "No key",
-      debridKeyPlaceholder: "Paste API key",
-      debridPerScraperHint: "A key entered here is used by every scraper configured for that service.",
-      torrentFailed: "The torrent failed: {status}",
-      debridKeyMissing: "Debrid key missing",
-      streamProviderAddIndexed: "+ TorrentsDB",
-      streamProviderAddStandard: "+ Torrentio",
-      sourceNotServingMedia: "This source no longer serves the film \u2014 the link has expired or is locked to the network it was fetched on. Search again or pick another stream.",
-      aiostreamsHint: "AIOStreams is configured on its own site (UUID + password, debrid keys and filters live there). Configure once, then paste the manifest URL from the Save & Install page here."
-    },
-    sv: {
-      convertingMagnet: "Konverterar magnet\u2026",
-      addManually: "L\xE4gg till magnet / direktl\xE4nk manuellt",
-      pasteManual: "Klistra in magnet-l\xE4nk manuellt",
-      manualPlaceholder: "magnet:? eller https://\u2026",
-      debridSectionDesc: "API-nycklarna delas mellan alla scrapers. Vilken tj\xE4nst en scraper anv\xE4nder st\xE4lls p\xE5 den scrapern under Scrapers.",
-      debridKeySaved: "Nyckel sparad",
-      debridNoKeyBadge: "Ingen nyckel",
-      debridKeyPlaceholder: "Klistra in API-nyckel",
-      debridPerScraperHint: "En nyckel h\xE4r anv\xE4nds av alla scrapers som \xE4r konfigurerade f\xF6r den tj\xE4nsten.",
-      torrentFailed: "Torrenten misslyckades: {status}",
-      debridKeyMissing: "Debrid-nyckel saknas",
-      streamProviderAddIndexed: "+ TorrentsDB",
-      streamProviderAddStandard: "+ Torrentio",
-      sourceNotServingMedia: "K\xE4llan levererar inte filmen l\xE4ngre \u2014 l\xE4nken har g\xE5tt ut eller \xE4r l\xE5st till n\xE4tverket den h\xE4mtades p\xE5. S\xF6k om eller v\xE4lj en annan stream.",
-      aiostreamsHint: "AIOStreams konfigureras p\xE5 sin egen sida (UUID + l\xF6senord \u2014 debrid-nycklar och filter bor d\xE4r). Konfigurera en g\xE5ng, klistra sedan in manifest-URL:en fr\xE5n Save & Install-sidan h\xE4r."
-    }
-  };
-  function currentLang() {
-    if (typeof window === "undefined") return "en";
-    try {
-      return getScopedStorageItem("app_lang") === "sv" ? "sv" : "en";
-    } catch {
-      return "en";
-    }
-  }
-  function lt(key) {
-    return STRINGS[currentLang()][key] ?? STRINGS.en[key];
-  }
-
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
-  init_react_shim();
-  var import_react57 = __toESM(require_dist89());
-
   // lib/app-storage.ts
   var store = null;
   function ensureStore() {
@@ -166292,6 +166231,16 @@
 
   // lib/i18n.tsx
   init_react_shim();
+
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build/profile-storage-shim.ts
+  var sdk = globalThis.__lumioPluginRuntime?.sdk;
+  var getActiveProfileId = () => sdk.getActiveProfileId();
+  var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
+  var setScopedStorageItem = (baseKey, value) => sdk.setScopedStorageItem(baseKey, value);
+  var removeScopedStorageItem = (baseKey) => sdk.removeScopedStorageItem(baseKey);
+  var onProfileChanged = (listener) => sdk.onProfileChanged(listener);
+
+  // lib/i18n.tsx
   init_jsx_runtime_shim();
   var strings = {
     en: {
@@ -166505,6 +166454,57 @@
       copyStreamLink: "Copy stream link",
       downloadThisVideo: "Download this video",
       openInVlc: "Play in VLC",
+      tvModeGroupTitle: "TV mode",
+      tvModeUseTitle: "Use TV mode",
+      tvRowsIntro: "Every segment has its own rows in TV mode. The starting point mirrors your normal home page, so nothing changes until you change it here.",
+      tvAddRow: "Add row",
+      tvAddRowAll: "Every row can be picked.",
+      tvSegmentProviders: "services",
+      tvSearchAlphaTab: "A\u2013Z",
+      tvSearchBefore1990: "Before 1990",
+      tvSearchEmpty: "Type or pick a letter to search.",
+      tvSearchNoHits: "No matches. Try a shorter search.",
+      pairUnknownDevice: "Unknown device",
+      pairTooManyTries: "Too many attempts \u2014 wait a moment.",
+      pairBadCode: "Wrong or expired code.",
+      pairUnstable: "The connection is unstable right now \u2014 try again shortly.",
+      pairTitle: "Pair this device with Lumio",
+      pairIntro: "Create an invite code in Lumio on your computer (Settings \u2192 Remote access) and enter it here.",
+      watchUnknownTitle: "Unknown title",
+      watchWaiting: "Waiting for playback\u2026",
+      lanLocalAddrTip: "This .local address keeps working even when the computer\u2019s IP address changes. On iPhone: open the link in Safari and choose Share \u2192 Add to Home Screen for fullscreen.",
+      bugStepsHeading: "**Steps to reproduce:**",
+      pluginsHostOnly: "Plugin management happens on the host in LAN mode.",
+      calFetchFailed: "Could not fetch data.",
+      nothingYet: "Nothing to show yet.",
+      bugEnvLabel: "Environment:",
+      appUpdateAndroidInstaller: "Opening the system installer \u2014 confirm the install there.",
+      tvSegmentMovies: "movies",
+      tvSegmentSeries: "series",
+      tvSegmentAll: "everything",
+      tvMirrorsHome: "Mirrors your normal home page. Change anything here and the segment gets its own rows.",
+      tvMirrorsHomeLimited: "Mirrors your normal home page, limited to {type}. Change anything here and the segment gets its own rows.",
+      tvAddRowLimited: "Only rows that belong to {type} are offered.",
+      tvRemoveRow: "Remove",
+      raAlwaysVlc: "Always open in VLC",
+      dtMinutesShort: "{n}m",
+      epLayoutTitle: "Episode layout",
+      epLayoutDesc: "List shows a thumbnail beside the text. Cards show wide artwork you scroll through, with the text over the image.",
+      epLayoutList: "List",
+      epLayoutCards: "Cards",
+      epLayoutToggleTitle: "Switch episode layout",
+      homeBubble: "Home",
+      daPlacementTitle: "Action buttons",
+      daPlacementDesc: "Where Follow, Watched, Trailer and Sources sit on the details page.",
+      daPlacementHeader: "Top right",
+      daPlacementInline: "Next to Play",
+      dtSeasonOne: "1 season",
+      dtSeasonsN: "{n} seasons",
+      settingsDetailsEyebrow: "Details page",
+      sideMenuTitle: "Side menu",
+      sideMenuDesc: "A floating icon rail on the left instead of the horizontal menu. Search moves into the rail. Desktop only.",
+      sideMenuOn: "Side menu",
+      sideMenuOff: "Horizontal menu",
       vlcToggleOn: "VLC on",
       vlcToggleOff: "VLC off",
       vlcToggleTitle: "Open streams directly in VLC",
@@ -168612,6 +168612,57 @@
       copyStreamLink: "Kopiera streaml\xE4nk",
       downloadThisVideo: "Ladda ner videon",
       openInVlc: "Spela i VLC",
+      tvModeGroupTitle: "TV-l\xE4ge",
+      tvModeUseTitle: "Anv\xE4nd TV-l\xE4ge",
+      tvRowsIntro: "Varje segment har egna rader i TV-l\xE4get. Utg\xE5ngsl\xE4get speglar din vanliga startsida, s\xE5 inget \xE4ndras f\xF6rr\xE4n du g\xF6r det h\xE4r.",
+      tvAddRow: "L\xE4gg till rad",
+      tvAddRowAll: "Alla rader kan v\xE4ljas.",
+      tvSegmentProviders: "tj\xE4nster",
+      tvSearchAlphaTab: "A\u2013\xD6",
+      tvSearchBefore1990: "F\xF6re 1990",
+      tvSearchEmpty: "Skriv eller v\xE4lj en bokstav f\xF6r att s\xF6ka.",
+      tvSearchNoHits: "Inga tr\xE4ffar. Prova en kortare s\xF6kning.",
+      pairUnknownDevice: "Ok\xE4nd enhet",
+      pairTooManyTries: "F\xF6r m\xE5nga f\xF6rs\xF6k \u2014 v\xE4nta en stund.",
+      pairBadCode: "Fel eller utg\xE5ngen kod.",
+      pairUnstable: "Anslutningen \xE4r ostadig just nu \u2014 f\xF6rs\xF6k igen om en stund.",
+      pairTitle: "Para den h\xE4r enheten med Lumio",
+      pairIntro: "Skapa en inbjudningskod i Lumio p\xE5 datorn (Inst\xE4llningar \u2192 Fj\xE4rr\xE5tkomst) och ange den h\xE4r.",
+      watchUnknownTitle: "Ok\xE4nd titel",
+      watchWaiting: "V\xE4ntar p\xE5 uppspelning\u2026",
+      lanLocalAddrTip: "Den h\xE4r .local-adressen forts\xE4tter fungera \xE4ven n\xE4r datorns IP-adress \xE4ndras. P\xE5 iPhone: \xF6ppna l\xE4nken i Safari och v\xE4lj Dela \u2192 L\xE4gg till p\xE5 hemsk\xE4rmen f\xF6r helsk\xE4rm.",
+      bugStepsHeading: "**Steg f\xF6r att \xE5terskapa:**",
+      pluginsHostOnly: "Plugin-hantering g\xF6rs p\xE5 hosten i LAN-l\xE4ge.",
+      calFetchFailed: "Kunde inte h\xE4mta data.",
+      nothingYet: "Inget att visa \xE4n.",
+      bugEnvLabel: "Milj\xF6:",
+      appUpdateAndroidInstaller: "\xD6ppnar systemets installerare \u2014 bekr\xE4fta installationen d\xE4r.",
+      tvSegmentMovies: "film",
+      tvSegmentSeries: "serier",
+      tvSegmentAll: "allt",
+      tvMirrorsHome: "Speglar din vanliga startsida. \xC4ndrar du n\xE5got h\xE4r f\xE5r segmentet egna rader.",
+      tvMirrorsHomeLimited: "Speglar din vanliga startsida, begr\xE4nsad till {type}. \xC4ndrar du n\xE5got h\xE4r f\xE5r segmentet egna rader.",
+      tvAddRowLimited: "Bara rader som h\xF6r till {type} erbjuds.",
+      tvRemoveRow: "Ta bort",
+      raAlwaysVlc: "\xD6ppna alltid i VLC",
+      dtMinutesShort: "{n} min",
+      epLayoutTitle: "Avsnittslayout",
+      epLayoutDesc: "Lista visar en miniatyr bredvid texten. Kort visar breda bilder du bl\xE4ddrar genom, med texten ovanp\xE5 bilden.",
+      epLayoutList: "Lista",
+      epLayoutCards: "Kort",
+      epLayoutToggleTitle: "Byt avsnittslayout",
+      homeBubble: "Hem",
+      daPlacementTitle: "\xC5tg\xE4rdsknappar",
+      daPlacementDesc: "Var F\xF6lj, Sedd, Trailer och K\xE4llor sitter p\xE5 detaljsidan.",
+      daPlacementHeader: "Uppe till h\xF6ger",
+      daPlacementInline: "Bredvid Spela",
+      dtSeasonOne: "1 s\xE4song",
+      dtSeasonsN: "{n} s\xE4songer",
+      settingsDetailsEyebrow: "Detaljsidan",
+      sideMenuTitle: "Sidomeny",
+      sideMenuDesc: "En flytande ikonrad till v\xE4nster i st\xE4llet f\xF6r den horisontella menyn. S\xF6ket flyttar in i raden. Endast skrivbord.",
+      sideMenuOn: "Sidomeny",
+      sideMenuOff: "Horisontell meny",
       vlcToggleOn: "VLC p\xE5",
       vlcToggleOff: "VLC av",
       vlcToggleTitle: "\xD6ppna streams direkt i VLC",
@@ -170554,6 +170605,67 @@
       t: (key) => strings[detachedLang][key] ?? strings.en[key]
     };
   }
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/local-strings.ts
+  var STRINGS = {
+    en: {
+      convertingMagnet: "Converting magnet\u2026",
+      addManually: "Add magnet / direct link manually",
+      pasteManual: "Paste magnet link manually",
+      manualPlaceholder: "magnet:? or https://\u2026",
+      debridSectionDesc: "API keys are shared across every scraper. Which service a scraper resolves through is set on that scraper under Scrapers.",
+      debridKeySaved: "Key saved",
+      debridNoKeyBadge: "No key",
+      debridKeyPlaceholder: "Paste API key",
+      debridPerScraperHint: "A key entered here is used by every scraper configured for that service.",
+      torrentFailed: "The torrent failed: {status}",
+      debridKeyMissing: "Debrid key missing",
+      debridMissingTitle: "No debrid service",
+      debridMissingBody: "Connect a debrid service (Real-Debrid, TorBox, AllDebrid and others) under {path} to fetch streams.",
+      noScraperTitle: "No scraper enabled",
+      noScraperBody: "No scraper is enabled \u2014 nothing can find streams. Turn one on under {path}.",
+      streamProviderAddIndexed: "+ TorrentsDB",
+      streamProviderAddStandard: "+ Torrentio",
+      sourceNotServingMedia: "This source no longer serves the film \u2014 the link has expired or is locked to the network it was fetched on. Search again or pick another stream.",
+      aiostreamsHint: "AIOStreams is configured on its own site (UUID + password, debrid keys and filters live there). Configure once, then paste the manifest URL from the Save & Install page here."
+    },
+    sv: {
+      convertingMagnet: "Konverterar magnet\u2026",
+      addManually: "L\xE4gg till magnet / direktl\xE4nk manuellt",
+      pasteManual: "Klistra in magnet-l\xE4nk manuellt",
+      manualPlaceholder: "magnet:? eller https://\u2026",
+      debridSectionDesc: "API-nycklarna delas mellan alla scrapers. Vilken tj\xE4nst en scraper anv\xE4nder st\xE4lls p\xE5 den scrapern under Scrapers.",
+      debridKeySaved: "Nyckel sparad",
+      debridNoKeyBadge: "Ingen nyckel",
+      debridKeyPlaceholder: "Klistra in API-nyckel",
+      debridPerScraperHint: "En nyckel h\xE4r anv\xE4nds av alla scrapers som \xE4r konfigurerade f\xF6r den tj\xE4nsten.",
+      torrentFailed: "Torrenten misslyckades: {status}",
+      debridKeyMissing: "Debrid-nyckel saknas",
+      debridMissingTitle: "Debrid-tj\xE4nst saknas",
+      debridMissingBody: "Koppla en debrid-tj\xE4nst (Real-Debrid, TorBox, AllDebrid m.fl.) under {path} f\xF6r att kunna h\xE4mta streams.",
+      noScraperTitle: "Ingen scraper p\xE5slagen",
+      noScraperBody: "Ingen scraper \xE4r p\xE5slagen \u2014 inget kan hitta str\xF6mmar. Sl\xE5 p\xE5 en under {path}.",
+      streamProviderAddIndexed: "+ TorrentsDB",
+      streamProviderAddStandard: "+ Torrentio",
+      sourceNotServingMedia: "K\xE4llan levererar inte filmen l\xE4ngre \u2014 l\xE4nken har g\xE5tt ut eller \xE4r l\xE5st till n\xE4tverket den h\xE4mtades p\xE5. S\xF6k om eller v\xE4lj en annan stream.",
+      aiostreamsHint: "AIOStreams konfigureras p\xE5 sin egen sida (UUID + l\xF6senord \u2014 debrid-nycklar och filter bor d\xE4r). Konfigurera en g\xE5ng, klistra sedan in manifest-URL:en fr\xE5n Save & Install-sidan h\xE4r."
+    }
+  };
+  function currentLang() {
+    if (typeof window === "undefined") return "en";
+    try {
+      return readStoredLang();
+    } catch {
+      return "en";
+    }
+  }
+  function lt(key) {
+    return STRINGS[currentLang()][key] ?? STRINGS.en[key];
+  }
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/scrapers-settings-section.tsx
+  init_react_shim();
+  var import_react57 = __toESM(require_dist89());
 
   // lib/tauri-mpv.ts
   var import_core = __toESM(require_core2());
@@ -180473,6 +180585,7 @@ ${cue.text}`).join("\n\n")}
                             subtitlePreferenceRef.current = { mode: "off" };
                             void selectSubtitle(null, { manual: true });
                             setSelectedLang(null);
+                            setShowSubMenu(false);
                           },
                           className: `flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-white/5 ${selectedLang === null ? "bg-white/5" : ""} ${activeSubId === null ? "text-aurora-300" : "text-slate-300"}`,
                           children: [
@@ -180512,7 +180625,10 @@ ${cue.text}`).join("\n\n")}
                         {
                           type: "button",
                           "data-f": isTv ? "1" : void 0,
-                          onClick: () => void selectSubtitle(sub, { manual: true }),
+                          onClick: () => {
+                            void selectSubtitle(sub, { manual: true });
+                            setShowSubMenu(false);
+                          },
                           className: `flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-white/5 ${isActive ? "bg-white/5" : ""}`,
                           children: [
                             /* @__PURE__ */ jsxs("div", { className: "text-left", children: [
@@ -184020,6 +184136,7 @@ ${cue.text}`).join("\n\n")}
     if (enabledConfigs.length === 0) {
       return {
         hasPlaybackAccess: false,
+        hasEnabledScraper: false,
         missingProviderLabels: [],
         primaryProviderLabel: "Stream provider"
       };
@@ -184045,6 +184162,7 @@ ${cue.text}`).join("\n\n")}
     }
     return {
       hasPlaybackAccess,
+      hasEnabledScraper: true,
       missingProviderLabels: [...missingProviderLabels],
       primaryProviderLabel
     };
@@ -184072,6 +184190,7 @@ ${cue.text}`).join("\n\n")}
   }) {
     const { t, lang } = useLang();
     const [hasPlaybackAccess, setHasPlaybackAccess] = useState(() => getEnabledScraperAccessState().hasPlaybackAccess);
+    const [hasEnabledScraper] = useState(() => getEnabledScraperAccessState().hasEnabledScraper);
     const [missingProviderLabels, setMissingProviderLabels] = useState(() => getEnabledScraperAccessState().missingProviderLabels);
     const [primaryProviderLabel, setPrimaryProviderLabel] = useState(() => getEnabledScraperAccessState().primaryProviderLabel);
     const [streamFilters, setStreamFilters] = useState(DEFAULT_FILTERS);
@@ -186108,8 +186227,8 @@ ${cue.text}`).join("\n\n")}
     }
     if (!hasPlaybackAccess) {
       return /* @__PURE__ */ jsxs("section", { children: [
-        /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.24em] text-slate-400", children: "Debrid-tj\xE4nst saknas" }),
-        /* @__PURE__ */ jsx("p", { className: "mt-3 text-sm text-slate-400", children: "Koppla en debrid-tj\xE4nst (Real-Debrid, TorBox, AllDebrid m.fl.) under Inst\xE4llningar \u2192 K\xE4llor f\xF6r att kunna h\xE4mta streams." })
+        /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.24em] text-slate-400", children: lt(hasEnabledScraper ? "debridMissingTitle" : "noScraperTitle") }),
+        /* @__PURE__ */ jsx("p", { className: "mt-3 text-sm text-slate-400", children: lt(hasEnabledScraper ? "debridMissingBody" : "noScraperBody").replace("{path}", `${t("settings")} \u2192 ${t("settingsPageSources")}`) })
       ] });
     }
     const isLoading = step.type === "processing" || step.type === "torrent_polling";
@@ -186598,8 +186717,8 @@ ${cue.text}`).join("\n\n")}
           {
             type: "button",
             onClick: () => openInVlc(url),
-            title: "\xD6ppna i VLC",
-            "aria-label": "\xD6ppna i VLC",
+            title: t("openInVlc"),
+            "aria-label": t("openInVlc"),
             className: "flex-shrink-0 rounded-full bg-orange-500/90 p-2 text-white transition hover:bg-orange-500",
             children: /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M12 2.5c-.5 0-.9.3-1.1.8L9.6 7h4.8l-1.3-3.7c-.2-.5-.6-.8-1.1-.8zM8.9 8.8 6 18.2c-.3.9.4 1.8 1.3 1.8h9.4c.9 0 1.6-.9 1.3-1.8l-2.9-9.4H8.9z" }) })
           }
