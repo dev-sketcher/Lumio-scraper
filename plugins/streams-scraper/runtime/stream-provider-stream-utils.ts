@@ -237,6 +237,11 @@ export function getStreamSizeBytes(stream: StreamResult): number | null {
     .flatMap((entry) => Object.values(entry))
     .reduce((sum, file) => sum + (Number.isFinite(file.filesize) ? file.filesize : 0), 0)
   if (cachedFileBytes > 0) return cachedFileBytes
+  // Backendens fält före fritexten: det är plockat ur addonens råa svar innan
+  // titeln byttes mot det rena filnamnet, så det finns för strömmar där texten
+  // inte längre säger något om storleken. Fritexten kvar som fallback för
+  // svar som saknar fältet (äldre backend, egen provider).
+  if (typeof stream.sizeBytes === 'number' && stream.sizeBytes > 0) return stream.sizeBytes
   return parseSizeBytes(`${stream.name} ${stream.title}`)
 }
 

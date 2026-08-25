@@ -48702,7 +48702,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_system_rsc = require_dist4();
-      var import_i18n13 = require_main5();
+      var import_i18n14 = require_main5();
       var import_react73 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_framer_motion2 = require_cjs4();
       var import_utils8 = require_main4();
@@ -48758,7 +48758,7 @@
           labelPlacement,
           spinnerVariant
         ]);
-        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(ProviderContext, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_i18n13.I18nProvider, { locale, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_framer_motion2.MotionConfig, { reducedMotion, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_overlays.OverlayProvider, { ...otherProps, children: contents }) }) }) });
+        return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(ProviderContext, { value: context, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_i18n14.I18nProvider, { locale, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_framer_motion2.MotionConfig, { reducedMotion, children: /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(import_overlays.OverlayProvider, { ...otherProps, children: contents }) }) }) });
       };
       var import_react210 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useLabelPlacement(props) {
@@ -109948,7 +109948,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_react73 = (init_react_shim(), __toCommonJS(react_shim_exports));
-      var import_i18n13 = require_main5();
+      var import_i18n14 = require_main5();
       var import_shared_utils = require_dist2();
       var PaginationItemType2 = /* @__PURE__ */ ((PaginationItemType22) => {
         PaginationItemType22["DOTS"] = "dots";
@@ -109967,7 +109967,7 @@
           onChange
         } = props;
         const [activePage, setActivePage] = (0, import_react73.useState)(page || initialPage);
-        const { direction } = (0, import_i18n13.useLocale)();
+        const { direction } = (0, import_i18n14.useLocale)();
         const isRTL = direction === "rtl";
         const onChangeActivePage = (newPage) => {
           setActivePage(newPage);
@@ -110277,7 +110277,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_react310 = (init_react_shim(), __toCommonJS(react_shim_exports));
-      var import_i18n13 = require_main5();
+      var import_i18n14 = require_main5();
       var import_system4 = require_dist11();
       var import_use_pagination3 = require_dist38();
       var import_shared_icons = require_dist17();
@@ -110629,7 +110629,7 @@
           getItemProps,
           getCursorProps
         } = usePagination({ ...props, ref });
-        const { direction } = (0, import_i18n13.useLocale)();
+        const { direction } = (0, import_i18n14.useLocale)();
         const isRTL = direction === "rtl";
         const renderChevronIcon = (0, import_react310.useCallback)(
           (key) => {
@@ -138906,7 +138906,7 @@
         useMultiSelectState: () => useMultiSelectState
       });
       module.exports = __toCommonJS2(index_exports);
-      var import_i18n13 = require_main5();
+      var import_i18n14 = require_main5();
       var import_interactions = require_main59();
       var import_label = require_main60();
       var import_menu = require_main61();
@@ -138915,7 +138915,7 @@
       var import_react73 = (init_react_shim(), __toCommonJS(react_shim_exports));
       function useMultiSelect(props, state, ref) {
         const { disallowEmptySelection, isDisabled } = props;
-        const collator = (0, import_i18n13.useCollator)({ usage: "search", sensitivity: "base" });
+        const collator = (0, import_i18n14.useCollator)({ usage: "search", sensitivity: "base" });
         const delegate = (0, import_react73.useMemo)(
           () => new import_selection.ListKeyboardDelegate(state.collection, state.disabledKeys, null, collator),
           [state.collection, state.disabledKeys, collator]
@@ -140524,7 +140524,7 @@
       var import_interactions = require_main17();
       var import_focus2 = require_main18();
       var import_shared_utils = require_dist2();
-      var import_i18n13 = require_main5();
+      var import_i18n14 = require_main5();
       function useSliderThumb(props) {
         const {
           ref,
@@ -140545,7 +140545,7 @@
         const Component2 = as || "div";
         const domRef = (0, import_react_utils.useDOMRef)(ref);
         const inputRef = (0, import_react73.useRef)(null);
-        const numberFormatter = (0, import_i18n13.useNumberFormatter)(formatOptions);
+        const numberFormatter = (0, import_i18n14.useNumberFormatter)(formatOptions);
         const { thumbProps, inputProps, isDragging: isDragging2, isFocused } = (0, import_slider.useSliderThumb)(
           {
             index: index3,
@@ -145768,7 +145768,7 @@
       var import_react73 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_react_utils = require_dist10();
       var import_combobox = require_main67();
-      var import_i18n13 = require_main5();
+      var import_i18n14 = require_main5();
       var import_theme = require_dist12();
       var import_use_safe_layout_effect = require_dist21();
       var import_system = require_dist11();
@@ -145820,7 +145820,7 @@
           isReadOnly = false,
           ...otherProps
         } = props;
-        const { contains } = (0, import_i18n13.useFilter)(filterOptions);
+        const { contains } = (0, import_i18n14.useFilter)(filterOptions);
         const { onChange: _onChange, ...restProps } = originalProps;
         let state = (0, import_combobox.useComboBoxState)({
           ...restProps,
@@ -150834,13 +150834,13 @@
       var import_theme = require_dist12();
       var import_utils8 = require_main38();
       var import_react_utils = require_dist10();
-      var import_i18n13 = require_main5();
+      var import_i18n14 = require_main5();
       var import_shared_utils = require_dist2();
       function useCalendarBase(originalProps) {
         var _a, _b, _c, _d, _e, _f, _g;
         const [props, variantProps2] = (0, import_system.mapPropsVariants)(originalProps, import_theme.calendar.variantKeys);
         const globalContext = (0, import_system.useProviderContext)();
-        const { locale, direction } = (0, import_i18n13.useLocale)();
+        const { locale, direction } = (0, import_i18n14.useLocale)();
         const isRTL = direction === "rtl";
         const calendarProp = (0, import_date.createCalendar)(
           new import_date.DateFormatter(locale).resolvedOptions().calendar
@@ -156801,7 +156801,7 @@
       });
       module.exports = __toCommonJS2(index_exports);
       var import_system4 = require_dist11();
-      var import_i18n13 = require_main5();
+      var import_i18n14 = require_main5();
       var import_date = require_main74();
       var import_system = require_dist11();
       var import_system2 = require_dist11();
@@ -156817,7 +156817,7 @@
         const globalContext = (0, import_system.useProviderContext)();
         const { validationBehavior: formValidationBehavior } = (0, import_form.useSlottedContext)(import_form.FormContext) || {};
         const [props, variantProps2] = (0, import_system2.mapPropsVariants)(originalProps, import_theme.dateInput.variantKeys);
-        const { locale } = (0, import_i18n13.useLocale)();
+        const { locale } = (0, import_i18n14.useLocale)();
         const calendarProp = (0, import_date.createCalendar)(
           new import_date.DateFormatter(locale).resolvedOptions().calendar
         );
@@ -157378,7 +157378,7 @@
       var import_react73 = (init_react_shim(), __toCommonJS(react_shim_exports));
       var import_system = require_dist11();
       var import_react_utils = require_dist10();
-      var import_i18n13 = require_main5();
+      var import_i18n14 = require_main5();
       var import_utils8 = require_main38();
       var messages_default = {
         "ar-AE": {
@@ -157599,7 +157599,7 @@
         const [isCalendarHeaderExpanded, setIsCalendarHeaderExpanded] = (0, import_utils8.useControlledState)(isHeaderExpanded, isHeaderDefaultExpanded != null ? isHeaderDefaultExpanded : false, handleHeaderExpandedChange);
         const domRef = (0, import_react_utils.useDOMRef)(ref);
         const disableAnimation = (_b = (_a = originalProps.disableAnimation) != null ? _a : globalContext == null ? void 0 : globalContext.disableAnimation) != null ? _b : false;
-        let stringFormatter = (0, import_i18n13.useLocalizedStringFormatter)(messages_default);
+        let stringFormatter = (0, import_i18n14.useLocalizedStringFormatter)(messages_default);
         const isDefaultColor = originalProps.color === "default" || !originalProps.color;
         const hasMultipleMonths = visibleMonths > 1;
         const placeholder = originalProps == null ? void 0 : originalProps.placeholderValue;
@@ -160237,7 +160237,7 @@
       var import_theme = require_dist12();
       var import_react_utils = require_dist10();
       var import_interactions = require_main17();
-      var import_i18n13 = require_main5();
+      var import_i18n14 = require_main5();
       var import_shared_utils = require_dist2();
       var import_numberfield = require_main78();
       var import_numberfield2 = require_main79();
@@ -160276,7 +160276,7 @@
         const baseDomRef = (0, import_react_utils.useDOMRef)(baseRef);
         const inputWrapperRef = (0, import_react_utils.useDOMRef)(wrapperRef);
         const innerWrapperRef = (0, import_react_utils.useDOMRef)(innerWrapperRefProp);
-        const { locale } = (0, import_i18n13.useLocale)();
+        const { locale } = (0, import_i18n14.useLocale)();
         const state = (0, import_numberfield.useNumberFieldState)({
           ...originalProps,
           validationBehavior,
@@ -166592,6 +166592,7 @@
       // Results
       aboutResults: "About",
       results: "results",
+      resultsTryThis: "Try this",
       page: "Page",
       of: "of",
       previous: "Previous",
@@ -167478,7 +167479,7 @@
       homeSourceStudios: "Studios",
       liveTvList: "Live TV list",
       liveTvChooseList: "Choose a Live TV list",
-      homeMenuPremiereStar: "Premiere star",
+      homeMenuPremiereStar: "Premieres",
       traktTitle: "Trakt",
       traktDesc: "Sign in with Trakt to sync watched TV episodes, watchlists, and your collection with Lumio.",
       traktSignedInAs: "Signed in as",
@@ -168756,6 +168757,7 @@
       // Results
       aboutResults: "Ungef\xE4r",
       results: "resultat",
+      resultsTryThis: "Prova det h\xE4r",
       page: "Sida",
       of: "av",
       previous: "F\xF6reg\xE5ende",
@@ -169642,7 +169644,7 @@
       homeSourceStudios: "Studios",
       liveTvList: "Live TV-lista",
       liveTvChooseList: "V\xE4lj en Live TV-lista",
-      homeMenuPremiereStar: "Premi\xE4rstj\xE4rna",
+      homeMenuPremiereStar: "Premi\xE4rer",
       traktTitle: "Trakt",
       traktDesc: "Logga in med Trakt f\xF6r att synka sedda serieavsnitt, listor och din samling med Lumio.",
       traktSignedInAs: "Inloggad som",
@@ -183399,6 +183401,7 @@ ${cue.text}`).join("\n\n")}
   function getStreamSizeBytes(stream) {
     const cachedFileBytes = stream.cachedFiles.flatMap((entry) => Object.values(entry)).reduce((sum, file) => sum + (Number.isFinite(file.filesize) ? file.filesize : 0), 0);
     if (cachedFileBytes > 0) return cachedFileBytes;
+    if (typeof stream.sizeBytes === "number" && stream.sizeBytes > 0) return stream.sizeBytes;
     return parseSizeBytes(`${stream.name} ${stream.title}`);
   }
   var STREAM_LANGUAGE_PATTERNS = [
@@ -186685,7 +186688,8 @@ ${cue.text}`).join("\n\n")}
     const [copied, setCopied] = useState(false);
     const url = streamHttpUrl(stream);
     const sizeBytes = getStreamSizeBytes(stream);
-    const sizeLabel = sizeBytes && sizeBytes > 0 ? sizeBytes >= 1024 ** 3 ? `${(sizeBytes / 1024 ** 3).toFixed(sizeBytes >= 10 * 1024 ** 3 ? 1 : 2)} GB` : `${Math.round(sizeBytes / 1024 ** 2)} MB` : null;
+    const titleShowsSize = parseSizeBytes(stream.title ?? "") !== null;
+    const sizeLabel = sizeBytes && sizeBytes > 0 && !titleShowsSize ? sizeBytes >= 1024 ** 3 ? `${(sizeBytes / 1024 ** 3).toFixed(sizeBytes >= 10 * 1024 ** 3 ? 1 : 2)} GB` : `${Math.round(sizeBytes / 1024 ** 2)} MB` : null;
     return /* @__PURE__ */ jsxs("div", { className: "rounded-xl border border-white/10 bg-slate-900 px-4 py-3 space-y-2", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between gap-2", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 flex-1 flex-wrap items-center gap-1.5", children: [

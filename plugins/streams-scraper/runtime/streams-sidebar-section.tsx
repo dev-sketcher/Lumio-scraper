@@ -68,6 +68,7 @@ import {
   getStreamSizeBytes,
   looksLikeSampleOrExtra,
   matchesEpisodeIdentifier,
+  parseSizeBytes,
   pickBestUnrestrictedLink,
   qualityRank,
   SLATE_MIN_BYTES,
@@ -3625,7 +3626,20 @@ function StreamRow({ stream, onPlay, unsupported = false }: { stream: StreamResu
   const [copied, setCopied] = useState(false)
   const url = streamHttpUrl(stream)
   const sizeBytes = getStreamSizeBytes(stream)
-  const sizeLabel = sizeBytes && sizeBytes > 0
+  /**
+   * Storleken visas EN gång.
+   *
+   * Torrentios titel bär sin egen storleksrad ("… 👤 6 💾 18.9 GB ⚙️
+   * TorrentGalaxy"), och chippet ovanför den blev då samma tal två gånger på
+   * samma rad. Chippet är därför bara för strömmar vars titel INTE säger
+   * storleken — vilket efter backendens sizeBytes-fält är de allra flesta.
+   *
+   * Villkoret läser titeln, inte providern: det är texten som avgör om det
+   * blir en dubblett, och en ny scraper som råkar skriva "2.2 GB" i titeln
+   * ska inte behöva läggas till i någon lista här.
+   */
+  const titleShowsSize = parseSizeBytes(stream.title ?? '') !== null
+  const sizeLabel = sizeBytes && sizeBytes > 0 && !titleShowsSize
     ? sizeBytes >= 1024 ** 3
       ? `${(sizeBytes / 1024 ** 3).toFixed(sizeBytes >= 10 * 1024 ** 3 ? 1 : 2)} GB`
       : `${Math.round(sizeBytes / 1024 ** 2)} MB`
