@@ -166256,6 +166256,24 @@
       popularTrendingMovies: "Movies",
       popularTrailers: "Trailers",
       popularLiveTv: "Live TV",
+      // Tomlägets vägledning (lib/utils/no-results-guidance.ts). Modulen hade
+      // ingen språktillgång alls och var därför hårdkodad engelska mitt i en
+      // svensk ruta — t trådas nu in från media-grid.tsx.
+      noResultsNothingMatched: "Nothing matched the current filter combination.",
+      noResultsFoundCandidates: "We found {count} candidates, but none matched all of your filters at the same time.",
+      noResultsNoCastMatch: "We could not find a clear cast match for that query with the current filters.",
+      noResultsNoTitleMatch: "We could not find a clear title match for that query with the current filters.",
+      noResultsTipSpellingCast: "Check the spelling or try a full cast name with fewer extra words.",
+      noResultsTipSpellingTitle: "Check the spelling or try a shorter title, such as the main word only.",
+      noResultsTipProviders: "Remove a streaming provider or try searching without provider filters to widen the results.",
+      noResultsTipKeywords: "Remove a keyword or try searching without keywords to surface more candidates.",
+      noResultsTipLanguages: "Remove an original language or add more languages if you want broader results.",
+      noResultsTipRatingTmdb: "Lower the minimum TMDb rating or widen the rating range to include more titles.",
+      noResultsTipRating: "Lower the minimum rating or widen the rating range to include more titles.",
+      noResultsTipYears: "Widen the year range by a few years to give the search more room.",
+      noResultsTipMediaType: "Switch from movies only or series only to both if you want more matches faster.",
+      noResultsTipGenres: "Remove one genre or try fewer genres at the same time.",
+      noResultsTipClearAll: "Clear the filters and start broader, then narrow the search step by step.",
       m3uUrls: "M3U Playlist URLs",
       m3uUrlsDesc: "Enter one M3U URL per line. Channels are stored in your browser.",
       m3uUrlsPlaceholder: "https://example.com/playlist.m3u",
@@ -168421,6 +168439,21 @@
       popularTrendingMovies: "Filmer",
       popularTrailers: "Trailers",
       popularLiveTv: "Live TV",
+      noResultsNothingMatched: "Ingenting matchade den nuvarande filterkombinationen.",
+      noResultsFoundCandidates: "Vi hittade {count} kandidater, men ingen matchade alla dina filter samtidigt.",
+      noResultsNoCastMatch: "Vi hittade ingen tydlig sk\xE5despelartr\xE4ff f\xF6r s\xF6kningen med de nuvarande filtren.",
+      noResultsNoTitleMatch: "Vi hittade ingen tydlig titeltr\xE4ff f\xF6r s\xF6kningen med de nuvarande filtren.",
+      noResultsTipSpellingCast: "Kontrollera stavningen eller prova ett fullst\xE4ndigt sk\xE5despelarnamn med f\xE4rre extra ord.",
+      noResultsTipSpellingTitle: "Kontrollera stavningen eller prova en kortare titel, till exempel bara huvudordet.",
+      noResultsTipProviders: "Ta bort en streamingtj\xE4nst eller s\xF6k utan tj\xE4nstefilter f\xF6r att bredda tr\xE4ffarna.",
+      noResultsTipKeywords: "Ta bort ett nyckelord eller s\xF6k utan nyckelord f\xF6r att f\xE5 fram fler kandidater.",
+      noResultsTipLanguages: "Ta bort ett originalspr\xE5k, eller l\xE4gg till fler spr\xE5k om du vill ha bredare tr\xE4ffar.",
+      noResultsTipRatingTmdb: "S\xE4nk l\xE4gsta TMDb-betyg eller vidga betygsspannet f\xF6r att f\xE5 med fler titlar.",
+      noResultsTipRating: "S\xE4nk l\xE4gsta betyg eller vidga betygsspannet f\xF6r att f\xE5 med fler titlar.",
+      noResultsTipYears: "Vidga \xE5rsspannet med n\xE5gra \xE5r f\xF6r att ge s\xF6kningen mer utrymme.",
+      noResultsTipMediaType: "Byt fr\xE5n bara filmer eller bara serier till b\xE5da om du vill hitta fler snabbare.",
+      noResultsTipGenres: "Ta bort en genre eller prova f\xE4rre genrer samtidigt.",
+      noResultsTipClearAll: "Rensa filtren och b\xF6rja bredare, och smalna sedan av s\xF6kningen steg f\xF6r steg.",
       m3uUrls: "M3U-spellistor",
       m3uUrlsDesc: "Ange en M3U-l\xE4nk per rad.",
       m3uUrlsPlaceholder: "https://exempel.se/spellista.m3u",
@@ -171021,6 +171054,207 @@
     }
   }
 
+  // lib/media-stream/core-addons.ts
+  var KEY = "core_stream_addons_v1";
+  var EVENT = "lumio-core-stream-addons-changed";
+  function readCoreStreamAddons() {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = getScopedStorageItem(KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((entry) => Boolean(entry) && typeof entry === "object" && typeof entry.url === "string" && entry.url.length > 0);
+    } catch {
+      return [];
+    }
+  }
+  function writeCoreStreamAddons(entries) {
+    setScopedStorageItem(KEY, JSON.stringify(entries));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT));
+  }
+  function upsertCoreStreamAddon(url, name) {
+    const trimmedUrl = url.trim();
+    if (!trimmedUrl) return;
+    const trimmedName = name.trim() || trimmedUrl;
+    const existing = readCoreStreamAddons();
+    const previous = existing.find((entry) => entry.url === trimmedUrl);
+    const next2 = {
+      url: trimmedUrl,
+      name: trimmedName,
+      enabled: previous ? previous.enabled : true,
+      installedAt: previous?.installedAt ?? (/* @__PURE__ */ new Date()).toISOString()
+    };
+    const filtered = existing.filter((entry) => entry.url !== trimmedUrl);
+    writeCoreStreamAddons([...filtered, next2]);
+  }
+
+  // lib/stremio/addons-storage.ts
+  var STORAGE_KEY2 = "stremio_addons_v1";
+  var EVENT2 = "lumio-stremio-addons-changed";
+  function readRaw() {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = getScopedStorageItem(STORAGE_KEY2);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter(
+        (entry) => Boolean(entry) && typeof entry === "object" && typeof entry.baseUrl === "string" && typeof entry.id === "string"
+      );
+    } catch {
+      return [];
+    }
+  }
+  function writeRaw(entries) {
+    if (typeof window === "undefined") return;
+    setScopedStorageItem(STORAGE_KEY2, JSON.stringify(entries));
+    window.dispatchEvent(new CustomEvent(EVENT2));
+  }
+  function upsertStremioAddon(baseUrl, manifest) {
+    const entries = readRaw();
+    const next2 = {
+      baseUrl,
+      id: manifest.id,
+      name: manifest.name,
+      version: manifest.version,
+      description: manifest.description ?? null,
+      resources: manifest.resources,
+      types: manifest.types,
+      catalogs: manifest.catalogs,
+      logo: manifest.logo ?? null,
+      background: manifest.background ?? null,
+      installedAt: (/* @__PURE__ */ new Date()).toISOString()
+    };
+    const filtered = entries.filter((entry) => entry.baseUrl !== baseUrl);
+    filtered.push(next2);
+    writeRaw(filtered);
+    return next2;
+  }
+
+  // lib/stremio/manifest.ts
+  var VALID_RESOURCES = /* @__PURE__ */ new Set([
+    "catalog",
+    "meta",
+    "stream",
+    "subtitles",
+    "addon_catalog"
+  ]);
+  function normalizeAddonUrl(raw) {
+    const trimmed = raw.trim();
+    if (!trimmed) return "";
+    const withScheme = trimmed.replace(/^stremio:\/\//i, "https://");
+    return withScheme.replace(/\/manifest\.json$/i, "").replace(/\/+$/, "");
+  }
+  function asArray(value) {
+    return Array.isArray(value) ? value : [];
+  }
+  function parseResources(value) {
+    const raw = asArray(value);
+    const result = [];
+    for (const entry of raw) {
+      if (typeof entry === "string" && VALID_RESOURCES.has(entry)) {
+        result.push(entry);
+      } else if (entry && typeof entry === "object" && "name" in entry) {
+        const name = entry.name;
+        if (typeof name === "string" && VALID_RESOURCES.has(name)) {
+          result.push(name);
+        }
+      }
+    }
+    return Array.from(new Set(result));
+  }
+  function parseCatalogs(value) {
+    return asArray(value).map((entry) => {
+      if (typeof entry.id !== "string" || typeof entry.type !== "string") return null;
+      const catalog = {
+        type: entry.type,
+        id: entry.id,
+        name: typeof entry.name === "string" ? entry.name : entry.id
+      };
+      if (Array.isArray(entry.extra)) {
+        const extras = [];
+        for (const raw of entry.extra) {
+          if (!raw || typeof raw !== "object") continue;
+          const obj = raw;
+          if (typeof obj.name !== "string") continue;
+          extras.push({
+            name: obj.name,
+            isRequired: typeof obj.isRequired === "boolean" ? obj.isRequired : void 0,
+            options: Array.isArray(obj.options) ? obj.options.filter((opt) => typeof opt === "string") : void 0,
+            optionsLimit: typeof obj.optionsLimit === "number" ? obj.optionsLimit : void 0
+          });
+        }
+        catalog.extra = extras;
+      }
+      if (Array.isArray(entry.extraSupported)) {
+        catalog.extraSupported = entry.extraSupported.filter((v) => typeof v === "string");
+      }
+      if (Array.isArray(entry.extraRequired)) {
+        catalog.extraRequired = entry.extraRequired.filter((v) => typeof v === "string");
+      }
+      if (Array.isArray(entry.genres)) {
+        catalog.genres = entry.genres.filter((v) => typeof v === "string");
+      }
+      return catalog;
+    }).filter((entry) => entry !== null);
+  }
+  function parseManifestPayload(payload) {
+    if (!payload || typeof payload !== "object") return null;
+    const raw = payload;
+    if (typeof raw.id !== "string" || typeof raw.name !== "string") return null;
+    const types = asArray(raw.types).filter((entry) => typeof entry === "string");
+    return {
+      id: raw.id,
+      name: raw.name,
+      version: typeof raw.version === "string" ? raw.version : "0.0.0",
+      description: typeof raw.description === "string" ? raw.description : void 0,
+      resources: parseResources(raw.resources),
+      types,
+      catalogs: parseCatalogs(raw.catalogs),
+      logo: typeof raw.logo === "string" ? raw.logo : null,
+      background: typeof raw.background === "string" ? raw.background : null,
+      contactEmail: typeof raw.contactEmail === "string" ? raw.contactEmail : null,
+      behaviorHints: raw.behaviorHints && typeof raw.behaviorHints === "object" ? raw.behaviorHints : void 0
+    };
+  }
+  async function fetchManifest(rawUrl, options) {
+    const baseUrl = normalizeAddonUrl(rawUrl);
+    if (!baseUrl) throw new Error("Empty addon URL");
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), options?.timeoutMs ?? 8e3);
+    options?.signal?.addEventListener("abort", () => controller.abort(), { once: true });
+    try {
+      const response = await fetch(`${baseUrl}/manifest.json`, {
+        signal: controller.signal,
+        cache: "no-store"
+      });
+      if (!response.ok) throw new Error(`Manifest fetch failed (${response.status})`);
+      const payload = await response.json();
+      const manifest = parseManifestPayload(payload);
+      if (!manifest) throw new Error("Invalid manifest payload");
+      return { baseUrl, manifest };
+    } finally {
+      window.clearTimeout(timeoutId);
+    }
+  }
+
+  // lib/stremio/install-addon.ts
+  var NO_CATALOG_ADDON = "lumio:addon-has-no-catalog-or-stream";
+  async function installStremioAddonFromUrl(url) {
+    const { baseUrl, manifest } = await fetchManifest(url);
+    const hasCatalog = manifest.resources.includes("catalog");
+    const hasStream = manifest.resources.includes("stream");
+    if (!hasCatalog && !hasStream) {
+      throw new Error(NO_CATALOG_ADDON);
+    }
+    upsertStremioAddon(baseUrl, manifest);
+    if (hasStream) {
+      upsertCoreStreamAddon(url, manifest.name);
+    }
+    return manifest.name;
+  }
+
   // lib/media-stream/config.ts
   var KEY_PRESET_URL = (id4) => `scraper_url_${id4}`;
   var SCRAPER_PRESETS = [
@@ -171734,6 +171968,11 @@
           const key = getStreamProviderAccessKey(debridProvider);
           setStreamProviderAccessKey(debridProvider, key);
         }
+        const manifestUrl = config.preset === "aiostreams" ? config.options.manifestUrl?.trim() : "";
+        if (manifestUrl) {
+          void installStremioAddonFromUrl(manifestUrl).catch(() => {
+          });
+        }
         setSavedSnapshot(getScraperSnapshot(config));
         setSaveState("saved");
         saveTimerRef.current = setTimeout(() => {
@@ -172343,7 +172582,7 @@
 
   // lib/trakt-storage.ts
   var AUTH_KEY = "trakt_auth";
-  var EVENT = "lumio-trakt-auth-changed";
+  var EVENT3 = "lumio-trakt-auth-changed";
   function getTraktAuth() {
     if (typeof window === "undefined") return null;
     try {
@@ -172368,7 +172607,7 @@
   }
   function emitChanged() {
     if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent(EVENT));
+      window.dispatchEvent(new CustomEvent(EVENT3));
     }
   }
   function setTraktAuth(auth) {
@@ -172391,8 +172630,8 @@
   }
 
   // lib/watched-episodes.ts
-  var KEY = "watched_episodes";
-  var EVENT2 = "lumio-watched-episodes-changed";
+  var KEY2 = "watched_episodes";
+  var EVENT4 = "lumio-watched-episodes-changed";
   var DETAIL_EVENT = "lumio-watched-episode-mutated";
   function epKey(tmdbId, season, episode) {
     return `${tmdbId}-S${season}E${episode}`;
@@ -172400,7 +172639,7 @@
   function read() {
     if (typeof window === "undefined") return {};
     try {
-      const parsed = JSON.parse(getScopedStorageItem(KEY) ?? "{}");
+      const parsed = JSON.parse(getScopedStorageItem(KEY2) ?? "{}");
       const out = {};
       for (const [key, value] of Object.entries(parsed)) {
         if (typeof value === "string" && value.trim().length > 0) out[key] = value;
@@ -172412,9 +172651,9 @@
     }
   }
   function write(data) {
-    setScopedStorageItem(KEY, JSON.stringify(data));
+    setScopedStorageItem(KEY2, JSON.stringify(data));
     if (typeof window !== "undefined") {
-      window.dispatchEvent(new CustomEvent(EVENT2));
+      window.dispatchEvent(new CustomEvent(EVENT4));
     }
   }
   function timestampOf(value) {
@@ -172491,8 +172730,8 @@
   function onWatchedEpisodesChanged(listener) {
     if (typeof window === "undefined") return () => {
     };
-    window.addEventListener(EVENT2, listener);
-    return () => window.removeEventListener(EVENT2, listener);
+    window.addEventListener(EVENT4, listener);
+    return () => window.removeEventListener(EVENT4, listener);
   }
 
   // lib/watched-movies.ts
@@ -172927,7 +173166,7 @@
   init_plugin_registry();
 
   // lib/plugin-state.ts
-  var STORAGE_KEY2 = "lumio:plugin-state";
+  var STORAGE_KEY3 = "lumio:plugin-state";
   function normalizeState(state, fallback) {
     return {
       ...fallback,
@@ -172942,7 +173181,7 @@
   function readAll() {
     if (typeof window === "undefined") return {};
     try {
-      const raw = getScopedStorageItem(STORAGE_KEY2);
+      const raw = getScopedStorageItem(STORAGE_KEY3);
       return raw ? JSON.parse(raw) : {};
     } catch {
       return {};
@@ -173844,17 +174083,17 @@
   init_plugin_registry();
 
   // lib/video-progress.ts
-  var EVENT3 = "lumio-stream-progress-changed";
+  var EVENT5 = "lumio-stream-progress-changed";
   if (typeof window !== "undefined") {
     void Promise.resolve().then(() => (init_plugin_registry(), plugin_registry_exports)).then(({ subscribePluginRegistry: subscribePluginRegistry2 }) => {
       subscribePluginRegistry2(() => {
-        window.dispatchEvent(new CustomEvent(EVENT3));
+        window.dispatchEvent(new CustomEvent(EVENT5));
         window.dispatchEvent(new CustomEvent(HISTORY_EVENT));
       });
     }).catch(() => {
     });
   }
-  var KEY2 = "stream_progress_list";
+  var KEY3 = "stream_progress_list";
   var MAX = 20;
   var HISTORY_KEY = "stream_history_list";
   var HISTORY_EVENT = "lumio-stream-history-changed";
@@ -173874,7 +174113,7 @@
   function read2() {
     if (typeof window === "undefined") return [];
     try {
-      return JSON.parse(getScopedStorageItem(KEY2) ?? "[]");
+      return JSON.parse(getScopedStorageItem(KEY3) ?? "[]");
     } catch {
       return [];
     }
@@ -173958,8 +174197,8 @@
   function saveStreamProgress(entry) {
     const sanitizedEntry = sanitizeEntry(entry);
     const list = sortByWatchedAtDesc(dedupeProgressEntries([sanitizedEntry, ...read2()])).slice(0, MAX);
-    setScopedStorageItem(KEY2, JSON.stringify(list));
-    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT3));
+    setScopedStorageItem(KEY3, JSON.stringify(list));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT5));
     appendHistoryEntry(sanitizedEntry);
   }
   function removeStreamProgress(id4, season, episode) {
@@ -173970,8 +174209,8 @@
       const entryLookupKey = entryKey(entry.id, entry.season, entry.episode);
       return entryLookupKey !== key && entryLookupKey !== prefixedMovieKey && entryLookupKey !== prefixedTvKey;
     });
-    setScopedStorageItem(KEY2, JSON.stringify(list));
-    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT3));
+    setScopedStorageItem(KEY3, JSON.stringify(list));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT5));
   }
 
   // lib/resume-playback.ts
@@ -174075,7 +174314,7 @@
     "fullscreen"
   ];
   var LAYOUT_KEY = "player_layout";
-  var EVENT4 = "lumio-player-layout-changed";
+  var EVENT6 = "lumio-player-layout-changed";
   function defaultLayout() {
     return {
       order: [...PLAYER_CONTROL_IDS],
@@ -174129,8 +174368,8 @@
   function onPlayerLayoutChanged(listener) {
     if (typeof window === "undefined") return () => {
     };
-    window.addEventListener(EVENT4, listener);
-    return () => window.removeEventListener(EVENT4, listener);
+    window.addEventListener(EVENT6, listener);
+    return () => window.removeEventListener(EVENT6, listener);
   }
 
   // components/player/player-tuning-panel.tsx
@@ -174145,12 +174384,12 @@
     cinema: { labelKey: "vtPresetCinema", patch: { brightness: -4, gamma: -6, saturation: -5 } },
     sharp: { labelKey: "vtPresetSharp", patch: { sharpen: 0.6, saturation: 8 } }
   };
-  var KEY3 = "video_tuning";
-  var EVENT5 = "lumio-video-tuning-changed";
+  var KEY4 = "video_tuning";
+  var EVENT7 = "lumio-video-tuning-changed";
   function getVideoTuning() {
     if (typeof window === "undefined") return { ...DEFAULT_TUNING };
     try {
-      const raw = getScopedStorageItem(KEY3);
+      const raw = getScopedStorageItem(KEY4);
       if (!raw) return { ...DEFAULT_TUNING };
       const parsed = JSON.parse(raw);
       const clamp2 = (v, lo, hi, dflt) => {
@@ -174169,14 +174408,14 @@
     }
   }
   function setVideoTuning(tuning) {
-    setScopedStorageItem(KEY3, JSON.stringify(tuning));
-    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT5));
+    setScopedStorageItem(KEY4, JSON.stringify(tuning));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT7));
   }
   function onVideoTuningChanged(listener) {
     if (typeof window === "undefined") return () => {
     };
-    window.addEventListener(EVENT5, listener);
-    return () => window.removeEventListener(EVENT5, listener);
+    window.addEventListener(EVENT7, listener);
+    return () => window.removeEventListener(EVENT7, listener);
   }
   var TONE_MAPPINGS = ["auto", "hable", "mobius", "reinhard", "bt.2390"];
   var DEFAULT_RENDER_TUNING = {
@@ -174210,7 +174449,7 @@
   }
   function setRenderTuning(tuning) {
     setScopedStorageItem(RENDER_KEY, JSON.stringify(tuning));
-    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT5));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT7));
   }
   function renderTuningProperties(t) {
     const props = [
@@ -174250,12 +174489,12 @@
     voiceClarity: false,
     downmixStereo: false
   };
-  var KEY4 = "audio_tuning";
-  var EVENT6 = "lumio-audio-tuning-changed";
+  var KEY5 = "audio_tuning";
+  var EVENT8 = "lumio-audio-tuning-changed";
   function getAudioTuning() {
     if (typeof window === "undefined") return { ...DEFAULT_AUDIO_TUNING };
     try {
-      const raw = getScopedStorageItem(KEY4);
+      const raw = getScopedStorageItem(KEY5);
       if (!raw) return { ...DEFAULT_AUDIO_TUNING };
       const parsed = JSON.parse(raw);
       return {
@@ -174269,14 +174508,14 @@
     }
   }
   function setAudioTuning(tuning) {
-    setScopedStorageItem(KEY4, JSON.stringify(tuning));
-    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT6));
+    setScopedStorageItem(KEY5, JSON.stringify(tuning));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT8));
   }
   function onAudioTuningChanged(listener) {
     if (typeof window === "undefined") return () => {
     };
-    window.addEventListener(EVENT6, listener);
-    return () => window.removeEventListener(EVENT6, listener);
+    window.addEventListener(EVENT8, listener);
+    return () => window.removeEventListener(EVENT8, listener);
   }
   function audioTuningFilters(t) {
     const filters = [];
@@ -176164,7 +176403,7 @@
   }
 
   // lib/keyboard-shortcuts.ts
-  var KEY5 = "keyboard_shortcuts";
+  var KEY6 = "keyboard_shortcuts";
   var SHORTCUT_COMMANDS = [
     { id: "playPause", category: "player", defaultKey: " ", labelKey: "shortcutsPlayPause" },
     { id: "seekBack", category: "player", defaultKey: "ArrowLeft", labelKey: "shortcutsSeekBackward" },
@@ -176184,7 +176423,7 @@
   function readOverrides() {
     if (typeof window === "undefined") return {};
     try {
-      const raw = getScopedStorageItem(KEY5);
+      const raw = getScopedStorageItem(KEY6);
       if (!raw) return {};
       const parsed = JSON.parse(raw);
       return parsed && typeof parsed === "object" ? parsed : {};
@@ -176217,12 +176456,12 @@
   }
 
   // lib/subtitle-delay-store.ts
-  var STORAGE_KEY3 = "lumio_subtitle_delays_v1";
+  var STORAGE_KEY4 = "lumio_subtitle_delays_v1";
   var MAX_ENTRIES = 400;
   function readStore() {
     if (typeof window === "undefined") return {};
     try {
-      const raw = getScopedStorageItem(STORAGE_KEY3);
+      const raw = getScopedStorageItem(STORAGE_KEY4);
       if (!raw) return {};
       const parsed = JSON.parse(raw);
       return parsed && typeof parsed === "object" ? parsed : {};
@@ -176239,7 +176478,7 @@
           delete store2[key];
         });
       }
-      setScopedStorageItem(STORAGE_KEY3, JSON.stringify(store2));
+      setScopedStorageItem(STORAGE_KEY4, JSON.stringify(store2));
     } catch {
     }
   }

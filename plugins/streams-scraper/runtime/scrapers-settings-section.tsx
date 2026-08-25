@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Input, Switch } from '@heroui/react'
 import { useLang } from '@/lib/i18n'
 import { openExternalUrl } from '@/lib/open-external'
+import { installStremioAddonFromUrl } from '@/lib/stremio/install-addon'
 import {
   getStreamProviderConfigs,
   setStreamProviderConfigs,
@@ -505,6 +506,34 @@ function ScraperCard({
       if (debridProvider && debridProvider !== 'none') {
       const key = getStreamProviderAccessKey(debridProvider)
       setStreamProviderAccessKey(debridProvider, key)
+      }
+
+      /**
+       * Ett manifest ska ge samma sak var man än klistrar in det.
+       *
+       * Förut sparade det här kortet BARA URL:en som scraper, medan samma
+       * manifest inklistrat under "kataloger från communityn" gav sina
+       * kataloger (AIOStreams levererar sju: TorBox Torrents/Usenet/WebDL,
+       * Store TB …). Samma addon, två olika resultat beroende på vilken ruta
+       * man råkade välja.
+       *
+       * Installationen är delad med community-listan
+       * (lib/stremio/install-addon.ts), så manifestets kataloger blir
+       * valbara som radkällor OCH addonen hamnar i kärnans strömlagring —
+       * det senare är vad som gör att bara manifestet räcker: spelaren kan
+       * lösa strömmar därifrån utan att scraper eller debrid är ifyllt, precis
+       * som när addonen används via debridtjänsten.
+       *
+       * Väntar inte på svaret: sparandet ska inte hänga på ett nätanrop, och
+       * ett manifest som inte svarar just nu är fortfarande en giltig scraper.
+       * Kortets manifestrad (fetchScraperManifest) visar redan när URL:en är
+       * trasig, så felet har en synlig plats utan att blockera SPARA.
+       */
+      const manifestUrl = config.preset === 'aiostreams'
+        ? (config.options as AiostreamsOptions).manifestUrl?.trim()
+        : ''
+      if (manifestUrl) {
+        void installStremioAddonFromUrl(manifestUrl).catch(() => {})
       }
       // Deliberately no config write here. This used to round-trip the list
       // through storage — read it, write it straight back — which destroyed
