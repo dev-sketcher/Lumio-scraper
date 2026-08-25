@@ -163674,7 +163674,7 @@
           this.channelId = channelId;
         }
         async unregister() {
-          return invoke4(`plugin:${this.plugin}|remove_listener`, {
+          return invoke5(`plugin:${this.plugin}|remove_listener`, {
             event: this.event,
             channelId: this.channelId
           });
@@ -163683,23 +163683,23 @@
       async function addPluginListener(plugin2, event, cb) {
         const handler = new Channel(cb);
         try {
-          await invoke4(`plugin:${plugin2}|register_listener`, {
+          await invoke5(`plugin:${plugin2}|register_listener`, {
             event,
             handler
           });
           return new PluginListener(plugin2, event, handler.id);
         } catch {
-          await invoke4(`plugin:${plugin2}|registerListener`, { event, handler });
+          await invoke5(`plugin:${plugin2}|registerListener`, { event, handler });
           return new PluginListener(plugin2, event, handler.id);
         }
       }
       async function checkPermissions(plugin2) {
-        return invoke4(`plugin:${plugin2}|check_permissions`);
+        return invoke5(`plugin:${plugin2}|check_permissions`);
       }
       async function requestPermissions(plugin2) {
-        return invoke4(`plugin:${plugin2}|request_permissions`);
+        return invoke5(`plugin:${plugin2}|request_permissions`);
       }
-      async function invoke4(cmd, args = {}, options) {
+      async function invoke5(cmd, args = {}, options) {
         return window.__TAURI_INTERNALS__.invoke(cmd, args, options);
       }
       function convertFileSrc(filePath, protocol = "asset") {
@@ -163718,7 +163718,7 @@
          * **You should not call any method on this object anymore and should drop any reference to it.**
          */
         async close() {
-          return invoke4("plugin:resources|close", {
+          return invoke5("plugin:resources|close", {
             rid: this.rid
           });
         }
@@ -163734,7 +163734,7 @@
       exports.addPluginListener = addPluginListener;
       exports.checkPermissions = checkPermissions;
       exports.convertFileSrc = convertFileSrc;
-      exports.invoke = invoke4;
+      exports.invoke = invoke5;
       exports.isTauri = isTauri;
       exports.requestPermissions = requestPermissions;
       exports.transformCallback = transformCallback;
@@ -166840,6 +166840,8 @@
       advDownloadsTitle: "Download folder",
       advDownloadsHint: "Where the player saves videos. When set, the folder picker is skipped.",
       advDownloadsUnset: "Ask every time",
+      advDownloadsAppManaged: "Downloads are saved in the app and appear under My files.",
+      settingsFolderPickerUnavailable: "Choosing a folder is not available on this device.",
       advDownloadsPick: "Choose folder",
       advDownloadsClear: "Clear",
       advOnboardingEyebrow: "Onboarding",
@@ -168227,6 +168229,10 @@
       sssSeasonWatched: "Season watched",
       sssMarkSeasonWatched: "Mark season watched",
       sssEpisodesLoadError: "Could not load episodes right now.",
+      sssSeasonsLoadError: "Could not load seasons right now.",
+      detailsCastLoadError: "Could not load the cast right now.",
+      detailsRecommendationsLoadError: "Could not load recommendations right now.",
+      detailsCommentsLoadError: "Could not load comments right now.",
       sssPlayEpisodeCode: "Play {code}",
       sssPlayEpisode: "Play episode",
       // Series calendar
@@ -168998,6 +169004,8 @@
       advDownloadsTitle: "Nedladdningsmapp",
       advDownloadsHint: "Var spelaren sparar video. N\xE4r satt hoppas mappv\xE4ljaren \xF6ver.",
       advDownloadsUnset: "Fr\xE5ga varje g\xE5ng",
+      advDownloadsAppManaged: "Nedladdningar sparas i appen och visas under Mina filer.",
+      settingsFolderPickerUnavailable: "Att v\xE4lja mapp g\xE5r inte p\xE5 den h\xE4r enheten.",
       advDownloadsPick: "V\xE4lj mapp",
       advDownloadsClear: "Rensa",
       advOnboardingEyebrow: "Onboarding",
@@ -170381,6 +170389,10 @@
       sssSeasonWatched: "S\xE4songen sedd",
       sssMarkSeasonWatched: "Markera s\xE4song sedd",
       sssEpisodesLoadError: "Kunde inte ladda avsnitt just nu.",
+      sssSeasonsLoadError: "Kunde inte ladda s\xE4songer just nu.",
+      detailsCastLoadError: "Kunde inte ladda sk\xE5despelarna just nu.",
+      detailsRecommendationsLoadError: "Kunde inte ladda rekommendationer just nu.",
+      detailsCommentsLoadError: "Kunde inte ladda kommentarer just nu.",
       sssPlayEpisodeCode: "Spela {code}",
       sssPlayEpisode: "Spela avsnitt",
       // Series calendar
@@ -170996,8 +171008,8 @@
     }
     if (isTauriEnv) {
       try {
-        const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
-        await invoke4("open_external_url", { url });
+        const { invoke: invoke5 } = await Promise.resolve().then(() => __toESM(require_core2()));
+        await invoke5("open_external_url", { url });
         return;
       } catch {
       }
@@ -173521,6 +173533,235 @@
   // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build/auth-capabilities-shim.ts
   var sdk2 = globalThis.__lumioPluginRuntime?.sdk;
 
+  // lib/tauri-native-player.ts
+  init_react_shim();
+  var isAndroidTauriEnv = isTauriEnv && typeof navigator !== "undefined" && /android/i.test(navigator.userAgent);
+  async function np(cmd) {
+    try {
+      const res = await fetch("/api/native-player", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(cmd)
+      });
+      if (!res.ok) return null;
+      return await res.json();
+    } catch {
+      return null;
+    }
+  }
+  var deviceCapsCache = null;
+  var deviceCapsPromise = null;
+  async function getDeviceCapabilities() {
+    if (!isAndroidTauriEnv) return null;
+    if (deviceCapsCache) return deviceCapsCache;
+    if (!deviceCapsPromise) {
+      deviceCapsPromise = np({ cmd: "getCapabilities" }).then((value) => {
+        const caps = value;
+        if (caps && typeof caps.dolbyVision === "boolean") deviceCapsCache = caps;
+        return deviceCapsCache;
+      });
+    }
+    return deviceCapsPromise;
+  }
+  function looksLikeDolbyVision(name) {
+    const separated = /(?:^|[.\s_\-\[(])(dv|dovi)(?:$|[.\s_\-\])])/i;
+    return separated.test(name) || /dolby[.\s_-]?vision/i.test(name);
+  }
+  function looksLikeLosslessAudio(name) {
+    return /(true[.\s_-]?hd|atmos|dts[.\s_-]?hd|dts[.\s_-]?x|\bdtsma\b)/i.test(name);
+  }
+  async function deviceCanPlayStream(name) {
+    if (!isAndroidTauriEnv) return { ok: true };
+    if (!name) return { ok: true };
+    const caps = await getDeviceCapabilities();
+    if (!caps) return { ok: true };
+    if (looksLikeLosslessAudio(name) && !caps.trueHd && !caps.dts) {
+      return { ok: false, reason: "DEVICE_NO_AUDIO_DECODER" };
+    }
+    if (looksLikeDolbyVision(name) && !caps.dolbyVision) {
+      return { ok: false, reason: "DEVICE_NO_DOLBY_VISION" };
+    }
+    return { ok: true };
+  }
+  async function openNativePlayer(opts) {
+    const wrapped = sourceCacheUrl(opts.url) ?? opts.url;
+    await np({ cmd: "open", url: wrapped, start: opts.start ?? 0, audioLang: opts.audioLang ?? "" });
+  }
+  async function closeNativePlayer() {
+    await np({ cmd: "close" });
+  }
+  function setAndroidImmersive(on) {
+    if (!isAndroidTauriEnv) return;
+    void np({ cmd: "setImmersive", on });
+  }
+  async function nativeSetVideoTuning(t) {
+    await np({ cmd: "setTuning", brightness: t.brightness, contrast: t.contrast, saturation: t.saturation });
+  }
+  async function nativeSetVideoGeometry(opts) {
+    await np({
+      cmd: "setGeometry",
+      aspect: opts.aspectOverride ?? "-1",
+      panscan: opts.panscan ?? 0,
+      zoom: opts.videoZoom ?? 0
+    });
+  }
+  function openInExternalAndroidPlayer(url, title) {
+    void np({ cmd: "openExternal", url, ...title ? { title } : {} });
+  }
+  function nativeSetBounds(rect) {
+    const scale2 = window.devicePixelRatio || 1;
+    void np({
+      cmd: "setBounds",
+      x: Math.round(rect.left * scale2),
+      y: Math.round(rect.top * scale2),
+      w: Math.round(rect.width * scale2),
+      h: Math.round(rect.height * scale2)
+    });
+  }
+  function useNativePlayer(enabled = true) {
+    const [timePos, setTimePos] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [paused, setPaused] = useState(false);
+    const [ended, setEnded] = useState(false);
+    const [sid, setSid] = useState(null);
+    const [fileLoaded, setFileLoaded] = useState(false);
+    const [fileLoadedToken, setFileLoadedToken] = useState(0);
+    const [playbackRestarted, setPlaybackRestarted] = useState(false);
+    const [playbackRestartedToken, setPlaybackRestartedToken] = useState(0);
+    const [pausedForCache, setPausedForCache] = useState(false);
+    const [coreIdle, setCoreIdle] = useState(true);
+    const [firstFrameRendered, setFirstFrameRendered] = useState(false);
+    const [loadFailed, setLoadFailed] = useState(false);
+    const [loadFailedToken, setLoadFailedToken] = useState(0);
+    const [loadFailedError, setLoadFailedError] = useState(null);
+    const [audioTracks, setAudioTracks] = useState([]);
+    const [subtitleTracks, setSubtitleTracks] = useState([]);
+    const [selectedAudio, setSelectedAudio] = useState(-1);
+    const prevRef = useRef({ fileLoaded: false, firstFrame: false, failToken: -1, timePos: 0 });
+    useEffect(() => {
+      if (!isAndroidTauriEnv || !enabled) return;
+      let cancelled = false;
+      const tick = async () => {
+        const s = await np({ cmd: "status" });
+        if (cancelled || !s || typeof s.timePos !== "number") return;
+        const prev = prevRef.current;
+        setTimePos(s.timePos);
+        prev.timePos = s.timePos;
+        setDuration(s.duration);
+        setPaused(s.paused);
+        setEnded(s.ended);
+        setPausedForCache(s.pausedForCache);
+        setCoreIdle(!s.fileLoaded || s.paused);
+        setSid(s.selectedSub > 0 ? s.selectedSub : null);
+        setAudioTracks(s.tracks?.audio ?? []);
+        setSubtitleTracks(s.tracks?.sub ?? []);
+        setSelectedAudio(s.selectedAudio);
+        if (s.fileLoaded && !prev.fileLoaded) {
+          setFileLoaded(true);
+          setFileLoadedToken((t) => t + 1);
+        }
+        if (!s.fileLoaded) setFileLoaded(false);
+        prev.fileLoaded = s.fileLoaded;
+        if (s.firstFrame && !prev.firstFrame) {
+          setFirstFrameRendered(true);
+          setPlaybackRestarted(true);
+          setPlaybackRestartedToken((t) => t + 1);
+        }
+        prev.firstFrame = s.firstFrame;
+        if (prev.failToken === -1) {
+          prev.failToken = s.loadFailedToken;
+        } else if (s.loadFailedToken > prev.failToken) {
+          prev.failToken = s.loadFailedToken;
+          setLoadFailed(true);
+          setLoadFailedToken((t) => t + 1);
+          setLoadFailedError(null);
+          if (s.loadFailedMessage === "DEVICE_NO_DOLBY_VISION" || s.loadFailedMessage === "DEVICE_FORMAT_UNSUPPORTED") {
+            window.dispatchEvent(new CustomEvent("lumio-device-format-unsupported", {
+              detail: { reason: s.loadFailedMessage }
+            }));
+          }
+        }
+      };
+      const id4 = window.setInterval(() => {
+        void tick();
+      }, 250);
+      void tick();
+      return () => {
+        cancelled = true;
+        window.clearInterval(id4);
+      };
+    }, [enabled]);
+    const seek = useCallback((time2) => {
+      void np({ cmd: "seek", value: time2 });
+    }, []);
+    const seekRelative = useCallback((delta) => {
+      void np({ cmd: "seek", value: Math.max(0, prevRef.current.timePos + delta) });
+    }, []);
+    const setPlayPause = useCallback((pause) => {
+      void np({ cmd: "setPause", value: pause });
+    }, []);
+    const setVolume = useCallback((vol) => {
+      void np({ cmd: "setVolume", value: vol });
+    }, []);
+    const setMuted = useCallback((muted) => {
+      void np({ cmd: "setMuted", value: muted });
+    }, []);
+    const setAudioTrack = useCallback((aid) => {
+      void np({ cmd: "setAudioTrack", id: aid });
+    }, []);
+    const setSubtitleTrack = useCallback((newSid) => {
+      void np({ cmd: "setSubtitleTrack", id: newSid });
+    }, []);
+    const resetFileLoaded = useCallback(() => {
+      setFileLoaded(false);
+    }, []);
+    const resetEnded = useCallback(() => {
+      setEnded(false);
+    }, []);
+    const resetPlaybackRestarted = useCallback(() => {
+      setPlaybackRestarted(false);
+    }, []);
+    const resetFirstFrameRendered = useCallback(() => {
+      setFirstFrameRendered(false);
+    }, []);
+    const resetLoadFailed = useCallback(() => {
+      setLoadFailed(false);
+      setLoadFailedError(null);
+    }, []);
+    return {
+      timePos,
+      duration,
+      paused,
+      ended,
+      sid,
+      fileLoaded,
+      fileLoadedToken,
+      resetEnded,
+      playbackRestarted,
+      playbackRestartedToken,
+      pausedForCache,
+      coreIdle,
+      firstFrameRendered,
+      loadFailed,
+      loadFailedToken,
+      loadFailedError,
+      seek,
+      seekRelative,
+      setPlayPause,
+      setVolume,
+      setMuted,
+      setAudioTrack,
+      resetFileLoaded,
+      resetPlaybackRestarted,
+      resetFirstFrameRendered,
+      resetLoadFailed,
+      audioTracks,
+      subtitleTracks,
+      selectedAudio,
+      setSubtitleTrack
+    };
+  }
+
   // lib/utils/scroll-lock.ts
   function currentLockCount() {
     const raw = Number(document.body.dataset.lumioScrollLocks ?? "0");
@@ -173594,7 +173835,7 @@
   // components/player/video-player-modal.tsx
   init_react_shim();
   var import_react_dom = __toESM(require_react_dom());
-  var import_core3 = __toESM(require_core2());
+  var import_core4 = __toESM(require_core2());
   var import_window = __toESM(require_window());
 
   // lib/playback-availability.ts
@@ -174279,6 +174520,23 @@
         ]
       }
     );
+  }
+
+  // lib/download-target.ts
+  var import_core2 = __toESM(require_core2());
+  async function resolveDownloadFolder() {
+    const preset = getDownloadDir();
+    if (preset) return preset;
+    if (isAndroidTauriEnv) {
+      return await (0, import_core2.invoke)("default_download_dir");
+    }
+    if (isTauriEnv) {
+      const picked = await (0, import_core2.invoke)("pick_folder");
+      return picked ?? await (0, import_core2.invoke)("default_download_dir");
+    }
+    const response = await fetch("/api/pick-folder", { method: "POST" });
+    if (!response.ok) throw new Error("Folder picker failed");
+    return (await response.json()).path;
   }
 
   // lib/vlc-deep-link.ts
@@ -175443,7 +175701,7 @@
         onClick: (e) => e.stopPropagation(),
         ...isTv ? { "data-panel-root": "" } : {},
         children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex flex-shrink-0 items-center justify-between border-b border-white/[0.07] px-4 pb-3 pt-[max(0.75rem,calc(env(safe-area-inset-top)+0.5rem))]", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex flex-shrink-0 items-center justify-between border-b border-white/[0.07] px-4 pb-3 pt-[max(0.75rem,calc(env(safe-area-inset-top)+0.5rem),calc(var(--android-inset-top,0px)+0.5rem))]", children: [
             /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
               onBack ? /* @__PURE__ */ jsx(
                 "button",
@@ -175875,10 +176133,10 @@
   // lib/playback/playback-session-client.ts
   async function invokeDesktop(command, payload) {
     if (!isPluginDesktopHost()) return null;
-    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
+    const { invoke: invoke5 } = await Promise.resolve().then(() => __toESM(require_core2()));
     try {
-      if (payload) return await invoke4(command, payload);
-      return await invoke4(command);
+      if (payload) return await invoke5(command, payload);
+      return await invoke5(command);
     } catch {
       return null;
     }
@@ -176011,240 +176269,11 @@
     writeStore(store2);
   }
 
-  // lib/tauri-native-player.ts
-  init_react_shim();
-  var isAndroidTauriEnv = isTauriEnv && typeof navigator !== "undefined" && /android/i.test(navigator.userAgent);
-  async function np(cmd) {
-    try {
-      const res = await fetch("/api/native-player", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(cmd)
-      });
-      if (!res.ok) return null;
-      return await res.json();
-    } catch {
-      return null;
-    }
-  }
-  var deviceCapsCache = null;
-  var deviceCapsPromise = null;
-  async function getDeviceCapabilities() {
-    if (!isAndroidTauriEnv) return null;
-    if (deviceCapsCache) return deviceCapsCache;
-    if (!deviceCapsPromise) {
-      deviceCapsPromise = np({ cmd: "getCapabilities" }).then((value) => {
-        const caps = value;
-        if (caps && typeof caps.dolbyVision === "boolean") deviceCapsCache = caps;
-        return deviceCapsCache;
-      });
-    }
-    return deviceCapsPromise;
-  }
-  function looksLikeDolbyVision(name) {
-    const separated = /(?:^|[.\s_\-\[(])(dv|dovi)(?:$|[.\s_\-\])])/i;
-    return separated.test(name) || /dolby[.\s_-]?vision/i.test(name);
-  }
-  function looksLikeLosslessAudio(name) {
-    return /(true[.\s_-]?hd|atmos|dts[.\s_-]?hd|dts[.\s_-]?x|\bdtsma\b)/i.test(name);
-  }
-  async function deviceCanPlayStream(name) {
-    if (!isAndroidTauriEnv) return { ok: true };
-    if (!name) return { ok: true };
-    const caps = await getDeviceCapabilities();
-    if (!caps) return { ok: true };
-    if (looksLikeLosslessAudio(name) && !caps.trueHd && !caps.dts) {
-      return { ok: false, reason: "DEVICE_NO_AUDIO_DECODER" };
-    }
-    if (looksLikeDolbyVision(name) && !caps.dolbyVision) {
-      return { ok: false, reason: "DEVICE_NO_DOLBY_VISION" };
-    }
-    return { ok: true };
-  }
-  async function openNativePlayer(opts) {
-    const wrapped = sourceCacheUrl(opts.url) ?? opts.url;
-    await np({ cmd: "open", url: wrapped, start: opts.start ?? 0, audioLang: opts.audioLang ?? "" });
-  }
-  async function closeNativePlayer() {
-    await np({ cmd: "close" });
-  }
-  function setAndroidImmersive(on) {
-    if (!isAndroidTauriEnv) return;
-    void np({ cmd: "setImmersive", on });
-  }
-  async function nativeSetVideoTuning(t) {
-    await np({ cmd: "setTuning", brightness: t.brightness, contrast: t.contrast, saturation: t.saturation });
-  }
-  async function nativeSetVideoGeometry(opts) {
-    await np({
-      cmd: "setGeometry",
-      aspect: opts.aspectOverride ?? "-1",
-      panscan: opts.panscan ?? 0,
-      zoom: opts.videoZoom ?? 0
-    });
-  }
-  function openInExternalAndroidPlayer(url, title) {
-    void np({ cmd: "openExternal", url, ...title ? { title } : {} });
-  }
-  function nativeSetBounds(rect) {
-    const scale2 = window.devicePixelRatio || 1;
-    void np({
-      cmd: "setBounds",
-      x: Math.round(rect.left * scale2),
-      y: Math.round(rect.top * scale2),
-      w: Math.round(rect.width * scale2),
-      h: Math.round(rect.height * scale2)
-    });
-  }
-  function useNativePlayer(enabled = true) {
-    const [timePos, setTimePos] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const [paused, setPaused] = useState(false);
-    const [ended, setEnded] = useState(false);
-    const [sid, setSid] = useState(null);
-    const [fileLoaded, setFileLoaded] = useState(false);
-    const [fileLoadedToken, setFileLoadedToken] = useState(0);
-    const [playbackRestarted, setPlaybackRestarted] = useState(false);
-    const [playbackRestartedToken, setPlaybackRestartedToken] = useState(0);
-    const [pausedForCache, setPausedForCache] = useState(false);
-    const [coreIdle, setCoreIdle] = useState(true);
-    const [firstFrameRendered, setFirstFrameRendered] = useState(false);
-    const [loadFailed, setLoadFailed] = useState(false);
-    const [loadFailedToken, setLoadFailedToken] = useState(0);
-    const [loadFailedError, setLoadFailedError] = useState(null);
-    const [audioTracks, setAudioTracks] = useState([]);
-    const [subtitleTracks, setSubtitleTracks] = useState([]);
-    const [selectedAudio, setSelectedAudio] = useState(-1);
-    const prevRef = useRef({ fileLoaded: false, firstFrame: false, failToken: -1, timePos: 0 });
-    useEffect(() => {
-      if (!isAndroidTauriEnv || !enabled) return;
-      let cancelled = false;
-      const tick = async () => {
-        const s = await np({ cmd: "status" });
-        if (cancelled || !s || typeof s.timePos !== "number") return;
-        const prev = prevRef.current;
-        setTimePos(s.timePos);
-        prev.timePos = s.timePos;
-        setDuration(s.duration);
-        setPaused(s.paused);
-        setEnded(s.ended);
-        setPausedForCache(s.pausedForCache);
-        setCoreIdle(!s.fileLoaded || s.paused);
-        setSid(s.selectedSub > 0 ? s.selectedSub : null);
-        setAudioTracks(s.tracks?.audio ?? []);
-        setSubtitleTracks(s.tracks?.sub ?? []);
-        setSelectedAudio(s.selectedAudio);
-        if (s.fileLoaded && !prev.fileLoaded) {
-          setFileLoaded(true);
-          setFileLoadedToken((t) => t + 1);
-        }
-        if (!s.fileLoaded) setFileLoaded(false);
-        prev.fileLoaded = s.fileLoaded;
-        if (s.firstFrame && !prev.firstFrame) {
-          setFirstFrameRendered(true);
-          setPlaybackRestarted(true);
-          setPlaybackRestartedToken((t) => t + 1);
-        }
-        prev.firstFrame = s.firstFrame;
-        if (prev.failToken === -1) {
-          prev.failToken = s.loadFailedToken;
-        } else if (s.loadFailedToken > prev.failToken) {
-          prev.failToken = s.loadFailedToken;
-          setLoadFailed(true);
-          setLoadFailedToken((t) => t + 1);
-          setLoadFailedError(null);
-          if (s.loadFailedMessage === "DEVICE_NO_DOLBY_VISION" || s.loadFailedMessage === "DEVICE_FORMAT_UNSUPPORTED") {
-            window.dispatchEvent(new CustomEvent("lumio-device-format-unsupported", {
-              detail: { reason: s.loadFailedMessage }
-            }));
-          }
-        }
-      };
-      const id4 = window.setInterval(() => {
-        void tick();
-      }, 250);
-      void tick();
-      return () => {
-        cancelled = true;
-        window.clearInterval(id4);
-      };
-    }, [enabled]);
-    const seek = useCallback((time2) => {
-      void np({ cmd: "seek", value: time2 });
-    }, []);
-    const seekRelative = useCallback((delta) => {
-      void np({ cmd: "seek", value: Math.max(0, prevRef.current.timePos + delta) });
-    }, []);
-    const setPlayPause = useCallback((pause) => {
-      void np({ cmd: "setPause", value: pause });
-    }, []);
-    const setVolume = useCallback((vol) => {
-      void np({ cmd: "setVolume", value: vol });
-    }, []);
-    const setMuted = useCallback((muted) => {
-      void np({ cmd: "setMuted", value: muted });
-    }, []);
-    const setAudioTrack = useCallback((aid) => {
-      void np({ cmd: "setAudioTrack", id: aid });
-    }, []);
-    const setSubtitleTrack = useCallback((newSid) => {
-      void np({ cmd: "setSubtitleTrack", id: newSid });
-    }, []);
-    const resetFileLoaded = useCallback(() => {
-      setFileLoaded(false);
-    }, []);
-    const resetEnded = useCallback(() => {
-      setEnded(false);
-    }, []);
-    const resetPlaybackRestarted = useCallback(() => {
-      setPlaybackRestarted(false);
-    }, []);
-    const resetFirstFrameRendered = useCallback(() => {
-      setFirstFrameRendered(false);
-    }, []);
-    const resetLoadFailed = useCallback(() => {
-      setLoadFailed(false);
-      setLoadFailedError(null);
-    }, []);
-    return {
-      timePos,
-      duration,
-      paused,
-      ended,
-      sid,
-      fileLoaded,
-      fileLoadedToken,
-      resetEnded,
-      playbackRestarted,
-      playbackRestartedToken,
-      pausedForCache,
-      coreIdle,
-      firstFrameRendered,
-      loadFailed,
-      loadFailedToken,
-      loadFailedError,
-      seek,
-      seekRelative,
-      setPlayPause,
-      setVolume,
-      setMuted,
-      setAudioTrack,
-      resetFileLoaded,
-      resetPlaybackRestarted,
-      resetFirstFrameRendered,
-      resetLoadFailed,
-      audioTracks,
-      subtitleTracks,
-      selectedAudio,
-      setSubtitleTrack
-    };
-  }
-
   // lib/tauri-avplayer.ts
-  var import_core2 = __toESM(require_core2());
+  var import_core3 = __toESM(require_core2());
   async function avplayerPrepare(url, start2, sub) {
     if (!isTauriEnv) return { streamUrl: url, offset: 0 };
-    return (0, import_core2.invoke)("avplayer_prepare", {
+    return (0, import_core3.invoke)("avplayer_prepare", {
       url,
       start: start2 ?? null,
       subContent: sub?.subContent ?? null,
@@ -176255,11 +176284,11 @@
   }
   async function avplayerTeardown() {
     if (!isTauriEnv) return;
-    await (0, import_core2.invoke)("avplayer_teardown");
+    await (0, import_core3.invoke)("avplayer_teardown");
   }
   function airplayLog(msg) {
     if (!isTauriEnv) return;
-    void (0, import_core2.invoke)("lumio_debug_log", { msg: `airplay: ${msg}` }).catch(() => {
+    void (0, import_core3.invoke)("lumio_debug_log", { msg: `airplay: ${msg}` }).catch(() => {
     });
   }
 
@@ -178258,7 +178287,7 @@ ${cue.text}`).join("\n\n")}
           }
           setPlaying(false);
           setControlsPaused(true);
-          await (0, import_core3.invoke)("open_in_vlc", { url, app: getExternalPlayerApp() });
+          await (0, import_core4.invoke)("open_in_vlc", { url, app: getExternalPlayerApp() });
         } else {
           if (useMpv) {
             void setMpvPause2(true);
@@ -178283,13 +178312,7 @@ ${cue.text}`).join("\n\n")}
     const handleDownload = useCallback(async () => {
       setDownloadState({ type: "picking-folder" });
       try {
-        const presetDir = getDownloadDir();
-        const folderPath = presetDir ? presetDir : isTauriEnv ? await (0, import_core3.invoke)("pick_folder") : await (async () => {
-          const folderRes = await fetch("/api/pick-folder", { method: "POST" });
-          if (!folderRes.ok) throw new Error("Folder picker failed");
-          const folderData = await folderRes.json();
-          return folderData.path;
-        })();
+        const folderPath = await resolveDownloadFolder();
         if (!folderPath) {
           setDownloadState({ type: "idle" });
           return;
@@ -178654,7 +178677,7 @@ ${cue.text}`).join("\n\n")}
         if (isMpvEngine) {
           try {
             const subtitlePath = await withTimeout(
-              (0, import_core3.invoke)("download_subtitle_to_temp", { url: sub.url }),
+              (0, import_core4.invoke)("download_subtitle_to_temp", { url: sub.url }),
               5e3,
               "subtitle_temp_download_timeout"
             );
@@ -180089,7 +180112,7 @@ ${cue.text}`).join("\n\n")}
       !(useMpv && desktopFullscreen) && /* @__PURE__ */ jsxs(
         "div",
         {
-          className: `absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-4 overflow-hidden transition-[height,padding,opacity,background-color] duration-300 ${collapseMpvTopBar || cssFullscreen && !controlsVisible ? "h-0 px-4 py-0 opacity-0" : "min-h-[44px] px-4 pb-2.5 pt-[max(0.625rem,env(safe-area-inset-top))]"}`,
+          className: `absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-4 overflow-hidden transition-[height,padding,opacity,background-color] duration-300 ${collapseMpvTopBar || cssFullscreen && !controlsVisible ? "h-0 px-4 py-0 opacity-0" : "min-h-[44px] px-4 pb-2.5 pt-[max(0.625rem,env(safe-area-inset-top),var(--android-inset-top,0px))]"}`,
           style: {
             backgroundColor: useMpv ? "#000" : controlsVisible ? "rgba(0,0,0,0.8)" : "transparent",
             pointerEvents: controlsVisible ? "auto" : "none"
@@ -181453,8 +181476,8 @@ ${cue.text}`).join("\n\n")}
   }
   async function lookupPluginStreams(url, streamProviderName, timeoutMs) {
     if (!isPluginDesktopHost()) return null;
-    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
-    const payload = await invoke4("desktop_stream_lookup", {
+    const { invoke: invoke5 } = await Promise.resolve().then(() => __toESM(require_core2()));
+    const payload = await invoke5("desktop_stream_lookup", {
       url,
       streamProviderName: streamProviderName ?? null,
       timeoutMs: timeoutMs ?? null
@@ -181464,8 +181487,8 @@ ${cue.text}`).join("\n\n")}
   async function lookupPluginStreamsBatchRanked(requests, mediaType, season, episode) {
     if (!isPluginDesktopHost()) return null;
     if (requests.length === 0) return { streams: [], failures: [] };
-    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
-    return invoke4("desktop_stream_lookup_batch_ranked", {
+    const { invoke: invoke5 } = await Promise.resolve().then(() => __toESM(require_core2()));
+    return invoke5("desktop_stream_lookup_batch_ranked", {
       requests: requests.map((request) => ({
         url: request.url,
         streamProviderName: request.streamProviderName ?? null,
@@ -181481,9 +181504,9 @@ ${cue.text}`).join("\n\n")}
     if (!isPluginDesktopHost()) return false;
     const stage = payload.stage.trim();
     if (!stage) return false;
-    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
+    const { invoke: invoke5 } = await Promise.resolve().then(() => __toESM(require_core2()));
     try {
-      return await invoke4("playback_session_telemetry", {
+      return await invoke5("playback_session_telemetry", {
         payload: {
           sessionId: payload.sessionId ?? null,
           stage,
@@ -181498,8 +181521,8 @@ ${cue.text}`).join("\n\n")}
   }
   async function cancelDesktopPlaybackSessions(reason) {
     if (!isPluginDesktopHost()) return;
-    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
-    await invoke4("playback_session_cancel_all", {
+    const { invoke: invoke5 } = await Promise.resolve().then(() => __toESM(require_core2()));
+    await invoke5("playback_session_cancel_all", {
       reason: reason?.trim() || null
     });
   }
@@ -181508,8 +181531,8 @@ ${cue.text}`).join("\n\n")}
     const normalized = pathAndQuery.trim();
     if (!normalized.startsWith("/api/")) return null;
     try {
-      const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
-      return await invoke4("desktop_api_query", {
+      const { invoke: invoke5 } = await Promise.resolve().then(() => __toESM(require_core2()));
+      return await invoke5("desktop_api_query", {
         pathAndQuery: normalized,
         timeoutMs: timeoutMs ?? null
       });
@@ -182102,12 +182125,12 @@ ${cue.text}`).join("\n\n")}
   async function rdDesktopJson(path, method = "GET", body) {
     const token = getRdApiKey();
     if (!token) throw new Error("No Real-Debrid API key configured");
-    const { invoke: invoke4 } = await Promise.resolve().then(() => __toESM(require_core2()));
+    const { invoke: invoke5 } = await Promise.resolve().then(() => __toESM(require_core2()));
     const headers = [`Authorization: Bearer ${token}`];
     if (body && body.trim().length > 0) {
       headers.push("Content-Type: application/x-www-form-urlencoded");
     }
-    return invoke4("desktop_external_api_request", {
+    return invoke5("desktop_external_api_request", {
       baseUrl: RD_API_BASE_URL,
       path,
       method,
@@ -183365,12 +183388,12 @@ ${cue.text}`).join("\n\n")}
     return options.hideUncached ? streams.filter((stream) => stream.cached) : streams;
   }
   function parseSizeBytes(text) {
-    const match = text.match(/(\d+(?:[.,]\d+)?)\s*(tb|gb|mb)\b/i);
+    const match = text.match(/(\d+(?:[.,]\d+)?)\s*(tib|gib|mib|tb|gb|mb)\b/i);
     if (!match) return null;
     const value = Number.parseFloat(match[1].replace(",", "."));
     if (!Number.isFinite(value) || value <= 0) return null;
     const unit = match[2].toLowerCase();
-    const multiplier = unit === "tb" ? 1024 ** 4 : unit === "gb" ? 1024 ** 3 : 1024 ** 2;
+    const multiplier = unit === "tb" || unit === "tib" ? 1024 ** 4 : unit === "gb" || unit === "gib" ? 1024 ** 3 : 1024 ** 2;
     return value * multiplier;
   }
   function getStreamSizeBytes(stream) {

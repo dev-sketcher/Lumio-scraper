@@ -204,16 +204,29 @@ export function filterVisibleStreams(
     : streams
 }
 
+/**
+ * Storleken finns bara i strömmens fritext — StreamResult har inget eget
+ * fält — så parsern ÄR funktionen. Missar den formatet visas ingen storlek
+ * alls, vilket var precis fallet för binärenheterna: den gamla regexen tog
+ * bara tb|gb|mb, och \b efter "gb" matchar inte "GiB". AIOStreams och flera
+ * paneler skriver GiB/MiB, så deras strömmar såg storlekslösa ut.
+ *
+ * Längre enheter först i alternationen — inte för att det behövs (motorn
+ * provar alternativen i tur och ordning på samma position), utan för att
+ * ordningen ska vara läsbar för nästa som lägger till en enhet.
+ */
 export function parseSizeBytes(text: string): number | null {
-  const match = text.match(/(\d+(?:[.,]\d+)?)\s*(tb|gb|mb)\b/i)
+  const match = text.match(/(\d+(?:[.,]\d+)?)\s*(tib|gib|mib|tb|gb|mb)\b/i)
   if (!match) return null
   const value = Number.parseFloat(match[1].replace(',', '.'))
   if (!Number.isFinite(value) || value <= 0) return null
+  // Binärt genomgående. GB som 1024^3 är tekniskt GiB, men det är vad koden
+  // alltid gjort och skillnaden är osynlig i en etikett som visar "4.7 GB".
   const unit = match[2].toLowerCase()
   const multiplier =
-    unit === 'tb'
+    unit === 'tb' || unit === 'tib'
       ? 1024 ** 4
-      : unit === 'gb'
+      : unit === 'gb' || unit === 'gib'
         ? 1024 ** 3
         : 1024 ** 2
   return value * multiplier
