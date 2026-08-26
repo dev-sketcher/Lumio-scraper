@@ -170703,6 +170703,7 @@
       debridPerScraperHint: "A key entered here is used by every scraper configured for that service.",
       torrentFailed: "The torrent failed: {status}",
       debridKeyMissing: "Debrid key missing",
+      imdbLookupFailed: "Could not reach the metadata service \u2014 check the connection and reopen the title.",
       communitySource: "Community addon",
       debridMissingTitle: "No debrid service",
       debridMissingBody: "Connect a debrid service (Real-Debrid, TorBox, AllDebrid and others) under {path} to fetch streams.",
@@ -170725,6 +170726,7 @@
       debridPerScraperHint: "En nyckel h\xE4r anv\xE4nds av alla scrapers som \xE4r konfigurerade f\xF6r den tj\xE4nsten.",
       torrentFailed: "Torrenten misslyckades: {status}",
       debridKeyMissing: "Debrid-nyckel saknas",
+      imdbLookupFailed: "N\xE5dde inte metadatatj\xE4nsten \u2014 kontrollera anslutningen och \xF6ppna titeln igen.",
       communitySource: "Community-addon",
       debridMissingTitle: "Debrid-tj\xE4nst saknas",
       debridMissingBody: "Koppla en debrid-tj\xE4nst (Real-Debrid, TorBox, AllDebrid m.fl.) under {path} f\xF6r att kunna h\xE4mta streams.",
@@ -184546,6 +184548,7 @@ ${cue.text}`).join("\n\n")}
     const [primaryProviderLabel, setPrimaryProviderLabel] = useState(() => getEnabledScraperAccessState().primaryProviderLabel);
     const [streamFilters, setStreamFilters] = useState(DEFAULT_FILTERS);
     const [resolvedImdbId, setResolvedImdbId] = useState(imdbId ?? null);
+    const [imdbLookupFailed, setImdbLookupFailed] = useState(false);
     const [seasons, setSeasons] = useState(null);
     const [loadingSeasons, setLoadingSeasons] = useState(false);
     const seasonAbortRetryRef = useRef(0);
@@ -184667,17 +184670,33 @@ ${cue.text}`).join("\n\n")}
       let cancelled = false;
       const requestId = ++imdbResolveRequestIdRef.current;
       const controller = resetAbortRef(imdbResolveAbortRef);
-      void fetchJsonWithTimeout3(
-        `/api/item?tmdbId=${numericTmdbId}&type=${mediaType}`,
-        4200,
-        void 0,
-        controller.signal
-      ).then((data) => {
-        if (cancelled || requestId !== imdbResolveRequestIdRef.current) return;
-        const nextImdbId = data.item?.imdbId?.trim() ?? "";
-        if (nextImdbId) setResolvedImdbId(nextImdbId);
-      }).catch(() => {
-      });
+      setImdbLookupFailed(false);
+      const h\u00E4mta = (f\u00F6rs\u00F6k) => {
+        void fetchJsonWithTimeout3(
+          `/api/item?tmdbId=${numericTmdbId}&type=${mediaType}`,
+          12e3,
+          void 0,
+          controller.signal
+        ).then((data) => {
+          if (cancelled || requestId !== imdbResolveRequestIdRef.current) return;
+          const nextImdbId = data.item?.imdbId?.trim() ?? "";
+          if (nextImdbId) {
+            setResolvedImdbId(nextImdbId);
+            return;
+          }
+          setImdbLookupFailed(false);
+        }).catch(() => {
+          if (cancelled || requestId !== imdbResolveRequestIdRef.current) return;
+          if (f\u00F6rs\u00F6k === 0) {
+            window.setTimeout(() => {
+              if (!cancelled) h\u00E4mta(1);
+            }, 2e3);
+            return;
+          }
+          setImdbLookupFailed(true);
+        });
+      };
+      h\u00E4mta(0);
       return () => {
         cancelled = true;
         clearAbortRef(imdbResolveAbortRef, controller);
@@ -186806,7 +186825,7 @@ ${cue.text}`).join("\n\n")}
             selectedEpisode.name
           ] })
         ] }),
-        !effectiveImdbId && step.type === "idle" && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: "No IMDb ID \u2014 use manual input below." }),
+        !effectiveImdbId && step.type === "idle" && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: imdbLookupFailed ? lt("imdbLookupFailed") : "No IMDb ID \u2014 use manual input below." }),
         loadingStreams && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("searchingStreams") }),
         streamsError && /* @__PURE__ */ jsx("p", { className: "text-sm text-red-400", children: streamsError }),
         streams && streams.length === 0 && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("noStreams") }),
@@ -187299,7 +187318,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.112",
+    version: "1.0.113",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

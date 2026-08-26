@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.113
+
+- A failed IMDb lookup no longer claims the title has no IMDb id. The lookup ran
+  with a 4.2 s timeout, swallowed every error and never retried, so one slow or
+  dropped request left the panel stuck on "No IMDb ID — use manual input below"
+  — a statement about the title when the truth was that no answer arrived. It
+  now waits 12 s, retries once, and says it could not reach the metadata service
+  when that is what happened.
+
 ## 1.0.112
 
 - The streams panel really searches when a community addon is the only source.

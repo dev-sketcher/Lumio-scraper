@@ -422,6 +422,9 @@ export function StreamsSidebarSection({
   const [primaryProviderLabel, setPrimaryProviderLabel] = useState(() => getEnabledScraperAccessState().primaryProviderLabel)
   const [streamFilters, setStreamFilters] = useState(DEFAULT_FILTERS)
   const [resolvedImdbId, setResolvedImdbId] = useState<string | null>(imdbId ?? null)
+  // Skilj "posten har inget IMDb-id" från "uppslaget kom aldrig fram" — se
+  // effekten nedan. Samma tomma lista, två helt olika orsaker och åtgärder.
+  const [imdbLookupFailed, setImdbLookupFailed] = useState(false)
 
   // TV navigation
   const [seasons, setSeasons] = useState<TvSeason[] | null>(null)
@@ -610,16 +613,43 @@ export function StreamsSidebarSection({
     let cancelled = false
     const requestId = ++imdbResolveRequestIdRef.current
     const controller = resetAbortRef(imdbResolveAbortRef)
-    void fetchJsonWithTimeout<{ item?: { imdbId?: string | null } }>(
-      `/api/item?tmdbId=${numericTmdbId}&type=${mediaType}`,
-      4200,
-      undefined,
-      controller.signal,
-    ).then((data) => {
-      if (cancelled || requestId !== imdbResolveRequestIdRef.current) return
-      const nextImdbId = data.item?.imdbId?.trim() ?? ''
-      if (nextImdbId) setResolvedImdbId(nextImdbId)
-    }).catch(() => {})
+    setImdbLookupFailed(false)
+    /**
+     * 12 s och ett omförsök, inte 4,2 s och tystnad.
+     *
+     * Uppslaget svalde varje fel och effekten kördes aldrig om (dess deps
+     * ändras inte när resolvedImdbId förblir null). EN långsam eller tappad
+     * begäran låste därför panelen i "No IMDb ID — use manual input below" —
+     * ett påstående om posten, när sanningen var att svaret aldrig kom.
+     * Uppmätt på en telefon med trasigt nät: /api/item föll på 4,51 s varje
+     * gång, alltså strax över den gamla gränsen.
+     */
+    const hämta = (försök: number): void => {
+      void fetchJsonWithTimeout<{ item?: { imdbId?: string | null } }>(
+        `/api/item?tmdbId=${numericTmdbId}&type=${mediaType}`,
+        12_000,
+        undefined,
+        controller.signal,
+      ).then((data) => {
+        if (cancelled || requestId !== imdbResolveRequestIdRef.current) return
+        const nextImdbId = data.item?.imdbId?.trim() ?? ''
+        if (nextImdbId) {
+          setResolvedImdbId(nextImdbId)
+          return
+        }
+        // Svar men tomt id: posten saknar faktiskt IMDb-id. Då är meddelandet
+        // sant, och ett omförsök hade bara fördröjt det.
+        setImdbLookupFailed(false)
+      }).catch(() => {
+        if (cancelled || requestId !== imdbResolveRequestIdRef.current) return
+        if (försök === 0) {
+          window.setTimeout(() => { if (!cancelled) hämta(1) }, 2000)
+          return
+        }
+        setImdbLookupFailed(true)
+      })
+    }
+    hämta(0)
     return () => {
       cancelled = true
       clearAbortRef(imdbResolveAbortRef, controller)
@@ -3361,9 +3391,13 @@ function scraperInCooldown(configId: string): boolean {
           </div>
         )}
 
-        {/* No imdbId */}
+        {/* Inget imdbId — men av vilken orsak? */}
         {!effectiveImdbId && step.type === 'idle' && (
-          <p className="text-sm text-slate-400">No IMDb ID — use manual input below.</p>
+          <p className="text-sm text-slate-400">
+            {imdbLookupFailed
+              ? lt('imdbLookupFailed')
+              : 'No IMDb ID — use manual input below.'}
+          </p>
         )}
 
         {/* Streams */}
