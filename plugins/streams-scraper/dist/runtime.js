@@ -187196,8 +187196,7 @@ ${cue.text}`).join("\n\n")}
               title: t("streamDeviceUnsupportedHint"),
               children: t("streamDeviceUnsupported")
             }
-          ) : null,
-          stream.cached ? /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400", children: t("streamAvailable") }) : /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400", children: t("streamDownload") })
+          ) : null
         ] }),
         isClientSession() && !vlcSupported() && url && /* @__PURE__ */ jsx(
           "button",
@@ -187274,6 +187273,7 @@ ${cue.text}`).join("\n\n")}
         )
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-baseline gap-x-2 gap-y-1", children: [
+        stream.cached ? /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400", children: t("streamAvailable") }) : /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400", children: t("streamDownload") }),
         sizeLabel ? /* @__PURE__ */ jsx("span", { className: "shrink-0 rounded bg-white/5 px-1.5 py-0.5 text-[11px] font-medium tabular-nums text-slate-300", children: sizeLabel }) : null,
         /* @__PURE__ */ jsx("p", { className: "min-w-0 flex-1 break-all text-xs text-slate-400", children: stream.title })
       ] })

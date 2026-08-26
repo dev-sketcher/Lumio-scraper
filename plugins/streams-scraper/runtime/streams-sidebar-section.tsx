@@ -3858,15 +3858,6 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
               {t('streamDeviceUnsupported')}
             </span>
           ) : null}
-          {stream.cached ? (
-            <span className="flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400">
-              {t('streamAvailable')}
-            </span>
-          ) : (
-            <span className="flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400">
-              {t('streamDownload')}
-            </span>
-          )}
         </div>
         {/* Desktop client browser (can't launch VLC): copy the direct URL so the
             user can paste it into VLC → Open Network Stream. */}
@@ -3974,7 +3965,21 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
           {t('play')}
         </button>
       </div>
+      {/* Andra raden: cachad-märket, storleken och filnamnet på samma linje.
+          Märket satt förut på översta raden, under namnet, och lämnade en
+          ensam rad mellan namnet och filnamnet. Här står de tre uppgifter som
+          hör ihop när man väljer ström — är den redan cachad, hur stor är den,
+          vilken fil är det — sida vid sida. */}
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+        {stream.cached ? (
+          <span className="flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400">
+            {t('streamAvailable')}
+          </span>
+        ) : (
+          <span className="flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400">
+            {t('streamDownload')}
+          </span>
+        )}
         {/* Storleken beräknas från cachade filer eller släppnamnet, så den
             visas oavsett scraper/debrid — förut syntes den bara i fil- och
             länklistorna längre ner. */}
