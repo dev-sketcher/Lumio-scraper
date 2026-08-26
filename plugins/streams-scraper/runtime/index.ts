@@ -2,6 +2,7 @@
 // This namespace keeps generic stream-provider internals separated from external plugin runtimes.
 
 import type React from 'react'
+import { getEnabledCoreStreamAddons } from '@/lib/media-stream/core-addons'
 import type { LumioPlugin, StreamSidebarProps } from '@/lib/plugin-sdk'
 import { ScrapersSettingsSection } from './scrapers-settings-section'
 import { StreamsScraperDetailsDownloadButton } from './details-download-button'
@@ -103,6 +104,13 @@ export const StreamsScraperPlugin: LumioPlugin = {
       order: 100,
       getStatus: () => {
         const active = getStreamProviderConfigs().filter((config) => config.enabled)
+        // En strömkapabel community-addon ÄR en strömkälla, även utan scraper.
+        // Ett manifest inlagt under "kataloger från communityn" hamnar i
+        // kärnans strömlagring och löser strömmar utan scraper eller
+        // debridnyckel. Kortet läste bara scraper-listan och sa därför "inget
+        // kan hitta strömmar" till någon som mycket väl kunde spela — ett
+        // rött kort som var faktiskt fel.
+        const communityKällor = getEnabledCoreStreamAddons()
         // "Påslagen" räcker inte: torrentio levereras PÅSLAGEN som standard,
         // pekad mot RealDebrid, utan nyckel. Ett grönt kort på en orörd
         // installation är sämre än inget kort — det säger att allt är klart
@@ -117,13 +125,18 @@ export const StreamsScraperPlugin: LumioPlugin = {
           return loadPresetUrl(config.preset).trim().length > 0
         })
         return {
-          ok: configured.length > 0,
+          ok: configured.length > 0 || communityKällor.length > 0,
           detail: configured.length > 0
             ? {
                 en: `${configured.length} configured`,
                 sv: `${configured.length} konfigurerade`,
               }
-            : active.length > 0
+            : communityKällor.length > 0
+              ? {
+                  en: `${communityKällor.length} community addon(s) provide streams`,
+                  sv: `${communityKällor.length} community-addon ger strömmar`,
+                }
+              : active.length > 0
               ? {
                   en: 'A scraper is enabled but not configured — add a debrid key or your own URL.',
                   sv: 'En scraper är påslagen men inte konfigurerad — lägg till en debridnyckel eller egen URL.',
@@ -134,7 +147,9 @@ export const StreamsScraperPlugin: LumioPlugin = {
                 },
           accountLabel: configured.length > 0
             ? configured.map((config) => config.preset).join(', ')
-            : null,
+            : communityKällor.length > 0
+              ? communityKällor.map((addon) => addon.name).join(', ')
+              : null,
           settingsTarget: 'scrapers',
         }
       },

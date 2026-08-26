@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.109
+
+- The Scrapers card on the overview no longer claims "nothing can find streams"
+  when a stream-capable community addon is installed. A manifest added under
+  community catalogs lands in core stream storage and resolves streams without
+  a scraper or a debrid key, so the card read only half the picture and showed a
+  red state to someone who could play fine.
+
 ## 1.0.108
 
 - Stream file size is shown for every stream, exactly once. The backend now

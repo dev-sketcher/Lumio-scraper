@@ -166173,6 +166173,52 @@
     StreamsScraperPlugin: () => StreamsScraperPlugin
   });
 
+  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build/profile-storage-shim.ts
+  var sdk = globalThis.__lumioPluginRuntime?.sdk;
+  var getActiveProfileId = () => sdk.getActiveProfileId();
+  var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
+  var setScopedStorageItem = (baseKey, value) => sdk.setScopedStorageItem(baseKey, value);
+  var removeScopedStorageItem = (baseKey) => sdk.removeScopedStorageItem(baseKey);
+  var onProfileChanged = (listener) => sdk.onProfileChanged(listener);
+
+  // lib/media-stream/core-addons.ts
+  var KEY = "core_stream_addons_v1";
+  var EVENT = "lumio-core-stream-addons-changed";
+  function readCoreStreamAddons() {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = getScopedStorageItem(KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((entry) => Boolean(entry) && typeof entry === "object" && typeof entry.url === "string" && entry.url.length > 0);
+    } catch {
+      return [];
+    }
+  }
+  function writeCoreStreamAddons(entries) {
+    setScopedStorageItem(KEY, JSON.stringify(entries));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT));
+  }
+  function getEnabledCoreStreamAddons() {
+    return readCoreStreamAddons().filter((entry) => entry.enabled !== false);
+  }
+  function upsertCoreStreamAddon(url, name) {
+    const trimmedUrl = url.trim();
+    if (!trimmedUrl) return;
+    const trimmedName = name.trim() || trimmedUrl;
+    const existing = readCoreStreamAddons();
+    const previous = existing.find((entry) => entry.url === trimmedUrl);
+    const next2 = {
+      url: trimmedUrl,
+      name: trimmedName,
+      enabled: previous ? previous.enabled : true,
+      installedAt: previous?.installedAt ?? (/* @__PURE__ */ new Date()).toISOString()
+    };
+    const filtered = existing.filter((entry) => entry.url !== trimmedUrl);
+    writeCoreStreamAddons([...filtered, next2]);
+  }
+
   // lib/app-storage.ts
   var store = null;
   function ensureStore() {
@@ -166231,16 +166277,6 @@
 
   // lib/i18n.tsx
   init_react_shim();
-
-  // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build/profile-storage-shim.ts
-  var sdk = globalThis.__lumioPluginRuntime?.sdk;
-  var getActiveProfileId = () => sdk.getActiveProfileId();
-  var getScopedStorageItem = (baseKey) => sdk.getScopedStorageItem(baseKey);
-  var setScopedStorageItem = (baseKey, value) => sdk.setScopedStorageItem(baseKey, value);
-  var removeScopedStorageItem = (baseKey) => sdk.removeScopedStorageItem(baseKey);
-  var onProfileChanged = (listener) => sdk.onProfileChanged(listener);
-
-  // lib/i18n.tsx
   init_jsx_runtime_shim();
   var strings = {
     en: {
@@ -171052,41 +171088,6 @@
     if (typeof window !== "undefined") {
       window.open(url, "_blank", "noopener,noreferrer");
     }
-  }
-
-  // lib/media-stream/core-addons.ts
-  var KEY = "core_stream_addons_v1";
-  var EVENT = "lumio-core-stream-addons-changed";
-  function readCoreStreamAddons() {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = getScopedStorageItem(KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) return [];
-      return parsed.filter((entry) => Boolean(entry) && typeof entry === "object" && typeof entry.url === "string" && entry.url.length > 0);
-    } catch {
-      return [];
-    }
-  }
-  function writeCoreStreamAddons(entries) {
-    setScopedStorageItem(KEY, JSON.stringify(entries));
-    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT));
-  }
-  function upsertCoreStreamAddon(url, name) {
-    const trimmedUrl = url.trim();
-    if (!trimmedUrl) return;
-    const trimmedName = name.trim() || trimmedUrl;
-    const existing = readCoreStreamAddons();
-    const previous = existing.find((entry) => entry.url === trimmedUrl);
-    const next2 = {
-      url: trimmedUrl,
-      name: trimmedName,
-      enabled: previous ? previous.enabled : true,
-      installedAt: previous?.installedAt ?? (/* @__PURE__ */ new Date()).toISOString()
-    };
-    const filtered = existing.filter((entry) => entry.url !== trimmedUrl);
-    writeCoreStreamAddons([...filtered, next2]);
   }
 
   // lib/stremio/addons-storage.ts
@@ -187257,6 +187258,7 @@ ${cue.text}`).join("\n\n")}
         order: 100,
         getStatus: () => {
           const active = getStreamProviderConfigs().filter((config) => config.enabled);
+          const communityK\u00E4llor = getEnabledCoreStreamAddons();
           const configured = active.filter((config) => {
             if (config.preset === "torrentio") {
               const debrid = config.options.debridProvider;
@@ -187265,10 +187267,13 @@ ${cue.text}`).join("\n\n")}
             return loadPresetUrl(config.preset).trim().length > 0;
           });
           return {
-            ok: configured.length > 0,
+            ok: configured.length > 0 || communityK\u00E4llor.length > 0,
             detail: configured.length > 0 ? {
               en: `${configured.length} configured`,
               sv: `${configured.length} konfigurerade`
+            } : communityK\u00E4llor.length > 0 ? {
+              en: `${communityK\u00E4llor.length} community addon(s) provide streams`,
+              sv: `${communityK\u00E4llor.length} community-addon ger str\xF6mmar`
             } : active.length > 0 ? {
               en: "A scraper is enabled but not configured \u2014 add a debrid key or your own URL.",
               sv: "En scraper \xE4r p\xE5slagen men inte konfigurerad \u2014 l\xE4gg till en debridnyckel eller egen URL."
@@ -187276,7 +187281,7 @@ ${cue.text}`).join("\n\n")}
               en: "No scraper is enabled \u2014 nothing can find streams.",
               sv: "Ingen scraper \xE4r p\xE5slagen \u2014 inget kan hitta str\xF6mmar."
             },
-            accountLabel: configured.length > 0 ? configured.map((config) => config.preset).join(", ") : null,
+            accountLabel: configured.length > 0 ? configured.map((config) => config.preset).join(", ") : communityK\u00E4llor.length > 0 ? communityK\u00E4llor.map((addon) => addon.name).join(", ") : null,
             settingsTarget: "scrapers"
           };
         }
