@@ -1,6 +1,7 @@
 'use client'
 
 import { lt } from './local-strings'
+import { resolveCoreAddonStreams } from '@/lib/stremio/streams'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import type { StreamResult } from '@/app/api/streams/route'
@@ -66,6 +67,13 @@ async function resolveDownloadFromStream(
 
   if (!stream.infoHash) throw new Error(t('noPlayableStream'))
 
+  // HÄR är nyckeln faktiskt nödvändig: en magnetlänk måste genom debrid för att
+  // bli en nedladdningsbar URL. Kontrollen låg förut längst upp i handleClick
+  // och stoppade även strömmar som redan HAR en direkt URL — alltså allt en
+  // community-addon levererar. Meddelandet är detsamma, men nu bara när det är
+  // sant.
+  if (!(getPlaybackAccessKey() ?? '')) throw new Error(lt('debridKeyMissing'))
+
   const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${stream.infoHash}`)
   for (let attempt = 0; attempt < 60; attempt += 1) {
     if (attempt > 0) await sleep(3000)
@@ -111,15 +119,19 @@ type DownloadState =
   | { type: 'done'; filename: string }
   | { type: 'error'; message: string }
 
-export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly = false }: MediaDownloadActionProps) {
+export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly = false, season, episode }: MediaDownloadActionProps) {
   const forceMobileIconOnly = typeof className === 'string' && className.includes('!h-10') && className.includes('!w-10')
   const effectiveIconOnly = iconOnly || forceMobileIconOnly
   const { t } = useLang()
   const [state, setState] = useState<DownloadState>({ type: 'idle' })
+  // Ikonläget visar bara "!" tills man trycker — se felgrenen längst ner.
+  const [visaFelText, setVisaFelText] = useState(false)
   const esRef = useRef<EventSource | null>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const btnRef = useRef<HTMLButtonElement>(null)
   const posRef = useRef<{ top: number; right: number }>({ top: 0, right: 0 })
+
+  useEffect(() => { if (state.type !== 'error') setVisaFelText(false) }, [state.type])
 
   useEffect(() => () => {
     esRef.current?.close()
@@ -141,8 +153,27 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
       const targetImdbId = imdbId as string
       const requestContext = getPrimaryStreamProviderRequestContext()
       const accessKey = getPlaybackAccessKey() ?? ''
-      if (!accessKey) throw new Error(lt('debridKeyMissing'))
       const tType = mediaType === 'tv' ? 'series' : 'movie'
+
+      /**
+       * Strömkapabla community-addons frågas PARALLELLT med scrapern.
+       *
+       * Ett manifest inlagt under "kataloger från communityn" levererar
+       * färdiga URL:er och behöver ingen debridnyckel — resolveDownloadFromStream
+       * ovan tar directUrl först och rör aldrig debrid för dem. Förut kastade
+       * den här funktionen "debridnyckel saknas" INNAN någon lista hämtades, så
+       * en installation med bara ett manifest kunde inte ladda ner något alls
+       * fast strömmarna fanns.
+       *
+       * Nyckeln krävs numera bara av den ström man faktiskt väljer, se
+       * handlePickStream — en magnetlänk behöver debrid, en direkt URL inte.
+       */
+      const addonStreams = resolveCoreAddonStreams({
+        imdbId: targetImdbId,
+        type: tType === 'series' ? 'series' : 'movie',
+        season,
+        episode,
+      }).catch(() => [])
 
       const browserStreamUrl = requestContext.browserStreamUrl({
         imdbId: targetImdbId,
@@ -157,15 +188,37 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
             .catch(() => ({ streams: [] as RdStream[] }))
         : Promise.resolve({ streams: [] as RdStream[] })
 
-      const [res, cacheData] = await Promise.all([
+      const [res, cacheData, community] = await Promise.all([
         fetch(`/api/streams?imdbId=${targetImdbId}&type=${tType}`, {
           headers: requestContext.streamHeaders,
         }),
         cacheFetch,
+        addonStreams,
       ])
 
-      if (!res.ok) throw new Error(t('fetchStreamsFailed'))
-      const data = (await res.json()) as { streams: StreamResult[] }
+      // Scrapern får misslyckas när en community-addon svarade: en installation
+      // UTAN scraper svarar 400 här ("stream provider URL required"), och det
+      // ska inte döda strömmar som redan finns.
+      const scraperStreams: StreamResult[] = res.ok
+        ? ((await res.json()) as { streams: StreamResult[] }).streams
+        : []
+
+      // Addonens strömmar bär directUrl och är därmed spelbara direkt — de
+      // sorteras som cachade (vilket de i praktiken är) och namnges efter
+      // addonen så det syns var de kommer ifrån.
+      const communityStreams: StreamResult[] = community.map((entry, index) => ({
+        infoHash: '',
+        name: entry.title,
+        title: entry.title,
+        fileIdx: index,
+        cached: true,
+        downloadable: true,
+        cachedFiles: [],
+        directUrl: entry.url,
+        source: lt('communitySource'),
+      }))
+
+      const data = { streams: [...scraperStreams, ...communityStreams] }
       if (data.streams.length === 0) throw new Error(t('noStreamsFound'))
 
       const cachedTitles = new Set<string>()
@@ -372,14 +425,17 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
   }
 
   if (state.type === 'error') {
-    if (effectiveIconOnly) {
+    if (effectiveIconOnly && !visaFelText) {
       return (
         <button
           type="button"
           className={`${btnBase} border-red-400/30 text-red-400`}
-          onClick={() => setState({ type: 'idle' })}
+          /* Första trycket VISAR orsaken, andra nollställer.
+             Meddelandet låg bara i title, som aldrig visas på en touchskärm —
+             användaren fick ett utropstecken och ingen väg till varför. */
+          onClick={() => setVisaFelText(true)}
           title={state.message}
-          aria-label={t('downloadFailedRetry')}
+          aria-label={`${t('downloadFailedRetry')}: ${state.message}`}
         >
           !
         </button>
@@ -388,7 +444,7 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
     return (
       <div className="flex items-center gap-2">
         <span className="max-w-[180px] truncate text-[10px] text-red-400">{state.message}</span>
-        <button type="button" className={`${btnBase} border-red-400/30 text-red-400`} onClick={() => setState({ type: 'idle' })}>
+        <button type="button" className={`${btnBase} border-red-400/30 text-red-400`} onClick={() => { setVisaFelText(false); setState({ type: 'idle' }) }}>
           {`✗ ${t('tryAgain')}`}
         </button>
       </div>

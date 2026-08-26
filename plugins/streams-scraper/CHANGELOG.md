@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.110
+
+- Downloads work when the streams come from a community addon. The button used
+  to throw "Debrid key missing" before it fetched any stream list, so an install
+  whose only source was an AIOStreams manifest could not download at all — even
+  though such addons hand out finished URLs that need no debrid at all. The key
+  is now required only by the stream you actually pick, and only when it is a
+  magnet that has to go through debrid.
+- Stream-capable community addons are queried alongside the scraper, per title
+  and per episode (`tt…:S:E`), and their results are merged into the same
+  picker.
+- The icon-only error state showed a bare "!" with the reason in `title`, which
+  never appears on a touch screen. The first tap now reveals the reason, the
+  second resets.
+
 ## 1.0.109
 
 - The Scrapers card on the overview no longer claims "nothing can find streams"

@@ -170703,6 +170703,7 @@
       debridPerScraperHint: "A key entered here is used by every scraper configured for that service.",
       torrentFailed: "The torrent failed: {status}",
       debridKeyMissing: "Debrid key missing",
+      communitySource: "Community addon",
       debridMissingTitle: "No debrid service",
       debridMissingBody: "Connect a debrid service (Real-Debrid, TorBox, AllDebrid and others) under {path} to fetch streams.",
       noScraperTitle: "No scraper enabled",
@@ -170724,6 +170725,7 @@
       debridPerScraperHint: "En nyckel h\xE4r anv\xE4nds av alla scrapers som \xE4r konfigurerade f\xF6r den tj\xE4nsten.",
       torrentFailed: "Torrenten misslyckades: {status}",
       debridKeyMissing: "Debrid-nyckel saknas",
+      communitySource: "Community-addon",
       debridMissingTitle: "Debrid-tj\xE4nst saknas",
       debridMissingBody: "Koppla en debrid-tj\xE4nst (Real-Debrid, TorBox, AllDebrid m.fl.) under {path} f\xF6r att kunna h\xE4mta streams.",
       noScraperTitle: "Ingen scraper p\xE5slagen",
@@ -172559,6 +172561,62 @@
         preset
       )) })
     ] });
+  }
+
+  // lib/stremio/streams.ts
+  function isUrlDeliverableStream(stream) {
+    return Boolean(stream.url || stream.externalUrl || stream.ytId);
+  }
+  function streamPlayableUrl(stream) {
+    if (typeof stream.url === "string" && stream.url.length > 0) return stream.url;
+    if (typeof stream.externalUrl === "string" && stream.externalUrl.length > 0) return stream.externalUrl;
+    if (typeof stream.ytId === "string" && stream.ytId.length > 0) {
+      return `https://www.youtube.com/watch?v=${stream.ytId}`;
+    }
+    return null;
+  }
+  function streamDisplayTitle(stream) {
+    return stream.title?.trim() || stream.name?.trim() || stream.description?.trim() || "Stream";
+  }
+  function streamRootFromUrl(url) {
+    const trimmed = url.replace(/\/+$/, "");
+    return trimmed.endsWith("/manifest.json") ? trimmed.slice(0, -"/manifest.json".length) : trimmed;
+  }
+  async function fetchStreamsFromRoot(root, type, rawId) {
+    const encodedId = encodeURIComponent(rawId).replace(/%3A/g, ":");
+    const url = `${root}/stream/${encodeURIComponent(type)}/${encodedId}.json`;
+    try {
+      const response = await fetch(url, { cache: "no-store" });
+      if (!response.ok) return [];
+      const data = await response.json();
+      return Array.isArray(data.streams) ? data.streams : [];
+    } catch {
+      return [];
+    }
+  }
+  async function resolveCoreAddonStreams(params) {
+    const addons = getEnabledCoreStreamAddons();
+    if (addons.length === 0) return [];
+    const id4 = params.type === "series" && params.season != null && params.episode != null ? `${params.imdbId}:${params.season}:${params.episode}` : params.imdbId;
+    const svar = await Promise.all(
+      addons.map((addon) => fetchStreamsFromRoot(streamRootFromUrl(addon.url), params.type, id4))
+    );
+    const sedda = /* @__PURE__ */ new Set();
+    const ut = [];
+    for (const streams of svar) {
+      for (const stream of streams) {
+        if (!isUrlDeliverableStream(stream)) continue;
+        const url = streamPlayableUrl(stream);
+        if (!url || sedda.has(url)) continue;
+        sedda.add(url);
+        ut.push({
+          url,
+          title: streamDisplayTitle(stream),
+          subtitles: Array.isArray(stream.subtitles) ? stream.subtitles.filter((sub) => typeof sub.url === "string" && sub.url.length > 0).map((sub) => ({ url: sub.url, lang: sub.lang })) : void 0
+        });
+      }
+    }
+    return ut;
   }
 
   // ../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
@@ -183244,6 +183302,7 @@ ${cue.text}`).join("\n\n")}
       return { url: stream.directUrl, filename };
     }
     if (!stream.infoHash) throw new Error(t("noPlayableStream"));
+    if (!(getPlaybackAccessKey() ?? "")) throw new Error(lt("debridKeyMissing"));
     const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${stream.infoHash}`);
     for (let attempt = 0; attempt < 60; attempt += 1) {
       if (attempt > 0) await sleep3(3e3);
@@ -183274,15 +183333,19 @@ ${cue.text}`).join("\n\n")}
     }
     throw new Error("Timeout: torrenten blev inte klar i tid");
   }
-  function StreamsScraperDetailsDownloadButton({ item, className, iconOnly = false }) {
+  function StreamsScraperDetailsDownloadButton({ item, className, iconOnly = false, season, episode }) {
     const forceMobileIconOnly = typeof className === "string" && className.includes("!h-10") && className.includes("!w-10");
     const effectiveIconOnly = iconOnly || forceMobileIconOnly;
     const { t } = useLang();
     const [state, setState] = useState({ type: "idle" });
+    const [visaFelText, setVisaFelText] = useState(false);
     const esRef = useRef(null);
     const timerRef = useRef(null);
     const btnRef = useRef(null);
     const posRef = useRef({ top: 0, right: 0 });
+    useEffect(() => {
+      if (state.type !== "error") setVisaFelText(false);
+    }, [state.type]);
     useEffect(() => () => {
       esRef.current?.close();
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -183301,8 +183364,13 @@ ${cue.text}`).join("\n\n")}
         const targetImdbId = imdbId;
         const requestContext = getPrimaryStreamProviderRequestContext2();
         const accessKey = getPlaybackAccessKey() ?? "";
-        if (!accessKey) throw new Error(lt("debridKeyMissing"));
         const tType = mediaType === "tv" ? "series" : "movie";
+        const addonStreams = resolveCoreAddonStreams({
+          imdbId: targetImdbId,
+          type: tType === "series" ? "series" : "movie",
+          season,
+          episode
+        }).catch(() => []);
         const browserStreamUrl = requestContext.browserStreamUrl({
           imdbId: targetImdbId,
           mediaType: tType
@@ -183310,14 +183378,26 @@ ${cue.text}`).join("\n\n")}
         const cacheFetch = browserStreamUrl ? fetch(browserStreamUrl, {
           headers: { Accept: "application/json" }
         }).then((r) => r.ok ? r.json() : { streams: [] }).catch(() => ({ streams: [] })) : Promise.resolve({ streams: [] });
-        const [res, cacheData] = await Promise.all([
+        const [res, cacheData, community] = await Promise.all([
           fetch(`/api/streams?imdbId=${targetImdbId}&type=${tType}`, {
             headers: requestContext.streamHeaders
           }),
-          cacheFetch
+          cacheFetch,
+          addonStreams
         ]);
-        if (!res.ok) throw new Error(t("fetchStreamsFailed"));
-        const data = await res.json();
+        const scraperStreams = res.ok ? (await res.json()).streams : [];
+        const communityStreams = community.map((entry, index3) => ({
+          infoHash: "",
+          name: entry.title,
+          title: entry.title,
+          fileIdx: index3,
+          cached: true,
+          downloadable: true,
+          cachedFiles: [],
+          directUrl: entry.url,
+          source: lt("communitySource")
+        }));
+        const data = { streams: [...scraperStreams, ...communityStreams] };
         if (data.streams.length === 0) throw new Error(t("noStreamsFound"));
         const cachedTitles = /* @__PURE__ */ new Set();
         const cachedHashes = /* @__PURE__ */ new Set();
@@ -183504,22 +183584,25 @@ ${cue.text}`).join("\n\n")}
       );
     }
     if (state.type === "error") {
-      if (effectiveIconOnly) {
+      if (effectiveIconOnly && !visaFelText) {
         return /* @__PURE__ */ jsx(
           "button",
           {
             type: "button",
             className: `${btnBase} border-red-400/30 text-red-400`,
-            onClick: () => setState({ type: "idle" }),
+            onClick: () => setVisaFelText(true),
             title: state.message,
-            "aria-label": t("downloadFailedRetry"),
+            "aria-label": `${t("downloadFailedRetry")}: ${state.message}`,
             children: "!"
           }
         );
       }
       return /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
         /* @__PURE__ */ jsx("span", { className: "max-w-[180px] truncate text-[10px] text-red-400", children: state.message }),
-        /* @__PURE__ */ jsx("button", { type: "button", className: `${btnBase} border-red-400/30 text-red-400`, onClick: () => setState({ type: "idle" }), children: `\u2717 ${t("tryAgain")}` })
+        /* @__PURE__ */ jsx("button", { type: "button", className: `${btnBase} border-red-400/30 text-red-400`, onClick: () => {
+          setVisaFelText(false);
+          setState({ type: "idle" });
+        }, children: `\u2717 ${t("tryAgain")}` })
       ] });
     }
     return /* @__PURE__ */ jsxs(
