@@ -167792,6 +167792,9 @@
       nightModeOff: "Off",
       nightModeMild: "Mild night mode",
       nightModeStrong: "Strong night mode",
+      dvColorLabel: "Dolby Vision",
+      dvColorAuto: "Vivid (auto)",
+      dvColorOff: "Off",
       nightModeMenuLabel: "Night mode",
       nightModeMenuMild: "Mild",
       nightModeMenuStrong: "Strong",
@@ -169968,6 +169971,9 @@
       nightModeOff: "Av",
       nightModeMild: "Mild nattl\xE4ge",
       nightModeStrong: "Stark nattl\xE4ge",
+      dvColorLabel: "Dolby Vision",
+      dvColorAuto: "Vivid (auto)",
+      dvColorOff: "Av",
       nightModeMenuLabel: "Nattl\xE4ge",
       nightModeMenuMild: "Mild",
       nightModeMenuStrong: "Stark",
@@ -176847,7 +176853,15 @@ ${cue.text}`).join("\n\n")}
     return {
       position: "fixed",
       bottom: Math.round(window.innerHeight - rect.top + 8),
-      right: Math.min(right, maxRight)
+      right: Math.min(right, maxRight),
+      // Menyn växer UPPÅT från kontrollraden och hade ingen höjdgräns: raderna
+      // är ~44 px, och ••• -menyns nio poster blir drygt 400 px. En telefon i
+      // liggande läge är ~412 px hög, så de översta posterna låg redan utanför
+      // skärmen utan att gå att nå — det syntes inte i porträtt, där det finns
+      // gott om höjd. Gränsen är utrymmet ovanför knappen, och rullningen gör
+      // resten nåbar i stället för avklippt.
+      maxHeight: Math.max(160, Math.round(rect.top - 16)),
+      overflowY: "auto"
     };
   }
   async function initHlsStream(originalUrl, track, start2, vcodec, channels, audioMode, nightMode, transcode) {
@@ -177258,6 +177272,36 @@ ${cue.text}`).join("\n\n")}
     useEffect(() => onPlayerLayoutChanged(() => setPlayerLayout(getPlayerLayout())), []);
     const [videoTuning, setVideoTuningState] = useState(() => getVideoTuning());
     useEffect(() => onVideoTuningChanged(() => setVideoTuningState(getVideoTuning())), []);
+    const [dvColorFallback, setDvColorFallback] = useState(false);
+    const [dvColorFallbackMuted, setDvColorFallbackMuted] = useState(false);
+    const dvColorFallbackActive = dvColorFallback && !dvColorFallbackMuted;
+    const effectiveVideoTuning = useMemo(
+      () => dvColorFallbackActive ? { ...DEFAULT_TUNING, ...TUNING_PRESETS.vivid.patch } : videoTuning,
+      [dvColorFallbackActive, videoTuning]
+    );
+    useEffect(() => {
+      setDvColorFallback(false);
+      setDvColorFallbackMuted(false);
+      if (!url || !hasStarted) return;
+      let cancelled = false;
+      void (async () => {
+        try {
+          const response = await fetch(`/api/video-color?url=${encodeURIComponent(url)}`);
+          const data = await response.json();
+          if (cancelled) return;
+          if (data?.dolbyVisionProfile != null) {
+            void fetch(`/api/debug-log?msg=${encodeURIComponent(`[dv] profil ${data.dolbyVisionProfile} bl_compat ${data.blCompatibilityId ?? "?"} korrigering ${data.needsColorFallback ? "P\xC5" : "av"}`)}`).catch(() => {
+            });
+          }
+          if (!data?.needsColorFallback) return;
+          setDvColorFallback(true);
+        } catch {
+        }
+      })();
+      return () => {
+        cancelled = true;
+      };
+    }, [url, hasStarted]);
     const [streamQualityLabel, setStreamQualityLabel] = useState(null);
     useEffect(() => {
       if (!hasStarted || !getShowStreamQuality()) {
@@ -177320,15 +177364,15 @@ ${cue.text}`).join("\n\n")}
         void mpvCommand2(["set_property", prop, value]);
       }
       if (isDroidEngine) {
-        void nativeSetVideoTuning(videoTuning);
+        void nativeSetVideoTuning(effectiveVideoTuning);
         return;
       }
-      void mpvCommand2(["set_property", "brightness", videoTuning.brightness]);
-      void mpvCommand2(["set_property", "contrast", videoTuning.contrast]);
-      void mpvCommand2(["set_property", "saturation", videoTuning.saturation]);
-      void mpvCommand2(["set_property", "gamma", videoTuning.gamma]);
-      void mpvCommand2(["set_property", "sharpen", videoTuning.sharpen]);
-    }, [useMpv, videoTuning, hasStarted]);
+      void mpvCommand2(["set_property", "brightness", effectiveVideoTuning.brightness]);
+      void mpvCommand2(["set_property", "contrast", effectiveVideoTuning.contrast]);
+      void mpvCommand2(["set_property", "saturation", effectiveVideoTuning.saturation]);
+      void mpvCommand2(["set_property", "gamma", effectiveVideoTuning.gamma]);
+      void mpvCommand2(["set_property", "sharpen", effectiveVideoTuning.sharpen]);
+    }, [useMpv, effectiveVideoTuning, hasStarted]);
     const [requiresUserStart, setRequiresUserStart] = useState(false);
     const [hasEnded, setHasEnded] = useState(false);
     const [mpvStartupHoldReady, setMpvStartupHoldReady] = useState(false);
@@ -180564,7 +180608,7 @@ ${cue.text}`).join("\n\n")}
                 autoPlay: true,
                 playsInline: true,
                 className: "block",
-                style: { ...videoPresentation.videoStyle, ...cropZoomVideoStyle, filter: tuningToCssFilter(videoTuning) || void 0 },
+                style: { ...videoPresentation.videoStyle, ...cropZoomVideoStyle, filter: tuningToCssFilter(effectiveVideoTuning) || void 0 },
                 ...{ "x-webkit-airplay": "allow" },
                 onLoadedMetadata: () => {
                   if (!hasStarted) void attemptHtml5Start(false);
@@ -181344,6 +181388,26 @@ ${cue.text}`).join("\n\n")}
                             className: "z-50 w-64 rounded-[1.6rem] border border-white/10 bg-base-800/95 p-2.5 shadow-2xl backdrop-blur-md",
                             onClick: (e) => e.stopPropagation(),
                             children: [
+                              dvColorFallback && /* @__PURE__ */ jsxs(
+                                "button",
+                                {
+                                  type: "button",
+                                  "data-f": isTv ? "1" : void 0,
+                                  onClick: () => setDvColorFallbackMuted((current2) => !current2),
+                                  className: "flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-left text-slate-100 transition hover:bg-white/5",
+                                  children: [
+                                    /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
+                                      /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "9" }),
+                                      /* @__PURE__ */ jsx("path", { d: "M12 3a9 9 0 0 1 0 18z", fill: "currentColor", stroke: "none" })
+                                    ] }),
+                                    /* @__PURE__ */ jsxs("span", { className: "text-[15px] leading-tight", children: [
+                                      t("dvColorLabel"),
+                                      ": ",
+                                      dvColorFallbackActive ? t("dvColorAuto") : t("dvColorOff")
+                                    ] })
+                                  ]
+                                }
+                              ),
                               isMpvEngine && /* @__PURE__ */ jsxs(
                                 "button",
                                 {
@@ -184660,6 +184724,8 @@ ${cue.text}`).join("\n\n")}
     const nextEpTransitionRef = useRef(false);
     const nextEpAutoplayPendingRef = useRef(false);
     const sawEarlyPlaybackForEpisodeRef = useRef(false);
+    const nextEpExpectedStartRef = useRef(null);
+    const nextEpDiagSeenRef = useRef(/* @__PURE__ */ new Set());
     const firstPlaySeenRef = useRef(false);
     const lastPlaybackTimeRef = useRef(0);
     const lastAutoplayStreamsRef = useRef([]);
@@ -186256,6 +186322,7 @@ ${cue.text}`).join("\n\n")}
       setPlayerSeason(config.season);
       setPlayerEpisode(config.episode);
       setPlayerInitialTime(config.initialTime);
+      nextEpExpectedStartRef.current = config.initialTime ?? null;
       setPlayerForceProxy(config.forceProxy ?? false);
       setPlayerHideStartSplash(true);
       setPlayerSplashFading(false);
@@ -186282,6 +186349,7 @@ ${cue.text}`).join("\n\n")}
       nextEpCardShown.current = false;
       nextEpArmedRef.current = false;
       watchedMarkedInSessionRef.current = false;
+      nextEpDiagSeenRef.current = /* @__PURE__ */ new Set();
       setNextEpCard(null);
       setNextEpUrlReady(false);
       setPlayerSkipHomeKitClose(false);
@@ -186311,6 +186379,8 @@ ${cue.text}`).join("\n\n")}
       nextEpAutoplayPendingRef.current = false;
       nextEpDismissedRef.current = false;
       sawEarlyPlaybackForEpisodeRef.current = false;
+      nextEpExpectedStartRef.current = null;
+      nextEpDiagSeenRef.current = /* @__PURE__ */ new Set();
       setNextEpCard(null);
       setNextEpUrlReady(false);
     }
@@ -186471,19 +186541,34 @@ ${cue.text}`).join("\n\n")}
         onAutoPlayFallback?.();
       }
     }, [loadingStreams, onAutoPlayFallback, pendingPlayRequestToken, playerUrl, streams, streamsError]);
+    function nextEpDiag(orsak) {
+      if (nextEpDiagSeenRef.current.has(orsak)) return;
+      nextEpDiagSeenRef.current.add(orsak);
+      void fetch(`/api/debug-log?msg=${encodeURIComponent(`[next-ep] stoppad: ${orsak}`)}`).catch(() => {
+      });
+    }
     function handleTimeUpdate(current2, duration) {
       lastPlaybackTimeRef.current = current2;
       if (nextEpTransitionRef.current) {
         if (current2 < 20) return;
         nextEpTransitionRef.current = false;
       }
-      if (mediaType !== "tv" || !selectedEpisode || !selectedSeason) return;
-      if (!isFinite(duration) || duration === 0) return;
+      if (mediaType !== "tv" || !selectedEpisode || !selectedSeason) {
+        nextEpDiag(`kontext saknas (typ=${mediaType} s\xE4song=${selectedSeason?.season_number ?? "null"} avsnitt=${selectedEpisode?.episode_number ?? "null"})`);
+        return;
+      }
+      if (!isFinite(duration) || duration === 0) {
+        nextEpDiag(`l\xE4ngden ok\xE4nd (duration=${duration})`);
+        return;
+      }
       if (nextEpAutoplayPendingRef.current) return;
       if (!sawEarlyPlaybackForEpisodeRef.current) {
-        if (current2 <= 15) {
+        const forvantadStart = nextEpExpectedStartRef.current;
+        const narForvantadStart = forvantadStart != null && Math.abs(current2 - forvantadStart) <= 20;
+        if (current2 <= 15 || narForvantadStart) {
           sawEarlyPlaybackForEpisodeRef.current = true;
         } else {
+          nextEpDiag(`ingen ren startst\xE4mpel (current=${Math.round(current2)} f\xF6rv\xE4ntad=${forvantadStart == null ? "ingen" : Math.round(forvantadStart)})`);
           return;
         }
       }
@@ -186498,7 +186583,10 @@ ${cue.text}`).join("\n\n")}
           watchedMarkedInSessionRef.current = true;
         }
       }
-      if (!getAutoPlayNextEpisode()) return;
+      if (!getAutoPlayNextEpisode()) {
+        nextEpDiag("autoplay av i inst\xE4llningarna");
+        return;
+      }
       if (!nextEpArmedRef.current) {
         if (current2 < 30) return;
         nextEpArmedRef.current = true;
@@ -186556,7 +186644,11 @@ ${cue.text}`).join("\n\n")}
       return { season: targetSeason, episode: targetEpisode, episodeTitle, stillUrl };
     }
     function handleOutroStart() {
-      if (mediaType !== "tv" || !selectedEpisode || !selectedSeason) return;
+      if (mediaType !== "tv" || !selectedEpisode || !selectedSeason) {
+        nextEpDiag(`outro: kontext saknas (typ=${mediaType} s\xE4song=${selectedSeason?.season_number ?? "null"} avsnitt=${selectedEpisode?.episode_number ?? "null"})`);
+        return;
+      }
+      nextEpDiag("outro: n\xE5dd");
       if (numericTmdbId && !watchedMarkedInSessionRef.current) {
         const activeSeasonNumber = playerSeason ?? selectedSeason.season_number;
         const activeEpisodeNumber = playerEpisode ?? selectedEpisode.episode_number;
@@ -186571,7 +186663,10 @@ ${cue.text}`).join("\n\n")}
         if (!pendingCardInfo.current) {
           pendingCardInfo.current = await prepareNextEpisodeCardInfo();
         }
-        if (!pendingCardInfo.current) return;
+        if (!pendingCardInfo.current) {
+          nextEpDiag("outro: inget n\xE4sta avsnitt att erbjuda");
+          return;
+        }
         const cardInfo = pendingCardInfo.current;
         nextEpCardShown.current = true;
         nextEpDismissedRef.current = false;
@@ -187470,7 +187565,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.115",
+    version: "1.0.116",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

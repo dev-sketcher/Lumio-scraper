@@ -538,6 +538,10 @@ export function StreamsSidebarSection({
   const nextEpTransitionRef = useRef(false)
   const nextEpAutoplayPendingRef = useRef(false)
   const sawEarlyPlaybackForEpisodeRef = useRef(false)
+  /** Positionen vi bad spelaren starta på — null när den börjar från noll. */
+  const nextEpExpectedStartRef = useRef<number | null>(null)
+  /** Orsaker som redan loggats för den här uppspelningen (en rad per orsak). */
+  const nextEpDiagSeenRef = useRef<Set<string>>(new Set())
   // Set the moment the player reports real playback (onFirstPlay). Autoplay uses
   // this to verify a candidate actually plays and, if not, move to the next.
   const firstPlaySeenRef = useRef(false)
@@ -2604,6 +2608,9 @@ function scraperInCooldown(configId: string): boolean {
     setPlayerSeason(config.season)
     setPlayerEpisode(config.episode)
     setPlayerInitialTime(config.initialTime)
+    // Vad vi BAD spelaren starta på. Stale-sample-vakten i handleTimeUpdate
+    // använder den för att känna igen en återupptagning.
+    nextEpExpectedStartRef.current = config.initialTime ?? null
     setPlayerForceProxy(config.forceProxy ?? false)
     setPlayerHideStartSplash(true)
     setPlayerSplashFading(false)
@@ -2635,6 +2642,7 @@ function scraperInCooldown(configId: string): boolean {
     nextEpCardShown.current = false
     nextEpArmedRef.current = false
     watchedMarkedInSessionRef.current = false
+    nextEpDiagSeenRef.current = new Set()
     setNextEpCard(null)
     setNextEpUrlReady(false)
     setPlayerSkipHomeKitClose(false)
@@ -2667,6 +2675,8 @@ function scraperInCooldown(configId: string): boolean {
     nextEpAutoplayPendingRef.current = false
     nextEpDismissedRef.current = false
     sawEarlyPlaybackForEpisodeRef.current = false
+    nextEpExpectedStartRef.current = null
+    nextEpDiagSeenRef.current = new Set()
     setNextEpCard(null)
     setNextEpUrlReady(false)
   }
@@ -2885,22 +2895,51 @@ function scraperInCooldown(configId: string): boolean {
     }
   }, [loadingStreams, onAutoPlayFallback, pendingPlayRequestToken, playerUrl, streams, streamsError])
 
+  /**
+   * Loggar EN gång per orsak och uppspelning varför nästa-avsnitt-kortet inte
+   * visades. Kedjan har sju grindar och sa ingenting när en av dem stängde:
+   * en rapport om "ingen popup kom" gick därför inte att skilja från "det
+   * fanns inget nästa avsnitt". En rad per orsak, inte per tick — anropas
+   * fyra gånger i sekunden.
+   */
+  function nextEpDiag(orsak: string) {
+    if (nextEpDiagSeenRef.current.has(orsak)) return
+    nextEpDiagSeenRef.current.add(orsak)
+    void fetch(`/api/debug-log?msg=${encodeURIComponent(`[next-ep] stoppad: ${orsak}`)}`).catch(() => {})
+  }
+
   function handleTimeUpdate(current: number, duration: number) {
     lastPlaybackTimeRef.current = current
     if (nextEpTransitionRef.current) {
       if (current < 20) return
       nextEpTransitionRef.current = false
     }
-    if (mediaType !== 'tv' || !selectedEpisode || !selectedSeason) return
-    if (!isFinite(duration) || duration === 0) return
+    if (mediaType !== 'tv' || !selectedEpisode || !selectedSeason) {
+      nextEpDiag(`kontext saknas (typ=${mediaType} säsong=${selectedSeason?.season_number ?? 'null'} avsnitt=${selectedEpisode?.episode_number ?? 'null'})`)
+      return
+    }
+    if (!isFinite(duration) || duration === 0) {
+      nextEpDiag(`längden okänd (duration=${duration})`)
+      return
+    }
     if (nextEpAutoplayPendingRef.current) return
 
     // Ignore stale high time samples from the previous episode until we
     // observe a clean near-start sample for the current episode.
+    // Stale-sample-vakten: efter ett avsnittsbyte kan spelaren skicka en sista
+    // hög tidsstämpel från FÖRRA avsnittet, och den fick inte räknas som
+    // "nästan slut". Villkoret var current <= 15 — men det gäller bara en
+    // uppspelning som börjar från noll. Återupptar man ett avsnitt mitt i
+    // kommer ingen sådan stämpel någonsin, och kortet visades aldrig i den
+    // sessionen. Nu godtas även en stämpel nära den position vi BAD spelaren
+    // att starta på, vilket är just vad en återupptagning är.
     if (!sawEarlyPlaybackForEpisodeRef.current) {
-      if (current <= 15) {
+      const forvantadStart = nextEpExpectedStartRef.current
+      const narForvantadStart = forvantadStart != null && Math.abs(current - forvantadStart) <= 20
+      if (current <= 15 || narForvantadStart) {
         sawEarlyPlaybackForEpisodeRef.current = true
       } else {
+        nextEpDiag(`ingen ren startstämpel (current=${Math.round(current)} förväntad=${forvantadStart == null ? 'ingen' : Math.round(forvantadStart)})`)
         return
       }
     }
@@ -2918,7 +2957,10 @@ function scraperInCooldown(configId: string): boolean {
       }
     }
 
-    if (!getAutoPlayNextEpisode()) return
+    if (!getAutoPlayNextEpisode()) {
+      nextEpDiag('autoplay av i inställningarna')
+      return
+    }
     // Guard against startup/probe jitter so next-episode logic only runs after playback has actually settled.
     if (!nextEpArmedRef.current) {
       if (current < 30) return
@@ -3007,7 +3049,11 @@ function scraperInCooldown(configId: string): boolean {
   // if `auto play next episode` is disabled — the setting only controls the
   // 5.2 s autoplay timer below, not whether the card appears.
   function handleOutroStart() {
-    if (mediaType !== 'tv' || !selectedEpisode || !selectedSeason) return
+    if (mediaType !== 'tv' || !selectedEpisode || !selectedSeason) {
+      nextEpDiag(`outro: kontext saknas (typ=${mediaType} säsong=${selectedSeason?.season_number ?? 'null'} avsnitt=${selectedEpisode?.episode_number ?? 'null'})`)
+      return
+    }
+    nextEpDiag('outro: nådd')
     if (numericTmdbId && !watchedMarkedInSessionRef.current) {
       const activeSeasonNumber = playerSeason ?? selectedSeason.season_number
       const activeEpisodeNumber = playerEpisode ?? selectedEpisode.episode_number
@@ -3023,7 +3069,14 @@ function scraperInCooldown(configId: string): boolean {
       if (!pendingCardInfo.current) {
         pendingCardInfo.current = await prepareNextEpisodeCardInfo()
       }
-      if (!pendingCardInfo.current) return
+      if (!pendingCardInfo.current) {
+        // Vanligaste orsaken är att det INTE finns ett nästa avsnitt att
+        // erbjuda: sista avsnittet i sista säsongen, eller ett nästa avsnitt
+        // som ännu inte haft premiär. Då är utebliven popup rätt beteende,
+        // och loggen ska säga det i stället för att vara tyst.
+        nextEpDiag('outro: inget nästa avsnitt att erbjuda')
+        return
+      }
       const cardInfo = pendingCardInfo.current
       nextEpCardShown.current = true
       nextEpDismissedRef.current = false
