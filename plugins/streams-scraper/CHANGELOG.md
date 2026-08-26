@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.0.108
+
+- Stream file size is shown for every stream, exactly once. The backend now
+  carries `sizeBytes` (lifted from the addon's raw response before the clean
+  filename replaces the metadata line), so size no longer depends on the
+  release name happening to contain it — measured 4 of 50 streams before, 50 of
+  50 after. Where the title already prints "💾 18.9 GB" the chip is dropped
+  instead of repeating the number.
+- An AIOStreams manifest saved in the scrapers menu now installs like one
+  pasted under community catalogs: its catalogs become selectable row sources,
+  and a stream-capable addon lands in core stream storage — which is what makes
+  the manifest work on its own, without scraper or debrid fields filled in.
+- Sizes are parsed from binary units (GiB/MiB) as well.
+- Empty states in the stream sidebar follow the app language and give the right
+  advice.
+
 ## 1.0.97
 
 - Open in external player button on the Android app (Quest and phones): hands
