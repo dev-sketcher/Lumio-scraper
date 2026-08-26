@@ -184539,6 +184539,7 @@ ${cue.text}`).join("\n\n")}
     year
   }) {
     const { t, lang } = useLang();
+    const harCommunityK\u00E4lla = getEnabledCoreStreamAddons().length > 0;
     const [hasPlaybackAccess, setHasPlaybackAccess] = useState(() => getEnabledScraperAccessState().hasPlaybackAccess);
     const [hasEnabledScraper] = useState(() => getEnabledScraperAccessState().hasEnabledScraper);
     const [missingProviderLabels, setMissingProviderLabels] = useState(() => getEnabledScraperAccessState().missingProviderLabels);
@@ -185194,7 +185195,7 @@ ${cue.text}`).join("\n\n")}
         return qualityRank2(b.name) - qualityRank2(a.name);
       });
       try {
-        if (streamProviderRequests.length === 0) {
+        if (streamProviderRequests.length === 0 && !harCommunityK\u00E4lla) {
           setStreamsError(t("noScrapersEnabled"));
           setLoadingStreams(false);
           return;
@@ -185363,7 +185364,7 @@ ${cue.text}`).join("\n\n")}
         const apiStreamsList = await Promise.all(apiPromises);
         if (requestId !== searchRequestIdRef.current) return;
         const allStreams = [...apiStreamsList.flat(), ...communityStreams];
-        const willRetry = !published && allStreams.length === 0 && streamProviderRequests.length > 0 && retryAttempt === 0;
+        const willRetry = !published && allStreams.length === 0 && (streamProviderRequests.length > 0 || harCommunityK\u00E4lla) && retryAttempt === 0;
         if (!published && !willRetry) {
           const merged = mergeStreams(allStreams);
           const prepared = sortByPriority(normalizeCached(merged));
@@ -185386,7 +185387,7 @@ ${cue.text}`).join("\n\n")}
           }, 1500);
           return;
         }
-        if (!published && allStreams.length === 0 && streamProviderRequests.length > 0) {
+        if (!published && allStreams.length === 0 && (streamProviderRequests.length > 0 || harCommunityK\u00E4lla)) {
           const details = [...providerErrors].reverse().find((entry) => entry && entry.trim().length > 0) ?? null;
           setStreamsError(details ?? t("noStreams"));
         }
@@ -187298,7 +187299,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.111",
+    version: "1.0.112",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

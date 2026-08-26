@@ -407,6 +407,15 @@ export function StreamsSidebarSection({
   year,
 }: RdStreamingSectionProps) {
   const { t, lang } = useLang()
+  /**
+   * Finns en strömkapabel community-addon?
+   *
+   * Egen konstant för att grindarna nedan inte ska driva isär: panelen hade
+   * FYRA olika ställen som antog att strömmar bara kan komma från en scraper
+   * (åtkomstkontrollen, sökningens tidiga retur, omförsöket och felrutan), och
+   * de rättades en i taget medan symptomet flyttade sig. Läses här, en gång.
+   */
+  const harCommunityKälla = getEnabledCoreStreamAddons().length > 0
   const [hasPlaybackAccess, setHasPlaybackAccess] = useState(() => getEnabledScraperAccessState().hasPlaybackAccess)
   const [hasEnabledScraper] = useState(() => getEnabledScraperAccessState().hasEnabledScraper)
   const [missingProviderLabels, setMissingProviderLabels] = useState<string[]>(() => getEnabledScraperAccessState().missingProviderLabels)
@@ -1265,7 +1274,11 @@ function scraperInCooldown(configId: string): boolean {
         })
 
     try {
-      if (streamProviderRequests.length === 0) {
+      // Utan scrapers MEN med en community-addon ska sökningen köras: addonens
+      // strömmar hämtas längre ner och är hela poängen med den vägen. Den
+      // tidiga returen här var varför panelen sa "inga strömkällor påslagna"
+      // trots ett inlagt manifest.
+      if (streamProviderRequests.length === 0 && !harCommunityKälla) {
         setStreamsError(t('noScrapersEnabled'))
         setLoadingStreams(false)
         return
@@ -1496,7 +1509,7 @@ function scraperInCooldown(configId: string): boolean {
       const willRetry =
         !published
         && allStreams.length === 0
-        && streamProviderRequests.length > 0
+        && (streamProviderRequests.length > 0 || harCommunityKälla)
         && retryAttempt === 0
       if (!published && !willRetry) {
         const merged = mergeStreams(allStreams)
@@ -1523,7 +1536,7 @@ function scraperInCooldown(configId: string): boolean {
       }
 
       // Surface error when all providers returned zero results (likely DNS or network failure).
-      if (!published && allStreams.length === 0 && streamProviderRequests.length > 0) {
+      if (!published && allStreams.length === 0 && (streamProviderRequests.length > 0 || harCommunityKälla)) {
         const details = [...providerErrors].reverse().find((entry) => entry && entry.trim().length > 0) ?? null
         setStreamsError(details ?? t('noStreams'))
       }

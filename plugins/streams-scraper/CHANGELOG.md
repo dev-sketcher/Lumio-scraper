@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.112
+
+- The streams panel really searches when a community addon is the only source.
+  1.0.111 opened the access gate but the search itself still returned early on
+  an empty scraper list, so the panel said "No stream providers enabled" with a
+  manifest installed. All four places that assumed streams can only come from a
+  scraper — the access gate, the search's early return, the retry and the error
+  state — now read one shared value instead of being fixed one at a time.
+
 ## 1.0.111
 
 - The streams panel accepts a community addon as a playback source. It used to
