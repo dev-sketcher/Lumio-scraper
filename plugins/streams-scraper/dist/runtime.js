@@ -184482,9 +184482,10 @@ ${cue.text}`).join("\n\n")}
   }
   function getEnabledScraperAccessState() {
     const enabledConfigs = getStreamProviderConfigs().filter((config) => config.enabled);
+    const harCommunityK\u00E4lla = getEnabledCoreStreamAddons().length > 0;
     if (enabledConfigs.length === 0) {
       return {
-        hasPlaybackAccess: false,
+        hasPlaybackAccess: harCommunityK\u00E4lla,
         hasEnabledScraper: false,
         missingProviderLabels: [],
         primaryProviderLabel: "Stream provider"
@@ -184510,7 +184511,7 @@ ${cue.text}`).join("\n\n")}
       }
     }
     return {
-      hasPlaybackAccess,
+      hasPlaybackAccess: hasPlaybackAccess || harCommunityK\u00E4lla,
       hasEnabledScraper: true,
       missingProviderLabels: [...missingProviderLabels],
       primaryProviderLabel
@@ -185343,9 +185344,25 @@ ${cue.text}`).join("\n\n")}
             return [];
           }
         });
+        const communityStreams = effectiveImdbId ? (await resolveCoreAddonStreams({
+          imdbId: effectiveImdbId,
+          type: mediaType === "tv" ? "series" : "movie",
+          season: season != null ? Number(season) : null,
+          episode: episode != null ? Number(episode) : null
+        }).catch(() => [])).map((entry, index3) => ({
+          infoHash: "",
+          name: entry.title,
+          title: entry.title,
+          fileIdx: index3,
+          cached: true,
+          downloadable: true,
+          cachedFiles: [],
+          directUrl: entry.url,
+          source: lt("communitySource")
+        })) : [];
         const apiStreamsList = await Promise.all(apiPromises);
         if (requestId !== searchRequestIdRef.current) return;
-        const allStreams = apiStreamsList.flat();
+        const allStreams = [...apiStreamsList.flat(), ...communityStreams];
         const willRetry = !published && allStreams.length === 0 && streamProviderRequests.length > 0 && retryAttempt === 0;
         if (!published && !willRetry) {
           const merged = mergeStreams(allStreams);
@@ -187281,7 +187298,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.110",
+    version: "1.0.111",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

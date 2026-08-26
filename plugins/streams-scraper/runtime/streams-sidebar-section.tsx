@@ -1,6 +1,8 @@
 'use client'
 
 import { lt } from './local-strings'
+import { getEnabledCoreStreamAddons } from '@/lib/media-stream/core-addons'
+import { resolveCoreAddonStreams } from '@/lib/stremio/streams'
 import { resolveFreshLinkFromHash } from './resume-resolver'
 import React, { useEffect, useRef, useState, type MutableRefObject } from 'react'
 import { createPortal } from 'react-dom'
@@ -301,9 +303,15 @@ function getEnabledScraperAccessState(): {
   primaryProviderLabel: string
 } {
   const enabledConfigs = getStreamProviderConfigs().filter((config) => config.enabled)
+  // En strömkapabel community-addon ÄR uppspelningsåtkomst, även utan scraper.
+  // Panelen visade annars "ingen scraper är påslagen — inget kan hitta
+  // strömmar" för en installation vars enda källa var ett AIOStreams-manifest,
+  // och gav rådet att slå på en scraper — fel råd, för addonen levererar
+  // färdiga URL:er utan både scraper och debridnyckel.
+  const harCommunityKälla = getEnabledCoreStreamAddons().length > 0
   if (enabledConfigs.length === 0) {
     return {
-      hasPlaybackAccess: false,
+      hasPlaybackAccess: harCommunityKälla,
       hasEnabledScraper: false,
       missingProviderLabels: [],
       primaryProviderLabel: 'Stream provider',
@@ -334,7 +342,7 @@ function getEnabledScraperAccessState(): {
   }
 
   return {
-    hasPlaybackAccess,
+    hasPlaybackAccess: hasPlaybackAccess || harCommunityKälla,
     hasEnabledScraper: true,
     missingProviderLabels: [...missingProviderLabels],
     primaryProviderLabel,
@@ -1448,10 +1456,39 @@ function scraperInCooldown(configId: string): boolean {
         }
       })
 
+      /**
+       * Community-addonsen frågas vid sidan av scrapern.
+       *
+       * Utan detta kunde ett manifest inlagt under "kataloger från communityn"
+       * aldrig ge en spelbar ström: panelen hämtade bara /api/streams, som
+       * kräver en scraper-URL. Addonen lämnar färdiga URL:er, så de går rakt in
+       * i listan som cachade (vilket de i praktiken är) och sorteras först.
+       *
+       * Säsong/avsnitt skickas med — utan dem svarar addons med hela serien.
+       */
+      const communityStreams: StreamResult[] = effectiveImdbId
+        ? (await resolveCoreAddonStreams({
+            imdbId: effectiveImdbId,
+            type: mediaType === 'tv' ? 'series' : 'movie',
+            season: season != null ? Number(season) : null,
+            episode: episode != null ? Number(episode) : null,
+          }).catch(() => [])).map((entry, index) => ({
+            infoHash: '',
+            name: entry.title,
+            title: entry.title,
+            fileIdx: index,
+            cached: true,
+            downloadable: true,
+            cachedFiles: [],
+            directUrl: entry.url,
+            source: lt('communitySource'),
+          }))
+        : []
+
       const apiStreamsList = await Promise.all(apiPromises)
       if (requestId !== searchRequestIdRef.current) return
 
-      const allStreams = apiStreamsList.flat()
+      const allStreams = [...apiStreamsList.flat(), ...communityStreams]
       // First attempt that returned zero streams: schedule a single retry
       // before showing the noStreams/error message. Providers sometimes
       // return empty mid-cache-refresh (Real-Debrid or scraper warm-up);

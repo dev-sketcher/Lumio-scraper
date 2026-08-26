@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.111
+
+- The streams panel accepts a community addon as a playback source. It used to
+  read only the scraper list, so an install whose single source was an
+  AIOStreams manifest got "No scraper is enabled — nothing can find streams"
+  and advice to turn on a scraper — the wrong advice, since such an addon hands
+  out finished URLs without a scraper or a debrid key.
+- Those addons are now queried alongside the scraper for every lookup, with
+  season and episode, and their streams enter the same list as cached entries.
+
 ## 1.0.110
 
 - Downloads work when the streams come from a community addon. The button used
