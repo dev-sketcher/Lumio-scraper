@@ -172580,6 +172580,39 @@
   function streamDisplayTitle(stream) {
     return stream.title?.trim() || stream.name?.trim() || stream.description?.trim() || "Stream";
   }
+  var SIZE_TOKEN = /(\d+(?:[.,]\d+)?)\s*(TiB|GiB|MiB|KiB|TB|GB|MB|KB)\b/i;
+  var SIZE_UNIT_BYTES = {
+    kb: 1e3,
+    mb: 1e3 ** 2,
+    gb: 1e3 ** 3,
+    tb: 1e3 ** 4,
+    kib: 1024,
+    mib: 1024 ** 2,
+    gib: 1024 ** 3,
+    tib: 1024 ** 4
+  };
+  function parseSizeBytes(text) {
+    const match = SIZE_TOKEN.exec(text);
+    if (!match) return void 0;
+    const value = Number.parseFloat(match[1].replace(",", "."));
+    const unit = SIZE_UNIT_BYTES[match[2].toLowerCase()];
+    if (!Number.isFinite(value) || !unit) return void 0;
+    const bytes = Math.round(value * unit);
+    return bytes > 0 ? bytes : void 0;
+  }
+  var FILNAMN_MONSTER = /[^\s/\\]+\.(?:mkv|mp4|avi|m4v|mov|ts|webm|flv|wmv|mpg|mpeg|m2ts)\b/i;
+  function streamFileInfo(stream) {
+    const hints = stream.behaviorHints ?? {};
+    const hintFilename = typeof hints.filename === "string" && hints.filename.trim() ? hints.filename.trim() : void 0;
+    const hintSize = typeof hints.videoSize === "number" && hints.videoSize > 0 ? Math.round(hints.videoSize) : void 0;
+    const beskrivning = stream.description?.trim() || stream.title?.trim() || void 0;
+    const fritext = `${stream.name ?? ""} ${stream.title ?? ""} ${stream.description ?? ""}`;
+    return {
+      filename: hintFilename ?? FILNAMN_MONSTER.exec(fritext)?.[0],
+      sizeBytes: hintSize ?? parseSizeBytes(fritext),
+      description: beskrivning
+    };
+  }
   function streamRootFromUrl(url) {
     const trimmed = url.replace(/\/+$/, "");
     return trimmed.endsWith("/manifest.json") ? trimmed.slice(0, -"/manifest.json".length) : trimmed;
@@ -172614,6 +172647,7 @@
         ut.push({
           url,
           title: streamDisplayTitle(stream),
+          ...streamFileInfo(stream),
           subtitles: Array.isArray(stream.subtitles) ? stream.subtitles.filter((sub) => typeof sub.url === "string" && sub.url.length > 0).map((sub) => ({ url: sub.url, lang: sub.lang })) : void 0
         });
       }
@@ -183395,12 +183429,15 @@ ${cue.text}`).join("\n\n")}
         const communityStreams = community.map((entry, index3) => ({
           infoHash: "",
           name: entry.title,
-          title: entry.title,
+          // Samma som i strömpanelen: filnamn eller beskrivning på
+          // sekundärraden, och storleken med så valet av ström kan väga den.
+          title: entry.filename ?? entry.description ?? entry.title,
           fileIdx: index3,
           cached: true,
           downloadable: true,
           cachedFiles: [],
           directUrl: entry.url,
+          sizeBytes: entry.sizeBytes,
           source: lt("communitySource")
         }));
         const data = { streams: [...scraperStreams, ...communityStreams] };
@@ -183718,7 +183755,7 @@ ${cue.text}`).join("\n\n")}
     }
     return options.hideUncached ? streams.filter((stream) => stream.cached) : streams;
   }
-  function parseSizeBytes(text) {
+  function parseSizeBytes2(text) {
     const match = text.match(/(\d+(?:[.,]\d+)?)\s*(tib|gib|mib|tb|gb|mb)\b/i);
     if (!match) return null;
     const value = Number.parseFloat(match[1].replace(",", "."));
@@ -183731,7 +183768,7 @@ ${cue.text}`).join("\n\n")}
     const cachedFileBytes = stream.cachedFiles.flatMap((entry) => Object.values(entry)).reduce((sum, file) => sum + (Number.isFinite(file.filesize) ? file.filesize : 0), 0);
     if (cachedFileBytes > 0) return cachedFileBytes;
     if (typeof stream.sizeBytes === "number" && stream.sizeBytes > 0) return stream.sizeBytes;
-    return parseSizeBytes(`${stream.name} ${stream.title}`);
+    return parseSizeBytes2(`${stream.name} ${stream.title}`);
   }
   var STREAM_LANGUAGE_PATTERNS = [
     { code: "en", pattern: /\b(?:en|eng|english)\b/i },
@@ -185376,12 +185413,19 @@ ${cue.text}`).join("\n\n")}
         }).catch(() => [])).map((entry, index3) => ({
           infoHash: "",
           name: entry.title,
-          title: entry.title,
+          // Sekundärraden visade samma korta namn en gång till. Filnamnet
+          // först, addonens beskrivning (storlek, seeders, språk) därnäst —
+          // och namnet bara om varken finns.
+          title: entry.filename ?? entry.description ?? entry.title,
           fileIdx: index3,
           cached: true,
           downloadable: true,
           cachedFiles: [],
           directUrl: entry.url,
+          // Storleken kommer ur behaviorHints.videoSize eller addonens
+          // fritext; utan den räknades raden som "storlek okänd" och föll
+          // dessutom igenom storleksfiltret utan att kunna prövas.
+          sizeBytes: entry.sizeBytes,
           source: lt("communitySource")
         })) : [];
         const apiStreamsList = await Promise.all(apiPromises);
@@ -187138,7 +187182,7 @@ ${cue.text}`).join("\n\n")}
     const [copied, setCopied] = useState(false);
     const url = streamHttpUrl(stream);
     const sizeBytes = getStreamSizeBytes(stream);
-    const titleShowsSize = parseSizeBytes(stream.title ?? "") !== null;
+    const titleShowsSize = parseSizeBytes2(stream.title ?? "") !== null;
     const sizeLabel = sizeBytes && sizeBytes > 0 && !titleShowsSize ? sizeBytes >= 1024 ** 3 ? `${(sizeBytes / 1024 ** 3).toFixed(sizeBytes >= 10 * 1024 ** 3 ? 1 : 2)} GB` : `${Math.round(sizeBytes / 1024 ** 2)} MB` : null;
     return /* @__PURE__ */ jsxs("div", { className: "rounded-xl border border-white/10 bg-slate-900 px-4 py-3 space-y-2", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between gap-2", children: [
@@ -187426,7 +187470,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.114",
+    version: "1.0.115",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

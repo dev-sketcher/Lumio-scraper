@@ -1519,12 +1519,19 @@ function scraperInCooldown(configId: string): boolean {
           }).catch(() => [])).map((entry, index) => ({
             infoHash: '',
             name: entry.title,
-            title: entry.title,
+            // Sekundärraden visade samma korta namn en gång till. Filnamnet
+            // först, addonens beskrivning (storlek, seeders, språk) därnäst —
+            // och namnet bara om varken finns.
+            title: entry.filename ?? entry.description ?? entry.title,
             fileIdx: index,
             cached: true,
             downloadable: true,
             cachedFiles: [],
             directUrl: entry.url,
+            // Storleken kommer ur behaviorHints.videoSize eller addonens
+            // fritext; utan den räknades raden som "storlek okänd" och föll
+            // dessutom igenom storleksfiltret utan att kunna prövas.
+            sizeBytes: entry.sizeBytes,
             source: lt('communitySource'),
           }))
         : []

@@ -138,12 +138,15 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
       const communityStreams: StreamResult[] = community.map((entry, index) => ({
         infoHash: '',
         name: entry.title,
-        title: entry.title,
+        // Samma som i strömpanelen: filnamn eller beskrivning på
+        // sekundärraden, och storleken med så valet av ström kan väga den.
+        title: entry.filename ?? entry.description ?? entry.title,
         fileIdx: index,
         cached: true,
         downloadable: true,
         cachedFiles: [],
         directUrl: entry.url,
+        sizeBytes: entry.sizeBytes,
         source: lt('communitySource'),
       }))
 
