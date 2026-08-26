@@ -167,6 +167,11 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
        *
        * Nyckeln krävs numera bara av den ström man faktiskt väljer, se
        * handlePickStream — en magnetlänk behöver debrid, en direkt URL inte.
+       *
+       * season/episode kommer från detaljsidan. Utan dem frågar vi ändå, men
+       * svaret blir hela serien: mätt mot AIOStreams 1152 strömmar utan
+       * avsnitt mot 156 med. Listan blir alltså användbar först när värden
+       * skickar avsnittet (kräver en app-version med de propsen).
        */
       const addonStreams = resolveCoreAddonStreams({
         imdbId: targetImdbId,
