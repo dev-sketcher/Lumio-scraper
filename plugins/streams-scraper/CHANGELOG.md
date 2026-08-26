@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.114
+
+- Every stream row in the panel has a download button, next to Play. Series had
+  no working way to download a specific episode at all: clicking an episode
+  opens this panel, and downloading lived on the details page — which had to
+  guess which episode was meant and run its own stream search. The panel already
+  holds both decisions, so the choice now finishes where it is made.
+- A stream that needs debrid says so before the click instead of failing after
+  it, and every download failure is written to the debug log with whether the
+  stream had a direct URL and whether a key was present.
+- The download logic moved to a shared module so the details button and the
+  panel rows cannot drift apart.
+
 ## 1.0.113
 
 - A failed IMDb lookup no longer claims the title has no IMDb id. The lookup ran

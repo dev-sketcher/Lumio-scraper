@@ -3,6 +3,7 @@
 import { lt } from './local-strings'
 import { getEnabledCoreStreamAddons } from '@/lib/media-stream/core-addons'
 import { resolveCoreAddonStreams } from '@/lib/stremio/streams'
+import { hasDebridKey, resolveDownloadFromStream, streamNeedsDebrid, triggerBrowserDownload } from './stream-download'
 import { resolveFreshLinkFromHash } from './resume-resolver'
 import React, { useEffect, useRef, useState, type MutableRefObject } from 'react'
 import { createPortal } from 'react-dom'
@@ -3136,6 +3137,67 @@ function scraperInCooldown(configId: string): boolean {
     setPlayerUrl(nextSource.url)
   }
 
+  /**
+   * Nedladdning PER STRÖMRAD.
+   *
+   * Serier hade ingen fungerande väg: detaljsidans knapp måste härleda vilket
+   * avsnitt som menades och göra en EGEN strömsökning, och att klicka ett
+   * avsnitt öppnade den här panelen — som saknade nedladdning. Alltså gick det
+   * inte att välja avsnitt alls.
+   *
+   * Här finns redan båda besluten: du står på ett avsnitt och ser strömmarna.
+   * Knappen på raden avslutar valet där i stället för att skicka dig tillbaka.
+   *
+   * Samma två vägar som filmflödet, som fungerar: värdens egen nedladdning i
+   * webview/mobil, och mappval + /api/download på skrivbordet.
+   */
+  const [radNedladdning, setRadNedladdning] = useState<Record<string, { typ: 'laddar' } | { typ: 'klar' } | { typ: 'fel'; meddelande: string }>>({})
+  const radNyckel = (stream: StreamResult) => stream.directUrl || stream.infoHash || stream.name
+
+  async function handleDownloadStream(stream: StreamResult) {
+    const nyckel = radNyckel(stream)
+    setRadNedladdning((current) => ({ ...current, [nyckel]: { typ: 'laddar' } }))
+    const misslyckades = (meddelande: string) => {
+      // Loggas, inte bara visas: förra felsökningen kostade en halv dag på att
+      // gissa vilken grind som fällde nedladdningen, eftersom UI:t bara sa
+      // "Debrid key missing" utan spår. Läses via /api/debug-log.
+      sendTelemetry('streams.download', 'error', meddelande, {
+        imdbId: effectiveImdbId,
+        mediaType,
+        harDirektUrl: Boolean(stream.directUrl),
+        harNyckel: hasDebridKey(),
+      })
+      setRadNedladdning((current) => ({ ...current, [nyckel]: { typ: 'fel', meddelande } }))
+    }
+    try {
+      // Magnetlänk utan nyckel: säg det INNAN vi försöker, i stället för att
+      // falla på debridsteget efteråt. Raden är dessutom redan märkt.
+      if (streamNeedsDebrid(stream) && !hasDebridKey()) {
+        misslyckades(lt('debridKeyMissing'))
+        return
+      }
+      const resolved = await resolveDownloadFromStream(stream, t)
+      if (!isPluginDesktopHost()) {
+        triggerBrowserDownload(resolved.url, resolved.filename)
+        setRadNedladdning((current) => ({ ...current, [nyckel]: { typ: 'klar' } }))
+        return
+      }
+      const mapp = await fetch('/api/pick-folder', { method: 'POST' })
+      if (!mapp.ok) { misslyckades(t('folderPickFailed')); return }
+      const { path } = (await mapp.json()) as { path: string | null }
+      if (!path) { setRadNedladdning((current) => { const nästa = { ...current }; delete nästa[nyckel]; return nästa }); return }
+      const jobb = await fetch('/api/download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ directUrl: resolved.url, folder: path, filename: resolved.filename }),
+      })
+      if (!jobb.ok) { misslyckades(t('startDownloadFailed')); return }
+      setRadNedladdning((current) => ({ ...current, [nyckel]: { typ: 'klar' } }))
+    } catch (error) {
+      misslyckades(error instanceof Error ? error.message : t('startDownloadFailed'))
+    }
+  }
+
   // ---- render ----
 
   if (!hasPlaybackAccess) {
@@ -3412,7 +3474,16 @@ function scraperInCooldown(configId: string): boolean {
             <>
               {filtered.length === 0
                 ? <p className="text-sm text-slate-400">{t('allFiltered')}</p>
-                : <StreamList deviceLacksDolbyVision={deviceLacksDolbyVision} streams={filtered} onPlay={handlePlayStream} />
+                : (
+                  <StreamList
+                    deviceLacksDolbyVision={deviceLacksDolbyVision}
+                    streams={filtered}
+                    onPlay={handlePlayStream}
+                    onDownload={handleDownloadStream}
+                    downloadStatus={radNedladdning}
+                    streamKey={radNyckel}
+                  />
+                )
               }
               {hiddenCount > 0 && (
                 <p className="text-xs text-slate-600">{hiddenCount} stream{hiddenCount > 1 ? 's' : ''} hidden by quality filters</p>
@@ -3623,10 +3694,17 @@ function scraperInCooldown(configId: string): boolean {
 function StreamList({
   streams,
   onPlay,
+  onDownload,
+  downloadStatus = {},
+  streamKey,
   deviceLacksDolbyVision = false,
 }: {
   streams: StreamResult[]
   onPlay: (s: StreamResult) => void
+  /** Nedladdning per rad. Utelämnad = ingen knapp (t.ex. i TV-läget). */
+  onDownload?: (s: StreamResult) => void
+  downloadStatus?: Record<string, { typ: 'laddar' } | { typ: 'klar' } | { typ: 'fel'; meddelande: string }>
+  streamKey?: (s: StreamResult) => string
   deviceLacksDolbyVision?: boolean
 }) {
   const unsupported = (s: StreamResult) => deviceLacksDolbyVision && streamUnsupportedOnDevice(s)
@@ -3640,12 +3718,30 @@ function StreamList({
     <div className="space-y-2">
       {cached.length > 0 && (
         <>
-          {cached.map((s, i) => <StreamRow key={`${s.infoHash}-${i}`} stream={s} onPlay={onPlay} unsupported={unsupported(s)} />)}
+          {cached.map((s, i) => (
+            <StreamRow
+              key={`${s.infoHash}-${i}`}
+              stream={s}
+              onPlay={onPlay}
+              onDownload={onDownload}
+              status={streamKey ? downloadStatus[streamKey(s)] : undefined}
+              unsupported={unsupported(s)}
+            />
+          ))}
         </>
       )}
       {uncached.length > 0 && (
         <>
-          {uncached.map((s, i) => <StreamRow key={`${s.infoHash}-${i}`} stream={s} onPlay={onPlay} unsupported={unsupported(s)} />)}
+          {uncached.map((s, i) => (
+            <StreamRow
+              key={`${s.infoHash}-${i}`}
+              stream={s}
+              onPlay={onPlay}
+              onDownload={onDownload}
+              status={streamKey ? downloadStatus[streamKey(s)] : undefined}
+              unsupported={unsupported(s)}
+            />
+          ))}
         </>
       )}
     </div>
@@ -3701,7 +3797,13 @@ function streamHttpUrl(stream: StreamResult): string | null {
   return null
 }
 
-function StreamRow({ stream, onPlay, unsupported = false }: { stream: StreamResult; onPlay: (s: StreamResult) => void; unsupported?: boolean }) {
+function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: {
+  stream: StreamResult
+  onPlay: (s: StreamResult) => void
+  onDownload?: (s: StreamResult) => void
+  status?: { typ: 'laddar' } | { typ: 'klar' } | { typ: 'fel'; meddelande: string }
+  unsupported?: boolean
+}) {
   // Every row's Play button is a focus station in TV mode. Without them the
   // panel opens but cannot be used — the list is visible and nothing in it is
   // selectable.
@@ -3816,6 +3918,42 @@ function StreamRow({ stream, onPlay, unsupported = false }: { stream: StreamResu
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2.5c-.5 0-.9.3-1.1.8L9.6 7h4.8l-1.3-3.7c-.2-.5-.6-.8-1.1-.8zM8.9 8.8 6 18.2c-.3.9.4 1.8 1.3 1.8h9.4c.9 0 1.6-.9 1.3-1.8l-2.9-9.4H8.9z" />
             </svg>
+          </button>
+        )}
+        {onDownload && (
+          /* Nedladdning DÄR valet görs. Serier hade ingen väg alls: att klicka
+             ett avsnitt öppnar den här panelen, och nedladdningen låg kvar på
+             detaljsidan — som måste härleda avsnittet och söka strömmar en
+             gång till. Här är både avsnitt och ström redan valda.
+             Samma ikonform som VLC-knappen ovanför, så raden inte får ett nytt
+             formspråk. */
+          <button
+            type="button"
+            onClick={() => onDownload(stream)}
+            disabled={status?.typ === 'laddar'}
+            title={status?.typ === 'fel' ? status.meddelande : t('download')}
+            aria-label={status?.typ === 'fel' ? `${t('download')}: ${status.meddelande}` : t('download')}
+            className={`flex-shrink-0 rounded-full p-2 transition ${
+              status?.typ === 'fel'
+                ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'
+                : status?.typ === 'klar'
+                  ? 'bg-emerald-500/20 text-emerald-300'
+                  : 'bg-white/10 text-white/80 hover:bg-white/20 disabled:opacity-50'
+            }`}
+          >
+            {status?.typ === 'laddar' ? (
+              <svg className="h-4 w-4 animate-spin motion-reduce:animate-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 12a9 9 0 1 1-6.2-8.56" strokeLinecap="round" />
+              </svg>
+            ) : status?.typ === 'klar' ? (
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : (
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 3v12m0 0-4-4m4 4 4-4M4 19h16" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            )}
           </button>
         )}
         <button

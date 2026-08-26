@@ -183270,33 +183270,13 @@ ${cue.text}`).join("\n\n")}
     };
   }
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
-  init_jsx_runtime_shim();
-  function qualityRank(name) {
-    const n = name.toLowerCase();
-    if (n.includes("4k") || n.includes("2160p")) return 4;
-    if (n.includes("1080p")) return 3;
-    if (n.includes("720p")) return 2;
-    return 1;
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/stream-download.ts
+  var sleep3 = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  function streamNeedsDebrid(stream) {
+    return !stream.directUrl;
   }
-  function extractSize(title) {
-    const m2 = title.match(/(\d+(?:\.\d+)?)\s*(GB|MB)/i);
-    return m2 ? `${m2[1]} ${m2[2].toUpperCase()}` : null;
-  }
-  var VIDEO_EXTS = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
-  function sleep3(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-  function triggerBrowserDownload(url, filename) {
-    if (typeof document === "undefined") return;
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    if (filename) anchor.download = filename;
-    anchor.rel = "noopener noreferrer";
-    anchor.target = "_blank";
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
+  function hasDebridKey() {
+    return Boolean((getPlaybackAccessKey() ?? "").trim());
   }
   async function resolveDownloadFromStream(stream, t) {
     if (stream.directUrl) {
@@ -183335,6 +183315,31 @@ ${cue.text}`).join("\n\n")}
     }
     throw new Error("Timeout: torrenten blev inte klar i tid");
   }
+  function triggerBrowserDownload(url, filename) {
+    if (typeof document === "undefined") return;
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    if (filename) anchor.download = filename;
+    anchor.rel = "noopener noreferrer";
+    anchor.target = "_blank";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+  }
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
+  init_jsx_runtime_shim();
+  function qualityRank(name) {
+    const n = name.toLowerCase();
+    if (n.includes("4k") || n.includes("2160p")) return 4;
+    if (n.includes("1080p")) return 3;
+    if (n.includes("720p")) return 2;
+    return 1;
+  }
+  function extractSize(title) {
+    const m2 = title.match(/(\d+(?:\.\d+)?)\s*(GB|MB)/i);
+    return m2 ? `${m2[1]} ${m2[2].toUpperCase()}` : null;
+  }
   function StreamsScraperDetailsDownloadButton({ item, className, iconOnly = false, season, episode }) {
     const forceMobileIconOnly = typeof className === "string" && className.includes("!h-10") && className.includes("!w-10");
     const effectiveIconOnly = iconOnly || forceMobileIconOnly;
@@ -183365,7 +183370,6 @@ ${cue.text}`).join("\n\n")}
       try {
         const targetImdbId = imdbId;
         const requestContext = getPrimaryStreamProviderRequestContext2();
-        const accessKey = getPlaybackAccessKey() ?? "";
         const tType = mediaType === "tv" ? "series" : "movie";
         const addonStreams = resolveCoreAddonStreams({
           imdbId: targetImdbId,
@@ -186611,6 +186615,59 @@ ${cue.text}`).join("\n\n")}
       setPlayerInfoHash(playbackInfoHash(nextItem?.infoHash ?? null, nextSource.url));
       setPlayerUrl(nextSource.url);
     }
+    const [radNedladdning, setRadNedladdning] = useState({});
+    const radNyckel = (stream) => stream.directUrl || stream.infoHash || stream.name;
+    async function handleDownloadStream(stream) {
+      const nyckel = radNyckel(stream);
+      setRadNedladdning((current2) => ({ ...current2, [nyckel]: { typ: "laddar" } }));
+      const misslyckades = (meddelande) => {
+        sendTelemetry("streams.download", "error", meddelande, {
+          imdbId: effectiveImdbId,
+          mediaType,
+          harDirektUrl: Boolean(stream.directUrl),
+          harNyckel: hasDebridKey()
+        });
+        setRadNedladdning((current2) => ({ ...current2, [nyckel]: { typ: "fel", meddelande } }));
+      };
+      try {
+        if (streamNeedsDebrid(stream) && !hasDebridKey()) {
+          misslyckades(lt("debridKeyMissing"));
+          return;
+        }
+        const resolved = await resolveDownloadFromStream(stream, t);
+        if (!isPluginDesktopHost()) {
+          triggerBrowserDownload(resolved.url, resolved.filename);
+          setRadNedladdning((current2) => ({ ...current2, [nyckel]: { typ: "klar" } }));
+          return;
+        }
+        const mapp = await fetch("/api/pick-folder", { method: "POST" });
+        if (!mapp.ok) {
+          misslyckades(t("folderPickFailed"));
+          return;
+        }
+        const { path } = await mapp.json();
+        if (!path) {
+          setRadNedladdning((current2) => {
+            const n\u00E4sta = { ...current2 };
+            delete n\u00E4sta[nyckel];
+            return n\u00E4sta;
+          });
+          return;
+        }
+        const jobb = await fetch("/api/download", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ directUrl: resolved.url, folder: path, filename: resolved.filename })
+        });
+        if (!jobb.ok) {
+          misslyckades(t("startDownloadFailed"));
+          return;
+        }
+        setRadNedladdning((current2) => ({ ...current2, [nyckel]: { typ: "klar" } }));
+      } catch (error) {
+        misslyckades(error instanceof Error ? error.message : t("startDownloadFailed"));
+      }
+    }
     if (!hasPlaybackAccess) {
       return /* @__PURE__ */ jsxs("section", { children: [
         /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.24em] text-slate-400", children: lt(hasEnabledScraper ? "debridMissingTitle" : "noScraperTitle") }),
@@ -186834,7 +186891,17 @@ ${cue.text}`).join("\n\n")}
           const filtered = streams.filter((_, i) => visible[i]);
           const hiddenCount = streams.length - filtered.length;
           return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            filtered.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("allFiltered") }) : /* @__PURE__ */ jsx(StreamList, { deviceLacksDolbyVision, streams: filtered, onPlay: handlePlayStream }),
+            filtered.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("allFiltered") }) : /* @__PURE__ */ jsx(
+              StreamList,
+              {
+                deviceLacksDolbyVision,
+                streams: filtered,
+                onPlay: handlePlayStream,
+                onDownload: handleDownloadStream,
+                downloadStatus: radNedladdning,
+                streamKey: radNyckel
+              }
+            ),
             hiddenCount > 0 && /* @__PURE__ */ jsxs("p", { className: "text-xs text-slate-600", children: [
               hiddenCount,
               " stream",
@@ -186993,6 +187060,9 @@ ${cue.text}`).join("\n\n")}
   function StreamList({
     streams,
     onPlay,
+    onDownload,
+    downloadStatus = {},
+    streamKey,
     deviceLacksDolbyVision = false
   }) {
     const unsupported = (s) => deviceLacksDolbyVision && streamUnsupportedOnDevice(s);
@@ -187000,8 +187070,28 @@ ${cue.text}`).join("\n\n")}
     const cached = byPlayability(streams.filter((s) => s.cached));
     const uncached = byPlayability(streams.filter((s) => !s.cached));
     return /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-      cached.length > 0 && /* @__PURE__ */ jsx(Fragment2, { children: cached.map((s, i) => /* @__PURE__ */ jsx(StreamRow, { stream: s, onPlay, unsupported: unsupported(s) }, `${s.infoHash}-${i}`)) }),
-      uncached.length > 0 && /* @__PURE__ */ jsx(Fragment2, { children: uncached.map((s, i) => /* @__PURE__ */ jsx(StreamRow, { stream: s, onPlay, unsupported: unsupported(s) }, `${s.infoHash}-${i}`)) })
+      cached.length > 0 && /* @__PURE__ */ jsx(Fragment2, { children: cached.map((s, i) => /* @__PURE__ */ jsx(
+        StreamRow,
+        {
+          stream: s,
+          onPlay,
+          onDownload,
+          status: streamKey ? downloadStatus[streamKey(s)] : void 0,
+          unsupported: unsupported(s)
+        },
+        `${s.infoHash}-${i}`
+      )) }),
+      uncached.length > 0 && /* @__PURE__ */ jsx(Fragment2, { children: uncached.map((s, i) => /* @__PURE__ */ jsx(
+        StreamRow,
+        {
+          stream: s,
+          onPlay,
+          onDownload,
+          status: streamKey ? downloadStatus[streamKey(s)] : void 0,
+          unsupported: unsupported(s)
+        },
+        `${s.infoHash}-${i}`
+      )) })
     ] });
   }
   async function copyTextToClipboard(text) {
@@ -187042,7 +187132,7 @@ ${cue.text}`).join("\n\n")}
     }
     return null;
   }
-  function StreamRow({ stream, onPlay, unsupported = false }) {
+  function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }) {
     const isTvMode = useTvMode();
     const { t } = useLang();
     const [copied, setCopied] = useState(false);
@@ -187108,6 +187198,24 @@ ${cue.text}`).join("\n\n")}
             "aria-label": t("openInVlc"),
             className: "flex-shrink-0 rounded-full bg-orange-500/90 p-2 text-white transition hover:bg-orange-500",
             children: /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M12 2.5c-.5 0-.9.3-1.1.8L9.6 7h4.8l-1.3-3.7c-.2-.5-.6-.8-1.1-.8zM8.9 8.8 6 18.2c-.3.9.4 1.8 1.3 1.8h9.4c.9 0 1.6-.9 1.3-1.8l-2.9-9.4H8.9z" }) })
+          }
+        ),
+        onDownload && /* Nedladdning DÄR valet görs. Serier hade ingen väg alls: att klicka
+           ett avsnitt öppnar den här panelen, och nedladdningen låg kvar på
+           detaljsidan — som måste härleda avsnittet och söka strömmar en
+           gång till. Här är både avsnitt och ström redan valda.
+           Samma ikonform som VLC-knappen ovanför, så raden inte får ett nytt
+           formspråk. */
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            onClick: () => onDownload(stream),
+            disabled: status?.typ === "laddar",
+            title: status?.typ === "fel" ? status.meddelande : t("download"),
+            "aria-label": status?.typ === "fel" ? `${t("download")}: ${status.meddelande}` : t("download"),
+            className: `flex-shrink-0 rounded-full p-2 transition ${status?.typ === "fel" ? "bg-red-500/20 text-red-300 hover:bg-red-500/30" : status?.typ === "klar" ? "bg-emerald-500/20 text-emerald-300" : "bg-white/10 text-white/80 hover:bg-white/20 disabled:opacity-50"}`,
+            children: status?.typ === "laddar" ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4 animate-spin motion-reduce:animate-none", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.2-8.56", strokeLinecap: "round" }) }) : status?.typ === "klar" ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: /* @__PURE__ */ jsx("path", { d: "M20 6 9 17l-5-5", strokeLinecap: "round", strokeLinejoin: "round" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M12 3v12m0 0-4-4m4 4 4-4M4 19h16", strokeLinecap: "round", strokeLinejoin: "round" }) })
           }
         ),
         /* @__PURE__ */ jsx(
@@ -187318,7 +187426,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.113",
+    version: "1.0.114",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

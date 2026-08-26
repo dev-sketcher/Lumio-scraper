@@ -10,13 +10,7 @@ import type { MediaDownloadActionProps } from '@/lib/plugin-sdk'
 import type { StringKey } from '@/lib/i18n'
 import { isPluginDesktopHost, useLang } from '@/lib/plugin-sdk'
 import { getPrimaryStreamProviderRequestContext } from './stream-provider-request-context'
-import {
-  getPlaybackAccessKey,
-  getPlaybackSourceInfo,
-  queueMagnetForPlayback,
-  resolvePlaybackLink,
-  selectPlaybackFiles,
-} from '@/lib/stream-provider-runtime/playback/stream-provider-playback'
+import { resolveDownloadFromStream, triggerBrowserDownload } from './stream-download'
 
 interface RdStream {
   name: string
@@ -40,75 +34,6 @@ function extractSize(title: string): string | null {
 
 const VIDEO_EXTS = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i
 
-function sleep(ms: number) {
-  return new Promise<void>((resolve) => setTimeout(resolve, ms))
-}
-
-function triggerBrowserDownload(url: string, filename?: string | null) {
-  if (typeof document === 'undefined') return
-  const anchor = document.createElement('a')
-  anchor.href = url
-  if (filename) anchor.download = filename
-  anchor.rel = 'noopener noreferrer'
-  anchor.target = '_blank'
-  document.body.appendChild(anchor)
-  anchor.click()
-  anchor.remove()
-}
-
-async function resolveDownloadFromStream(
-  stream: StreamResult,
-  t: (key: StringKey) => string,
-): Promise<{ url: string; filename: string }> {
-  if (stream.directUrl) {
-    const filename = stream.directUrl.split('/').pop()?.split('?')[0] ?? 'download'
-    return { url: stream.directUrl, filename }
-  }
-
-  if (!stream.infoHash) throw new Error(t('noPlayableStream'))
-
-  // HÄR är nyckeln faktiskt nödvändig: en magnetlänk måste genom debrid för att
-  // bli en nedladdningsbar URL. Kontrollen låg förut längst upp i handleClick
-  // och stoppade även strömmar som redan HAR en direkt URL — alltså allt en
-  // community-addon levererar. Meddelandet är detsamma, men nu bara när det är
-  // sant.
-  if (!(getPlaybackAccessKey() ?? '')) throw new Error(lt('debridKeyMissing'))
-
-  const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${stream.infoHash}`)
-  for (let attempt = 0; attempt < 60; attempt += 1) {
-    if (attempt > 0) await sleep(3000)
-    const info = await getPlaybackSourceInfo(added.id)
-
-    if (info.status === 'waiting_files_selection') {
-      await selectPlaybackFiles(info.id, 'all')
-      continue
-    }
-
-    if (info.status === 'downloaded') {
-      const resolved = await Promise.all(
-        info.links.map(async (link) => {
-          try {
-            return await resolvePlaybackLink(link)
-          } catch {
-            return null
-          }
-        }),
-      )
-
-      const playable = resolved.filter((entry): entry is NonNullable<typeof entry> => Boolean(entry))
-      const videoEntries = playable.filter((entry) => VIDEO_EXTS.test(entry.filename))
-      const best = [...(videoEntries.length > 0 ? videoEntries : playable)].sort((a, b) => b.filesize - a.filesize)[0]
-      if (!best) throw new Error(t('resolveLinkFailed'))
-      return { url: best.download, filename: best.filename }
-    }
-
-    if (['error', 'magnet_error', 'dead', 'virus'].includes(info.status)) {
-      throw new Error(lt('torrentFailed').replace('{status}', String(info.status)))
-    }
-  }
-
-  throw new Error('Timeout: torrenten blev inte klar i tid')
-}
 
 type DownloadState =
   | { type: 'idle' }
@@ -152,7 +77,6 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
     try {
       const targetImdbId = imdbId as string
       const requestContext = getPrimaryStreamProviderRequestContext()
-      const accessKey = getPlaybackAccessKey() ?? ''
       const tType = mediaType === 'tv' ? 'series' : 'movie'
 
       /**
