@@ -69,6 +69,9 @@ import {
   streamUnsupportedOnDevice,
   getPreferredTorrentFileIds,
   getStreamSizeBytes,
+  getStreamAudioLanguages,
+  getStreamSubtitleLanguages,
+  langFlag,
   looksLikeSampleOrExtra,
   matchesEpisodeIdentifier,
   parseSizeBytes,
@@ -1536,6 +1539,10 @@ function scraperInCooldown(configId: string): boolean {
             // fritext; utan den räknades raden som "storlek okänd" och föll
             // dessutom igenom storleksfiltret utan att kunna prövas.
             sizeBytes: entry.sizeBytes,
+            // Addonens egna undertextspråk — riktig data, inte gissad ur namnet.
+            subtitleLangs: entry.subtitles
+              ?.map((sub) => sub.lang)
+              .filter((lang): lang is string => Boolean(lang)),
             source: lt('communitySource'),
           }))
         : []
@@ -3885,6 +3892,10 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
    * ska inte behöva läggas till i någon lista här.
    */
   const titleShowsSize = parseSizeBytes(stream.title ?? '') !== null
+  const ljudSprak = getStreamAudioLanguages(stream).slice(0, 4)
+  const ljudFlaggor = ljudSprak.map((kod) => langFlag(kod)).filter((flagga): flagga is string => Boolean(flagga))
+  const undertextSprak = getStreamSubtitleLanguages(stream).slice(0, 4)
+  const undertextFlaggor = undertextSprak.map((kod) => langFlag(kod)).filter((flagga): flagga is string => Boolean(flagga))
   const sizeLabel = sizeBytes && sizeBytes > 0 && !titleShowsSize
     ? sizeBytes >= 1024 ** 3
       ? `${(sizeBytes / 1024 ** 3).toFixed(sizeBytes >= 10 * 1024 ** 3 ? 1 : 2)} GB`
@@ -4018,30 +4029,64 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
           {t('play')}
         </button>
       </div>
-      {/* Andra raden: cachad-märket, storleken och filnamnet på samma linje.
-          Märket satt förut på översta raden, under namnet, och lämnade en
-          ensam rad mellan namnet och filnamnet. Här står de tre uppgifter som
-          hör ihop när man väljer ström — är den redan cachad, hur stor är den,
-          vilken fil är det — sida vid sida. */}
-      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-        {stream.cached ? (
-          <span className="flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400">
-            {t('streamAvailable')}
-          </span>
-        ) : (
-          <span className="flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400">
-            {t('streamDownload')}
-          </span>
-        )}
-        {/* Storleken beräknas från cachade filer eller släppnamnet, så den
-            visas oavsett scraper/debrid — förut syntes den bara i fil- och
-            länklistorna längre ner. */}
-        {sizeLabel ? (
-          <span className="shrink-0 rounded bg-white/5 px-1.5 py-0.5 text-[11px] font-medium tabular-nums text-slate-300">
-            {sizeLabel}
-          </span>
-        ) : null}
-        <p className="min-w-0 flex-1 break-all text-xs text-slate-400">{stream.title}</p>
+      {/* Under namnet: två korta rader till vänster, filnamnet till höger.
+          Vänsterkolumnen bär det man väljer ström EFTER — cachad, storlek,
+          språk — och filnamnet får resten av bredden.
+
+          flex-wrap + min-w på texten: på en smal telefon skulle en fast
+          vänsterkolumn annars klämma filnamnet till en remsa på några tecken.
+          Med brytningen hoppar filnamnet ner på egen rad i stället, och
+          kolumnerna återstår så fort bredden finns. */}
+      <div className="flex flex-wrap items-start gap-x-3 gap-y-1">
+        <div className="flex flex-none flex-col gap-1">
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+            {stream.cached ? (
+              <span className="flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400">
+                {t('streamAvailable')}
+              </span>
+            ) : (
+              <span className="flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400">
+                {t('streamDownload')}
+              </span>
+            )}
+            {/* Storleken beräknas från cachade filer eller släppnamnet, så den
+                visas oavsett scraper/debrid — förut syntes den bara i fil- och
+                länklistorna längre ner. */}
+            {sizeLabel ? (
+              <span className="shrink-0 rounded bg-white/5 px-1.5 py-0.5 text-[11px] font-medium tabular-nums text-slate-300">
+                {sizeLabel}
+              </span>
+            ) : null}
+          </div>
+          {/* Språkmärkning. Ljudspråken läses ur släppnamnet ("MULTi", "SWE",
+              "DUAL"), undertexterna kommer BARA från addonens egna uppgifter —
+              de står nästan aldrig i namnet, och en gissning där hade blivit
+              fel oftare än rätt. Högst fyra flaggor per grupp, och koderna
+              står i title-attributet. Hela raden uteblir när ingenting kunde
+              läsas ut — en tom rad är sämre än ingen. */}
+          {ljudFlaggor.length > 0 || undertextFlaggor.length > 0 ? (
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              {ljudFlaggor.length > 0 ? (
+                <span
+                  className="shrink-0 text-[11px] leading-none tracking-[0.08em]"
+                  title={`${t('audio')}: ${ljudSprak.join(', ').toUpperCase()}`}
+                >
+                  {ljudFlaggor.join('')}
+                </span>
+              ) : null}
+              {undertextFlaggor.length > 0 ? (
+                <span
+                  className="shrink-0 rounded bg-white/5 px-1 py-0.5 text-[11px] leading-none tracking-[0.08em]"
+                  title={`${t('subtitleLanguages')}: ${undertextSprak.join(', ').toUpperCase()}`}
+                >
+                  <span className="mr-0.5 text-[9px] text-slate-500">CC</span>
+                  {undertextFlaggor.join('')}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+        <p className="min-w-[11rem] flex-1 break-all text-xs text-slate-400">{stream.title}</p>
       </div>
     </div>
   )

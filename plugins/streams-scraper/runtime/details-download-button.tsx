@@ -147,6 +147,9 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
         cachedFiles: [],
         directUrl: entry.url,
         sizeBytes: entry.sizeBytes,
+        subtitleLangs: entry.subtitles
+          ?.map((sub) => sub.lang)
+          .filter((lang): lang is string => Boolean(lang)),
         source: lt('communitySource'),
       }))
 

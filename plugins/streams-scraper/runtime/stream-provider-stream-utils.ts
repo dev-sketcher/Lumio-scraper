@@ -264,6 +264,43 @@ const STREAM_LANGUAGE_PATTERNS: Array<{ code: string; pattern: RegExp }> = [
   { code: 'ko', pattern: /\b(?:ko|kor|korean)\b/i },
 ]
 
+/**
+ * Flagga per språkkod, för strömradens språkmärkning.
+ *
+ * Språk är inte land, och kartan är därför en konvention och inte en sanning:
+ * engelska får 🇬🇧, portugisiska 🇵🇹, spanska 🇪🇸. Den som söker sin egen
+ * variant känner ändå igen flaggan, och koden står kvar i title-attributet för
+ * den som vill veta exakt vad som matchade.
+ *
+ * Bara språk vi faktiskt känner igen (STREAM_LANGUAGE_PATTERNS) finns här —
+ * ett okänt språk ska inte visa en gissad flagga.
+ */
+const LANG_FLAGS: Record<string, string> = {
+  en: '🇬🇧', sv: '🇸🇪', no: '🇳🇴', da: '🇩🇰', fi: '🇫🇮', de: '🇩🇪', fr: '🇫🇷',
+  es: '🇪🇸', it: '🇮🇹', pt: '🇵🇹', nl: '🇳🇱', pl: '🇵🇱', ru: '🇷🇺', tr: '🇹🇷',
+  ja: '🇯🇵', ko: '🇰🇷', zh: '🇨🇳', hi: '🇮🇳', ar: '🇸🇦', cs: '🇨🇿', hu: '🇭🇺',
+  ro: '🇷🇴', uk: '🇺🇦', el: '🇬🇷', he: '🇮🇱', th: '🇹🇭', vi: '🇻🇳', id: '🇮🇩',
+}
+
+export function langFlag(code: string): string | null {
+  return LANG_FLAGS[code.toLowerCase().split(/[-_]/)[0]] ?? null
+}
+
+/**
+ * Undertextspråk för raden. Bara addonens egna uppgifter — undertexter står
+ * nästan aldrig i ett släppnamn, så att gissa dem ur texten hade gett fel
+ * oftare än rätt. Saknas fältet visas ingen undertextmärkning alls.
+ */
+export function getStreamSubtitleLanguages(stream: StreamResult): string[] {
+  if (!stream.subtitleLangs?.length) return []
+  const sedda = new Set<string>()
+  for (const rå of stream.subtitleLangs) {
+    const kod = rå.toLowerCase().split(/[-_]/)[0]
+    if (kod.length >= 2 && LANG_FLAGS[kod]) sedda.add(kod)
+  }
+  return [...sedda]
+}
+
 export function getStreamAudioLanguages(stream: StreamResult): string[] {
   const source = `${stream.name} ${stream.title}`.toLowerCase()
   return STREAM_LANGUAGE_PATTERNS

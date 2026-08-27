@@ -177572,6 +177572,7 @@ ${cue.text}`).join("\n\n")}
     const subtitleDownloadRequestIdRef = useRef(0);
     const subtitlesSnapshotRef = useRef([]);
     const didApplyPreferredAudioRef = useRef(false);
+    const loggedAudioTrackCountRef = useRef(-1);
     useEffect(() => {
       iosWebKitRef.current = isIosWebKitBrowser();
       if (typeof window !== "undefined") {
@@ -179302,6 +179303,7 @@ ${cue.text}`).join("\n\n")}
       setShowAudioMenu(false);
       preferredAudioLangRef.current = getDefaultAudioLanguage() || null;
       didApplyPreferredAudioRef.current = false;
+      loggedAudioTrackCountRef.current = -1;
       setHasEnded(false);
       firstFrameLoggedRef.current = false;
       playbackEventRef.current = { started: false, wasPlaying: false };
@@ -179738,6 +179740,13 @@ ${cue.text}`).join("\n\n")}
       if (!preferredAudioLangRef.current || audioTracks.length === 0) return;
       if (didApplyPreferredAudioRef.current) return;
       const match = audioTracks.find((track) => audioTrackMatchesLanguage(track, preferredAudioLangRef.current));
+      if (audioTracks.length !== loggedAudioTrackCountRef.current) {
+        loggedAudioTrackCountRef.current = audioTracks.length;
+        void fetch(`/api/debug-log?msg=${encodeURIComponent(
+          `[audio-pref] \xF6nskat=${preferredAudioLangRef.current} motor=${engineKind} sp\xE5r=[${audioTracks.map((track) => `${track.index}:${track.language ?? "ok\xE4nt"}`).join(" ")}] tr\xE4ff=${match ? match.index : "INGEN"}`
+        )}`).catch(() => {
+        });
+      }
       if (!match) {
         return;
       }
@@ -183502,6 +183511,7 @@ ${cue.text}`).join("\n\n")}
           cachedFiles: [],
           directUrl: entry.url,
           sizeBytes: entry.sizeBytes,
+          subtitleLangs: entry.subtitles?.map((sub) => sub.lang).filter((lang) => Boolean(lang)),
           source: lt("communitySource")
         }));
         const data = { streams: [...scraperStreams, ...communityStreams] };
@@ -183852,6 +183862,48 @@ ${cue.text}`).join("\n\n")}
     { code: "ja", pattern: /\b(?:ja|jpn|japanese)\b/i },
     { code: "ko", pattern: /\b(?:ko|kor|korean)\b/i }
   ];
+  var LANG_FLAGS = {
+    en: "\u{1F1EC}\u{1F1E7}",
+    sv: "\u{1F1F8}\u{1F1EA}",
+    no: "\u{1F1F3}\u{1F1F4}",
+    da: "\u{1F1E9}\u{1F1F0}",
+    fi: "\u{1F1EB}\u{1F1EE}",
+    de: "\u{1F1E9}\u{1F1EA}",
+    fr: "\u{1F1EB}\u{1F1F7}",
+    es: "\u{1F1EA}\u{1F1F8}",
+    it: "\u{1F1EE}\u{1F1F9}",
+    pt: "\u{1F1F5}\u{1F1F9}",
+    nl: "\u{1F1F3}\u{1F1F1}",
+    pl: "\u{1F1F5}\u{1F1F1}",
+    ru: "\u{1F1F7}\u{1F1FA}",
+    tr: "\u{1F1F9}\u{1F1F7}",
+    ja: "\u{1F1EF}\u{1F1F5}",
+    ko: "\u{1F1F0}\u{1F1F7}",
+    zh: "\u{1F1E8}\u{1F1F3}",
+    hi: "\u{1F1EE}\u{1F1F3}",
+    ar: "\u{1F1F8}\u{1F1E6}",
+    cs: "\u{1F1E8}\u{1F1FF}",
+    hu: "\u{1F1ED}\u{1F1FA}",
+    ro: "\u{1F1F7}\u{1F1F4}",
+    uk: "\u{1F1FA}\u{1F1E6}",
+    el: "\u{1F1EC}\u{1F1F7}",
+    he: "\u{1F1EE}\u{1F1F1}",
+    th: "\u{1F1F9}\u{1F1ED}",
+    vi: "\u{1F1FB}\u{1F1F3}",
+    id: "\u{1F1EE}\u{1F1E9}"
+  };
+  function langFlag(code) {
+    return LANG_FLAGS[code.toLowerCase().split(/[-_]/)[0]] ?? null;
+  }
+  function getStreamSubtitleLanguages(stream) {
+    if (!stream.subtitleLangs?.length) return [];
+    const sedda = /* @__PURE__ */ new Set();
+    for (const r\u00E5 of stream.subtitleLangs) {
+      const kod = r\u00E5.toLowerCase().split(/[-_]/)[0];
+      if (kod.length >= 2 && LANG_FLAGS[kod]) sedda.add(kod);
+    }
+    return [...sedda];
+  }
   function getStreamAudioLanguages(stream) {
     const source = `${stream.name} ${stream.title}`.toLowerCase();
     return STREAM_LANGUAGE_PATTERNS.filter(({ pattern }) => pattern.test(source)).map(({ code }) => code);
@@ -185492,6 +185544,8 @@ ${cue.text}`).join("\n\n")}
           // fritext; utan den räknades raden som "storlek okänd" och föll
           // dessutom igenom storleksfiltret utan att kunna prövas.
           sizeBytes: entry.sizeBytes,
+          // Addonens egna undertextspråk — riktig data, inte gissad ur namnet.
+          subtitleLangs: entry.subtitles?.map((sub) => sub.lang).filter((lang2) => Boolean(lang2)),
           source: lt("communitySource")
         })) : [];
         const apiStreamsList = await Promise.all(apiPromises);
@@ -187278,6 +187332,10 @@ ${cue.text}`).join("\n\n")}
     const url = streamHttpUrl(stream);
     const sizeBytes = getStreamSizeBytes(stream);
     const titleShowsSize = parseSizeBytes2(stream.title ?? "") !== null;
+    const ljudSprak = getStreamAudioLanguages(stream).slice(0, 4);
+    const ljudFlaggor = ljudSprak.map((kod) => langFlag(kod)).filter((flagga) => Boolean(flagga));
+    const undertextSprak = getStreamSubtitleLanguages(stream).slice(0, 4);
+    const undertextFlaggor = undertextSprak.map((kod) => langFlag(kod)).filter((flagga) => Boolean(flagga));
     const sizeLabel = sizeBytes && sizeBytes > 0 && !titleShowsSize ? sizeBytes >= 1024 ** 3 ? `${(sizeBytes / 1024 ** 3).toFixed(sizeBytes >= 10 * 1024 ** 3 ? 1 : 2)} GB` : `${Math.round(sizeBytes / 1024 ** 2)} MB` : null;
     return /* @__PURE__ */ jsxs("div", { className: "rounded-xl border border-white/10 bg-slate-900 px-4 py-3 space-y-2", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between gap-2", children: [
@@ -187367,10 +187425,35 @@ ${cue.text}`).join("\n\n")}
           }
         )
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-baseline gap-x-2 gap-y-1", children: [
-        stream.cached ? /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400", children: t("streamAvailable") }) : /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400", children: t("streamDownload") }),
-        sizeLabel ? /* @__PURE__ */ jsx("span", { className: "shrink-0 rounded bg-white/5 px-1.5 py-0.5 text-[11px] font-medium tabular-nums text-slate-300", children: sizeLabel }) : null,
-        /* @__PURE__ */ jsx("p", { className: "min-w-0 flex-1 break-all text-xs text-slate-400", children: stream.title })
+      /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-start gap-x-3 gap-y-1", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-none flex-col gap-1", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-baseline gap-x-2 gap-y-1", children: [
+            stream.cached ? /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400", children: t("streamAvailable") }) : /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400", children: t("streamDownload") }),
+            sizeLabel ? /* @__PURE__ */ jsx("span", { className: "shrink-0 rounded bg-white/5 px-1.5 py-0.5 text-[11px] font-medium tabular-nums text-slate-300", children: sizeLabel }) : null
+          ] }),
+          ljudFlaggor.length > 0 || undertextFlaggor.length > 0 ? /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-x-2 gap-y-1", children: [
+            ljudFlaggor.length > 0 ? /* @__PURE__ */ jsx(
+              "span",
+              {
+                className: "shrink-0 text-[11px] leading-none tracking-[0.08em]",
+                title: `${t("audio")}: ${ljudSprak.join(", ").toUpperCase()}`,
+                children: ljudFlaggor.join("")
+              }
+            ) : null,
+            undertextFlaggor.length > 0 ? /* @__PURE__ */ jsxs(
+              "span",
+              {
+                className: "shrink-0 rounded bg-white/5 px-1 py-0.5 text-[11px] leading-none tracking-[0.08em]",
+                title: `${t("subtitleLanguages")}: ${undertextSprak.join(", ").toUpperCase()}`,
+                children: [
+                  /* @__PURE__ */ jsx("span", { className: "mr-0.5 text-[9px] text-slate-500", children: "CC" }),
+                  undertextFlaggor.join("")
+                ]
+              }
+            ) : null
+          ] }) : null
+        ] }),
+        /* @__PURE__ */ jsx("p", { className: "min-w-[11rem] flex-1 break-all text-xs text-slate-400", children: stream.title })
       ] })
     ] });
   }
@@ -187565,7 +187648,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.116",
+    version: "1.0.117",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
