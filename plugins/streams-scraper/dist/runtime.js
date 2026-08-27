@@ -185372,7 +185372,7 @@ ${cue.text}`).join("\n\n")}
     const cachedFileBytes = stream.cachedFiles.flatMap((entry) => Object.values(entry)).reduce((sum, file) => sum + (Number.isFinite(file.filesize) ? file.filesize : 0), 0);
     if (cachedFileBytes > 0) return cachedFileBytes;
     if (typeof stream.sizeBytes === "number" && stream.sizeBytes > 0) return stream.sizeBytes;
-    return parseSizeBytes2(`${stream.name} ${stream.title}`);
+    return parseSizeBytes2(`${stream.name} ${stream.title} ${stream.description ?? ""}`);
   }
   var STREAM_LANGUAGE_PATTERNS = [
     { code: "en", pattern: /\b(?:en|eng|english)\b/i },
@@ -185435,7 +185435,7 @@ ${cue.text}`).join("\n\n")}
     return [...sedda];
   }
   function getStreamAudioLanguages(stream) {
-    const source = `${stream.name} ${stream.title}`.toLowerCase();
+    const source = `${stream.name} ${stream.title} ${stream.description ?? ""}`.toLowerCase();
     return STREAM_LANGUAGE_PATTERNS.filter(({ pattern }) => pattern.test(source)).map(({ code }) => code);
   }
   function browserCodecScore(stream) {
@@ -187124,6 +187124,9 @@ ${cue.text}`).join("\n\n")}
           // fritext; utan den räknades raden som "storlek okänd" och föll
           // dessutom igenom storleksfiltret utan att kunna prövas.
           sizeBytes: entry.sizeBytes,
+          // Beskrivningen följer med community-vägen av samma skäl som
+          // scraper-vägen skickar den: språken står bara där.
+          description: entry.description,
           // Addonens egna undertextspråk — riktig data, inte gissad ur namnet.
           subtitleLangs: entry.subtitles?.map((sub) => sub.lang).filter((lang2) => Boolean(lang2)),
           source: lt("communitySource")
@@ -189266,7 +189269,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.122",
+    version: "1.0.123",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

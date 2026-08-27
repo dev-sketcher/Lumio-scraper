@@ -242,7 +242,7 @@ export function getStreamSizeBytes(stream: StreamResult): number | null {
   // inte längre säger något om storleken. Fritexten kvar som fallback för
   // svar som saknar fältet (äldre backend, egen provider).
   if (typeof stream.sizeBytes === 'number' && stream.sizeBytes > 0) return stream.sizeBytes
-  return parseSizeBytes(`${stream.name} ${stream.title}`)
+  return parseSizeBytes(`${stream.name} ${stream.title} ${stream.description ?? ''}`)
 }
 
 const STREAM_LANGUAGE_PATTERNS: Array<{ code: string; pattern: RegExp }> = [
@@ -302,7 +302,11 @@ export function getStreamSubtitleLanguages(stream: StreamResult): string[] {
 }
 
 export function getStreamAudioLanguages(stream: StreamResult): string[] {
-  const source = `${stream.name} ${stream.title}`.toLowerCase()
+  // Beskrivningen MÅSTE vara med. `title` är det rena filnamnet, och ett
+  // filnamn bär i praktiken aldrig en språkkod — mätt på AIOStreams gav alla
+  // filnamn noll träffar medan beskrivningen sa "🌎 English". Utan den här
+  // raden syns inga flaggor alls på addon-strömmar, oavsett vilken väg de kom.
+  const source = `${stream.name} ${stream.title} ${stream.description ?? ''}`.toLowerCase()
   return STREAM_LANGUAGE_PATTERNS
     .filter(({ pattern }) => pattern.test(source))
     .map(({ code }) => code)

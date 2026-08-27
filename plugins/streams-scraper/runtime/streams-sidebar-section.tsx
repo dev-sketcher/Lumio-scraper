@@ -1616,6 +1616,9 @@ function scraperInCooldown(configId: string): boolean {
             // fritext; utan den räknades raden som "storlek okänd" och föll
             // dessutom igenom storleksfiltret utan att kunna prövas.
             sizeBytes: entry.sizeBytes,
+            // Beskrivningen följer med community-vägen av samma skäl som
+            // scraper-vägen skickar den: språken står bara där.
+            description: entry.description,
             // Addonens egna undertextspråk — riktig data, inte gissad ur namnet.
             subtitleLangs: entry.subtitles
               ?.map((sub) => sub.lang)
