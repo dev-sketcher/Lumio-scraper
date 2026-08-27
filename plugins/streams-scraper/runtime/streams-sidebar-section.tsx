@@ -1099,6 +1099,55 @@ export function StreamsSidebarSection({
     }
   }
 
+  /**
+   * Avsnittslistan spelaren får.
+   *
+   * Panelens egen `episodes` finns bara om användaren BLÄDDRAT i säsongslistan.
+   * Startar man avsnittet från Fortsätt titta, ett nästa-avsnitt-hopp eller
+   * hero-knappen har ingen sådan bläddring skett — och då fick spelaren ingen
+   * lista alls, fast pluginet visste både serie och säsong (spelarens titel sa
+   * "S01E04"). Knappen fanns därför inte, utan att något såg trasigt ut.
+   *
+   * Egen hämtning i stället för `loadEpisodes()`: den senare nollställer
+   * strömlistan, valt avsnitt och märkningarna i panelen, och det ska ett
+   * avsnitt som redan spelar inte göra. Delar cachen, så en bläddring efteråt
+   * kostar ingen ny hämtning.
+   *
+   * Ingen AbortController: det var precis den kopplingen till panelens
+   * livscykel som sköt ner hämtningarna i 1.0.118.
+   */
+  const [playerEpisodes, setPlayerEpisodes] = useState<TvEpisode[] | null>(null)
+  const playerSeasonNumber = playerSeason ?? selectedSeason?.season_number ?? null
+  useEffect(() => {
+    if (!playerUrl || mediaType !== 'tv' || !numericTmdbId || playerSeasonNumber == null) {
+      setPlayerEpisodes(null)
+      return
+    }
+    const cacheKey = `${numericTmdbId}-S${playerSeasonNumber}`
+    const cached = episodeCacheRef.current.get(cacheKey)
+    if (cached) {
+      setPlayerEpisodes(cached)
+      return
+    }
+    let cancelled = false
+    void (async () => {
+      try {
+        const data = await fetchJsonWithTimeout<{ episodes?: TvEpisode[]; error?: string }>(
+          `/api/tv-info?tmdbId=${numericTmdbId}&season=${playerSeasonNumber}`,
+          15000,
+        )
+        if (cancelled) return
+        const eps = data.episodes ?? []
+        if (eps.length > 0) episodeCacheRef.current.set(cacheKey, eps)
+        setPlayerEpisodes(eps)
+      } catch {
+        if (!cancelled) setPlayerEpisodes(null)
+      }
+    })()
+    return () => { cancelled = true }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerUrl, mediaType, numericTmdbId, playerSeasonNumber])
+
   async function loadEpisodes(season: TvSeason) {
     if (!numericTmdbId) return
     const cacheKey = `${numericTmdbId}-S${season.season_number}`
@@ -3780,10 +3829,12 @@ function scraperInCooldown(configId: string): boolean {
            * än ingen rad. Samma regel som nästa-avsnitt-kortet följer.
            */
           episodes={
-            mediaType === 'tv' && selectedSeason && episodes && episodes.length > 0
+            (() => {
+            const lista = playerEpisodes ?? episodes
+            return mediaType === 'tv' && playerSeasonNumber != null && lista && lista.length > 0
               ? {
-                  seasonNumber: playerSeason ?? selectedSeason.season_number,
-                  items: episodes
+                  seasonNumber: playerSeasonNumber,
+                  items: lista
                     .filter((episode) => {
                       if (!episode.air_date) return true
                       const airMs = new Date(episode.air_date).getTime()
@@ -3801,19 +3852,19 @@ function scraperInCooldown(configId: string): boolean {
                       // (numericTmdbId-S<n>E<n>) — watchedEps är ett Set av
                       // id:n, inte av avsnittsnummer.
                       watched: numericTmdbId
-                        ? watchedEps.has(`${numericTmdbId}-S${selectedSeason.season_number}E${episode.episode_number}`)
+                        ? watchedEps.has(`${numericTmdbId}-S${playerSeasonNumber}E${episode.episode_number}`)
                         : false,
                     })),
                   current: playerEpisode ?? selectedEpisode?.episode_number ?? null,
                   onSelect: (episodeNumber: number) => {
-                    const mal = episodes.find((episode) => episode.episode_number === episodeNumber)
-                    if (!mal || !selectedSeason) return
+                    const mal = lista.find((episode) => episode.episode_number === episodeNumber)
+                    if (!mal) return
                     // Samma väg som nästa-avsnitt-kortet tar, med valt avsnitt
                     // i stället för nästa i ordningen: den nollställer
                     // avvisningsflaggan, byter ström och uppdaterar titeln.
                     nextEpDismissedRef.current = false
                     void handlePlayNextEpisode({
-                      season: selectedSeason.season_number,
+                      season: playerSeasonNumber,
                       episode: mal.episode_number,
                       episodeTitle: mal.name,
                       stillUrl: mal.still_path
@@ -3823,6 +3874,7 @@ function scraperInCooldown(configId: string): boolean {
                   },
                 }
               : undefined
+            })()
           }
           skipHomeKitOnClose={playerSkipHomeKitClose}
           skipHomeKitOnOpen={playerSkipHomeKitOpen}

@@ -177593,17 +177593,13 @@ ${cue.text}`).join("\n\n")}
     const [dvColorFallback, setDvColorFallback] = useState(false);
     const [dvColorFallbackMuted, setDvColorFallbackMuted] = useState(false);
     const dvColorFallbackActive = dvColorFallback && !dvColorFallbackMuted;
-    const [gestureBrightness, setGestureBrightness] = useState(0);
+    const [screenDim, setScreenDim] = useState(0);
     useEffect(() => {
-      setGestureBrightness(0);
+      setScreenDim(0);
     }, [playbackSessionIdentity]);
     const effectiveVideoTuning = useMemo(
-      () => {
-        const base = dvColorFallbackActive ? { ...DEFAULT_TUNING, ...TUNING_PRESETS.vivid.patch } : videoTuning;
-        if (!gestureBrightness) return base;
-        return { ...base, brightness: Math.min(50, Math.max(-50, base.brightness + gestureBrightness)) };
-      },
-      [dvColorFallbackActive, videoTuning, gestureBrightness]
+      () => dvColorFallbackActive ? { ...DEFAULT_TUNING, ...TUNING_PRESETS.vivid.patch } : videoTuning,
+      [dvColorFallbackActive, videoTuning]
     );
     useEffect(() => {
       setDvColorFallback(false);
@@ -181204,7 +181200,7 @@ ${cue.text}`).join("\n\n")}
         height: rect.height || 1,
         axis: null,
         startVolume: muted ? 0 : volume,
-        startBrightness: gestureBrightness,
+        startBrightness: screenDim,
         startTime: realTimeRef.current,
         pendingSeek: null
       };
@@ -181233,9 +181229,9 @@ ${cue.text}`).join("\n\n")}
         showGestureHud("volume", Math.round(next3 * 100));
         return;
       }
-      const next2 = Math.min(50, Math.max(-50, gesture.startBrightness - dy / gesture.height * 100));
-      setGestureBrightness(next2);
-      showGestureHud("brightness", Math.round(next2));
+      const next2 = Math.min(0.75, Math.max(0, gesture.startBrightness + dy / gesture.height));
+      setScreenDim(next2);
+      showGestureHud("brightness", Math.round((1 - next2) * 100));
     };
     const endGesture = () => {
       const gesture = gestureRef.current;
@@ -181897,6 +181893,13 @@ ${cue.text}`).join("\n\n")}
                     onMouseMove: onMouseActivity
                   }
                 ),
+                screenDim > 0 ? /* @__PURE__ */ jsx(
+                  "div",
+                  {
+                    className: "pointer-events-none absolute inset-0 z-[15] bg-black",
+                    style: { opacity: screenDim }
+                  }
+                ) : null,
                 gestureHud ? /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 z-[57] flex items-center justify-center", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 rounded-full bg-black/70 px-4 py-2.5 backdrop-blur-md", children: [
                   gestureHud.kind === "volume" ? /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px] text-white", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) : /* @__PURE__ */ jsxs("svg", { className: "h-[18px] w-[18px] text-white", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.9", strokeLinecap: "round", children: [
                     /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "4" }),
@@ -186653,6 +186656,38 @@ ${cue.text}`).join("\n\n")}
         setLoadingSeasons(false);
       }
     }
+    const [playerEpisodes, setPlayerEpisodes] = useState(null);
+    const playerSeasonNumber = playerSeason ?? selectedSeason?.season_number ?? null;
+    useEffect(() => {
+      if (!playerUrl || mediaType !== "tv" || !numericTmdbId || playerSeasonNumber == null) {
+        setPlayerEpisodes(null);
+        return;
+      }
+      const cacheKey = `${numericTmdbId}-S${playerSeasonNumber}`;
+      const cached = episodeCacheRef.current.get(cacheKey);
+      if (cached) {
+        setPlayerEpisodes(cached);
+        return;
+      }
+      let cancelled = false;
+      void (async () => {
+        try {
+          const data = await fetchJsonWithTimeout3(
+            `/api/tv-info?tmdbId=${numericTmdbId}&season=${playerSeasonNumber}`,
+            15e3
+          );
+          if (cancelled) return;
+          const eps = data.episodes ?? [];
+          if (eps.length > 0) episodeCacheRef.current.set(cacheKey, eps);
+          setPlayerEpisodes(eps);
+        } catch {
+          if (!cancelled) setPlayerEpisodes(null);
+        }
+      })();
+      return () => {
+        cancelled = true;
+      };
+    }, [playerUrl, mediaType, numericTmdbId, playerSeasonNumber]);
     async function loadEpisodes(season) {
       if (!numericTmdbId) return;
       const cacheKey = `${numericTmdbId}-S${season.season_number}`;
@@ -188709,36 +188744,39 @@ ${cue.text}`).join("\n\n")}
           forceProxy: playerForceProxy,
           onTimeUpdate: handleTimeUpdate,
           onOutroStart: handleOutroStart,
-          episodes: mediaType === "tv" && selectedSeason && episodes && episodes.length > 0 ? {
-            seasonNumber: playerSeason ?? selectedSeason.season_number,
-            items: episodes.filter((episode) => {
-              if (!episode.air_date) return true;
-              const airMs = new Date(episode.air_date).getTime();
-              return !Number.isFinite(airMs) || airMs <= Date.now();
-            }).map((episode) => ({
-              number: episode.episode_number,
-              title: episode.name,
-              stillUrl: episode.still_path ? `https://image.tmdb.org/t/p/w300${episode.still_path}` : null,
-              airDate: episode.air_date,
-              runtimeMinutes: episode.runtime ?? null,
-              // Samma nyckelform som avsnittslistan i panelen använder
-              // (numericTmdbId-S<n>E<n>) — watchedEps är ett Set av
-              // id:n, inte av avsnittsnummer.
-              watched: numericTmdbId ? watchedEps.has(`${numericTmdbId}-S${selectedSeason.season_number}E${episode.episode_number}`) : false
-            })),
-            current: playerEpisode ?? selectedEpisode?.episode_number ?? null,
-            onSelect: (episodeNumber) => {
-              const mal = episodes.find((episode) => episode.episode_number === episodeNumber);
-              if (!mal || !selectedSeason) return;
-              nextEpDismissedRef.current = false;
-              void handlePlayNextEpisode({
-                season: selectedSeason.season_number,
-                episode: mal.episode_number,
-                episodeTitle: mal.name,
-                stillUrl: mal.still_path ? `https://image.tmdb.org/t/p/w300${mal.still_path}` : null
-              });
-            }
-          } : void 0,
+          episodes: (() => {
+            const lista = playerEpisodes ?? episodes;
+            return mediaType === "tv" && playerSeasonNumber != null && lista && lista.length > 0 ? {
+              seasonNumber: playerSeasonNumber,
+              items: lista.filter((episode) => {
+                if (!episode.air_date) return true;
+                const airMs = new Date(episode.air_date).getTime();
+                return !Number.isFinite(airMs) || airMs <= Date.now();
+              }).map((episode) => ({
+                number: episode.episode_number,
+                title: episode.name,
+                stillUrl: episode.still_path ? `https://image.tmdb.org/t/p/w300${episode.still_path}` : null,
+                airDate: episode.air_date,
+                runtimeMinutes: episode.runtime ?? null,
+                // Samma nyckelform som avsnittslistan i panelen använder
+                // (numericTmdbId-S<n>E<n>) — watchedEps är ett Set av
+                // id:n, inte av avsnittsnummer.
+                watched: numericTmdbId ? watchedEps.has(`${numericTmdbId}-S${playerSeasonNumber}E${episode.episode_number}`) : false
+              })),
+              current: playerEpisode ?? selectedEpisode?.episode_number ?? null,
+              onSelect: (episodeNumber) => {
+                const mal = lista.find((episode) => episode.episode_number === episodeNumber);
+                if (!mal) return;
+                nextEpDismissedRef.current = false;
+                void handlePlayNextEpisode({
+                  season: playerSeasonNumber,
+                  episode: mal.episode_number,
+                  episodeTitle: mal.name,
+                  stillUrl: mal.still_path ? `https://image.tmdb.org/t/p/w300${mal.still_path}` : null
+                });
+              }
+            } : void 0;
+          })(),
           skipHomeKitOnClose: playerSkipHomeKitClose,
           skipHomeKitOnOpen: playerSkipHomeKitOpen,
           autoFullscreen: playerAutoFullscreen,
@@ -189164,7 +189202,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.119",
+    version: "1.0.120",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

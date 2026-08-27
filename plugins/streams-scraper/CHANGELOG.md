@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.120
+
+- Avsnittslistan i spelaren fanns bara om man BLÄDDRAT i säsongslistan först.
+  Startade man avsnittet från Fortsätt titta, ett nästa-avsnitt-hopp eller
+  hero-knappen fick spelaren ingen lista, fast pluginet visste både serie och
+  säsong — knappen ritades därför inte, utan att något såg trasigt ut. Läst av i
+  den körande appen på telefonen: spelarens titel sa "S01E04" medan listan var
+  tom.
+- Listan hämtas nu efter det som SPELAS, inte efter vad panelen råkar visa, och
+  utan att nollställa strömlistan eller valt avsnitt på vägen. Cachen delas, så
+  en bläddring efteråt kostar ingen ny hämtning.
+
 ## 1.0.119
 
 - Avsnittslistan och Nästa avsnitt föll bort tyst på serier med många säsonger.
