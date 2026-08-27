@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.118
+
+- Spelaren är ombyggd i appen (nytt kontrollager för desktop och telefon), och
+  pluginet bundlar sin egen kopia av den. Den här releasen finns för att hämta
+  in kopian: utan den kör strömuppspelning kvar på den gamla spelaren medan
+  appens egna vägar visar den nya, alltså två olika spelare i samma app.
+- Avsnittslistan och Nästa avsnitt bär därmed den nya designen i
+  strömuppspelning: knappen i kontrollradens vänstra zon på desktop, som
+  bricka respektive piller på telefon.
+- Ingen ändring i scraper-logiken, ingen ändring i strömvalet.
+
 ## 1.0.114
 
 - Every stream row in the panel has a download button, next to Play. Series had

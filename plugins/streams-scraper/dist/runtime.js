@@ -167785,6 +167785,20 @@
       introDebugLoading: "IntroDB loading",
       introDebugFound: "Intro found",
       introDebugMissing: "No intro match",
+      introFound: "Intro found",
+      /* Korta etiketter i telefonens kontrollrad — brickan är 62 px och pillret
+         ska rymmas i en rullande rad, så namnen är avsiktligt kortare än de
+         fullständiga (som ligger kvar som titel och i Mer-menyn). */
+      plShortEpisodes: "Episodes",
+      plShortPicture: "Picture",
+      plShortWiki: "Wiki",
+      plShortMusic: "Music",
+      plShortZoom: "Zoom",
+      plShortCast: "Cast",
+      plShortFullscreen: "Fullscreen",
+      plShortMore: "More",
+      recapFound: "Recap found",
+      outroFound: "Outro found",
       introDebugAutoOn: "Auto-skip on",
       introDebugAutoOff: "Auto-skip off",
       aspectAuto: "Auto",
@@ -169978,6 +169992,17 @@
       introDebugLoading: "IntroDB laddar",
       introDebugFound: "Intro hittat",
       introDebugMissing: "Ingen introtr\xE4ff",
+      introFound: "Intro hittad",
+      plShortEpisodes: "Avsnitt",
+      plShortPicture: "Bild",
+      plShortWiki: "Wiki",
+      plShortMusic: "Musik",
+      plShortZoom: "Zoom",
+      plShortCast: "Casta",
+      plShortFullscreen: "Fullsk\xE4rm",
+      plShortMore: "Mer",
+      recapFound: "Recap hittad",
+      outroFound: "Outro hittad",
       introDebugAutoOn: "Auto-skip p\xE5",
       introDebugAutoOff: "Auto-skip av",
       aspectAuto: "Auto",
@@ -176906,6 +176931,14 @@ ${cues.map((cue) => `${stamp(cue.start)} --> ${stamp(cue.end)}
 ${cue.text}`).join("\n\n")}
 `;
   }
+  var DESKTOP_CHROME_QUERY = "(min-width: 768px) and (min-height: 520px)";
+  var LANDSCAPE_PHONE_QUERY = "(max-height: 519px) and (orientation: landscape)";
+  function readChromeViewport() {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return "desktop";
+    if (window.matchMedia(DESKTOP_CHROME_QUERY).matches) return "desktop";
+    if (window.matchMedia(LANDSCAPE_PHONE_QUERY).matches) return "landscape";
+    return "portrait";
+  }
   var INTRODB_CACHE = /* @__PURE__ */ new Map();
   function buildIntroDbCacheKey(mediaType, tmdbId, imdbId, season, episode) {
     return [
@@ -177488,7 +177521,7 @@ ${cue.text}`).join("\n\n")}
       if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
       hideTimerRef.current = setTimeout(() => {
         const paused = useMpv ? mpv.paused : videoRef.current?.paused ?? true;
-        if (!paused) setControlsVisible(false);
+        if (!paused && openSurfaceRef.current === null) setControlsVisible(false);
       }, 3e3);
     }
     const onMouseActivityRef = useRef(() => {
@@ -177502,6 +177535,8 @@ ${cue.text}`).join("\n\n")}
     const [playing, setPlaying] = useState(false);
     const [hasStarted, setHasStarted] = useState(false);
     const [openSurface, setOpenSurface] = useState(null);
+    const openSurfaceRef = useRef(null);
+    openSurfaceRef.current = openSurface;
     const surfaceSetter = (id4) => (value) => setOpenSurface((current2) => {
       const next2 = typeof value === "function" ? value(current2 === id4) : value;
       return next2 ? id4 : current2 === id4 ? null : current2;
@@ -177532,14 +177567,40 @@ ${cue.text}`).join("\n\n")}
     const [hasEverStarted, setHasEverStarted] = useState(false);
     const [playerLayout, setPlayerLayout] = useState(() => getPlayerLayout());
     useEffect(() => onPlayerLayoutChanged(() => setPlayerLayout(getPlayerLayout())), []);
+    const [chromeViewport, setChromeViewport] = useState(readChromeViewport);
+    useEffect(() => {
+      if (typeof window.matchMedia !== "function") return;
+      const queries = [DESKTOP_CHROME_QUERY, LANDSCAPE_PHONE_QUERY].map((q) => window.matchMedia(q));
+      const sync2 = () => setChromeViewport(readChromeViewport());
+      sync2();
+      queries.forEach((mq) => mq.addEventListener("change", sync2));
+      return () => queries.forEach((mq) => mq.removeEventListener("change", sync2));
+    }, []);
+    const chromeKind = isTv ? "tv" : chromeViewport;
+    const desktopChrome = chromeKind === "desktop";
+    const landscapeChrome = chromeKind === "landscape";
+    const portraitChrome = chromeKind === "portrait";
+    const phoneChrome = landscapeChrome || portraitChrome;
+    const newChrome = chromeKind !== "tv";
+    const playerAccentRgb = playerLayout.seekBarColor === "white" ? "255 255 255" : playerLayout.seekBarColor === "red" ? "239 68 68" : playerLayout.seekBarColor === "amber" ? "251 191 36" : "124 156 255";
+    const hiddenControls = useMemo(() => new Set(playerLayout.hidden), [playerLayout.hidden]);
+    const showsControl = (id4) => !hiddenControls.has(id4);
     const [videoTuning, setVideoTuningState] = useState(() => getVideoTuning());
     useEffect(() => onVideoTuningChanged(() => setVideoTuningState(getVideoTuning())), []);
     const [dvColorFallback, setDvColorFallback] = useState(false);
     const [dvColorFallbackMuted, setDvColorFallbackMuted] = useState(false);
     const dvColorFallbackActive = dvColorFallback && !dvColorFallbackMuted;
+    const [gestureBrightness, setGestureBrightness] = useState(0);
+    useEffect(() => {
+      setGestureBrightness(0);
+    }, [playbackSessionIdentity]);
     const effectiveVideoTuning = useMemo(
-      () => dvColorFallbackActive ? { ...DEFAULT_TUNING, ...TUNING_PRESETS.vivid.patch } : videoTuning,
-      [dvColorFallbackActive, videoTuning]
+      () => {
+        const base = dvColorFallbackActive ? { ...DEFAULT_TUNING, ...TUNING_PRESETS.vivid.patch } : videoTuning;
+        if (!gestureBrightness) return base;
+        return { ...base, brightness: Math.min(50, Math.max(-50, base.brightness + gestureBrightness)) };
+      },
+      [dvColorFallbackActive, videoTuning, gestureBrightness]
     );
     useEffect(() => {
       setDvColorFallback(false);
@@ -177753,6 +177814,10 @@ ${cue.text}`).join("\n\n")}
     const [aspectRatioMode, setAspectRatioMode] = useState(() => getRememberAspectRatio() ? getDefaultAspectRatio() : "auto");
     const [cropZoomMode, setCropZoomMode] = useState("off");
     const [copiedLink, setCopiedLink] = useState(false);
+    const [skipIntroDismissed, setSkipIntroDismissed] = useState(false);
+    useEffect(() => {
+      setSkipIntroDismissed(false);
+    }, [playbackSessionIdentity]);
     const iosWebKitRef = useRef(false);
     const autoMutedRef = useRef(false);
     const [downloadState, setDownloadState] = useState({ type: "idle" });
@@ -179133,6 +179198,11 @@ ${cue.text}`).join("\n\n")}
         if (e.key === "Escape" || isTv && e.key === "Backspace" && !typing) {
           e.preventDefault();
           e.stopPropagation();
+          if (!isTv && openSurfaceRef.current !== null) {
+            setOpenSurface(null);
+            onMouseActivityRef.current();
+            return;
+          }
           if (useMpv) {
             void syncDesktopFullscreenState().then((fullscreen) => {
               if (!fullscreen) {
@@ -180462,7 +180532,7 @@ ${cue.text}`).join("\n\n")}
       skipButtonAutoHideSeconds > 0 && activeIntro && realTime - activeIntro.startMs / 1e3 > skipButtonAutoHideSeconds
     );
     const shouldShowSkipIntroButton = Boolean(
-      hasStarted && !autoSkipIntro && activeIntro && introDataReady && !skipButtonExpired
+      hasStarted && !autoSkipIntro && activeIntro && introDataReady && !skipButtonExpired && !skipIntroDismissed
     );
     const controlsReady = useMpv ? hasEverStarted || hasStarted || mpv.firstFrameRendered || mpvRevealPlaybackReady : hasEverStarted || hasStarted;
     const collapseMpvTopBar = useMpv && !controlsVisible && !desktopFullscreen;
@@ -180718,1307 +180788,2358 @@ ${cue.text}`).join("\n\n")}
       lastAutoSyncedDelayRef.current = null;
       setSubtitleAutoSyncState({ type: "idle" });
     }, []);
-    const content = /* @__PURE__ */ jsxs("div", { ref: playerRootRef, "data-lumio-player-open": "1", "data-panel-root": isTv ? "1" : void 0, "data-tv-fullbleed": "", className: `fixed inset-x-0 top-0 z-[60] flex h-[100dvh] flex-col !mt-0 ${useMpv ? "" : "bg-black"}`, children: [
-      !hasEverStarted && (!hideStartSplash || clientOwnsSplash) && /* @__PURE__ */ jsxs(
-        "div",
+    const dtIconButtonClass = (state = "idle") => `flex h-[38px] w-[38px] flex-none items-center justify-center rounded-lg transition ${state === "open" ? "bg-[rgb(var(--player-accent)/0.34)] text-white" : state === "active" ? "bg-[rgb(var(--player-accent)/0.22)] text-white" : "text-slate-300 hover:bg-[rgb(var(--player-accent)/0.16)] hover:text-white"}`;
+    const dtLabelButtonClass = (state = "idle") => `flex h-[34px] flex-none items-center gap-[7px] rounded-lg px-3 text-[13px] font-semibold transition ${state === "open" ? "bg-[rgb(var(--player-accent)/0.34)] text-white" : state === "active" ? "bg-[rgb(var(--player-accent)/0.22)] text-white" : "text-slate-300 hover:bg-[rgb(var(--player-accent)/0.16)] hover:text-white"}`;
+    const dtStatusPillClass = "flex-none rounded-full border border-[rgb(var(--player-accent)/0.40)] px-[11px] py-[5px] text-[11px] font-semibold uppercase tracking-[0.12em] text-[rgb(var(--player-accent))]";
+    const dtDivider = /* @__PURE__ */ jsx("span", { "aria-hidden": true, className: "mx-2 h-[22px] w-px flex-none bg-white/[0.12]" });
+    const dtMenuSurfaceClass = newChrome ? "z-50 rounded-xl border border-white/10 bg-base-800/95 p-1.5 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : "z-50 rounded-xl border border-white/10 bg-slate-900/95 py-2 shadow-xl backdrop-blur-sm";
+    const dtMenuHeadingClass = newChrome ? "px-3 pb-1.5 pt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500" : "px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-slate-500";
+    const dtMenuRowClass = (active) => newChrome ? `flex w-full items-center justify-between gap-2.5 rounded-lg transition ${portraitChrome ? "px-3 py-3 text-[15px]" : "px-3 py-2.5 text-sm"} ${active ? "bg-[rgb(var(--player-accent)/0.22)] text-white" : "text-slate-100 hover:bg-[rgb(var(--player-accent)/0.14)]"}` : `flex w-full items-center justify-between px-3 py-2 text-sm transition hover:bg-white/5 ${active ? "text-aurora-300" : "text-slate-300"}`;
+    const dtMoreRowClass = newChrome ? `flex w-full items-center gap-3 rounded-lg text-left text-slate-100 transition hover:bg-[rgb(var(--player-accent)/0.14)] ${portraitChrome ? "px-3 py-3.5" : "px-3 py-2.5"}` : "flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-left text-slate-100 transition hover:bg-white/5";
+    const dtMoreIconClass = newChrome ? "h-[18px] w-[18px] flex-none text-slate-300" : "h-5 w-5 flex-none text-slate-200";
+    const dtMoreTextClass = newChrome ? portraitChrome ? "text-[15px] leading-tight" : "text-sm leading-tight" : "text-[15px] leading-tight";
+    const pickerStyle = (trigger, width) => portraitChrome ? { position: "fixed", left: 12, right: 12, bottom: 172, maxHeight: "55vh", overflowY: "auto" } : { ...getAnchoredMenuStyle(trigger, newChrome ? width : 0), width: newChrome ? width : void 0 };
+    const pickerHeading = (label) => portraitChrome ? /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-3 px-3 pb-1.5 pt-2", children: [
+      /* @__PURE__ */ jsx("span", { className: "text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400", children: label }),
+      /* @__PURE__ */ jsx(
+        "button",
         {
-          className: "absolute inset-0 z-50 flex flex-col items-center justify-center bg-slate-950",
-          style: {
-            transition: `opacity ${SPLASH_FADE_MS}ms ease-out`,
-            opacity: splashFading ? 0 : 1,
-            // Don't intercept clicks once we're fading — the player underneath
-            // is already playing, so the user should be able to interact with
-            // it through the dying splash.
-            pointerEvents: splashFading ? "none" : "auto"
+          type: "button",
+          onClick: () => setOpenSurface(null),
+          "aria-label": t("close"),
+          className: "flex h-6 w-6 flex-none items-center justify-center rounded-full text-slate-500",
+          children: /* @__PURE__ */ jsx("svg", { className: "h-3 w-3", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", strokeLinecap: "round", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12" }) })
+        }
+      )
+    ] }) : /* @__PURE__ */ jsx("div", { className: dtMenuHeadingClass, children: label });
+    const portraitPickerOpen = portraitChrome && (openSurface === "subs" || openSurface === "audio" || openSurface === "aspect" || openSurface === "zoom" || openSurface === "cast" || openSurface === "more");
+    const dtActiveTextClass = newChrome ? "text-[rgb(var(--player-accent))]" : "text-aurora-300";
+    const dtMenuDotClass = newChrome ? "ml-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-white" : "ml-2 h-2 w-2 flex-shrink-0 rounded-full bg-aurora-400";
+    const activeSubLangCode = activeSubId ? toSubtitleLangGroup(subtitleOptions.find((s) => s.id === activeSubId)?.language ?? null)?.toUpperCase() ?? "CC" : "CC";
+    const activeAudioLangCode = toAudioLangGroup(
+      (audioTracks.find((track) => track.index === activeAudioTrack) ?? audioTracks[0])?.language
+    )?.toUpperCase() ?? "AUD";
+    const [scrubPercent, setScrubPercent] = useState(null);
+    const handleSeekPointerDown = (event) => {
+      if (!totalDuration || event.button !== 0) return;
+      const element = event.currentTarget;
+      const percentAt = (clientX) => {
+        const rect = element.getBoundingClientRect();
+        if (rect.width <= 0) return 0;
+        return Math.min(100, Math.max(0, (clientX - rect.left) / rect.width * 100));
+      };
+      element.setPointerCapture(event.pointerId);
+      setScrubPercent(percentAt(event.clientX));
+      const onMove = (moveEvent) => setScrubPercent(percentAt(moveEvent.clientX));
+      const onUp = (upEvent) => {
+        element.removeEventListener("pointermove", onMove);
+        element.removeEventListener("pointerup", onUp);
+        element.removeEventListener("pointercancel", onUp);
+        const target = percentAt(upEvent.clientX);
+        setScrubPercent(null);
+        seekToAbsolute(target / 100 * totalDuration);
+      };
+      element.addEventListener("pointermove", onMove);
+      element.addEventListener("pointerup", onUp);
+      element.addEventListener("pointercancel", onUp);
+    };
+    const seekPercent = scrubPercent ?? progress2;
+    const seekTime = scrubPercent !== null ? scrubPercent / 100 * totalDuration : realTime;
+    const trackZone = (segment) => {
+      if (!segment || totalDuration <= 0) return null;
+      const left = segment.startMs / 1e3 / totalDuration * 100;
+      const width = (segment.endMs - segment.startMs) / 1e3 / totalDuration * 100;
+      if (!Number.isFinite(left) || !Number.isFinite(width) || width <= 0) return null;
+      return { left: Math.max(0, Math.min(100, left)), width: Math.max(0.5, Math.min(100 - left, width)) };
+    };
+    const introZone = trackZone(introSegment);
+    const outroZone = trackZone(outroSegment);
+    const playerIcon = (id4, cls) => {
+      switch (id4) {
+        case "nextEpisode":
+          return /* @__PURE__ */ jsxs("svg", { className: cls, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round", children: [
+            /* @__PURE__ */ jsx("path", { d: "M5 5l9 7-9 7z", fill: "currentColor" }),
+            /* @__PURE__ */ jsx("path", { d: "M18 5v14" })
+          ] });
+        case "subtitles":
+          return /* @__PURE__ */ jsxs("svg", { className: cls, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
+            /* @__PURE__ */ jsx("rect", { x: "3", y: "5", width: "18", height: "14", rx: "3" }),
+            /* @__PURE__ */ jsx("path", { d: "M7.5 14.5h3M13.5 14.5h3" })
+          ] });
+        case "audioTrack":
+          return /* @__PURE__ */ jsx("svg", { className: cls, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: /* @__PURE__ */ jsx("path", { d: "M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2" }) });
+        case "aspect":
+          return /* @__PURE__ */ jsx("svg", { className: cls, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: /* @__PURE__ */ jsx("rect", { x: "3", y: "6", width: "18", height: "12", rx: "2" }) });
+        case "cropZoom":
+          return /* @__PURE__ */ jsxs("svg", { className: cls, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
+            /* @__PURE__ */ jsx("path", { d: "M4 9V5h4" }),
+            /* @__PURE__ */ jsx("path", { d: "M20 15v4h-4" }),
+            /* @__PURE__ */ jsx("path", { d: "M9 15H5v4" }),
+            /* @__PURE__ */ jsx("path", { d: "M15 9h4V5" })
+          ] });
+        case "wiki":
+          return /* @__PURE__ */ jsxs("svg", { className: cls, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
+            /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "9" }),
+            /* @__PURE__ */ jsx("path", { d: "M12 8h.01" }),
+            /* @__PURE__ */ jsx("path", { d: "M11.5 12h1v4.5" })
+          ] });
+        case "soundtrack":
+          return /* @__PURE__ */ jsxs("svg", { className: cls, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
+            /* @__PURE__ */ jsx("circle", { cx: "7", cy: "18", r: "3" }),
+            /* @__PURE__ */ jsx("circle", { cx: "18", cy: "15", r: "3" }),
+            /* @__PURE__ */ jsx("path", { d: "M10 18V7l11-3v11" })
+          ] });
+        case "cast":
+          return /* @__PURE__ */ jsxs("svg", { className: cls, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
+            /* @__PURE__ */ jsx("path", { d: "M2 16.1a5 5 0 0 1 5.9 5.9" }),
+            /* @__PURE__ */ jsx("path", { d: "M2 12.05a9 9 0 0 1 9.95 9.95" }),
+            /* @__PURE__ */ jsx("path", { d: "M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5" })
+          ] });
+        case "tuning":
+          return /* @__PURE__ */ jsxs("svg", { className: cls, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.9", strokeLinecap: "round", children: [
+            /* @__PURE__ */ jsx("path", { d: "M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3" }),
+            /* @__PURE__ */ jsx("path", { d: "M1 14h6M9 8h6M17 16h6" })
+          ] });
+        case "fullscreen":
+          return /* @__PURE__ */ jsx("svg", { className: cls, viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" }) });
+        case "more":
+          return /* @__PURE__ */ jsxs("svg", { className: cls, viewBox: "0 0 24 24", fill: "currentColor", children: [
+            /* @__PURE__ */ jsx("circle", { cx: "5", cy: "12", r: "1.7" }),
+            /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "1.7" }),
+            /* @__PURE__ */ jsx("circle", { cx: "19", cy: "12", r: "1.7" })
+          ] });
+        default:
+          return null;
+      }
+    };
+    const downloadIcon = (cls) => /* @__PURE__ */ jsxs("svg", { className: cls, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", strokeLinejoin: "round", children: [
+      /* @__PURE__ */ jsx("path", { d: "M12 3v12" }),
+      /* @__PURE__ */ jsx("path", { d: "m7 10 5 5 5-5" }),
+      /* @__PURE__ */ jsx("path", { d: "M5 21h14" })
+    ] });
+    const seekIcon = (direction, cls) => /* @__PURE__ */ jsxs("svg", { className: cls, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.7", strokeLinecap: "round", strokeLinejoin: "round", children: [
+      direction === "back" ? /* @__PURE__ */ jsxs(Fragment2, { children: [
+        /* @__PURE__ */ jsx("path", { d: "M12 4.5A7.5 7.5 0 1 1 4.5 12" }),
+        /* @__PURE__ */ jsx("path", { d: "m12 4.5-3-3" }),
+        /* @__PURE__ */ jsx("path", { d: "m12 4.5-3 3" })
+      ] }) : /* @__PURE__ */ jsxs(Fragment2, { children: [
+        /* @__PURE__ */ jsx("path", { d: "M12 4.5A7.5 7.5 0 1 0 19.5 12" }),
+        /* @__PURE__ */ jsx("path", { d: "m12 4.5 3-3" }),
+        /* @__PURE__ */ jsx("path", { d: "m12 4.5 3 3" })
+      ] }),
+      /* @__PURE__ */ jsx("text", { x: "12", y: "13", fontSize: "8", fontWeight: "700", fill: "currentColor", stroke: "none", textAnchor: "middle", dominantBaseline: "middle", children: "10" })
+    ] });
+    const desktopControls = {
+      playPause: /* @__PURE__ */ jsx("button", { type: "button", onClick: togglePlay, "aria-label": t("plPlayPause"), className: dtIconButtonClass(), children: isPlaying ? /* @__PURE__ */ jsx("svg", { className: "h-[19px] w-[19px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M6 19h4V5H6v14zm8-14v14h4V5h-4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }) }),
+      nextEpisode: episodes && episodes.items.length > 0 ? /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => setShowEpisodes((open) => !open),
+          title: t("plNextEpisode"),
+          "aria-label": t("plNextEpisode"),
+          className: dtIconButtonClass(showEpisodes ? "open" : "idle"),
+          children: playerIcon("nextEpisode", "h-[19px] w-[19px]")
+        }
+      ) : null,
+      mute: /* @__PURE__ */ jsx("button", { type: "button", onClick: toggleMute, "aria-label": t("plMute"), className: "flex-none p-1 text-slate-300 transition hover:text-white", children: muted || volume === 0 ? /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4 9.91 6.09 12 8.18V4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) }),
+      volume: playerLayout.volumeStyle === "icon" ? null : playerLayout.volumeStyle === "stepper" ? /* @__PURE__ */ jsxs("span", { className: "flex flex-none items-center gap-1.5", children: [
+        /* @__PURE__ */ jsx("button", { type: "button", onClick: () => applyVolume((muted ? 0 : volume) - 0.05), className: "flex h-6 w-6 items-center justify-center rounded-full border border-white/[0.14] text-xs text-slate-300 transition hover:bg-white/10 hover:text-white", children: "\u2212" }),
+        /* @__PURE__ */ jsxs("span", { className: "min-w-[2.5rem] text-center text-xs tabular-nums text-slate-300", children: [
+          Math.round((muted ? 0 : volume) * 100),
+          "%"
+        ] }),
+        /* @__PURE__ */ jsx("button", { type: "button", onClick: () => applyVolume((muted ? 0 : volume) + 0.05), className: "flex h-6 w-6 items-center justify-center rounded-full border border-white/[0.14] text-xs text-slate-300 transition hover:bg-white/10 hover:text-white", children: "+" })
+      ] }) : (
+        /* Eget spår i stället för <input type="range">: designen har 84 × 4 px
+           med en 11 px punkt, och den nakna range-kontrollen gick inte att ge
+           den formen på ett sätt som höll i båda motorerna. */
+        /* @__PURE__ */ jsxs(
+          "div",
+          {
+            role: "slider",
+            tabIndex: 0,
+            "aria-label": t("plVolume"),
+            "aria-valuemin": 0,
+            "aria-valuemax": 100,
+            "aria-valuenow": Math.round((muted ? 0 : volume) * 100),
+            onClick: (event) => {
+              const rect = event.currentTarget.getBoundingClientRect();
+              applyVolume((event.clientX - rect.left) / rect.width);
+            },
+            onKeyDown: (event) => {
+              if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+              event.preventDefault();
+              applyVolume((muted ? 0 : volume) + (event.key === "ArrowLeft" ? -0.05 : 0.05));
+            },
+            className: "relative h-1 w-[84px] flex-none cursor-pointer rounded-full bg-white/[0.18]",
+            children: [
+              /* @__PURE__ */ jsx("div", { className: "absolute inset-y-0 left-0 rounded-full bg-slate-300", style: { width: `${(muted ? 0 : volume) * 100}%` } }),
+              /* @__PURE__ */ jsx("div", { className: "absolute top-1/2 h-[11px] w-[11px] -translate-y-1/2 rounded-full bg-white", style: { left: `calc(${(muted ? 0 : volume) * 100}% - 5px)` } })
+            ]
+          }
+        )
+      ),
+      /* Rena statusetiketter: de säger ATT segmentet hittats. Åtgärden ligger i
+         "Hoppa över intro"-pillret, och "hittades inte" utgår helt — det var en
+         rad som aldrig hade något att erbjuda. */
+      segmentBadges: mediaType === "tv" && (introSegment || outroSegment) ? /* @__PURE__ */ jsxs(Fragment2, { children: [
+        introSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: introKind === "recap" ? t("recapFound") : t("introFound") }) : null,
+        outroSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: t("outroFound") }) : null
+      ] }) : null,
+      subtitles: /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          ref: subTriggerRef,
+          onClick: () => {
+            if (!showSubMenu) {
+              const activeLang = activeSubId ? toSubtitleLangGroup(subtitleOptions.find((s) => s.id === activeSubId)?.language ?? null) : null;
+              setSelectedLang(activeLang);
+            }
+            setShowSubMenu((v) => !v);
           },
+          title: t("subtitlesLabel"),
+          className: dtLabelButtonClass(showSubMenu ? "open" : activeSubId ? "active" : "idle"),
           children: [
-            (backdropUrl ?? posterUrl) && /* @__PURE__ */ jsxs(Fragment2, { children: [
-              /* @__PURE__ */ jsx(
-                "div",
-                {
-                  className: "pointer-events-none absolute inset-0 bg-cover bg-center opacity-20 transition-all duration-300",
-                  style: { backgroundImage: `url(${backdropUrl ?? posterUrl})` }
+            playerIcon("subtitles", "h-[17px] w-[17px]"),
+            activeSubLangCode
+          ]
+        }
+      ),
+      audioTrack: audioTracks.length > 0 ? /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          ref: audioTriggerRef,
+          onClick: () => setShowAudioMenu((v) => !v),
+          title: t("audioLanguage"),
+          className: dtLabelButtonClass(showAudioMenu ? "open" : "idle"),
+          children: [
+            playerIcon("audioTrack", "h-[17px] w-[17px]"),
+            activeAudioLangCode
+          ]
+        }
+      ) : null,
+      aspect: /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          ref: aspectTriggerRef,
+          onClick: () => setShowAspectMenu((value) => !value),
+          title: t("aspectRatio"),
+          className: dtLabelButtonClass(showAspectMenu ? "open" : aspectRatioMode !== "auto" ? "active" : "idle"),
+          children: [
+            playerIcon("aspect", "h-[17px] w-[17px]"),
+            /* @__PURE__ */ jsx("span", { className: "uppercase", children: aspectLabel })
+          ]
+        }
+      ),
+      /* Beskär/zoom finns inte utritad i desktopdesignen, men funktionen finns i
+         appen och tas inte bort i en omdesign. Den får etikettknappens form
+         intill bildformatet, som är dess närmaste släkting. */
+      cropZoom: /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          ref: cropTriggerRef,
+          onClick: () => setShowCropZoomMenu((value) => !value),
+          title: t("cropZoom"),
+          className: dtLabelButtonClass(showCropZoomMenu ? "open" : cropZoomMode !== "off" ? "active" : "idle"),
+          children: [
+            playerIcon("cropZoom", "h-[17px] w-[17px]"),
+            /* @__PURE__ */ jsx("span", { className: "uppercase", children: cropZoomLabel })
+          ]
+        }
+      ),
+      wiki: wikiTmdbId || resolvedImdbId ? /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => setShowWiki((v) => !v),
+          title: t("info"),
+          "aria-label": t("info"),
+          className: dtIconButtonClass(showWiki ? "open" : "idle"),
+          children: playerIcon("wiki", "h-[19px] w-[19px]")
+        }
+      ) : null,
+      soundtrack: title ? /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => setShowSoundtrack((v) => !v),
+          title: t("soundtrack"),
+          "aria-label": t("soundtrack"),
+          className: dtIconButtonClass(showSoundtrack ? "open" : "idle"),
+          children: playerIcon("soundtrack", "h-[19px] w-[19px]")
+        }
+      ) : null,
+      cast: !isClientSession() ? /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          onClick: () => {
+            const opening = !showCastMenu;
+            setShowCastMenu(opening);
+            if (opening && castDevices.length === 0) void scanCastDevices();
+            if (opening && isMpvEngine && !airplaySession) void prepareAirplaySession();
+          },
+          title: t("castTitle"),
+          "aria-label": t("castTitle"),
+          className: dtIconButtonClass(showCastMenu ? "open" : castTarget ? "active" : "idle"),
+          children: playerIcon("cast", "h-[19px] w-[19px]")
+        }
+      ) : null,
+      tuning: /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          ref: tuningTriggerRef,
+          onClick: () => setShowTuningPanel((v) => !v),
+          title: t("vtTitle"),
+          "aria-label": t("vtTitle"),
+          className: dtIconButtonClass(showTuningPanel ? "open" : "idle"),
+          children: playerIcon("tuning", "h-[19px] w-[19px]")
+        }
+      ),
+      more: /* @__PURE__ */ jsx(
+        "button",
+        {
+          ref: moreTriggerRef,
+          type: "button",
+          onClick: () => setShowMoreMenu((value) => !value),
+          title: t("moreActions"),
+          "aria-label": t("moreActions"),
+          className: dtIconButtonClass(showMoreMenu ? "open" : "idle"),
+          children: playerIcon("more", "h-[19px] w-[19px]")
+        }
+      ),
+      fullscreen: !isTauriEnv || isDesktopTauriEnv ? /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          onClick: toggleFullscreen,
+          title: t("plFullscreen"),
+          "aria-label": t("plFullscreen"),
+          className: dtIconButtonClass(),
+          children: cssFullscreen ? /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" }) })
+        }
+      ) : null
+    };
+    const DESKTOP_ZONES = {
+      left: [["playPause", "nextEpisode"], ["mute", "volume"]],
+      center: [["segmentBadges"]],
+      right: [
+        ["subtitles", "audioTrack", "aspect", "cropZoom"],
+        ["wiki", "soundtrack", "cast"],
+        ["tuning", "more", "fullscreen"]
+      ]
+    };
+    const renderDesktopZone = (groups) => {
+      const filled = groups.map((group) => group.filter((id4) => showsControl(id4) && Boolean(desktopControls[id4])).sort((a, b) => playerLayout.order.indexOf(a) - playerLayout.order.indexOf(b))).filter((group) => group.length > 0);
+      return filled.map((group, index3) => /* @__PURE__ */ jsxs(react_shim_default.Fragment, { children: [
+        index3 > 0 ? dtDivider : null,
+        group.map((id4) => /* @__PURE__ */ jsx(react_shim_default.Fragment, { children: desktopControls[id4] }, id4))
+      ] }, group.join("+")));
+    };
+    const seekHeightClass = playerLayout.seekBarHeight === "slim" ? "h-1" : playerLayout.seekBarHeight === "chunky" ? "h-2.5" : "h-1.5";
+    const seekFillColorClass = "bg-[rgb(var(--player-accent))]";
+    const seekFillStyleClass = playerLayout.seekBarStyle === "glass" ? "shadow-[0_0_14px_rgba(255,255,255,0.35)]" : playerLayout.seekBarStyle === "pinstripe" ? "bg-[repeating-linear-gradient(45deg,transparent,transparent_4px,rgba(0,0,0,0.25)_4px,rgba(0,0,0,0.25)_8px)]" : "";
+    const renderSeekTrack = (widthClass) => /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: `relative cursor-pointer rounded-full bg-white/[0.18] ${widthClass} ${seekHeightClass}`,
+        onPointerDown: handleSeekPointerDown,
+        children: [
+          !useMpv && !isServerStreamUrl(videoSrc) && /* @__PURE__ */ jsx("div", { className: "absolute inset-y-0 left-0 rounded-full bg-white/30", style: { width: `${buffered}%` } }),
+          introZone ? /* @__PURE__ */ jsx(
+            "div",
+            {
+              className: "absolute -bottom-[3px] -top-[3px] rounded border border-[rgb(var(--player-accent)/0.45)] bg-[rgb(var(--player-accent)/0.30)]",
+              style: { left: `${introZone.left}%`, width: `${introZone.width}%` }
+            }
+          ) : null,
+          outroZone ? /* @__PURE__ */ jsx(
+            "div",
+            {
+              className: "absolute -bottom-[3px] -top-[3px] rounded border border-[rgb(var(--player-accent)/0.45)] bg-[rgb(var(--player-accent)/0.30)]",
+              style: { left: `${outroZone.left}%`, width: `${outroZone.width}%` }
+            }
+          ) : null,
+          totalDuration > 0 ? /* @__PURE__ */ jsxs(Fragment2, { children: [
+            /* @__PURE__ */ jsx("div", { className: `absolute inset-y-0 left-0 rounded-full ${seekFillColorClass} ${seekFillStyleClass}`, style: { width: `${seekPercent}%` } }),
+            playerLayout.seekBarDot ? /* @__PURE__ */ jsx(
+              "div",
+              {
+                className: `absolute top-1/2 -translate-y-1/2 rounded-full bg-white ${desktopChrome ? "h-3.5 w-3.5" : "h-3 w-3"}`,
+                style: {
+                  left: `calc(${seekPercent}% - ${desktopChrome ? 7 : 6}px)`,
+                  boxShadow: desktopChrome ? "0 0 0 4px rgb(var(--player-accent) / 0.28)" : void 0
                 }
-              ),
-              /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/30" })
-            ] }),
-            /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex flex-col items-center gap-6 px-6 text-center", children: [
-              posterUrl && /* @__PURE__ */ jsx("div", { className: "h-48 w-32 overflow-hidden rounded-xl shadow-2xl", children: /* @__PURE__ */ jsx("img", { src: posterUrl, alt: title, className: "h-full w-full object-cover" }) }),
-              /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("p", { className: "text-lg font-semibold text-white", children: title }),
-                year && /* @__PURE__ */ jsx("p", { className: "mt-0.5 text-sm text-slate-500", children: year })
-              ] }),
-              startError ? /* @__PURE__ */ jsx("p", { className: "max-w-xs text-sm text-rose-300", children: t("sourceNotResponding") }) : /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-sm text-slate-400", children: [
-                /* @__PURE__ */ jsx("svg", { className: "h-4 w-4 animate-spin", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }),
-                mediaType === "tv" ? t("startingEpisode") : t("startingMovie")
-              ] }),
-              /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-3", children: [
-                clientOwnsSplash && resolveDirectStreamUrl2(url) && /* @__PURE__ */ jsx(
+              }
+            ) : null
+          ] }) : null
+        ]
+      }
+    );
+    const [gestureHud, setGestureHud] = useState(null);
+    const gestureHudTimerRef = useRef(null);
+    const gestureRef = useRef(null);
+    const GESTURE_SEEK_SPAN_SECONDS = 90;
+    const showGestureHud = (kind, value) => {
+      if (gestureHudTimerRef.current) window.clearTimeout(gestureHudTimerRef.current);
+      setGestureHud({ kind, value });
+    };
+    const onGesturePointerDown = (event) => {
+      if (!phoneChrome || event.pointerType === "mouse") return;
+      const rect = event.currentTarget.getBoundingClientRect();
+      gestureRef.current = {
+        x: event.clientX,
+        y: event.clientY,
+        left: rect.left,
+        width: rect.width || 1,
+        height: rect.height || 1,
+        axis: null,
+        startVolume: muted ? 0 : volume,
+        startBrightness: gestureBrightness,
+        startTime: realTimeRef.current,
+        pendingSeek: null
+      };
+      event.currentTarget.setPointerCapture(event.pointerId);
+    };
+    const onGesturePointerMove = (event) => {
+      const gesture = gestureRef.current;
+      if (!gesture) return;
+      const dx = event.clientX - gesture.x;
+      const dy = event.clientY - gesture.y;
+      if (!gesture.axis) {
+        if (Math.abs(dx) < 12 && Math.abs(dy) < 12) return;
+        gesture.axis = Math.abs(dx) > Math.abs(dy) ? "seek" : gesture.x - gesture.left < gesture.width / 2 ? "brightness" : "volume";
+        onMouseActivity();
+      }
+      if (gesture.axis === "seek") {
+        if (!totalDuration) return;
+        const target = Math.min(totalDuration, Math.max(0, gesture.startTime + dx / gesture.width * GESTURE_SEEK_SPAN_SECONDS));
+        gesture.pendingSeek = target;
+        setScrubPercent(target / totalDuration * 100);
+        return;
+      }
+      if (gesture.axis === "volume") {
+        const next3 = Math.min(1, Math.max(0, gesture.startVolume - dy / gesture.height));
+        applyVolume(next3);
+        showGestureHud("volume", Math.round(next3 * 100));
+        return;
+      }
+      const next2 = Math.min(50, Math.max(-50, gesture.startBrightness - dy / gesture.height * 100));
+      setGestureBrightness(next2);
+      showGestureHud("brightness", Math.round(next2));
+    };
+    const endGesture = () => {
+      const gesture = gestureRef.current;
+      gestureRef.current = null;
+      if (!gesture?.axis) return false;
+      if (gesture.axis === "seek" && gesture.pendingSeek !== null) {
+        seekToAbsolute(gesture.pendingSeek);
+      }
+      setScrubPercent(null);
+      if (gestureHudTimerRef.current) window.clearTimeout(gestureHudTimerRef.current);
+      gestureHudTimerRef.current = window.setTimeout(() => setGestureHud(null), 700);
+      return true;
+    };
+    const toggleSubtitleMenu = () => {
+      if (!showSubMenu) {
+        const activeLang = activeSubId ? toSubtitleLangGroup(subtitleOptions.find((sub) => sub.id === activeSubId)?.language ?? null) : null;
+        setSelectedLang(activeLang);
+      }
+      setShowSubMenu((open) => !open);
+    };
+    const toggleCastMenu = () => {
+      const opening = !showCastMenu;
+      setShowCastMenu(opening);
+      if (opening && castDevices.length === 0) void scanCastDevices();
+      if (opening && isMpvEngine && !airplaySession) void prepareAirplaySession();
+    };
+    const phoneControls = {
+      subtitles: {
+        label: activeSubLangCode,
+        title: t("subtitlesLabel"),
+        state: showSubMenu ? "open" : activeSubId ? "active" : "idle",
+        onClick: toggleSubtitleMenu,
+        triggerRef: subTriggerRef
+      },
+      audioTrack: audioTracks.length > 0 ? {
+        label: activeAudioLangCode,
+        title: t("audioLanguage"),
+        state: showAudioMenu ? "open" : "idle",
+        onClick: () => setShowAudioMenu((open) => !open),
+        triggerRef: audioTriggerRef
+      } : void 0,
+      nextEpisode: episodes && episodes.items.length > 0 ? {
+        label: t("plShortEpisodes"),
+        title: t("plNextEpisode"),
+        state: showEpisodes ? "open" : "idle",
+        onClick: () => setShowEpisodes((open) => !open)
+      } : void 0,
+      tuning: {
+        label: t("plShortPicture"),
+        title: t("vtTitle"),
+        state: showTuningPanel ? "open" : "idle",
+        onClick: () => setShowTuningPanel((open) => !open),
+        triggerRef: tuningTriggerRef
+      },
+      wiki: wikiTmdbId || resolvedImdbId ? {
+        label: t("plShortWiki"),
+        title: t("info"),
+        state: showWiki ? "open" : "idle",
+        onClick: () => setShowWiki((open) => !open)
+      } : void 0,
+      soundtrack: title ? {
+        label: t("plShortMusic"),
+        title: t("soundtrack"),
+        state: showSoundtrack ? "open" : "idle",
+        onClick: () => setShowSoundtrack((open) => !open)
+      } : void 0,
+      cropZoom: {
+        label: t("plShortZoom"),
+        title: t("cropZoom"),
+        value: cropZoomLabel,
+        state: showCropZoomMenu ? "open" : cropZoomMode !== "off" ? "active" : "idle",
+        onClick: () => setShowCropZoomMenu((open) => !open),
+        triggerRef: cropTriggerRef
+      },
+      aspect: {
+        label: aspectLabel.toUpperCase(),
+        title: t("aspectRatio"),
+        value: aspectLabel,
+        state: showAspectMenu ? "open" : aspectRatioMode !== "auto" ? "active" : "idle",
+        onClick: () => setShowAspectMenu((open) => !open),
+        triggerRef: aspectTriggerRef
+      },
+      cast: !isClientSession() ? {
+        label: t("plShortCast"),
+        title: t("castTitle"),
+        state: showCastMenu ? "open" : castTarget ? "active" : "idle",
+        onClick: toggleCastMenu
+      } : void 0,
+      fullscreen: !isTauriEnv || isDesktopTauriEnv ? {
+        label: t("plShortFullscreen"),
+        title: t("plFullscreen"),
+        state: cssFullscreen ? "active" : "idle",
+        onClick: toggleFullscreen
+      } : void 0
+    };
+    const PHONE_ROW_IDS = [
+      "subtitles",
+      "audioTrack",
+      "nextEpisode",
+      "tuning",
+      "wiki",
+      "soundtrack",
+      "cropZoom",
+      "aspect",
+      "cast",
+      "fullscreen"
+    ];
+    const LANDSCAPE_ROW_BUDGET = 6;
+    const phoneDedicatedIds = landscapeChrome ? ["nextEpisode", "cast"] : ["cast", "fullscreen"];
+    const phoneRowCandidates = playerLayout.order.filter((id4) => PHONE_ROW_IDS.includes(id4) && !phoneDedicatedIds.includes(id4) && showsControl(id4) && Boolean(phoneControls[id4]));
+    const phoneRowIds = landscapeChrome ? phoneRowCandidates.slice(0, LANDSCAPE_ROW_BUDGET) : phoneRowCandidates;
+    const phoneOverflowIds = landscapeChrome ? phoneRowCandidates.slice(LANDSCAPE_ROW_BUDGET) : [];
+    const phoneClusterIds = phoneDedicatedIds.filter((id4) => showsControl(id4) && Boolean(phoneControls[id4]));
+    const phoneStateClass = (state, idleClass = "text-slate-200") => state === "open" ? "bg-[rgb(var(--player-accent)/0.34)] text-white" : state === "active" ? "bg-[rgb(var(--player-accent)/0.22)] text-white" : idleClass;
+    const renderPhoneTile = (id4, spec) => /* @__PURE__ */ jsxs(
+      "button",
+      {
+        type: "button",
+        ref: spec.triggerRef,
+        onClick: spec.onClick,
+        title: spec.title,
+        "aria-label": spec.title,
+        className: `flex w-[62px] flex-none flex-col items-center gap-1 rounded-[10px] py-1.5 transition ${phoneStateClass(spec.state)}`,
+        children: [
+          playerIcon(id4, "h-[19px] w-[19px]"),
+          /* @__PURE__ */ jsx("span", { className: "text-[11px] font-semibold leading-none", children: spec.label })
+        ]
+      },
+      id4
+    );
+    const renderPhonePill = (id4, spec) => /* @__PURE__ */ jsxs(
+      "button",
+      {
+        type: "button",
+        ref: spec.triggerRef,
+        onClick: spec.onClick,
+        title: spec.title,
+        "aria-label": spec.title,
+        className: `flex h-10 flex-none items-center gap-[7px] rounded-full border border-white/[0.12] px-3.5 transition ${phoneStateClass(spec.state, "text-slate-300")}`,
+        children: [
+          playerIcon(id4, "h-[17px] w-[17px]"),
+          /* @__PURE__ */ jsx("span", { className: "text-[13px] font-medium leading-none", children: spec.label })
+        ]
+      },
+      id4
+    );
+    const renderPhoneOverflowRow = (id4, spec) => /* @__PURE__ */ jsxs("button", { type: "button", onClick: spec.onClick, className: dtMoreRowClass, children: [
+      playerIcon(id4, dtMoreIconClass),
+      /* @__PURE__ */ jsx("span", { className: `flex-1 ${dtMoreTextClass}`, children: spec.title }),
+      spec.value ? /* @__PURE__ */ jsx("span", { className: "flex-none text-[13px] text-slate-400", children: spec.value }) : null
+    ] }, id4);
+    const renderPhoneRoundButton = (id4, spec) => /* @__PURE__ */ jsx(
+      "button",
+      {
+        type: "button",
+        ref: spec.triggerRef,
+        onClick: spec.onClick,
+        title: spec.title,
+        "aria-label": spec.title,
+        className: `flex h-10 w-10 flex-none items-center justify-center rounded-full transition ${phoneStateClass(spec.state, "bg-[rgba(13,14,22,0.6)] text-slate-100")}`,
+        children: playerIcon(id4, "h-[19px] w-[19px]")
+      },
+      id4
+    );
+    const renderPhoneFlatButton = (id4, spec) => /* @__PURE__ */ jsx(
+      "button",
+      {
+        type: "button",
+        ref: spec.triggerRef,
+        onClick: spec.onClick,
+        title: spec.title,
+        "aria-label": spec.title,
+        className: `flex h-[34px] w-[34px] flex-none items-center justify-center rounded-lg transition ${spec.state === "idle" ? "text-slate-300" : "text-[rgb(var(--player-accent))]"}`,
+        children: playerIcon(id4, "h-[17px] w-[17px]")
+      },
+      id4
+    );
+    const downloadLabel = downloadState.type === "downloading" ? `${downloadState.progress}%` : downloadState.type === "done" ? t("downloadComplete") : downloadState.type === "picking-folder" ? "\u2026" : null;
+    const renderPhoneDownload = (variant) => {
+      if (isClientSession()) return null;
+      const busy = downloadState.type === "picking-folder" || downloadState.type === "downloading";
+      const active = downloadLabel !== null;
+      return /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: () => {
+            void handleDownload();
+          },
+          disabled: busy,
+          title: t("downloadThisVideo"),
+          "aria-label": t("downloadThisVideo"),
+          className: variant === "round" ? `flex h-10 flex-none items-center gap-2 rounded-full transition ${active ? "bg-[rgb(var(--player-accent)/0.22)] px-4 text-white" : "w-10 justify-center bg-[rgba(13,14,22,0.6)] text-slate-100"}` : `flex h-[34px] flex-none items-center gap-1.5 rounded-lg transition ${active ? "px-2 text-[rgb(var(--player-accent))]" : "w-[34px] justify-center text-slate-300"}`,
+          children: [
+            downloadIcon(variant === "round" ? "h-[19px] w-[19px]" : "h-[17px] w-[17px]"),
+            downloadLabel ? /* @__PURE__ */ jsx("span", { className: `font-semibold tabular-nums ${variant === "round" ? "text-[13px]" : "text-xs"}`, children: downloadLabel }) : null
+          ]
+        }
+      );
+    };
+    const renderSegmentPills = () => {
+      if (mediaType !== "tv" || !showsControl("segmentBadges") || !introSegment && !outroSegment) return null;
+      return /* @__PURE__ */ jsxs(Fragment2, { children: [
+        introSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: introKind === "recap" ? t("recapFound") : t("introFound") }) : null,
+        outroSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: t("outroFound") }) : null
+      ] });
+    };
+    const renderPhoneClock = (bigClass, smallClass) => {
+      if (!showsControl("time")) return null;
+      const elapsedLabel = playerLayout.timeFormat === "remaining" ? `-${fmt(Math.max(0, totalDuration - seekTime))}` : fmt(seekTime);
+      return /* @__PURE__ */ jsxs("div", { className: "flex items-baseline gap-2", children: [
+        /* @__PURE__ */ jsx("span", { className: `font-semibold tabular-nums text-white ${bigClass}`, children: elapsedLabel }),
+        playerLayout.timeFormat === "elapsed-total" ? /* @__PURE__ */ jsxs("span", { className: `tabular-nums text-slate-400 ${smallClass}`, children: [
+          "/ ",
+          fmt(totalDuration)
+        ] }) : null
+      ] });
+    };
+    const content = /* @__PURE__ */ jsxs(
+      "div",
+      {
+        ref: playerRootRef,
+        "data-lumio-player-open": "1",
+        "data-panel-root": isTv ? "1" : void 0,
+        "data-tv-fullbleed": "",
+        style: { "--player-accent": playerAccentRgb },
+        className: `fixed inset-x-0 top-0 z-[60] flex h-[100dvh] flex-col !mt-0 ${useMpv ? "" : "bg-black"}`,
+        children: [
+          !hasEverStarted && (!hideStartSplash || clientOwnsSplash) && /* @__PURE__ */ jsxs(
+            "div",
+            {
+              className: "absolute inset-0 z-50 flex flex-col items-center justify-center bg-slate-950",
+              style: {
+                transition: `opacity ${SPLASH_FADE_MS}ms ease-out`,
+                opacity: splashFading ? 0 : 1,
+                // Don't intercept clicks once we're fading — the player underneath
+                // is already playing, so the user should be able to interact with
+                // it through the dying splash.
+                pointerEvents: splashFading ? "none" : "auto"
+              },
+              children: [
+                (backdropUrl ?? posterUrl) && /* @__PURE__ */ jsxs(Fragment2, { children: [
+                  /* @__PURE__ */ jsx(
+                    "div",
+                    {
+                      className: "pointer-events-none absolute inset-0 bg-cover bg-center opacity-20 transition-all duration-300",
+                      style: { backgroundImage: `url(${backdropUrl ?? posterUrl})` }
+                    }
+                  ),
+                  /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-slate-950/30" })
+                ] }),
+                /* @__PURE__ */ jsxs("div", { className: "relative z-10 flex flex-col items-center gap-6 px-6 text-center", children: [
+                  posterUrl && /* @__PURE__ */ jsx("div", { className: "h-48 w-32 overflow-hidden rounded-xl shadow-2xl", children: /* @__PURE__ */ jsx("img", { src: posterUrl, alt: title, className: "h-full w-full object-cover" }) }),
+                  /* @__PURE__ */ jsxs("div", { children: [
+                    /* @__PURE__ */ jsx("p", { className: "text-lg font-semibold text-white", children: title }),
+                    year && /* @__PURE__ */ jsx("p", { className: "mt-0.5 text-sm text-slate-500", children: year })
+                  ] }),
+                  startError ? /* @__PURE__ */ jsx("p", { className: "max-w-xs text-sm text-rose-300", children: t("sourceNotResponding") }) : /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-sm text-slate-400", children: [
+                    /* @__PURE__ */ jsx("svg", { className: "h-4 w-4 animate-spin", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }),
+                    mediaType === "tv" ? t("startingEpisode") : t("startingMovie")
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-3", children: [
+                    clientOwnsSplash && resolveDirectStreamUrl2(url) && /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        type: "button",
+                        "data-f": isTv ? "1" : void 0,
+                        onClick: () => {
+                          if (openInExternalPlayer(url)) {
+                            (onOpenedExternally ?? onClose)();
+                          }
+                        },
+                        className: "rounded-full border border-orange-400/50 bg-orange-500/15 px-4 py-2 text-xs font-medium uppercase tracking-[0.16em] text-orange-200 transition hover:border-orange-400 hover:text-orange-100",
+                        children: t("openInExternalPlayer")
+                      }
+                    ),
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        type: "button",
+                        ref: splashCancelRef,
+                        "data-f": isTv ? "1" : void 0,
+                        "data-init": isTv ? "1" : void 0,
+                        onClick: handleClose,
+                        className: "text-xs text-slate-500 transition hover:text-slate-300",
+                        children: startError ? t("close") : "Avbryt"
+                      }
+                    )
+                  ] })
+                ] })
+              ]
+            }
+          ),
+          !(useMpv && desktopFullscreen) && !landscapeChrome && (desktopChrome ? (
+            /* Desktopens topplist, 52 px: titel + två metadata-chips i mitten, två
+               knappar till höger. Ljudutgången satt tidigare i •••-menyn — den är
+               information och inte en inställning, så den ligger nu som chip
+               intill upplösningen. */
+            /* @__PURE__ */ jsxs(
+              "div",
+              {
+                className: `absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-4 overflow-hidden border-b border-white/[0.07] px-[18px] transition-[height,opacity] duration-300 ${collapseMpvTopBar || cssFullscreen && !controlsVisible ? "h-0" : "h-[52px]"}`,
+                style: {
+                  backgroundColor: "#0a0b12",
+                  opacity: controlsVisible ? 1 : 0,
+                  pointerEvents: controlsVisible ? "auto" : "none"
+                },
+                children: [
+                  isDesktopTauriEnv ? /* @__PURE__ */ jsx("span", { "aria-hidden": true, className: "w-[68px] flex-none" }) : null,
+                  /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-2.5", children: [
+                    /* @__PURE__ */ jsx("span", { className: "truncate text-sm font-medium text-slate-100", children: headerTitle }),
+                    streamQualityLabel ? /* @__PURE__ */ jsx("span", { className: "flex-none rounded-md border border-white/[0.14] px-[7px] py-[3px] text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400", children: streamQualityLabel }) : null,
+                    showsControl("audioOutput") ? /* @__PURE__ */ jsx(
+                      "span",
+                      {
+                        title: t("currentAudioOutput"),
+                        className: "flex-none rounded-md border border-white/[0.14] px-[7px] py-[3px] text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400",
+                        children: audioIndicator
+                      }
+                    ) : null
+                  ] }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex flex-none items-center gap-2", children: [
+                    /* @__PURE__ */ jsxs(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => {
+                          void handleCopyStreamLink();
+                        },
+                        className: "flex items-center gap-[7px] rounded-lg border border-[rgb(var(--player-accent)/0.40)] px-3 py-1.5 text-xs font-medium text-[rgb(var(--player-accent))] transition hover:bg-[rgb(var(--player-accent)/0.14)]",
+                        children: [
+                          /* @__PURE__ */ jsxs("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: [
+                            /* @__PURE__ */ jsx("path", { d: "M10 13a5 5 0 0 0 7.07 0l3.54-3.54a5 5 0 1 0-7.07-7.07L11 4" }),
+                            /* @__PURE__ */ jsx("path", { d: "M14 11a5 5 0 0 0-7.07 0L3.39 14.54a5 5 0 1 0 7.07 7.07L13 20" })
+                          ] }),
+                          copiedLink ? t("copied") : t("copyLink")
+                        ]
+                      }
+                    ),
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: handleClose,
+                        className: "rounded-lg border border-white/[0.14] px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-white/[0.07] hover:text-white",
+                        children: t("close")
+                      }
+                    )
+                  ] })
+                ]
+              }
+            )
+          ) : portraitChrome ? (
+            /* Stående: 56 px list med titeln till vänster och två pillerknappar
+               till höger. Inga chips — designen håller porträttläget rent och
+               lägger metadata bakom Mer. */
+            /* @__PURE__ */ jsxs(
+              "div",
+              {
+                className: `absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-2.5 overflow-hidden border-b border-white/[0.07] px-3.5 transition-[height,opacity] duration-300 ${collapseMpvTopBar || cssFullscreen && !controlsVisible ? "h-0" : "h-14 pt-[env(safe-area-inset-top)]"}`,
+                style: {
+                  backgroundColor: "#0a0b12",
+                  opacity: controlsVisible ? 1 : 0,
+                  pointerEvents: controlsVisible ? "auto" : "none"
+                },
+                children: [
+                  /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate text-sm font-medium text-slate-100", children: headerTitle }),
+                  /* @__PURE__ */ jsxs("div", { className: "flex flex-none items-center gap-2", children: [
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: () => {
+                          void handleCopyStreamLink();
+                        },
+                        className: "rounded-full border border-[rgb(var(--player-accent)/0.40)] px-3 py-[7px] text-[11px] font-medium text-[rgb(var(--player-accent))]",
+                        children: copiedLink ? t("copied") : t("copyLink")
+                      }
+                    ),
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        type: "button",
+                        onClick: handleClose,
+                        className: "rounded-full border border-white/[0.14] px-3 py-[7px] text-[11px] font-medium text-slate-300",
+                        children: t("close")
+                      }
+                    )
+                  ] })
+                ]
+              }
+            )
+          ) : /* @__PURE__ */ jsxs(
+            "div",
+            {
+              className: `absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-4 overflow-hidden transition-[height,padding,opacity,background-color] duration-300 ${collapseMpvTopBar || cssFullscreen && !controlsVisible ? "h-0 px-4 py-0 opacity-0" : "min-h-[44px] px-4 pb-2.5 pt-[max(0.625rem,env(safe-area-inset-top),var(--android-inset-top,0px))]"}`,
+              style: {
+                backgroundColor: useMpv ? "#000" : controlsVisible ? "rgba(0,0,0,0.8)" : "transparent",
+                pointerEvents: controlsVisible ? "auto" : "none"
+              },
+              children: [
+                /* @__PURE__ */ jsx(
+                  "div",
+                  {
+                    className: "pointer-events-none absolute inset-x-0 bottom-0 border-b border-white/10 transition-opacity duration-300",
+                    style: { opacity: controlsVisible ? 1 : 0 }
+                  }
+                ),
+                /* @__PURE__ */ jsxs(
+                  "span",
+                  {
+                    className: "relative flex min-w-0 flex-col transition-opacity duration-300",
+                    style: { opacity: controlsVisible ? 1 : 0 },
+                    children: [
+                      /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-300", children: headerTitle }),
+                      streamQualityLabel ? /* @__PURE__ */ jsx("span", { className: "truncate text-[10.5px] uppercase tracking-[0.14em] text-slate-500", children: streamQualityLabel }) : null
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxs(
+                  "div",
+                  {
+                    className: "relative flex items-center gap-2 transition-opacity duration-300",
+                    style: { opacity: controlsVisible ? 1 : 0 },
+                    children: [
+                      /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          "data-f": isTv ? "1" : void 0,
+                          onClick: () => {
+                            void handleCopyStreamLink();
+                          },
+                          className: "rounded-full border border-white/10 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-slate-300 transition hover:border-white/30 hover:text-white",
+                          children: t("copyLink")
+                        }
+                      ),
+                      /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          "data-f": isTv ? "1" : void 0,
+                          onClick: handleClose,
+                          className: "rounded-full border border-white/10 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-slate-300 transition hover:border-white/30 hover:text-white",
+                          children: t("close")
+                        }
+                      )
+                    ]
+                  }
+                )
+              ]
+            }
+          )),
+          /* @__PURE__ */ jsxs(
+            "div",
+            {
+              ref: containerRef,
+              className: `vp-container relative flex flex-1 items-center justify-center ${useMpv ? "bg-transparent" : "bg-black"}`,
+              style: { cursor: useMpv ? "default" : controlsVisible ? "default" : "none" },
+              onMouseMove: onMouseActivity,
+              children: [
+                isMpvEngine && /* Hidden WebKit video that owns the AirPlay hand-off — see the
+                   AirPlay row in the cast menu. */
+                /* eslint-disable-next-line jsx-a11y/media-has-caption */
+                /* @__PURE__ */ jsx(
+                  "video",
+                  {
+                    ref: airplayVideoRef,
+                    playsInline: true,
+                    style: { position: "absolute", bottom: 0, left: 0, width: 2, height: 2, opacity: 0, pointerEvents: "none" },
+                    ...{ "x-webkit-airplay": "allow" }
+                  }
+                ),
+                airplayActive && /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-black/80", children: [
+                  /* @__PURE__ */ jsxs("span", { className: "text-lg text-white", children: [
+                    t("castPlayingOn"),
+                    " AirPlay"
+                  ] }),
+                  /* @__PURE__ */ jsx(
+                    "button",
+                    {
+                      type: "button",
+                      "data-f": isTv ? "1" : void 0,
+                      className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
+                      onClick: () => {
+                        const v = airplayVideoRef.current;
+                        const resumeAt = v && v.currentTime > 0 ? (airplaySession?.offset ?? 0) + v.currentTime : realTimeRef.current;
+                        setAirplayActive(false);
+                        airplayWasExternalRef.current = false;
+                        stopAirplayVideo();
+                        void avplayerTeardown();
+                        setAirplaySession(null);
+                        setAirplayPrepare("idle");
+                        void mpvCommand2(["seek", resumeAt, "absolute"]);
+                        void setMpvPause2(false);
+                      },
+                      children: t("castStop")
+                    }
+                  )
+                ] }),
+                useMpv ? (
+                  // Transparent area — mpv NSView renders behind the WKWebView here
+                  /* @__PURE__ */ jsx("div", { style: { width: "100%", height: "100%", background: "transparent" } })
+                ) : videoSrc ? /* @__PURE__ */ jsx("div", { className: videoPresentation.wrapperClassName, children: /* @__PURE__ */ jsx("div", { style: aspectFrameStyle, className: aspectFrameStyle ? "relative flex items-center justify-center overflow-hidden" : "contents", children: /* @__PURE__ */ jsx(
+                  "video",
+                  {
+                    ref: videoRef,
+                    src: videoSrc,
+                    autoPlay: true,
+                    playsInline: true,
+                    className: "block",
+                    style: { ...videoPresentation.videoStyle, ...cropZoomVideoStyle, filter: tuningToCssFilter(effectiveVideoTuning) || void 0 },
+                    ...{ "x-webkit-airplay": "allow" },
+                    onLoadedMetadata: () => {
+                      if (!hasStarted) void attemptHtml5Start(false);
+                    },
+                    onCanPlay: () => {
+                      if (!hasStarted) void attemptHtml5Start(false);
+                    },
+                    onPlay: () => {
+                      setPlaying(true);
+                      if (!hasStarted) {
+                        hasStartedForUrlRef.current = true;
+                        setHasStarted(true);
+                        if (useMpv || !isServerStreamUrl(videoSrc)) {
+                          setHasEverStarted(true);
+                        }
+                        onFirstPlay?.();
+                      }
+                      if (!firstFrameLoggedRef.current) {
+                        firstFrameLoggedRef.current = true;
+                        void emitDesktopPlaybackTelemetry({
+                          stage: "player.lifecycle",
+                          status: "ok",
+                          detail: "first_frame",
+                          context: {
+                            title,
+                            mediaId: mediaId ?? null,
+                            mediaSource: mediaSource ?? null,
+                            position: realTime,
+                            playbackTraceId
+                          }
+                        });
+                      }
+                      setRequiresUserStart(false);
+                      setControlsPaused(false);
+                    },
+                    onPause: () => {
+                      setPlaying(false);
+                      setControlsPaused(true);
+                    },
+                    onEnded: () => {
+                      setHasEnded(true);
+                      setPlaying(false);
+                      setControlsPaused(true);
+                      onPlaybackEnded?.();
+                    },
+                    onTimeUpdate: (e) => {
+                      const v = e.currentTarget;
+                      const now3 = Date.now();
+                      if (now3 - lastUiTickAtRef.current >= PLAYER_UI_TICK_MS) {
+                        setCurrentTime(v.currentTime);
+                        lastUiTickAtRef.current = now3;
+                      }
+                      const currentReal = v.currentTime + streamStartRef.current;
+                      if (currentReal > lastProgressSecondsRef.current + 0.25) {
+                        lastProgressSecondsRef.current = currentReal;
+                        lastProgressAtRef.current = Date.now();
+                      }
+                      if (subtitleClockOverride !== null) {
+                        const actualRealTime = currentReal;
+                        if (Math.abs(actualRealTime - subtitleClockOverride) <= 1.5) setSubtitleClockOverride(null);
+                      }
+                      if (v.buffered.length > 0) {
+                        const lastEnd = v.buffered.end(v.buffered.length - 1);
+                        if (v.duration > 0 && Number.isFinite(v.duration)) {
+                          const bufferedPercent = lastEnd / v.duration * 100;
+                          if (now3 - lastBufferedTickAtRef.current >= PLAYER_UI_TICK_MS && Math.abs(bufferedPercent - lastBufferedPercentRef.current) >= 0.5) {
+                            setBuffered(bufferedPercent);
+                            lastBufferedPercentRef.current = bufferedPercent;
+                            lastBufferedTickAtRef.current = now3;
+                          }
+                        }
+                        if (!proxyBufferReady && lastEnd - v.currentTime >= 4) {
+                          setProxyBufferReady(true);
+                          setSeekingProxy(false);
+                        }
+                      }
+                    },
+                    onCanPlayThrough: () => {
+                      setProxyBufferReady(true);
+                      setSeekingProxy(false);
+                    },
+                    onDurationChange: (e) => {
+                      const v = e.currentTarget;
+                      setDuration(v.duration);
+                      if (!isServerStreamUrl(videoSrc) && !didSeekRef.current && initialTime && initialTime > 0) {
+                        didSeekRef.current = true;
+                        v.currentTime = Math.min(initialTime, v.duration - 1);
+                      }
+                    },
+                    onVolumeChange: (e) => {
+                      setMuted(e.currentTarget.muted);
+                      setVolume(e.currentTarget.volume);
+                    },
+                    onWaiting: () => {
+                      stallLastProgressAtRef.current = Math.min(stallLastProgressAtRef.current, Date.now() - 5200);
+                    },
+                    onStalled: () => {
+                      stallLastProgressAtRef.current = Math.min(stallLastProgressAtRef.current, Date.now() - 5200);
+                    },
+                    onError: () => {
+                      const v = videoRef.current;
+                      const mediaError = v?.error;
+                      void fetch(`/api/debug-log?msg=${encodeURIComponent(
+                        `webvideo error code=${mediaError?.code ?? "?"} msg=${mediaError?.message ?? ""} src=${videoSrc.slice(0, 90)} t=${(v?.currentTime ?? 0).toFixed(1)}`
+                      )}`).catch(() => {
+                      });
+                      const currentReal = (v?.currentTime ?? 0) + streamStartRef.current;
+                      if (!isServerStreamUrl(videoSrc)) {
+                        applyStreamSrc(url, null, currentReal, videoCodec, getTrackChannels(null), effectiveProxyAudioMode, nightMode, shouldForceProxyTranscode);
+                        return;
+                      }
+                      const proxyUrl = isProxyUrl(videoSrc) ? new URL(videoSrc, window.location.href) : null;
+                      const alreadyTranscoding = proxyUrl ? proxyUrl.searchParams.get("transcode") === "1" : hlsTranscodeRef.current;
+                      if (!alreadyTranscoding && !proxyRetryRef.current) {
+                        proxyRetryRef.current = true;
+                        const origUrl = proxyUrl?.searchParams.get("url") ?? url;
+                        const trackRaw = proxyUrl?.searchParams.get("track") ?? null;
+                        const track = trackRaw !== null ? parseInt(trackRaw, 10) : activeAudioTrack;
+                        applyStreamSrc(origUrl, track, currentReal, videoCodec, getTrackChannels(track), effectiveProxyAudioMode, nightMode, true);
+                        return;
+                      }
+                      if (!hasStarted) {
+                        escalateBrowserFailure();
+                      }
+                    }
+                  }
+                ) }) }) : /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-black" }),
+                /* @__PURE__ */ jsx(
+                  "div",
+                  {
+                    className: "absolute inset-0 z-10",
+                    onPointerDown: (e) => {
+                      suppressNextOverlayToggleRef.current = e.pointerType !== "mouse" && !controlsVisible;
+                      if (suppressNextOverlayToggleRef.current) onMouseActivity();
+                      onGesturePointerDown(e);
+                    },
+                    onPointerMove: onGesturePointerMove,
+                    onPointerUp: () => {
+                      if (endGesture()) suppressNextOverlayToggleRef.current = true;
+                    },
+                    onPointerCancel: () => {
+                      endGesture();
+                    },
+                    onClick: () => {
+                      if (suppressNextOverlayToggleRef.current) {
+                        suppressNextOverlayToggleRef.current = false;
+                        return;
+                      }
+                      togglePlay();
+                    },
+                    onMouseMove: onMouseActivity
+                  }
+                ),
+                gestureHud ? /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 z-[57] flex items-center justify-center", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 rounded-full bg-black/70 px-4 py-2.5 backdrop-blur-md", children: [
+                  gestureHud.kind === "volume" ? /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px] text-white", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) : /* @__PURE__ */ jsxs("svg", { className: "h-[18px] w-[18px] text-white", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.9", strokeLinecap: "round", children: [
+                    /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "4" }),
+                    /* @__PURE__ */ jsx("path", { d: "M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" })
+                  ] }),
+                  /* @__PURE__ */ jsx("span", { className: "min-w-[3ch] text-sm font-semibold tabular-nums text-white", children: gestureHud.kind === "volume" ? `${gestureHud.value}%` : `${gestureHud.value > 0 ? "+" : ""}${gestureHud.value}` })
+                ] }) }) : null,
+                hasStarted && !isPlaying && !newChrome && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 z-20 flex items-center justify-center", children: /* @__PURE__ */ jsx("div", { className: "rounded-full bg-black/40 p-5 backdrop-blur-sm", children: /* @__PURE__ */ jsx("svg", { className: "h-12 w-12 text-white", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }) }) }),
+                newChrome && hasStarted && /* @__PURE__ */ jsxs(
+                  "div",
+                  {
+                    className: `absolute inset-x-0 z-20 flex -translate-y-1/2 items-center justify-center transition-opacity duration-300 ${desktopChrome ? "top-[52%] gap-[60px]" : landscapeChrome ? "top-1/2 gap-14" : "gap-[34px]"}`,
+                    style: {
+                      opacity: controlsVisible && controlsReady ? 1 : 0,
+                      pointerEvents: controlsVisible && controlsReady ? "auto" : "none",
+                      // Liggande: designens -60 % lyfter klustret ur seekradens väg.
+                      transform: landscapeChrome ? "translateY(-60%)" : void 0,
+                      // Stående: centrerad på VIDEON, inte i ytan mellan listen och
+                      // kontrollerna. Bilden är brevlådad och ligger mitt i
+                      // videoytan — designens "centrerad över videon" är alltså
+                      // fönstrets mitt här, inte 56 + (höjd − 214) / 2, som la
+                      // cirkeln ~50 px för högt.
+                      top: portraitChrome ? "50%" : void 0
+                    },
+                    children: [
+                      showsControl("seekBack") ? /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          onClick: () => seek(-10),
+                          "aria-label": "-10s",
+                          className: `text-white/90 transition hover:text-white ${desktopChrome ? "p-2" : landscapeChrome ? "p-2.5" : "p-2"}`,
+                          children: seekIcon("back", desktopChrome ? "h-10 w-10" : landscapeChrome ? "h-[34px] w-[34px]" : "h-7 w-7")
+                        }
+                      ) : null,
+                      /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          onClick: togglePlay,
+                          "aria-label": t("plPlayPause"),
+                          className: `flex items-center justify-center rounded-full border-[1.5px] text-white transition ${desktopChrome ? "h-[86px] w-[86px] border-white/20 bg-[rgba(13,14,22,0.3)] hover:bg-[rgb(var(--player-accent)/0.20)]" : landscapeChrome ? "h-[78px] w-[78px] border-[rgb(var(--player-accent)/0.50)] bg-[rgb(var(--player-accent)/0.16)] shadow-[0_0_40px_rgb(var(--player-accent)/0.25)]" : "h-[58px] w-[58px] border-white/[0.22] bg-[rgba(13,14,22,0.34)]"}`,
+                          children: isPlaying ? /* @__PURE__ */ jsx("svg", { className: desktopChrome ? "h-[30px] w-[30px]" : landscapeChrome ? "h-[26px] w-[26px]" : "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M6 19h4V5H6v14zm8-14v14h4V5h-4z" }) }) : /* @__PURE__ */ jsx("svg", { className: desktopChrome ? "h-8 w-8" : landscapeChrome ? "h-7 w-7" : "h-[22px] w-[22px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) })
+                        }
+                      ),
+                      showsControl("seekForward") ? /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          onClick: () => seek(10),
+                          "aria-label": "+10s",
+                          className: `text-white/90 transition hover:text-white ${desktopChrome ? "p-2" : landscapeChrome ? "p-2.5" : "p-2"}`,
+                          children: seekIcon("forward", desktopChrome ? "h-10 w-10" : landscapeChrome ? "h-[34px] w-[34px]" : "h-7 w-7")
+                        }
+                      ) : null
+                    ]
+                  }
+                ),
+                landscapeChrome && /* @__PURE__ */ jsxs(
+                  "div",
+                  {
+                    className: "absolute inset-x-[26px] top-5 z-[26] flex items-center justify-between gap-6 transition-opacity duration-300",
+                    style: {
+                      opacity: controlsVisible ? 1 : 0,
+                      pointerEvents: controlsVisible ? "auto" : "none"
+                    },
+                    children: [
+                      /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-3", children: [
+                        /* @__PURE__ */ jsx("button", { type: "button", onClick: handleClose, "aria-label": t("close"), className: "flex-none p-1 text-white", children: /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: [
+                          /* @__PURE__ */ jsx("path", { d: "M19 12H5" }),
+                          /* @__PURE__ */ jsx("path", { d: "m11 6-6 6 6 6" })
+                        ] }) }),
+                        /* @__PURE__ */ jsxs("div", { className: "min-w-0", children: [
+                          /* @__PURE__ */ jsx("div", { className: "truncate text-[17px] font-semibold text-white drop-shadow-[0_1px_10px_rgba(0,0,0,0.8)]", children: headerTitle }),
+                          streamQualityLabel ? /* @__PURE__ */ jsx("div", { className: "truncate text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400", children: streamQualityLabel }) : null
+                        ] })
+                      ] }),
+                      /* @__PURE__ */ jsxs("div", { className: "flex flex-none items-center gap-2", children: [
+                        renderSegmentPills(),
+                        (introSegment || outroSegment) && phoneClusterIds.length > 0 ? /* @__PURE__ */ jsx("span", { "aria-hidden": true, className: "mx-0.5 h-5 w-px flex-none bg-white/[0.16]" }) : null,
+                        phoneClusterIds.map((id4) => renderPhoneRoundButton(id4, phoneControls[id4])),
+                        renderPhoneDownload("round")
+                      ] })
+                    ]
+                  }
+                ),
+                seekingProxy && hasEverStarted && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 z-30 flex items-center justify-center", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-full bg-black/55 px-5 py-3 backdrop-blur-md", children: [
+                  /* @__PURE__ */ jsx("svg", { className: "h-6 w-6 animate-spin text-white", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }),
+                  /* @__PURE__ */ jsx("span", { className: "text-sm text-white/90", children: t("startingMovie") })
+                ] }) }),
+                !hasStarted && requiresUserStart && /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-40 flex items-center justify-center bg-black/35", children: /* @__PURE__ */ jsx(
                   "button",
                   {
                     type: "button",
                     "data-f": isTv ? "1" : void 0,
                     onClick: () => {
-                      if (openInExternalPlayer(url)) {
-                        (onOpenedExternally ?? onClose)();
-                      }
+                      void attemptHtml5Start(true);
                     },
-                    className: "rounded-full border border-orange-400/50 bg-orange-500/15 px-4 py-2 text-xs font-medium uppercase tracking-[0.16em] text-orange-200 transition hover:border-orange-400 hover:text-orange-100",
-                    children: t("openInExternalPlayer")
+                    className: "rounded-full border border-white/20 bg-black/55 px-5 py-2 text-xs uppercase tracking-[0.18em] text-white transition hover:border-white/40",
+                    children: t("pressToStart")
                   }
-                ),
-                /* @__PURE__ */ jsx(
-                  "button",
-                  {
-                    type: "button",
-                    ref: splashCancelRef,
-                    "data-f": isTv ? "1" : void 0,
-                    "data-init": isTv ? "1" : void 0,
-                    onClick: handleClose,
-                    className: "text-xs text-slate-500 transition hover:text-slate-300",
-                    children: startError ? t("close") : "Avbryt"
-                  }
-                )
-              ] })
-            ] })
-          ]
-        }
-      ),
-      !(useMpv && desktopFullscreen) && /* @__PURE__ */ jsxs(
-        "div",
-        {
-          className: `absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-4 overflow-hidden transition-[height,padding,opacity,background-color] duration-300 ${collapseMpvTopBar || cssFullscreen && !controlsVisible ? "h-0 px-4 py-0 opacity-0" : "min-h-[44px] px-4 pb-2.5 pt-[max(0.625rem,env(safe-area-inset-top),var(--android-inset-top,0px))]"}`,
-          style: {
-            backgroundColor: useMpv ? "#000" : controlsVisible ? "rgba(0,0,0,0.8)" : "transparent",
-            pointerEvents: controlsVisible ? "auto" : "none"
-          },
-          children: [
-            /* @__PURE__ */ jsx(
-              "div",
-              {
-                className: "pointer-events-none absolute inset-x-0 bottom-0 border-b border-white/10 transition-opacity duration-300",
-                style: { opacity: controlsVisible ? 1 : 0 }
-              }
-            ),
-            /* @__PURE__ */ jsxs(
-              "span",
-              {
-                className: "relative flex min-w-0 flex-col transition-opacity duration-300",
-                style: { opacity: controlsVisible ? 1 : 0 },
-                children: [
-                  /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-300", children: headerTitle }),
-                  streamQualityLabel ? /* @__PURE__ */ jsx("span", { className: "truncate text-[10.5px] uppercase tracking-[0.14em] text-slate-500", children: streamQualityLabel }) : null
-                ]
-              }
-            ),
-            /* @__PURE__ */ jsxs(
-              "div",
-              {
-                className: "relative flex items-center gap-2 transition-opacity duration-300",
-                style: { opacity: controlsVisible ? 1 : 0 },
-                children: [
-                  /* @__PURE__ */ jsx(
-                    "button",
-                    {
-                      type: "button",
-                      "data-f": isTv ? "1" : void 0,
-                      onClick: () => {
-                        void handleCopyStreamLink();
-                      },
-                      className: "rounded-full border border-white/10 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-slate-300 transition hover:border-white/30 hover:text-white",
-                      children: t("copyLink")
-                    }
-                  ),
-                  /* @__PURE__ */ jsx(
-                    "button",
-                    {
-                      type: "button",
-                      "data-f": isTv ? "1" : void 0,
-                      onClick: handleClose,
-                      className: "rounded-full border border-white/10 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-slate-300 transition hover:border-white/30 hover:text-white",
-                      children: t("close")
-                    }
-                  )
-                ]
-              }
-            )
-          ]
-        }
-      ),
-      /* @__PURE__ */ jsxs(
-        "div",
-        {
-          ref: containerRef,
-          className: `vp-container relative flex flex-1 items-center justify-center ${useMpv ? "bg-transparent" : "bg-black"}`,
-          style: { cursor: useMpv ? "default" : controlsVisible ? "default" : "none" },
-          onMouseMove: onMouseActivity,
-          children: [
-            isMpvEngine && /* Hidden WebKit video that owns the AirPlay hand-off — see the
-               AirPlay row in the cast menu. */
-            /* eslint-disable-next-line jsx-a11y/media-has-caption */
-            /* @__PURE__ */ jsx(
-              "video",
-              {
-                ref: airplayVideoRef,
-                playsInline: true,
-                style: { position: "absolute", bottom: 0, left: 0, width: 2, height: 2, opacity: 0, pointerEvents: "none" },
-                ...{ "x-webkit-airplay": "allow" }
-              }
-            ),
-            airplayActive && /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-black/80", children: [
-              /* @__PURE__ */ jsxs("span", { className: "text-lg text-white", children: [
-                t("castPlayingOn"),
-                " AirPlay"
-              ] }),
-              /* @__PURE__ */ jsx(
-                "button",
-                {
-                  type: "button",
-                  "data-f": isTv ? "1" : void 0,
-                  className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
-                  onClick: () => {
-                    const v = airplayVideoRef.current;
-                    const resumeAt = v && v.currentTime > 0 ? (airplaySession?.offset ?? 0) + v.currentTime : realTimeRef.current;
-                    setAirplayActive(false);
-                    airplayWasExternalRef.current = false;
-                    stopAirplayVideo();
-                    void avplayerTeardown();
-                    setAirplaySession(null);
-                    setAirplayPrepare("idle");
-                    void mpvCommand2(["seek", resumeAt, "absolute"]);
-                    void setMpvPause2(false);
-                  },
-                  children: t("castStop")
-                }
-              )
-            ] }),
-            useMpv ? (
-              // Transparent area — mpv NSView renders behind the WKWebView here
-              /* @__PURE__ */ jsx("div", { style: { width: "100%", height: "100%", background: "transparent" } })
-            ) : videoSrc ? /* @__PURE__ */ jsx("div", { className: videoPresentation.wrapperClassName, children: /* @__PURE__ */ jsx("div", { style: aspectFrameStyle, className: aspectFrameStyle ? "relative flex items-center justify-center overflow-hidden" : "contents", children: /* @__PURE__ */ jsx(
-              "video",
-              {
-                ref: videoRef,
-                src: videoSrc,
-                autoPlay: true,
-                playsInline: true,
-                className: "block",
-                style: { ...videoPresentation.videoStyle, ...cropZoomVideoStyle, filter: tuningToCssFilter(effectiveVideoTuning) || void 0 },
-                ...{ "x-webkit-airplay": "allow" },
-                onLoadedMetadata: () => {
-                  if (!hasStarted) void attemptHtml5Start(false);
-                },
-                onCanPlay: () => {
-                  if (!hasStarted) void attemptHtml5Start(false);
-                },
-                onPlay: () => {
-                  setPlaying(true);
-                  if (!hasStarted) {
-                    hasStartedForUrlRef.current = true;
-                    setHasStarted(true);
-                    if (useMpv || !isServerStreamUrl(videoSrc)) {
-                      setHasEverStarted(true);
-                    }
-                    onFirstPlay?.();
-                  }
-                  if (!firstFrameLoggedRef.current) {
-                    firstFrameLoggedRef.current = true;
-                    void emitDesktopPlaybackTelemetry({
-                      stage: "player.lifecycle",
-                      status: "ok",
-                      detail: "first_frame",
-                      context: {
-                        title,
-                        mediaId: mediaId ?? null,
-                        mediaSource: mediaSource ?? null,
-                        position: realTime,
-                        playbackTraceId
-                      }
-                    });
-                  }
-                  setRequiresUserStart(false);
-                  setControlsPaused(false);
-                },
-                onPause: () => {
-                  setPlaying(false);
-                  setControlsPaused(true);
-                },
-                onEnded: () => {
-                  setHasEnded(true);
-                  setPlaying(false);
-                  setControlsPaused(true);
-                  onPlaybackEnded?.();
-                },
-                onTimeUpdate: (e) => {
-                  const v = e.currentTarget;
-                  const now3 = Date.now();
-                  if (now3 - lastUiTickAtRef.current >= PLAYER_UI_TICK_MS) {
-                    setCurrentTime(v.currentTime);
-                    lastUiTickAtRef.current = now3;
-                  }
-                  const currentReal = v.currentTime + streamStartRef.current;
-                  if (currentReal > lastProgressSecondsRef.current + 0.25) {
-                    lastProgressSecondsRef.current = currentReal;
-                    lastProgressAtRef.current = Date.now();
-                  }
-                  if (subtitleClockOverride !== null) {
-                    const actualRealTime = currentReal;
-                    if (Math.abs(actualRealTime - subtitleClockOverride) <= 1.5) setSubtitleClockOverride(null);
-                  }
-                  if (v.buffered.length > 0) {
-                    const lastEnd = v.buffered.end(v.buffered.length - 1);
-                    if (v.duration > 0 && Number.isFinite(v.duration)) {
-                      const bufferedPercent = lastEnd / v.duration * 100;
-                      if (now3 - lastBufferedTickAtRef.current >= PLAYER_UI_TICK_MS && Math.abs(bufferedPercent - lastBufferedPercentRef.current) >= 0.5) {
-                        setBuffered(bufferedPercent);
-                        lastBufferedPercentRef.current = bufferedPercent;
-                        lastBufferedTickAtRef.current = now3;
-                      }
-                    }
-                    if (!proxyBufferReady && lastEnd - v.currentTime >= 4) {
-                      setProxyBufferReady(true);
-                      setSeekingProxy(false);
-                    }
-                  }
-                },
-                onCanPlayThrough: () => {
-                  setProxyBufferReady(true);
-                  setSeekingProxy(false);
-                },
-                onDurationChange: (e) => {
-                  const v = e.currentTarget;
-                  setDuration(v.duration);
-                  if (!isServerStreamUrl(videoSrc) && !didSeekRef.current && initialTime && initialTime > 0) {
-                    didSeekRef.current = true;
-                    v.currentTime = Math.min(initialTime, v.duration - 1);
-                  }
-                },
-                onVolumeChange: (e) => {
-                  setMuted(e.currentTarget.muted);
-                  setVolume(e.currentTarget.volume);
-                },
-                onWaiting: () => {
-                  stallLastProgressAtRef.current = Math.min(stallLastProgressAtRef.current, Date.now() - 5200);
-                },
-                onStalled: () => {
-                  stallLastProgressAtRef.current = Math.min(stallLastProgressAtRef.current, Date.now() - 5200);
-                },
-                onError: () => {
-                  const v = videoRef.current;
-                  const mediaError = v?.error;
-                  void fetch(`/api/debug-log?msg=${encodeURIComponent(
-                    `webvideo error code=${mediaError?.code ?? "?"} msg=${mediaError?.message ?? ""} src=${videoSrc.slice(0, 90)} t=${(v?.currentTime ?? 0).toFixed(1)}`
-                  )}`).catch(() => {
-                  });
-                  const currentReal = (v?.currentTime ?? 0) + streamStartRef.current;
-                  if (!isServerStreamUrl(videoSrc)) {
-                    applyStreamSrc(url, null, currentReal, videoCodec, getTrackChannels(null), effectiveProxyAudioMode, nightMode, shouldForceProxyTranscode);
-                    return;
-                  }
-                  const proxyUrl = isProxyUrl(videoSrc) ? new URL(videoSrc, window.location.href) : null;
-                  const alreadyTranscoding = proxyUrl ? proxyUrl.searchParams.get("transcode") === "1" : hlsTranscodeRef.current;
-                  if (!alreadyTranscoding && !proxyRetryRef.current) {
-                    proxyRetryRef.current = true;
-                    const origUrl = proxyUrl?.searchParams.get("url") ?? url;
-                    const trackRaw = proxyUrl?.searchParams.get("track") ?? null;
-                    const track = trackRaw !== null ? parseInt(trackRaw, 10) : activeAudioTrack;
-                    applyStreamSrc(origUrl, track, currentReal, videoCodec, getTrackChannels(track), effectiveProxyAudioMode, nightMode, true);
-                    return;
-                  }
-                  if (!hasStarted) {
-                    escalateBrowserFailure();
-                  }
-                }
-              }
-            ) }) }) : /* @__PURE__ */ jsx("div", { className: "absolute inset-0 bg-black" }),
-            /* @__PURE__ */ jsx(
-              "div",
-              {
-                className: "absolute inset-0 z-10",
-                onPointerDown: (e) => {
-                  suppressNextOverlayToggleRef.current = e.pointerType !== "mouse" && !controlsVisible;
-                  if (suppressNextOverlayToggleRef.current) onMouseActivity();
-                },
-                onClick: () => {
-                  if (suppressNextOverlayToggleRef.current) {
-                    suppressNextOverlayToggleRef.current = false;
-                    return;
-                  }
-                  togglePlay();
-                },
-                onMouseMove: onMouseActivity
-              }
-            ),
-            hasStarted && !isPlaying && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 z-20 flex items-center justify-center", children: /* @__PURE__ */ jsx("div", { className: "rounded-full bg-black/40 p-5 backdrop-blur-sm", children: /* @__PURE__ */ jsx("svg", { className: "h-12 w-12 text-white", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }) }) }),
-            seekingProxy && hasEverStarted && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 z-30 flex items-center justify-center", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-full bg-black/55 px-5 py-3 backdrop-blur-md", children: [
-              /* @__PURE__ */ jsx("svg", { className: "h-6 w-6 animate-spin text-white", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }),
-              /* @__PURE__ */ jsx("span", { className: "text-sm text-white/90", children: t("startingMovie") })
-            ] }) }),
-            !hasStarted && requiresUserStart && /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-40 flex items-center justify-center bg-black/35", children: /* @__PURE__ */ jsx(
-              "button",
-              {
-                type: "button",
-                "data-f": isTv ? "1" : void 0,
-                onClick: () => {
-                  void attemptHtml5Start(true);
-                },
-                className: "rounded-full border border-white/20 bg-black/55 px-5 py-2 text-xs uppercase tracking-[0.18em] text-white transition hover:border-white/40",
-                children: t("pressToStart")
-              }
-            ) }),
-            manualSyncOpen && /* @__PURE__ */ jsx(
-              "div",
-              {
-                className: "absolute inset-0 z-[70] flex items-end justify-center bg-slate-950/70 p-6 backdrop-blur-sm",
-                onClick: () => {
-                  setManualSyncOpen(false);
-                  setManualSyncTapTime(null);
-                },
-                children: /* @__PURE__ */ jsx(
+                ) }),
+                manualSyncOpen && /* @__PURE__ */ jsx(
                   "div",
                   {
-                    className: "mb-24 w-full max-w-xl rounded-2xl border border-white/10 bg-slate-900/95 p-5 shadow-2xl",
-                    onClick: (event) => event.stopPropagation(),
-                    children: manualSyncTapTime === null ? /* @__PURE__ */ jsxs(Fragment2, { children: [
-                      /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-200", children: t("subtitleManualSyncTapPrompt") }),
+                    className: "absolute inset-0 z-[70] flex items-end justify-center bg-slate-950/70 p-6 backdrop-blur-sm",
+                    onClick: () => {
+                      setManualSyncOpen(false);
+                      setManualSyncTapTime(null);
+                    },
+                    children: /* @__PURE__ */ jsx(
+                      "div",
+                      {
+                        className: "mb-24 w-full max-w-xl rounded-2xl border border-white/10 bg-slate-900/95 p-5 shadow-2xl",
+                        onClick: (event) => event.stopPropagation(),
+                        children: manualSyncTapTime === null ? /* @__PURE__ */ jsxs(Fragment2, { children: [
+                          /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-200", children: t("subtitleManualSyncTapPrompt") }),
+                          /* @__PURE__ */ jsx(
+                            "button",
+                            {
+                              type: "button",
+                              autoFocus: true,
+                              "data-f": isTv ? "1" : void 0,
+                              onClick: () => setManualSyncTapTime(realTimeRef.current),
+                              className: "mt-4 w-full rounded-xl bg-aurora-500/80 px-4 py-3 text-sm font-semibold text-white transition hover:bg-aurora-400/80",
+                              children: t("subtitleManualSyncTapButton")
+                            }
+                          ),
+                          /* @__PURE__ */ jsx("p", { className: "mt-3 text-[11px] text-slate-500", children: t("subtitleManualSyncSecondHint") })
+                        ] }) : /* @__PURE__ */ jsxs(Fragment2, { children: [
+                          /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-200", children: manualSyncBusy ? t("subtitleManualSyncApplying") : t("subtitleManualSyncPickPrompt") }),
+                          manualSyncBusy && /* @__PURE__ */ jsxs("div", { className: "mt-3 flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-3", children: [
+                            /* @__PURE__ */ jsx("span", { className: "h-4 w-4 animate-spin rounded-full border-2 border-white/25 border-t-white/80" }),
+                            /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-300", children: t("subtitleManualSyncRefining") })
+                          ] }),
+                          /* @__PURE__ */ jsx("div", { className: `mt-3 max-h-64 space-y-1 overflow-y-auto ${manualSyncBusy ? "pointer-events-none opacity-40" : ""}`, children: (() => {
+                            const near = cues.filter((cue) => Math.abs(cue.start - manualSyncTapTime) <= 120).sort((a, b) => Math.abs(a.start - manualSyncTapTime) - Math.abs(b.start - manualSyncTapTime)).slice(0, 40).sort((a, b) => a.start - b.start);
+                            if (near.length === 0) {
+                              return /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("subtitleManualSyncNoCues") });
+                            }
+                            return near.map((cue) => /* @__PURE__ */ jsxs(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                disabled: manualSyncBusy,
+                                onClick: () => {
+                                  void applyManualAnchor(cue);
+                                },
+                                className: "flex w-full items-baseline gap-3 rounded-lg px-3 py-2 text-left text-sm text-slate-200 transition hover:bg-white/10 disabled:opacity-50",
+                                children: [
+                                  /* @__PURE__ */ jsxs("span", { className: "shrink-0 font-mono text-[11px] text-slate-500", children: [
+                                    Math.floor(cue.start / 60),
+                                    ":",
+                                    String(Math.floor(cue.start % 60)).padStart(2, "0")
+                                  ] }),
+                                  /* @__PURE__ */ jsx("span", { className: "line-clamp-2", children: cue.text.replace(/\n/g, " ") })
+                                ]
+                              },
+                              `${cue.start}-${cue.text.slice(0, 12)}`
+                            ));
+                          })() }),
+                          /* @__PURE__ */ jsx(
+                            "button",
+                            {
+                              type: "button",
+                              "data-f": isTv ? "1" : void 0,
+                              onClick: () => setManualSyncTapTime(null),
+                              className: "mt-3 text-xs text-slate-400 underline-offset-2 hover:text-white hover:underline",
+                              children: t("cancel2")
+                            }
+                          )
+                        ] })
+                      }
+                    )
+                  }
+                ),
+                activeCue && /* @__PURE__ */ jsx(
+                  "div",
+                  {
+                    className: "pointer-events-none absolute inset-x-0 z-30 flex justify-center px-8",
+                    style: { bottom: `calc(${subVerticalPos}% + 3.5rem)` },
+                    children: /* @__PURE__ */ jsx(
+                      "div",
+                      {
+                        className: "rounded px-3 py-1 text-center font-medium leading-snug",
+                        style: {
+                          fontSize: `${subSize / 100 * 1.25}rem`,
+                          color: subTextColor,
+                          backgroundColor: subBackgroundColor,
+                          opacity: subOpacity / 100,
+                          textShadow: `0 1px 6px ${subOutlineColor}, 0 0 2px ${subOutlineColor}, 1px 1px 3px ${subOutlineColor}, -1px -1px 3px ${subOutlineColor}`
+                        },
+                        children: activeCue.text.split("\n").map((line, i) => /* @__PURE__ */ jsxs("span", { children: [
+                          i > 0 && /* @__PURE__ */ jsx("br", {}),
+                          line
+                        ] }, i))
+                      }
+                    )
+                  }
+                ),
+                showCastMenu && /* @__PURE__ */ jsxs("div", { className: `absolute z-[60] border border-white/10 p-4 ${desktopChrome ? "bottom-[92px] right-6 w-72 rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : landscapeChrome ? "right-[26px] top-[72px] w-[260px] rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : portraitChrome ? "inset-x-3 bottom-[172px] rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : "bottom-20 right-4 w-72 rounded-2xl bg-slate-900/95 shadow-2xl backdrop-blur"}`, children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
+                    /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.2em] text-slate-400", children: t("castTitle") }),
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        type: "button",
+                        "data-f": isTv ? "1" : void 0,
+                        onClick: () => void scanCastDevices(),
+                        disabled: castScanning,
+                        className: "text-[11px] text-slate-400 underline-offset-2 hover:text-white hover:underline disabled:opacity-50",
+                        children: t("castRescan")
+                      }
+                    )
+                  ] }),
+                  castTarget && /* @__PURE__ */ jsxs("div", { className: "mt-3 rounded-xl border border-aurora-400/30 bg-aurora-400/10 p-3", children: [
+                    /* @__PURE__ */ jsx("p", { className: "text-[11px] uppercase tracking-[0.18em] text-aurora-200", children: t("castPlayingOn") }),
+                    /* @__PURE__ */ jsx("p", { className: "mt-1 truncate text-sm text-white", children: castTarget.name }),
+                    /* @__PURE__ */ jsxs("div", { className: "mt-2 flex gap-2", children: [
                       /* @__PURE__ */ jsx(
                         "button",
                         {
                           type: "button",
-                          autoFocus: true,
                           "data-f": isTv ? "1" : void 0,
-                          onClick: () => setManualSyncTapTime(realTimeRef.current),
-                          className: "mt-4 w-full rounded-xl bg-aurora-500/80 px-4 py-3 text-sm font-semibold text-white transition hover:bg-aurora-400/80",
-                          children: t("subtitleManualSyncTapButton")
+                          onClick: () => void sendToCast(castTarget, "pause"),
+                          className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
+                          children: t("castPause")
                         }
                       ),
-                      /* @__PURE__ */ jsx("p", { className: "mt-3 text-[11px] text-slate-500", children: t("subtitleManualSyncSecondHint") })
-                    ] }) : /* @__PURE__ */ jsxs(Fragment2, { children: [
-                      /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-200", children: manualSyncBusy ? t("subtitleManualSyncApplying") : t("subtitleManualSyncPickPrompt") }),
-                      manualSyncBusy && /* @__PURE__ */ jsxs("div", { className: "mt-3 flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-3", children: [
-                        /* @__PURE__ */ jsx("span", { className: "h-4 w-4 animate-spin rounded-full border-2 border-white/25 border-t-white/80" }),
-                        /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-300", children: t("subtitleManualSyncRefining") })
-                      ] }),
-                      /* @__PURE__ */ jsx("div", { className: `mt-3 max-h-64 space-y-1 overflow-y-auto ${manualSyncBusy ? "pointer-events-none opacity-40" : ""}`, children: (() => {
-                        const near = cues.filter((cue) => Math.abs(cue.start - manualSyncTapTime) <= 120).sort((a, b) => Math.abs(a.start - manualSyncTapTime) - Math.abs(b.start - manualSyncTapTime)).slice(0, 40).sort((a, b) => a.start - b.start);
-                        if (near.length === 0) {
-                          return /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("subtitleManualSyncNoCues") });
-                        }
-                        return near.map((cue) => /* @__PURE__ */ jsxs(
-                          "button",
-                          {
-                            type: "button",
-                            "data-f": isTv ? "1" : void 0,
-                            disabled: manualSyncBusy,
-                            onClick: () => {
-                              void applyManualAnchor(cue);
-                            },
-                            className: "flex w-full items-baseline gap-3 rounded-lg px-3 py-2 text-left text-sm text-slate-200 transition hover:bg-white/10 disabled:opacity-50",
-                            children: [
-                              /* @__PURE__ */ jsxs("span", { className: "shrink-0 font-mono text-[11px] text-slate-500", children: [
-                                Math.floor(cue.start / 60),
-                                ":",
-                                String(Math.floor(cue.start % 60)).padStart(2, "0")
-                              ] }),
-                              /* @__PURE__ */ jsx("span", { className: "line-clamp-2", children: cue.text.replace(/\n/g, " ") })
-                            ]
-                          },
-                          `${cue.start}-${cue.text.slice(0, 12)}`
-                        ));
-                      })() }),
                       /* @__PURE__ */ jsx(
                         "button",
                         {
                           type: "button",
                           "data-f": isTv ? "1" : void 0,
-                          onClick: () => setManualSyncTapTime(null),
-                          className: "mt-3 text-xs text-slate-400 underline-offset-2 hover:text-white hover:underline",
-                          children: t("cancel2")
+                          onClick: () => void sendToCast(castTarget, "resume"),
+                          className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
+                          children: t("castResume")
+                        }
+                      ),
+                      /* @__PURE__ */ jsx(
+                        "button",
+                        {
+                          type: "button",
+                          "data-f": isTv ? "1" : void 0,
+                          onClick: () => void sendToCast(castTarget, "stop"),
+                          className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
+                          children: t("castStop")
                         }
                       )
                     ] })
-                  }
-                )
-              }
-            ),
-            activeCue && /* @__PURE__ */ jsx(
-              "div",
-              {
-                className: "pointer-events-none absolute inset-x-0 z-30 flex justify-center px-8",
-                style: { bottom: `calc(${subVerticalPos}% + 3.5rem)` },
-                children: /* @__PURE__ */ jsx(
+                  ] }),
+                  /* @__PURE__ */ jsx("div", { className: "mt-3 max-h-56 space-y-1 overflow-y-auto", children: castScanning && castDevices.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("castScanning") }) : castDevices.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("castNoDevices") }) : castDevices.filter((device) => device.kind !== "airplay").map((device) => /* @__PURE__ */ jsxs(
+                    "button",
+                    {
+                      type: "button",
+                      "data-f": isTv ? "1" : void 0,
+                      onClick: () => void sendToCast(device, "play"),
+                      className: "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-white/10",
+                      children: [
+                        /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-200", children: device.name }),
+                        /* @__PURE__ */ jsx("span", { className: "shrink-0 text-[10px] uppercase tracking-[0.16em] text-slate-500", children: device.kind === "chromecast" ? "Cast" : "DLNA" })
+                      ]
+                    },
+                    device.id
+                  )) }),
+                  isMpvEngine && /* @__PURE__ */ jsxs(
+                    "button",
+                    {
+                      type: "button",
+                      "data-f": isTv ? "1" : void 0,
+                      disabled: airplayPrepare === "preparing" || airplaySession !== null && !(airplayTargetReady && airplayMediaReady),
+                      onClick: () => {
+                        if (!airplaySession) {
+                          void prepareAirplaySession();
+                          return;
+                        }
+                        const v = airplayVideoRef.current;
+                        if (!v) return;
+                        void v.play().catch(() => {
+                        });
+                        const show = v.webkitShowPlaybackTargetPicker;
+                        airplayLog(`row click, picker=${typeof show}, readyState=${v.readyState}`);
+                        if (typeof show === "function") show.call(v);
+                        else setCastError(t("castFailed"));
+                      },
+                      className: "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-white/10 disabled:cursor-default disabled:opacity-50",
+                      children: [
+                        /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-200", children: "AirPlay" }),
+                        /* @__PURE__ */ jsx("span", { className: `shrink-0 text-[10px] uppercase tracking-[0.16em] ${airplayPrepare === "failed" ? "text-rose-300" : "text-slate-500"}`, children: airplayPrepare === "failed" ? t("castPrepareFailed") : airplaySession && airplayTargetReady && airplayMediaReady ? "AirPlay" : t("castPreparing") })
+                      ]
+                    }
+                  ),
+                  castError && /* @__PURE__ */ jsx("p", { className: "mt-3 text-[11px] leading-5 text-rose-300", children: castError })
+                ] }),
+                showSubMenu && // The CC panel is three columns wide — anchoring it at the trigger
+                // and growing leftward clipped it against the window's left edge.
+                // Pin it to the window's right edge instead; only `bottom` follows
+                // the trigger so it still opens just above the controls bar.
+                /* @__PURE__ */ jsxs(
                   "div",
                   {
-                    className: "rounded px-3 py-1 text-center font-medium leading-snug",
-                    style: {
-                      fontSize: `${subSize / 100 * 1.25}rem`,
-                      color: subTextColor,
-                      backgroundColor: subBackgroundColor,
-                      opacity: subOpacity / 100,
-                      textShadow: `0 1px 6px ${subOutlineColor}, 0 0 2px ${subOutlineColor}, 1px 1px 3px ${subOutlineColor}, -1px -1px 3px ${subOutlineColor}`
-                    },
-                    children: activeCue.text.split("\n").map((line, i) => /* @__PURE__ */ jsxs("span", { children: [
-                      i > 0 && /* @__PURE__ */ jsx("br", {}),
-                      line
-                    ] }, i))
+                    style: { ...getAnchoredMenuStyle(subTriggerRef.current), right: 16, left: "auto" },
+                    className: `z-[70] flex max-h-[75vh] w-[min(calc(100vw-2rem),20rem)] flex-col overflow-y-auto rounded-xl border border-white/10 shadow-xl backdrop-blur-sm sm:max-h-none sm:w-auto sm:flex-row sm:overflow-visible ${desktopChrome ? "bg-base-800/95" : "bg-slate-900/95"}`,
+                    onClick: (e) => e.stopPropagation(),
+                    children: [
+                      /* @__PURE__ */ jsxs("div", { className: "flex w-full flex-col border-b border-white/10 py-3 sm:w-40 sm:border-b-0 sm:border-r", children: [
+                        /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleLanguages") }),
+                        /* @__PURE__ */ jsxs("div", { className: "overflow-y-auto overscroll-contain", style: { maxHeight: "260px" }, children: [
+                          /* @__PURE__ */ jsxs(
+                            "button",
+                            {
+                              type: "button",
+                              "data-f": isTv ? "1" : void 0,
+                              onClick: () => {
+                                manualSubtitleOverrideRef.current = true;
+                                subtitlePreferenceRef.current = { mode: "off" };
+                                void selectSubtitle(null, { manual: true });
+                                setSelectedLang(null);
+                                setShowSubMenu(false);
+                              },
+                              className: `flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-white/5 ${selectedLang === null ? "bg-white/5" : ""} ${activeSubId === null ? dtActiveTextClass : "text-slate-300"}`,
+                              children: [
+                                /* @__PURE__ */ jsx("span", { children: t("off") }),
+                                activeSubId === null && /* @__PURE__ */ jsx("span", { className: desktopChrome ? "h-1.5 w-1.5 rounded-full bg-white" : "h-2 w-2 rounded-full bg-aurora-400" })
+                              ]
+                            }
+                          ),
+                          Object.keys(subtitleGroups).map((lang2) => {
+                            const isActive = subtitleGroups[lang2].some((v) => v.id === activeSubId);
+                            return /* @__PURE__ */ jsxs(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => {
+                                  subtitlePreferenceRef.current = { mode: "language", language: lang2 };
+                                  setSelectedLang(lang2);
+                                },
+                                className: `flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-white/5 ${selectedLang === lang2 ? "bg-white/5" : ""} ${isActive ? dtActiveTextClass : "text-slate-300"}`,
+                                children: [
+                                  /* @__PURE__ */ jsx("span", { children: LANG_NAMES[lang2] ?? lang2.toUpperCase() }),
+                                  isActive && /* @__PURE__ */ jsx("span", { className: desktopChrome ? "h-1.5 w-1.5 rounded-full bg-white" : "h-2 w-2 rounded-full bg-aurora-400" })
+                                ]
+                              },
+                              lang2
+                            );
+                          })
+                        ] })
+                      ] }),
+                      /* @__PURE__ */ jsxs("div", { className: "flex w-full flex-col border-b border-white/10 py-3 sm:w-44 sm:border-b-0 sm:border-r", children: [
+                        /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleVariants") }),
+                        /* @__PURE__ */ jsx("div", { className: "overflow-y-auto overscroll-contain", style: { maxHeight: "260px" }, children: selectedLang ? subtitleGroups[selectedLang]?.map((sub) => {
+                          const isActive = sub.id === activeSubId;
+                          return /* @__PURE__ */ jsxs(
+                            "button",
+                            {
+                              type: "button",
+                              "data-f": isTv ? "1" : void 0,
+                              onClick: () => {
+                                void selectSubtitle(sub, { manual: true });
+                                setShowSubMenu(false);
+                              },
+                              className: `flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-white/5 ${isActive ? "bg-white/5" : ""}`,
+                              children: [
+                                /* @__PURE__ */ jsxs("div", { className: "text-left", children: [
+                                  /* @__PURE__ */ jsx("div", { className: isActive ? dtActiveTextClass : "text-slate-300", children: LANG_NAMES[selectedLang] ?? selectedLang }),
+                                  /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-500", children: sub.source === "embedded" ? "Embedded track" : t("subtitleProvider") })
+                                ] }),
+                                isActive && /* @__PURE__ */ jsx("span", { className: dtMenuDotClass })
+                              ]
+                            },
+                            sub.id
+                          );
+                        }) : /* @__PURE__ */ jsx("div", { className: "px-4 py-2 text-sm text-slate-600", children: t("selectLanguage") }) })
+                      ] }),
+                      /* @__PURE__ */ jsxs("div", { className: "w-full py-3 sm:w-48", children: [
+                        /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleSettings") }),
+                        subtitleLoadError && subtitleOptions.length === 0 && /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[11px] leading-5 text-rose-300", children: subtitleLoadError }),
+                        /* @__PURE__ */ jsxs("div", { className: "px-4 pb-2", children: [
+                          /* @__PURE__ */ jsx(
+                            "button",
+                            {
+                              type: "button",
+                              "data-f": isTv ? "1" : void 0,
+                              onClick: () => {
+                                setShowSubMenu(false);
+                                setManualSyncTapTime(null);
+                                setManualSyncOpen(true);
+                              },
+                              disabled: cues.length < 2,
+                              className: `mt-2 w-full rounded-lg border px-3 py-2 text-left text-xs font-semibold uppercase tracking-[0.18em] transition ${cues.length >= 2 ? "border-white/15 bg-white/5 text-slate-200 hover:border-white/25 hover:bg-white/10" : "border-white/10 bg-white/5 text-slate-500"}`,
+                              children: t("subtitleManualSync")
+                            }
+                          ),
+                          subtitleAutoSyncState.type !== "idle" && subtitleAutoSyncState.type !== "analyzing" && /* @__PURE__ */ jsxs("div", { className: "mt-2 text-[11px] leading-5 text-slate-400", children: [
+                            subtitleAutoSyncState.message,
+                            subtitleAutoSyncState.type === "done" && lastAutoSyncedDelayRef.current !== null && /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: undoSubtitleAutoSync,
+                                className: `ml-2 transition ${desktopChrome ? "text-[rgb(var(--player-accent))] hover:text-[rgb(var(--player-accent)/0.8)]" : "text-aurora-300 hover:text-aurora-200"}`,
+                                children: t("undo")
+                              }
+                            )
+                          ] }),
+                          subtitleAutoSyncState.type === "analyzing" && /* @__PURE__ */ jsx("div", { className: "mt-2 text-[11px] leading-5 text-slate-400", children: t("subtitleAutoSyncAnalyzing") })
+                        ] }),
+                        [
+                          { label: t("delay"), value: subDelay, unit: "s", dec: () => setSubDelay((v) => Math.max(-30, Math.round((v - 0.1) * 10) / 10)), inc: () => setSubDelay((v) => Math.min(30, Math.round((v + 0.1) * 10) / 10)) },
+                          { label: t("size"), value: subSize, unit: "%", dec: () => setSubSize((v) => Math.max(50, v - 10)), inc: () => setSubSize((v) => Math.min(200, v + 10)) },
+                          { label: t("verticalPosition"), value: subVerticalPos, unit: "%", dec: () => setSubVerticalPos((v) => Math.max(0, v - 5)), inc: () => setSubVerticalPos((v) => Math.min(90, v + 5)) }
+                        ].map(({ label, value, unit, dec, inc }) => /* @__PURE__ */ jsxs("div", { className: "px-4 py-2", children: [
+                          /* @__PURE__ */ jsx("div", { className: "mb-1.5 text-xs text-slate-400", children: label }),
+                          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+                            /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: dec,
+                                className: "flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-white/10 text-sm text-white transition hover:bg-white/10",
+                                children: "\u2212"
+                              }
+                            ),
+                            /* @__PURE__ */ jsxs("span", { className: "flex-1 text-center text-sm tabular-nums text-white", children: [
+                              value,
+                              unit
+                            ] }),
+                            /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: inc,
+                                className: "flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-white/10 text-sm text-white transition hover:bg-white/10",
+                                children: "+"
+                              }
+                            )
+                          ] })
+                        ] }, label))
+                      ] })
+                    ]
                   }
-                )
-              }
-            ),
-            showCastMenu && /* @__PURE__ */ jsxs("div", { className: "absolute bottom-20 right-4 z-[60] w-72 rounded-2xl border border-white/10 bg-slate-900/95 p-4 shadow-2xl backdrop-blur", children: [
-              /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
-                /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.2em] text-slate-400", children: t("castTitle") }),
-                /* @__PURE__ */ jsx(
-                  "button",
+                ),
+                overlayContent,
+                showStillWatchingPrompt && /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-[58] flex items-center justify-center bg-black/55 px-4 backdrop-blur-sm", onClick: (e) => e.stopPropagation(), children: /* @__PURE__ */ jsxs("div", { className: "w-full max-w-md rounded-3xl border border-white/10 bg-slate-950/90 p-6 text-center shadow-2xl", children: [
+                  /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.24em] text-slate-400", children: t("playbackTitle") }),
+                  /* @__PURE__ */ jsx("h3", { className: "mt-3 text-2xl font-semibold text-white", children: t("stillWatching") }),
+                  /* @__PURE__ */ jsxs("div", { className: "mt-5 flex flex-col gap-3 sm:flex-row sm:justify-center", children: [
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        type: "button",
+                        "data-f": isTv ? "1" : void 0,
+                        onClick: handleStillWatchingContinue,
+                        className: "rounded-full bg-accent-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-400",
+                        children: t("stillWatchingContinue")
+                      }
+                    ),
+                    /* @__PURE__ */ jsx(
+                      "button",
+                      {
+                        type: "button",
+                        "data-f": isTv ? "1" : void 0,
+                        onClick: handleClose,
+                        className: "rounded-full border border-white/10 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-white/20 hover:text-white",
+                        children: `${t("stillWatchingExit")} (${stillWatchingCountdown})`
+                      }
+                    )
+                  ] })
+                ] }) }),
+                showStartTitle && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute left-8 top-10 z-[55] max-w-[70%]", children: /* @__PURE__ */ jsx("p", { className: "text-2xl font-semibold text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] sm:text-3xl", children: title }) }),
+                showTuningPanel && /* @__PURE__ */ jsx(PlayerTuningPanel, { onClose: () => {
+                  setShowTuningPanel(false);
+                  if (isTv) requestAnimationFrame(() => tuningTriggerRef.current?.focus());
+                } }),
+                shouldShowSkipIntroButton && activeIntro && /* @__PURE__ */ jsxs(
+                  "div",
                   {
-                    type: "button",
-                    "data-f": isTv ? "1" : void 0,
-                    onClick: () => void scanCastDevices(),
-                    disabled: castScanning,
-                    className: "text-[11px] text-slate-400 underline-offset-2 hover:text-white hover:underline disabled:opacity-50",
-                    children: t("castRescan")
-                  }
-                )
-              ] }),
-              castTarget && /* @__PURE__ */ jsxs("div", { className: "mt-3 rounded-xl border border-aurora-400/30 bg-aurora-400/10 p-3", children: [
-                /* @__PURE__ */ jsx("p", { className: "text-[11px] uppercase tracking-[0.18em] text-aurora-200", children: t("castPlayingOn") }),
-                /* @__PURE__ */ jsx("p", { className: "mt-1 truncate text-sm text-white", children: castTarget.name }),
-                /* @__PURE__ */ jsxs("div", { className: "mt-2 flex gap-2", children: [
-                  /* @__PURE__ */ jsx(
-                    "button",
-                    {
-                      type: "button",
-                      "data-f": isTv ? "1" : void 0,
-                      onClick: () => void sendToCast(castTarget, "pause"),
-                      className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
-                      children: t("castPause")
-                    }
-                  ),
-                  /* @__PURE__ */ jsx(
-                    "button",
-                    {
-                      type: "button",
-                      "data-f": isTv ? "1" : void 0,
-                      onClick: () => void sendToCast(castTarget, "resume"),
-                      className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
-                      children: t("castResume")
-                    }
-                  ),
-                  /* @__PURE__ */ jsx(
-                    "button",
-                    {
-                      type: "button",
-                      "data-f": isTv ? "1" : void 0,
-                      onClick: () => void sendToCast(castTarget, "stop"),
-                      className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
-                      children: t("castStop")
-                    }
-                  )
-                ] })
-              ] }),
-              /* @__PURE__ */ jsx("div", { className: "mt-3 max-h-56 space-y-1 overflow-y-auto", children: castScanning && castDevices.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("castScanning") }) : castDevices.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("castNoDevices") }) : castDevices.filter((device) => device.kind !== "airplay").map((device) => /* @__PURE__ */ jsxs(
-                "button",
-                {
-                  type: "button",
-                  "data-f": isTv ? "1" : void 0,
-                  onClick: () => void sendToCast(device, "play"),
-                  className: "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-white/10",
-                  children: [
-                    /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-200", children: device.name }),
-                    /* @__PURE__ */ jsx("span", { className: "shrink-0 text-[10px] uppercase tracking-[0.16em] text-slate-500", children: device.kind === "chromecast" ? "Cast" : "DLNA" })
-                  ]
-                },
-                device.id
-              )) }),
-              isMpvEngine && /* @__PURE__ */ jsxs(
-                "button",
-                {
-                  type: "button",
-                  "data-f": isTv ? "1" : void 0,
-                  disabled: airplayPrepare === "preparing" || airplaySession !== null && !(airplayTargetReady && airplayMediaReady),
-                  onClick: () => {
-                    if (!airplaySession) {
-                      void prepareAirplaySession();
-                      return;
-                    }
-                    const v = airplayVideoRef.current;
-                    if (!v) return;
-                    void v.play().catch(() => {
-                    });
-                    const show = v.webkitShowPlaybackTargetPicker;
-                    airplayLog(`row click, picker=${typeof show}, readyState=${v.readyState}`);
-                    if (typeof show === "function") show.call(v);
-                    else setCastError(t("castFailed"));
-                  },
-                  className: "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-white/10 disabled:cursor-default disabled:opacity-50",
-                  children: [
-                    /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-200", children: "AirPlay" }),
-                    /* @__PURE__ */ jsx("span", { className: `shrink-0 text-[10px] uppercase tracking-[0.16em] ${airplayPrepare === "failed" ? "text-rose-300" : "text-slate-500"}`, children: airplayPrepare === "failed" ? t("castPrepareFailed") : airplaySession && airplayTargetReady && airplayMediaReady ? "AirPlay" : t("castPreparing") })
-                  ]
-                }
-              ),
-              castError && /* @__PURE__ */ jsx("p", { className: "mt-3 text-[11px] leading-5 text-rose-300", children: castError })
-            ] }),
-            showSubMenu && // The CC panel is three columns wide — anchoring it at the trigger
-            // and growing leftward clipped it against the window's left edge.
-            // Pin it to the window's right edge instead; only `bottom` follows
-            // the trigger so it still opens just above the controls bar.
-            /* @__PURE__ */ jsxs(
-              "div",
-              {
-                style: { ...getAnchoredMenuStyle(subTriggerRef.current), right: 16, left: "auto" },
-                className: "z-[70] flex max-h-[75vh] w-[min(calc(100vw-2rem),20rem)] flex-col overflow-y-auto rounded-xl border border-white/10 bg-slate-900/95 shadow-xl backdrop-blur-sm sm:max-h-none sm:w-auto sm:flex-row sm:overflow-visible",
-                onClick: (e) => e.stopPropagation(),
-                children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex w-full flex-col border-b border-white/10 py-3 sm:w-40 sm:border-b-0 sm:border-r", children: [
-                    /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleLanguages") }),
-                    /* @__PURE__ */ jsxs("div", { className: "overflow-y-auto overscroll-contain", style: { maxHeight: "260px" }, children: [
+                    className: `absolute z-[55] flex items-center gap-0.5 rounded-full border border-white/[0.14] bg-[rgba(13,14,22,0.82)] py-1 pl-4 pr-1 shadow-[0_12px_40px_rgba(0,0,0,0.5)] backdrop-blur-md transition-opacity duration-300 ${desktopChrome ? "bottom-32 right-6" : landscapeChrome ? "bottom-28 right-[26px]" : portraitChrome ? "bottom-[172px] right-3.5" : "bottom-24 right-4"}`,
+                    style: newChrome ? { opacity: controlsVisible ? 1 : 0, pointerEvents: controlsVisible ? "auto" : "none" } : void 0,
+                    onClick: (e) => e.stopPropagation(),
+                    children: [
                       /* @__PURE__ */ jsxs(
                         "button",
                         {
                           type: "button",
                           "data-f": isTv ? "1" : void 0,
-                          onClick: () => {
-                            manualSubtitleOverrideRef.current = true;
-                            subtitlePreferenceRef.current = { mode: "off" };
-                            void selectSubtitle(null, { manual: true });
-                            setSelectedLang(null);
-                            setShowSubMenu(false);
-                          },
-                          className: `flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-white/5 ${selectedLang === null ? "bg-white/5" : ""} ${activeSubId === null ? "text-aurora-300" : "text-slate-300"}`,
+                          onClick: () => seekToAbsolute(activeIntro.endMs / 1e3),
+                          className: "flex items-center gap-2 py-1.5 pr-2 text-sm font-medium text-white",
                           children: [
-                            /* @__PURE__ */ jsx("span", { children: t("off") }),
-                            activeSubId === null && /* @__PURE__ */ jsx("span", { className: "h-2 w-2 rounded-full bg-aurora-400" })
+                            t("skipIntro"),
+                            /* @__PURE__ */ jsx("svg", { className: "h-[15px] w-[15px]", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", children: /* @__PURE__ */ jsx("path", { d: "m9 6 6 6-6 6" }) })
                           ]
                         }
                       ),
-                      Object.keys(subtitleGroups).map((lang2) => {
-                        const isActive = subtitleGroups[lang2].some((v) => v.id === activeSubId);
-                        return /* @__PURE__ */ jsxs(
-                          "button",
-                          {
-                            type: "button",
-                            "data-f": isTv ? "1" : void 0,
-                            onClick: () => {
-                              subtitlePreferenceRef.current = { mode: "language", language: lang2 };
-                              setSelectedLang(lang2);
-                            },
-                            className: `flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-white/5 ${selectedLang === lang2 ? "bg-white/5" : ""} ${isActive ? "text-aurora-300" : "text-slate-300"}`,
-                            children: [
-                              /* @__PURE__ */ jsx("span", { children: LANG_NAMES[lang2] ?? lang2.toUpperCase() }),
-                              isActive && /* @__PURE__ */ jsx("span", { className: "h-2 w-2 rounded-full bg-aurora-400" })
-                            ]
-                          },
-                          lang2
-                        );
-                      })
-                    ] })
-                  ] }),
-                  /* @__PURE__ */ jsxs("div", { className: "flex w-full flex-col border-b border-white/10 py-3 sm:w-44 sm:border-b-0 sm:border-r", children: [
-                    /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleVariants") }),
-                    /* @__PURE__ */ jsx("div", { className: "overflow-y-auto overscroll-contain", style: { maxHeight: "260px" }, children: selectedLang ? subtitleGroups[selectedLang]?.map((sub) => {
-                      const isActive = sub.id === activeSubId;
-                      return /* @__PURE__ */ jsxs(
-                        "button",
-                        {
-                          type: "button",
-                          "data-f": isTv ? "1" : void 0,
-                          onClick: () => {
-                            void selectSubtitle(sub, { manual: true });
-                            setShowSubMenu(false);
-                          },
-                          className: `flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-white/5 ${isActive ? "bg-white/5" : ""}`,
-                          children: [
-                            /* @__PURE__ */ jsxs("div", { className: "text-left", children: [
-                              /* @__PURE__ */ jsx("div", { className: isActive ? "text-aurora-300" : "text-slate-300", children: LANG_NAMES[selectedLang] ?? selectedLang }),
-                              /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-500", children: sub.source === "embedded" ? "Embedded track" : t("subtitleProvider") })
-                            ] }),
-                            isActive && /* @__PURE__ */ jsx("span", { className: "h-2 w-2 flex-shrink-0 rounded-full bg-aurora-400" })
-                          ]
-                        },
-                        sub.id
-                      );
-                    }) : /* @__PURE__ */ jsx("div", { className: "px-4 py-2 text-sm text-slate-600", children: t("selectLanguage") }) })
-                  ] }),
-                  /* @__PURE__ */ jsxs("div", { className: "w-full py-3 sm:w-48", children: [
-                    /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleSettings") }),
-                    subtitleLoadError && subtitleOptions.length === 0 && /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[11px] leading-5 text-rose-300", children: subtitleLoadError }),
-                    /* @__PURE__ */ jsxs("div", { className: "px-4 pb-2", children: [
                       /* @__PURE__ */ jsx(
                         "button",
                         {
                           type: "button",
                           "data-f": isTv ? "1" : void 0,
-                          onClick: () => {
-                            setShowSubMenu(false);
-                            setManualSyncTapTime(null);
-                            setManualSyncOpen(true);
-                          },
-                          disabled: cues.length < 2,
-                          className: `mt-2 w-full rounded-lg border px-3 py-2 text-left text-xs font-semibold uppercase tracking-[0.18em] transition ${cues.length >= 2 ? "border-white/15 bg-white/5 text-slate-200 hover:border-white/25 hover:bg-white/10" : "border-white/10 bg-white/5 text-slate-500"}`,
-                          children: t("subtitleManualSync")
+                          onClick: () => setSkipIntroDismissed(true),
+                          title: t("dismiss"),
+                          "aria-label": t("dismiss"),
+                          className: "flex h-7 w-7 flex-none items-center justify-center rounded-full text-slate-400 transition hover:bg-white/10 hover:text-white",
+                          children: /* @__PURE__ */ jsx("svg", { className: "h-[13px] w-[13px]", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.4", strokeLinecap: "round", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12" }) })
                         }
-                      ),
-                      subtitleAutoSyncState.type !== "idle" && subtitleAutoSyncState.type !== "analyzing" && /* @__PURE__ */ jsxs("div", { className: "mt-2 text-[11px] leading-5 text-slate-400", children: [
-                        subtitleAutoSyncState.message,
-                        subtitleAutoSyncState.type === "done" && lastAutoSyncedDelayRef.current !== null && /* @__PURE__ */ jsx(
-                          "button",
-                          {
-                            type: "button",
-                            "data-f": isTv ? "1" : void 0,
-                            onClick: undoSubtitleAutoSync,
-                            className: "ml-2 text-aurora-300 transition hover:text-aurora-200",
-                            children: t("undo")
-                          }
-                        )
-                      ] }),
-                      subtitleAutoSyncState.type === "analyzing" && /* @__PURE__ */ jsx("div", { className: "mt-2 text-[11px] leading-5 text-slate-400", children: t("subtitleAutoSyncAnalyzing") })
-                    ] }),
-                    [
-                      { label: t("delay"), value: subDelay, unit: "s", dec: () => setSubDelay((v) => Math.max(-30, Math.round((v - 0.1) * 10) / 10)), inc: () => setSubDelay((v) => Math.min(30, Math.round((v + 0.1) * 10) / 10)) },
-                      { label: t("size"), value: subSize, unit: "%", dec: () => setSubSize((v) => Math.max(50, v - 10)), inc: () => setSubSize((v) => Math.min(200, v + 10)) },
-                      { label: t("verticalPosition"), value: subVerticalPos, unit: "%", dec: () => setSubVerticalPos((v) => Math.max(0, v - 5)), inc: () => setSubVerticalPos((v) => Math.min(90, v + 5)) }
-                    ].map(({ label, value, unit, dec, inc }) => /* @__PURE__ */ jsxs("div", { className: "px-4 py-2", children: [
-                      /* @__PURE__ */ jsx("div", { className: "mb-1.5 text-xs text-slate-400", children: label }),
-                      /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-                        /* @__PURE__ */ jsx(
-                          "button",
-                          {
-                            type: "button",
-                            "data-f": isTv ? "1" : void 0,
-                            onClick: dec,
-                            className: "flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-white/10 text-sm text-white transition hover:bg-white/10",
-                            children: "\u2212"
-                          }
-                        ),
-                        /* @__PURE__ */ jsxs("span", { className: "flex-1 text-center text-sm tabular-nums text-white", children: [
-                          value,
-                          unit
-                        ] }),
-                        /* @__PURE__ */ jsx(
-                          "button",
-                          {
-                            type: "button",
-                            "data-f": isTv ? "1" : void 0,
-                            onClick: inc,
-                            className: "flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full border border-white/10 text-sm text-white transition hover:bg-white/10",
-                            children: "+"
-                          }
-                        )
-                      ] })
-                    ] }, label))
-                  ] })
-                ]
-              }
-            ),
-            overlayContent,
-            showStillWatchingPrompt && /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-[58] flex items-center justify-center bg-black/55 px-4 backdrop-blur-sm", onClick: (e) => e.stopPropagation(), children: /* @__PURE__ */ jsxs("div", { className: "w-full max-w-md rounded-3xl border border-white/10 bg-slate-950/90 p-6 text-center shadow-2xl", children: [
-              /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.24em] text-slate-400", children: t("playbackTitle") }),
-              /* @__PURE__ */ jsx("h3", { className: "mt-3 text-2xl font-semibold text-white", children: t("stillWatching") }),
-              /* @__PURE__ */ jsxs("div", { className: "mt-5 flex flex-col gap-3 sm:flex-row sm:justify-center", children: [
-                /* @__PURE__ */ jsx(
-                  "button",
-                  {
-                    type: "button",
-                    "data-f": isTv ? "1" : void 0,
-                    onClick: handleStillWatchingContinue,
-                    className: "rounded-full bg-accent-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-400",
-                    children: t("stillWatchingContinue")
+                      )
+                    ]
                   }
                 ),
-                /* @__PURE__ */ jsx(
-                  "button",
+                /* @__PURE__ */ jsxs(
+                  "div",
                   {
-                    type: "button",
-                    "data-f": isTv ? "1" : void 0,
-                    onClick: handleClose,
-                    className: "rounded-full border border-white/10 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-white/20 hover:text-white",
-                    children: `${t("stillWatchingExit")} (${stillWatchingCountdown})`
-                  }
-                )
-              ] })
-            ] }) }),
-            showStartTitle && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute left-8 top-10 z-[55] max-w-[70%]", children: /* @__PURE__ */ jsx("p", { className: "text-2xl font-semibold text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)] sm:text-3xl", children: title }) }),
-            showTuningPanel && /* @__PURE__ */ jsx(PlayerTuningPanel, { onClose: () => {
-              setShowTuningPanel(false);
-              if (isTv) requestAnimationFrame(() => tuningTriggerRef.current?.focus());
-            } }),
-            shouldShowSkipIntroButton && activeIntro && /* @__PURE__ */ jsx("div", { className: "absolute bottom-24 right-4 z-[55]", onClick: (e) => e.stopPropagation(), children: /* @__PURE__ */ jsx(
-              "button",
-              {
-                type: "button",
-                "data-f": isTv ? "1" : void 0,
-                onClick: () => seekToAbsolute(activeIntro.endMs / 1e3),
-                className: "rounded-full border border-white/15 bg-black/70 px-4 py-2 text-sm font-medium text-white shadow-xl backdrop-blur-md transition hover:border-white/30 hover:bg-black/85",
-                children: t("skipIntro")
-              }
-            ) }),
-            /* @__PURE__ */ jsxs(
-              "div",
-              {
-                ref: controlsRef,
-                className: "vp-controls absolute inset-x-0 bottom-0 z-40 bg-gradient-to-t from-black/80 via-black/30 to-transparent px-4 pb-[max(0.75rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-10",
-                style: { opacity: controlsVisible && controlsReady ? 1 : 0, pointerEvents: controlsVisible && controlsReady ? "auto" : "none" },
-                onMouseMove: onMouseActivity,
-                onPointerDown: onMouseActivity,
-                onClick: (e) => e.stopPropagation(),
-                children: [
-                  (() => {
-                    const heightClass = playerLayout.seekBarHeight === "slim" ? "h-1" : playerLayout.seekBarHeight === "chunky" ? "h-2.5" : "h-1.5";
-                    const fillColorClass = playerLayout.seekBarColor === "white" ? "bg-white" : playerLayout.seekBarColor === "red" ? "bg-red-500" : playerLayout.seekBarColor === "amber" ? "bg-amber-400" : "bg-aurora-400";
-                    const styleClass = playerLayout.seekBarStyle === "glass" ? "opacity-80 backdrop-blur-sm shadow-[0_0_12px_rgba(255,255,255,0.25)]" : playerLayout.seekBarStyle === "pinstripe" ? "bg-[repeating-linear-gradient(45deg,transparent,transparent_4px,rgba(0,0,0,0.25)_4px,rgba(0,0,0,0.25)_8px)]" : "";
-                    return (
-                      // TV mode: the seek bar is a focus station. Left/right seek
-                      // while it has focus and are swallowed (stopPropagation) so the
-                      // focus engine doesn't move focus; up/down fall through and
-                      // leave the bar.
-                      /* @__PURE__ */ jsxs(
+                    ref: controlsRef,
+                    className: `vp-controls absolute inset-x-0 bottom-0 z-40 ${desktopChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.35)_40%,rgba(0,0,0,0.85)_100%)] px-6 pb-5 pt-16" : landscapeChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.45)_45%,rgba(0,0,0,0.85)_100%)] px-[26px] pb-5 pt-14" : portraitChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.5)_35%,rgba(0,0,0,0.92)_100%)] pb-[max(1.375rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-3.5" : "bg-gradient-to-t from-black/80 via-black/30 to-transparent px-4 pb-[max(0.75rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-10"}`,
+                    style: { opacity: controlsVisible && controlsReady ? 1 : 0, pointerEvents: controlsVisible && controlsReady ? "auto" : "none" },
+                    onMouseMove: onMouseActivity,
+                    onPointerDown: onMouseActivity,
+                    onClick: (e) => e.stopPropagation(),
+                    children: [
+                      portraitPickerOpen ? /* @__PURE__ */ jsx("div", { className: "fixed inset-0 z-0 bg-slate-950/60", onClick: () => setOpenSurface(null) }) : null,
+                      desktopChrome ? (() => {
+                        const timePillClass = "flex-none rounded-lg bg-[rgba(13,14,22,0.66)] px-2.5 py-[5px] text-[13px] font-semibold tabular-nums text-slate-100";
+                        const elapsedLabel = playerLayout.timeFormat === "remaining" ? `-${fmt(Math.max(0, totalDuration - seekTime))}` : fmt(seekTime);
+                        const totalLabel = playerLayout.timeFormat === "elapsed-total" ? fmt(totalDuration) : null;
+                        return /* @__PURE__ */ jsxs(Fragment2, { children: [
+                          /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3.5", children: [
+                            showsControl("time") ? /* @__PURE__ */ jsx("span", { className: timePillClass, children: elapsedLabel }) : null,
+                            renderSeekTrack("flex-1"),
+                            showsControl("time") && totalLabel ? /* @__PURE__ */ jsx("span", { className: timePillClass, children: totalLabel }) : null
+                          ] }),
+                          /* @__PURE__ */ jsxs("div", { className: "mt-3.5 flex items-center justify-between gap-6", children: [
+                            /* @__PURE__ */ jsx("div", { className: "flex items-center gap-1", children: renderDesktopZone(DESKTOP_ZONES.left) }),
+                            /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2.5", children: renderDesktopZone(DESKTOP_ZONES.center) }),
+                            /* @__PURE__ */ jsx("div", { className: "flex items-center gap-1", children: renderDesktopZone(DESKTOP_ZONES.right) })
+                          ] })
+                        ] });
+                      })() : landscapeChrome ? (
+                        /* Liggande: spåret kant till kant, tiden till vänster och sju
+                           brickor till höger — den sjunde är Mer, som bär det som inte fick
+                           plats. Ingen sidoscroll: budgeten är just sex plus Mer. */
+                        /* @__PURE__ */ jsxs(Fragment2, { children: [
+                          renderSeekTrack("w-full"),
+                          /* @__PURE__ */ jsxs("div", { className: "mt-3 flex items-center justify-between gap-5", children: [
+                            renderPhoneClock("text-[15px]", "text-[13px]"),
+                            /* @__PURE__ */ jsxs("div", { className: "flex flex-none items-center gap-1.5", children: [
+                              phoneRowIds.map((id4) => renderPhoneTile(id4, phoneControls[id4])),
+                              /* @__PURE__ */ jsxs(
+                                "button",
+                                {
+                                  type: "button",
+                                  ref: moreTriggerRef,
+                                  onClick: () => setShowMoreMenu((open) => !open),
+                                  title: t("moreActions"),
+                                  "aria-label": t("moreActions"),
+                                  className: `flex w-[62px] flex-none flex-col items-center gap-1 rounded-[10px] py-1.5 transition ${showMoreMenu ? "bg-[rgb(var(--player-accent)/0.34)] text-white" : "text-slate-200"}`,
+                                  children: [
+                                    playerIcon("more", "h-[19px] w-[19px]"),
+                                    /* @__PURE__ */ jsx("span", { className: "text-[11px] font-semibold leading-none", children: t("plShortMore") })
+                                  ]
+                                }
+                              )
+                            ] })
+                          ] })
+                        ] })
+                      ) : portraitChrome ? (
+                        /* Stående: seekrad och ikonrad i sidmarginalen, sedan den rullande
+                           pillerraden. `flex-none` på raden är NÖDVÄNDIGT — utan den blir
+                           min-height: auto noll i en höjdbegränsad flexkolumn och raden
+                           kollapsar (står i handoffens README, och det stämmer). */
+                        /* @__PURE__ */ jsxs(Fragment2, { children: [
+                          /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-2.5 px-3.5", children: [
+                            renderSeekTrack("w-full"),
+                            /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-3", children: [
+                              renderPhoneClock("text-sm", "text-xs"),
+                              /* @__PURE__ */ jsxs("div", { className: "flex flex-none items-center gap-1", children: [
+                                phoneClusterIds.map((id4) => renderPhoneFlatButton(id4, phoneControls[id4])),
+                                renderPhoneDownload("flat")
+                              ] })
+                            ] })
+                          ] }),
+                          /* @__PURE__ */ jsxs("div", { className: "vp-controls-row mt-3 flex min-h-[44px] flex-none items-center gap-2 overflow-x-auto overflow-y-hidden px-3.5", children: [
+                            phoneRowIds.map((id4) => renderPhonePill(id4, phoneControls[id4])),
+                            /* @__PURE__ */ jsxs(
+                              "button",
+                              {
+                                type: "button",
+                                ref: moreTriggerRef,
+                                onClick: () => setShowMoreMenu((open) => !open),
+                                title: t("moreActions"),
+                                "aria-label": t("moreActions"),
+                                className: `flex h-10 flex-none items-center gap-[7px] rounded-full border border-white/[0.12] px-3.5 transition ${showMoreMenu ? "bg-[rgb(var(--player-accent)/0.34)] text-white" : "text-slate-300"}`,
+                                children: [
+                                  playerIcon("more", "h-[17px] w-[17px]"),
+                                  /* @__PURE__ */ jsx("span", { className: "text-[13px] font-medium leading-none", children: t("plShortMore") })
+                                ]
+                              }
+                            )
+                          ] })
+                        ] })
+                      ) : /* @__PURE__ */ jsxs(Fragment2, { children: [
+                        (() => {
+                          const heightClass = playerLayout.seekBarHeight === "slim" ? "h-1" : playerLayout.seekBarHeight === "chunky" ? "h-2.5" : "h-1.5";
+                          const fillColorClass = playerLayout.seekBarColor === "white" ? "bg-white" : playerLayout.seekBarColor === "red" ? "bg-red-500" : playerLayout.seekBarColor === "amber" ? "bg-amber-400" : "bg-aurora-400";
+                          const styleClass = playerLayout.seekBarStyle === "glass" ? "opacity-80 backdrop-blur-sm shadow-[0_0_12px_rgba(255,255,255,0.25)]" : playerLayout.seekBarStyle === "pinstripe" ? "bg-[repeating-linear-gradient(45deg,transparent,transparent_4px,rgba(0,0,0,0.25)_4px,rgba(0,0,0,0.25)_8px)]" : "";
+                          return (
+                            // TV mode: the seek bar is a focus station. Left/right seek
+                            // while it has focus and are swallowed (stopPropagation) so the
+                            // focus engine doesn't move focus; up/down fall through and
+                            // leave the bar.
+                            /* @__PURE__ */ jsxs(
+                              "div",
+                              {
+                                className: `relative mb-3 cursor-pointer rounded-full bg-white/20 ${heightClass}`,
+                                onClick: handleSeekClick,
+                                "data-f": isTv ? "1" : void 0,
+                                tabIndex: isTv ? 0 : void 0,
+                                role: isTv ? "slider" : void 0,
+                                "aria-valuemin": isTv ? 0 : void 0,
+                                "aria-valuemax": isTv ? 100 : void 0,
+                                "aria-valuenow": isTv ? Math.round(progress2) : void 0,
+                                onKeyDown: isTv ? (e) => {
+                                  if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    seek(e.key === "ArrowLeft" ? -10 : 10);
+                                  }
+                                } : void 0,
+                                children: [
+                                  !useMpv && !isServerStreamUrl(videoSrc) && /* @__PURE__ */ jsx("div", { className: "absolute inset-y-0 left-0 rounded-full bg-white/30", style: { width: `${buffered}%` } }),
+                                  totalDuration > 0 && /* @__PURE__ */ jsxs(Fragment2, { children: [
+                                    /* @__PURE__ */ jsx("div", { className: `absolute inset-y-0 left-0 rounded-full ${fillColorClass}`, style: { width: `${progress2}%` }, children: styleClass ? /* @__PURE__ */ jsx("div", { className: `absolute inset-0 rounded-full ${styleClass}` }) : null }),
+                                    playerLayout.seekBarDot ? /* @__PURE__ */ jsx("div", { className: "absolute top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-white shadow", style: { left: `calc(${progress2}% - 7px)` } }) : null
+                                  ] })
+                                ]
+                              }
+                            )
+                          );
+                        })(),
+                        /* @__PURE__ */ jsx("div", { className: "vp-controls-row flex items-center gap-4 overflow-x-auto whitespace-nowrap", children: (() => {
+                          const controls = {
+                            playPause: /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, "data-init": isTv ? "1" : void 0, onClick: togglePlay, className: "text-white hover:text-aurora-300", children: isPlaying ? /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M6 19h4V5H6v14zm8-14v14h4V5h-4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }) }),
+                            seekBack: /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: () => seek(-10), className: "text-xs text-slate-300 hover:text-white", children: "\u221210s" }),
+                            seekForward: /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: () => seek(10), className: "text-xs text-slate-300 hover:text-white", children: "+10s" }),
+                            time: /* @__PURE__ */ jsx("span", { className: "text-xs tabular-nums text-slate-300", children: playerLayout.timeFormat === "remaining" ? `-${fmt(Math.max(0, totalDuration - realTime))}` : playerLayout.timeFormat === "elapsed" ? fmt(realTime) : `${fmt(realTime)} / ${fmt(totalDuration)}` }),
+                            spacer: /* @__PURE__ */ jsx("span", { "aria-hidden": true, className: "flex-1" }),
+                            /* Ljudfördröjning. Bara på mpv-motorn: Android kan inte
+                               förskjuta ljudet (ingen A/V-offset i media3), och en spak som
+                               inte rör något är sämre än ingen spak — samma skäl som
+                               nattläget döljs där. */
+                            audioDelay: useMpv ? /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                ref: audioDelayTriggerRef,
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => setShowAudioDelayMenu((open) => !open),
+                                title: t("audioDelayTitle"),
+                                "aria-label": t("audioDelayTitle"),
+                                className: `rounded px-1.5 py-0.5 text-xs font-medium tabular-nums transition ${effectiveAudioDelayMs !== 0 ? "bg-aurora-500/25 text-aurora-200" : "text-slate-300 hover:text-white"}`,
+                                children: effectiveAudioDelayMs === 0 ? "A/V" : `${effectiveAudioDelayMs > 0 ? "+" : ""}${effectiveAudioDelayMs} ms`
+                              }
+                            ) : null,
+                            /* Nästa avsnitt kopplas in av den som äger avsnittsdatan
+                               (strömpluginet) — utan callback finns inget att hoppa till, och
+                               då ska knappen inte finnas. */
+                            nextEpisode: episodes && episodes.items.length > 0 ? /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => setShowEpisodes((open) => !open),
+                                title: t("plNextEpisode"),
+                                "aria-label": t("plNextEpisode"),
+                                className: showEpisodes ? "text-aurora-300" : "text-slate-300 transition hover:text-white",
+                                children: /* @__PURE__ */ jsxs("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
+                                  /* @__PURE__ */ jsx("path", { d: "M5 5l9 7-9 7V5z", fill: "currentColor", stroke: "none" }),
+                                  /* @__PURE__ */ jsx("path", { d: "M18 5v14", strokeLinecap: "round" })
+                                ] })
+                              }
+                            ) : null,
+                            subtitles: /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                ref: subTriggerRef,
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => {
+                                  if (!showSubMenu) {
+                                    const activeLang = activeSubId ? toSubtitleLangGroup(subtitleOptions.find((s) => s.id === activeSubId)?.language ?? null) : null;
+                                    setSelectedLang(activeLang);
+                                  }
+                                  setShowSubMenu((v) => !v);
+                                },
+                                title: t("subtitlesLabel"),
+                                className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${activeSubId ? "bg-aurora-400 text-black" : hasSubtitles || loadingSub || subtitleLoadError || resolvedImdbId ? "text-slate-300 hover:text-white" : "text-slate-500"}`,
+                                children: "CC"
+                              }
+                            ),
+                            cast: !isClientSession() && /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => {
+                                  const opening = !showCastMenu;
+                                  setShowCastMenu(opening);
+                                  if (opening && castDevices.length === 0) void scanCastDevices();
+                                  if (opening && isMpvEngine && !airplaySession) void prepareAirplaySession();
+                                },
+                                title: t("castTitle"),
+                                className: `shrink-0 rounded px-1 py-0.5 transition ${castTarget ? "text-aurora-300" : "text-slate-300 hover:text-white"}`,
+                                children: /* @__PURE__ */ jsxs("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
+                                  /* @__PURE__ */ jsx("path", { d: "M2 16.1a5 5 0 0 1 5.9 5.9" }),
+                                  /* @__PURE__ */ jsx("path", { d: "M2 12.05a9 9 0 0 1 9.95 9.95" }),
+                                  /* @__PURE__ */ jsx("path", { d: "M2 8.05a13 13 0 0 1 13.95 13.95" }),
+                                  /* @__PURE__ */ jsx("path", { d: "M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5" })
+                                ] })
+                              }
+                            ),
+                            audioTrack: audioTracks.length > 0 && /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                ref: audioTriggerRef,
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => setShowAudioMenu((v) => !v),
+                                title: t("audioLanguage"),
+                                className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showAudioMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
+                                children: toAudioLangGroup((audioTracks.find((t2) => t2.index === activeAudioTrack) ?? audioTracks[0])?.language)?.toUpperCase() ?? "AUD"
+                              }
+                            ),
+                            aspect: /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                ref: aspectTriggerRef,
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => setShowAspectMenu((value) => !value),
+                                title: t("aspectRatio"),
+                                className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showAspectMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
+                                children: aspectLabel
+                              }
+                            ),
+                            cropZoom: /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                ref: cropTriggerRef,
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => setShowCropZoomMenu((value) => !value),
+                                title: t("cropZoom"),
+                                className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showCropZoomMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
+                                children: cropZoomLabel
+                              }
+                            ),
+                            audioOutput: /* @__PURE__ */ jsx(
+                              "span",
+                              {
+                                title: t("currentAudioOutput"),
+                                className: "shrink-0 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300",
+                                children: audioIndicator
+                              }
+                            ),
+                            segmentBadges: mediaType === "tv" ? /* @__PURE__ */ jsxs(Fragment2, { children: [
+                              /* @__PURE__ */ jsx("span", { className: `rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${introSegment ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-white/5 text-slate-300"}`, children: introSegment ? `${introKind === "recap" ? "Recap" : "Intro"} found` : t("introDebugMissing") }),
+                              /* @__PURE__ */ jsx("span", { className: `rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${outroSegment ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-white/5 text-slate-300"}`, children: outroSegment ? "Outro found" : "Outro missing" })
+                            ] }) : null,
+                            mute: /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: toggleMute, className: "text-slate-300 hover:text-white", children: muted || volume === 0 ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) }),
+                            volume: /* @__PURE__ */ jsx(Fragment2, { children: isTv || playerLayout.volumeStyle === "stepper" ? /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1.5", children: [
+                              /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: () => applyVolume((muted ? 0 : volume) - 0.05), className: "flex h-5 w-5 items-center justify-center rounded-full border border-white/10 text-xs text-slate-300 hover:text-white", children: "\u2212" }),
+                              /* @__PURE__ */ jsxs("span", { className: "min-w-[2.5rem] text-center text-xs tabular-nums text-slate-300", children: [
+                                Math.round((muted ? 0 : volume) * 100),
+                                "%"
+                              ] }),
+                              /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: () => applyVolume((muted ? 0 : volume) + 0.05), className: "flex h-5 w-5 items-center justify-center rounded-full border border-white/10 text-xs text-slate-300 hover:text-white", children: "+" })
+                            ] }) : playerLayout.volumeStyle === "icon" ? null : (
+                              /* Explicit track styling — the bare native range was invisible
+                                  against the black controls bar (only the thumb showed). */
+                              /* @__PURE__ */ jsx(
+                                "input",
+                                {
+                                  type: "range",
+                                  min: 0,
+                                  max: 1,
+                                  step: 0.05,
+                                  value: muted ? 0 : volume,
+                                  onChange: handleVolumeChange,
+                                  className: "h-1 w-20 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/20 accent-aurora-400"
+                                }
+                              )
+                            ) }),
+                            wiki: (wikiTmdbId || resolvedImdbId) && /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => {
+                                  setShowWiki((v) => !v);
+                                  setShowSoundtrack(false);
+                                },
+                                title: t("info"),
+                                className: `rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showWiki ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
+                                children: "Wiki"
+                              }
+                            ),
+                            soundtrack: Boolean(title) && /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => {
+                                  setShowSoundtrack((v) => !v);
+                                  setShowWiki(false);
+                                },
+                                title: t("soundtrack"),
+                                className: `rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showSoundtrack ? "bg-green-500 text-black" : "text-slate-300 hover:text-white"}`,
+                                children: t("soundtrack")
+                              }
+                            ),
+                            tuning: /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                ref: tuningTriggerRef,
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => setShowTuningPanel((v) => !v),
+                                title: t("vtTitle"),
+                                className: `transition ${showTuningPanel ? "text-aurora-300" : "text-slate-300 hover:text-white"}`,
+                                children: /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", children: [
+                                  /* @__PURE__ */ jsx("path", { d: "M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3" }),
+                                  /* @__PURE__ */ jsx("path", { d: "M1 14h6M9 8h6M17 16h6" })
+                                ] })
+                              }
+                            ),
+                            more: /* @__PURE__ */ jsx(Fragment2, { children: /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                ref: moreTriggerRef,
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => setShowMoreMenu((value) => !value),
+                                title: t("moreActions"),
+                                className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showMoreMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
+                                children: "\u2022\u2022\u2022"
+                              }
+                            ) }),
+                            fullscreen: (!isTauriEnv || isDesktopTauriEnv) && /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: toggleFullscreen, className: "shrink-0 text-slate-300 hover:text-white", children: cssFullscreen ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" }) }) })
+                          };
+                          return playerLayout.order.filter((id4) => showsControl(id4)).map((id4) => /* @__PURE__ */ jsx(react_shim_default.Fragment, { children: controls[id4] }, id4));
+                        })() })
+                      ] }),
+                      showAudioDelayMenu && useMpv && /* @__PURE__ */ jsxs(
                         "div",
                         {
-                          className: `relative mb-3 cursor-pointer rounded-full bg-white/20 ${heightClass}`,
-                          onClick: handleSeekClick,
-                          "data-f": isTv ? "1" : void 0,
-                          tabIndex: isTv ? 0 : void 0,
-                          role: isTv ? "slider" : void 0,
-                          "aria-valuemin": isTv ? 0 : void 0,
-                          "aria-valuemax": isTv ? 100 : void 0,
-                          "aria-valuenow": isTv ? Math.round(progress2) : void 0,
-                          onKeyDown: isTv ? (e) => {
-                            if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              seek(e.key === "ArrowLeft" ? -10 : 10);
-                            }
-                          } : void 0,
+                          style: getAnchoredMenuStyle(audioDelayTriggerRef.current, 244),
+                          className: "z-50 w-[244px] rounded-[1.1rem] border border-white/10 bg-base-800/95 p-3 shadow-2xl backdrop-blur-md",
+                          onClick: (event) => event.stopPropagation(),
                           children: [
-                            !useMpv && !isServerStreamUrl(videoSrc) && /* @__PURE__ */ jsx("div", { className: "absolute inset-y-0 left-0 rounded-full bg-white/30", style: { width: `${buffered}%` } }),
-                            totalDuration > 0 && /* @__PURE__ */ jsxs(Fragment2, { children: [
-                              /* @__PURE__ */ jsx("div", { className: `absolute inset-y-0 left-0 rounded-full ${fillColorClass}`, style: { width: `${progress2}%` }, children: styleClass ? /* @__PURE__ */ jsx("div", { className: `absolute inset-0 rounded-full ${styleClass}` }) : null }),
-                              playerLayout.seekBarDot ? /* @__PURE__ */ jsx("div", { className: "absolute top-1/2 h-3.5 w-3.5 -translate-y-1/2 rounded-full bg-white shadow", style: { left: `calc(${progress2}% - 7px)` } }) : null
-                            ] })
-                          ]
-                        }
-                      )
-                    );
-                  })(),
-                  /* @__PURE__ */ jsx("div", { className: "vp-controls-row flex items-center gap-4 overflow-x-auto whitespace-nowrap", children: (() => {
-                    const controls = {
-                      playPause: /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, "data-init": isTv ? "1" : void 0, onClick: togglePlay, className: "text-white hover:text-aurora-300", children: isPlaying ? /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M6 19h4V5H6v14zm8-14v14h4V5h-4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }) }),
-                      seekBack: /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: () => seek(-10), className: "text-xs text-slate-300 hover:text-white", children: "\u221210s" }),
-                      seekForward: /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: () => seek(10), className: "text-xs text-slate-300 hover:text-white", children: "+10s" }),
-                      time: /* @__PURE__ */ jsx("span", { className: "text-xs tabular-nums text-slate-300", children: playerLayout.timeFormat === "remaining" ? `-${fmt(Math.max(0, totalDuration - realTime))}` : playerLayout.timeFormat === "elapsed" ? fmt(realTime) : `${fmt(realTime)} / ${fmt(totalDuration)}` }),
-                      spacer: /* @__PURE__ */ jsx("span", { "aria-hidden": true, className: "flex-1" }),
-                      /* Ljudfördröjning. Bara på mpv-motorn: Android kan inte
-                         förskjuta ljudet (ingen A/V-offset i media3), och en spak som
-                         inte rör något är sämre än ingen spak — samma skäl som
-                         nattläget döljs där. */
-                      audioDelay: useMpv ? /* @__PURE__ */ jsx(
-                        "button",
-                        {
-                          type: "button",
-                          ref: audioDelayTriggerRef,
-                          "data-f": isTv ? "1" : void 0,
-                          onClick: () => setShowAudioDelayMenu((open) => !open),
-                          title: t("audioDelayTitle"),
-                          "aria-label": t("audioDelayTitle"),
-                          className: `rounded px-1.5 py-0.5 text-xs font-medium tabular-nums transition ${effectiveAudioDelayMs !== 0 ? "bg-aurora-500/25 text-aurora-200" : "text-slate-300 hover:text-white"}`,
-                          children: effectiveAudioDelayMs === 0 ? "A/V" : `${effectiveAudioDelayMs > 0 ? "+" : ""}${effectiveAudioDelayMs} ms`
-                        }
-                      ) : null,
-                      /* Nästa avsnitt kopplas in av den som äger avsnittsdatan
-                         (strömpluginet) — utan callback finns inget att hoppa till, och
-                         då ska knappen inte finnas. */
-                      nextEpisode: episodes && episodes.items.length > 0 ? /* @__PURE__ */ jsx(
-                        "button",
-                        {
-                          type: "button",
-                          "data-f": isTv ? "1" : void 0,
-                          onClick: () => setShowEpisodes((open) => !open),
-                          title: t("plNextEpisode"),
-                          "aria-label": t("plNextEpisode"),
-                          className: showEpisodes ? "text-aurora-300" : "text-slate-300 transition hover:text-white",
-                          children: /* @__PURE__ */ jsxs("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
-                            /* @__PURE__ */ jsx("path", { d: "M5 5l9 7-9 7V5z", fill: "currentColor", stroke: "none" }),
-                            /* @__PURE__ */ jsx("path", { d: "M18 5v14", strokeLinecap: "round" })
-                          ] })
-                        }
-                      ) : null,
-                      subtitles: /* @__PURE__ */ jsx(
-                        "button",
-                        {
-                          type: "button",
-                          ref: subTriggerRef,
-                          "data-f": isTv ? "1" : void 0,
-                          onClick: () => {
-                            if (!showSubMenu) {
-                              const activeLang = activeSubId ? toSubtitleLangGroup(subtitleOptions.find((s) => s.id === activeSubId)?.language ?? null) : null;
-                              setSelectedLang(activeLang);
-                            }
-                            setShowSubMenu((v) => !v);
-                          },
-                          title: t("subtitlesLabel"),
-                          className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${activeSubId ? "bg-aurora-400 text-black" : hasSubtitles || loadingSub || subtitleLoadError || resolvedImdbId ? "text-slate-300 hover:text-white" : "text-slate-500"}`,
-                          children: "CC"
-                        }
-                      ),
-                      cast: !isClientSession() && /* @__PURE__ */ jsx(
-                        "button",
-                        {
-                          type: "button",
-                          "data-f": isTv ? "1" : void 0,
-                          onClick: () => {
-                            const opening = !showCastMenu;
-                            setShowCastMenu(opening);
-                            if (opening && castDevices.length === 0) void scanCastDevices();
-                            if (opening && isMpvEngine && !airplaySession) void prepareAirplaySession();
-                          },
-                          title: t("castTitle"),
-                          className: `shrink-0 rounded px-1 py-0.5 transition ${castTarget ? "text-aurora-300" : "text-slate-300 hover:text-white"}`,
-                          children: /* @__PURE__ */ jsxs("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
-                            /* @__PURE__ */ jsx("path", { d: "M2 16.1a5 5 0 0 1 5.9 5.9" }),
-                            /* @__PURE__ */ jsx("path", { d: "M2 12.05a9 9 0 0 1 9.95 9.95" }),
-                            /* @__PURE__ */ jsx("path", { d: "M2 8.05a13 13 0 0 1 13.95 13.95" }),
-                            /* @__PURE__ */ jsx("path", { d: "M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-5" })
-                          ] })
-                        }
-                      ),
-                      audioTrack: audioTracks.length > 0 && /* @__PURE__ */ jsx(
-                        "button",
-                        {
-                          type: "button",
-                          ref: audioTriggerRef,
-                          "data-f": isTv ? "1" : void 0,
-                          onClick: () => setShowAudioMenu((v) => !v),
-                          title: t("audioLanguage"),
-                          className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showAudioMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
-                          children: toAudioLangGroup((audioTracks.find((t2) => t2.index === activeAudioTrack) ?? audioTracks[0])?.language)?.toUpperCase() ?? "AUD"
-                        }
-                      ),
-                      aspect: /* @__PURE__ */ jsx(
-                        "button",
-                        {
-                          type: "button",
-                          ref: aspectTriggerRef,
-                          "data-f": isTv ? "1" : void 0,
-                          onClick: () => setShowAspectMenu((value) => !value),
-                          title: t("aspectRatio"),
-                          className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showAspectMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
-                          children: aspectLabel
-                        }
-                      ),
-                      cropZoom: /* @__PURE__ */ jsx(
-                        "button",
-                        {
-                          type: "button",
-                          ref: cropTriggerRef,
-                          "data-f": isTv ? "1" : void 0,
-                          onClick: () => setShowCropZoomMenu((value) => !value),
-                          title: t("cropZoom"),
-                          className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showCropZoomMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
-                          children: cropZoomLabel
-                        }
-                      ),
-                      audioOutput: /* @__PURE__ */ jsx(
-                        "span",
-                        {
-                          title: t("currentAudioOutput"),
-                          className: "shrink-0 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300",
-                          children: audioIndicator
-                        }
-                      ),
-                      segmentBadges: mediaType === "tv" ? /* @__PURE__ */ jsxs(Fragment2, { children: [
-                        /* @__PURE__ */ jsx("span", { className: `rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${introSegment ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-white/5 text-slate-300"}`, children: introSegment ? `${introKind === "recap" ? "Recap" : "Intro"} found` : t("introDebugMissing") }),
-                        /* @__PURE__ */ jsx("span", { className: `rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${outroSegment ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-white/5 text-slate-300"}`, children: outroSegment ? "Outro found" : "Outro missing" })
-                      ] }) : null,
-                      mute: /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: toggleMute, className: "text-slate-300 hover:text-white", children: muted || volume === 0 ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) }),
-                      volume: /* @__PURE__ */ jsx(Fragment2, { children: isTv || playerLayout.volumeStyle === "stepper" ? /* @__PURE__ */ jsxs("span", { className: "flex items-center gap-1.5", children: [
-                        /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: () => applyVolume((muted ? 0 : volume) - 0.05), className: "flex h-5 w-5 items-center justify-center rounded-full border border-white/10 text-xs text-slate-300 hover:text-white", children: "\u2212" }),
-                        /* @__PURE__ */ jsxs("span", { className: "min-w-[2.5rem] text-center text-xs tabular-nums text-slate-300", children: [
-                          Math.round((muted ? 0 : volume) * 100),
-                          "%"
-                        ] }),
-                        /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: () => applyVolume((muted ? 0 : volume) + 0.05), className: "flex h-5 w-5 items-center justify-center rounded-full border border-white/10 text-xs text-slate-300 hover:text-white", children: "+" })
-                      ] }) : playerLayout.volumeStyle === "icon" ? null : (
-                        /* Explicit track styling — the bare native range was invisible
-                            against the black controls bar (only the thumb showed). */
-                        /* @__PURE__ */ jsx(
-                          "input",
-                          {
-                            type: "range",
-                            min: 0,
-                            max: 1,
-                            step: 0.05,
-                            value: muted ? 0 : volume,
-                            onChange: handleVolumeChange,
-                            className: "h-1 w-20 cursor-pointer appearance-none rounded-full border border-white/10 bg-white/20 accent-aurora-400"
-                          }
-                        )
-                      ) }),
-                      wiki: (wikiTmdbId || resolvedImdbId) && /* @__PURE__ */ jsx(
-                        "button",
-                        {
-                          type: "button",
-                          "data-f": isTv ? "1" : void 0,
-                          onClick: () => {
-                            setShowWiki((v) => !v);
-                            setShowSoundtrack(false);
-                          },
-                          title: t("info"),
-                          className: `rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showWiki ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
-                          children: "Wiki"
-                        }
-                      ),
-                      soundtrack: Boolean(title) && /* @__PURE__ */ jsx(
-                        "button",
-                        {
-                          type: "button",
-                          "data-f": isTv ? "1" : void 0,
-                          onClick: () => {
-                            setShowSoundtrack((v) => !v);
-                            setShowWiki(false);
-                          },
-                          title: t("soundtrack"),
-                          className: `rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showSoundtrack ? "bg-green-500 text-black" : "text-slate-300 hover:text-white"}`,
-                          children: t("soundtrack")
-                        }
-                      ),
-                      tuning: /* @__PURE__ */ jsx(
-                        "button",
-                        {
-                          type: "button",
-                          ref: tuningTriggerRef,
-                          "data-f": isTv ? "1" : void 0,
-                          onClick: () => setShowTuningPanel((v) => !v),
-                          title: t("vtTitle"),
-                          className: `transition ${showTuningPanel ? "text-aurora-300" : "text-slate-300 hover:text-white"}`,
-                          children: /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", children: [
-                            /* @__PURE__ */ jsx("path", { d: "M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3" }),
-                            /* @__PURE__ */ jsx("path", { d: "M1 14h6M9 8h6M17 16h6" })
-                          ] })
-                        }
-                      ),
-                      more: /* @__PURE__ */ jsxs(Fragment2, { children: [
-                        /* @__PURE__ */ jsx(
-                          "button",
-                          {
-                            ref: moreTriggerRef,
-                            type: "button",
-                            "data-f": isTv ? "1" : void 0,
-                            onClick: () => setShowMoreMenu((value) => !value),
-                            title: t("moreActions"),
-                            className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showMoreMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
-                            children: "\u2022\u2022\u2022"
-                          }
-                        ),
-                        showMoreMenu && /* @__PURE__ */ jsxs(
-                          "div",
-                          {
-                            ref: moreMenuRef,
-                            style: getAnchoredMenuStyle(moreTriggerRef.current),
-                            className: "z-50 w-64 rounded-[1.6rem] border border-white/10 bg-base-800/95 p-2.5 shadow-2xl backdrop-blur-md",
-                            onClick: (e) => e.stopPropagation(),
-                            children: [
-                              dvColorFallback && /* @__PURE__ */ jsxs(
+                            /* @__PURE__ */ jsx("p", { className: "px-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500", children: t("audioDelayTitle") }),
+                            /* @__PURE__ */ jsxs("div", { className: "mt-2 flex items-center justify-between gap-2", children: [
+                              /* @__PURE__ */ jsx(
                                 "button",
                                 {
                                   type: "button",
                                   "data-f": isTv ? "1" : void 0,
-                                  onClick: () => setDvColorFallbackMuted((current2) => !current2),
-                                  className: "flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-left text-slate-100 transition hover:bg-white/5",
-                                  children: [
-                                    /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
-                                      /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "9" }),
-                                      /* @__PURE__ */ jsx("path", { d: "M12 3a9 9 0 0 1 0 18z", fill: "currentColor", stroke: "none" })
-                                    ] }),
-                                    /* @__PURE__ */ jsxs("span", { className: "text-[15px] leading-tight", children: [
-                                      t("dvColorLabel"),
-                                      ": ",
-                                      dvColorFallbackActive ? t("dvColorAuto") : t("dvColorOff")
-                                    ] })
-                                  ]
+                                  onClick: () => setAudioDelayMs(audioDelayMs - AUDIO_DELAY_STEP_MS),
+                                  "aria-label": `\u2212${AUDIO_DELAY_STEP_MS} ms`,
+                                  className: "h-8 w-8 flex-none rounded-full border border-white/15 text-sm text-slate-200 transition hover:bg-white/10",
+                                  children: "\u2212"
                                 }
                               ),
-                              isMpvEngine && /* @__PURE__ */ jsxs(
+                              /* @__PURE__ */ jsxs("span", { className: "flex-1 text-center text-sm font-semibold tabular-nums text-white", children: [
+                                effectiveAudioDelayMs > 0 ? "+" : "",
+                                effectiveAudioDelayMs,
+                                " ms"
+                              ] }),
+                              /* @__PURE__ */ jsx(
+                                "button",
+                                {
+                                  type: "button",
+                                  "data-f": isTv ? "1" : void 0,
+                                  onClick: () => setAudioDelayMs(audioDelayMs + AUDIO_DELAY_STEP_MS),
+                                  "aria-label": `+${AUDIO_DELAY_STEP_MS} ms`,
+                                  className: "h-8 w-8 flex-none rounded-full border border-white/15 text-sm text-slate-200 transition hover:bg-white/10 disabled:opacity-40",
+                                  children: "+"
+                                }
+                              )
+                            ] }),
+                            outputIsBluetooth && getBluetoothAudioAutoOffset() ? /* @__PURE__ */ jsxs("p", { className: "mt-2 px-1 text-[11px] leading-snug text-slate-500", children: [
+                              t("btAudioAutoOffset"),
+                              " (",
+                              BLUETOOTH_AUDIO_OFFSET_MS,
+                              " ms)"
+                            ] }) : null,
+                            audioDelayMs !== 0 ? /* @__PURE__ */ jsx(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => setAudioDelayMs(0),
+                                className: "mt-2 w-full rounded-lg px-2 py-1.5 text-xs text-aurora-300 transition hover:bg-white/5",
+                                children: t("reset")
+                              }
+                            ) : null
+                          ]
+                        }
+                      ),
+                      showAudioMenu && audioTracks.length > 0 && /* @__PURE__ */ jsxs(
+                        "div",
+                        {
+                          style: pickerStyle(audioTriggerRef.current, landscapeChrome ? 200 : 210),
+                          className: `${dtMenuSurfaceClass} ${newChrome ? "" : "min-w-[140px]"}`,
+                          onClick: (e) => e.stopPropagation(),
+                          children: [
+                            pickerHeading(t("audio")),
+                            audioTracks.map((track) => {
+                              const isActive = activeAudioTrack === track.index || activeAudioTrack === null && track === audioTracks[0];
+                              const label = toAudioLangGroup(track.language)?.toUpperCase() ?? `Track ${track.index}`;
+                              return /* @__PURE__ */ jsxs(
+                                "button",
+                                {
+                                  type: "button",
+                                  "data-f": isTv ? "1" : void 0,
+                                  onClick: () => switchAudioTrack(track),
+                                  className: dtMenuRowClass(isActive),
+                                  children: [
+                                    /* @__PURE__ */ jsx("span", { className: "text-left", children: label }),
+                                    isActive && /* @__PURE__ */ jsx("span", { className: dtMenuDotClass })
+                                  ]
+                                },
+                                track.index
+                              );
+                            }),
+                            newChrome && phoneChrome && useMpv && showsControl("audioDelay") ? (
+                              /* Telefon: fördröjningen pressas till EN rad. En egen rubrik
+                                 och en nollställningsrad hade tryckt menyn upp över
+                                 titelraden i liggande läge — det står i README:n. */
+                              /* @__PURE__ */ jsxs("div", { className: "mt-1 flex items-center justify-between gap-2 border-t border-white/[0.08] px-3 pb-1 pt-2.5", children: [
+                                /* @__PURE__ */ jsx("span", { className: portraitChrome ? "text-sm text-slate-300" : "text-[13px] text-slate-300", children: t("delay") }),
+                                /* @__PURE__ */ jsxs("div", { className: "flex flex-none items-center gap-1.5", children: [
+                                  /* @__PURE__ */ jsx(
+                                    "button",
+                                    {
+                                      type: "button",
+                                      onClick: () => setAudioDelayMs(audioDelayMs - AUDIO_DELAY_STEP_MS),
+                                      "aria-label": `\u2212${AUDIO_DELAY_STEP_MS} ms`,
+                                      className: `flex flex-none items-center justify-center rounded-full border border-white/[0.14] text-slate-300 ${portraitChrome ? "h-8 w-8 text-base" : "h-[30px] w-[30px] text-[15px]"}`,
+                                      children: "\u2212"
+                                    }
+                                  ),
+                                  /* @__PURE__ */ jsxs("span", { className: `min-w-[62px] text-center text-[13px] font-semibold tabular-nums ${effectiveAudioDelayMs !== 0 ? "text-[rgb(var(--player-accent))]" : "text-slate-300"}`, children: [
+                                    effectiveAudioDelayMs > 0 ? "+" : "",
+                                    effectiveAudioDelayMs,
+                                    " ms"
+                                  ] }),
+                                  /* @__PURE__ */ jsx(
+                                    "button",
+                                    {
+                                      type: "button",
+                                      onClick: () => setAudioDelayMs(audioDelayMs + AUDIO_DELAY_STEP_MS),
+                                      "aria-label": `+${AUDIO_DELAY_STEP_MS} ms`,
+                                      className: `flex flex-none items-center justify-center rounded-full border border-white/[0.14] text-slate-300 ${portraitChrome ? "h-8 w-8 text-base" : "h-[30px] w-[30px] text-[15px]"}`,
+                                      children: "+"
+                                    }
+                                  )
+                                ] })
+                              ] })
+                            ) : desktopChrome && useMpv && showsControl("audioDelay") ? /* @__PURE__ */ jsxs("div", { className: "mt-1 border-t border-white/[0.08] px-3 pb-1 pt-2.5", children: [
+                              /* @__PURE__ */ jsx("p", { className: "text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500", children: t("audioDelayTitle") }),
+                              /* @__PURE__ */ jsxs("div", { className: "mt-2 flex items-center gap-2", children: [
+                                /* @__PURE__ */ jsx(
+                                  "button",
+                                  {
+                                    type: "button",
+                                    onClick: () => setAudioDelayMs(audioDelayMs - AUDIO_DELAY_STEP_MS),
+                                    "aria-label": `\u2212${AUDIO_DELAY_STEP_MS} ms`,
+                                    className: "h-8 w-[34px] flex-none rounded-lg border border-white/[0.14] text-slate-300 transition hover:bg-white/10 hover:text-white",
+                                    children: "\u2212"
+                                  }
+                                ),
+                                /* @__PURE__ */ jsxs("span", { className: `flex-1 text-center text-sm font-semibold tabular-nums ${effectiveAudioDelayMs !== 0 ? "text-[rgb(var(--player-accent))]" : "text-slate-300"}`, children: [
+                                  effectiveAudioDelayMs > 0 ? "+" : "",
+                                  effectiveAudioDelayMs,
+                                  " ms"
+                                ] }),
+                                /* @__PURE__ */ jsx(
+                                  "button",
+                                  {
+                                    type: "button",
+                                    onClick: () => setAudioDelayMs(audioDelayMs + AUDIO_DELAY_STEP_MS),
+                                    "aria-label": `+${AUDIO_DELAY_STEP_MS} ms`,
+                                    className: "h-8 w-[34px] flex-none rounded-lg border border-white/[0.14] text-slate-300 transition hover:bg-white/10 hover:text-white",
+                                    children: "+"
+                                  }
+                                )
+                              ] }),
+                              outputIsBluetooth && getBluetoothAudioAutoOffset() ? /* @__PURE__ */ jsxs("p", { className: "mt-2 text-[11px] leading-snug text-slate-500", children: [
+                                t("btAudioAutoOffset"),
+                                " (",
+                                BLUETOOTH_AUDIO_OFFSET_MS,
+                                " ms)"
+                              ] }) : null,
+                              audioDelayMs !== 0 ? /* @__PURE__ */ jsx(
+                                "button",
+                                {
+                                  type: "button",
+                                  onClick: () => setAudioDelayMs(0),
+                                  className: "mt-1.5 py-1 text-[13px] text-[rgb(var(--player-accent))] transition hover:text-[rgb(var(--player-accent)/0.8)]",
+                                  children: t("reset")
+                                }
+                              ) : null
+                            ] }) : null
+                          ]
+                        }
+                      ),
+                      showAspectMenu && /* @__PURE__ */ jsxs(
+                        "div",
+                        {
+                          style: pickerStyle(aspectTriggerRef.current, landscapeChrome ? 180 : 170),
+                          className: `${dtMenuSurfaceClass} ${newChrome ? "" : "min-w-[150px]"}`,
+                          onClick: (e) => e.stopPropagation(),
+                          children: [
+                            pickerHeading(t("aspectRatio")),
+                            ["auto", "contain", "fill", "ratio_16_9", "ratio_4_3"].map((mode) => {
+                              const isActive = aspectRatioMode === mode;
+                              return /* @__PURE__ */ jsxs(
                                 "button",
                                 {
                                   type: "button",
                                   "data-f": isTv ? "1" : void 0,
                                   onClick: () => {
-                                    const next2 = nightMode === "off" ? "mild" : nightMode === "mild" ? "strong" : "off";
-                                    setNightMode(next2);
+                                    setAspectRatioMode(mode);
+                                    setShowAspectMenu(false);
                                   },
-                                  className: "flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-left text-slate-100 transition hover:bg-white/5",
+                                  className: dtMenuRowClass(isActive),
                                   children: [
-                                    /* @__PURE__ */ jsx("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z", strokeLinecap: "round", strokeLinejoin: "round" }) }),
-                                    /* @__PURE__ */ jsxs("span", { className: "text-[15px] leading-tight", children: [
-                                      t("nightModeMenuLabel"),
-                                      ": ",
-                                      t(nightMode === "off" ? "nightModeOff" : nightMode === "mild" ? "nightModeMenuMild" : "nightModeMenuStrong")
-                                    ] })
+                                    /* @__PURE__ */ jsx("span", { children: getAspectRatioLabel(mode, t) }),
+                                    isActive && /* @__PURE__ */ jsx("span", { className: dtMenuDotClass })
                                   ]
-                                }
-                              ),
+                                },
+                                mode
+                              );
+                            })
+                          ]
+                        }
+                      ),
+                      showCropZoomMenu && /* @__PURE__ */ jsxs(
+                        "div",
+                        {
+                          style: pickerStyle(cropTriggerRef.current, 180),
+                          className: `${dtMenuSurfaceClass} ${newChrome ? "" : "min-w-[150px]"}`,
+                          onClick: (e) => e.stopPropagation(),
+                          children: [
+                            pickerHeading(t("cropZoom")),
+                            ["off", "crop", "zoom", "zoom_plus"].map((mode) => {
+                              const isActive = cropZoomMode === mode;
+                              return /* @__PURE__ */ jsxs(
+                                "button",
+                                {
+                                  type: "button",
+                                  "data-f": isTv ? "1" : void 0,
+                                  onClick: () => {
+                                    setCropZoomMode(mode);
+                                    setShowCropZoomMenu(false);
+                                  },
+                                  className: dtMenuRowClass(isActive),
+                                  children: [
+                                    /* @__PURE__ */ jsx("span", { children: getCropZoomLabel(mode, t) }),
+                                    isActive && /* @__PURE__ */ jsx("span", { className: dtMenuDotClass })
+                                  ]
+                                },
+                                mode
+                              );
+                            })
+                          ]
+                        }
+                      ),
+                      showMoreMenu && /* @__PURE__ */ jsxs(
+                        "div",
+                        {
+                          ref: moreMenuRef,
+                          style: portraitChrome ? { position: "fixed", left: 0, right: 0, bottom: 0, maxHeight: "70vh", overflowY: "auto" } : newChrome ? pickerStyle(moreTriggerRef.current, landscapeChrome ? 244 : 262) : getAnchoredMenuStyle(moreTriggerRef.current),
+                          className: portraitChrome ? "z-50 rounded-t-2xl border-t border-white/[0.07] bg-base-950/[0.96] px-3 pb-6 pt-3 shadow-[0_-20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : newChrome ? dtMenuSurfaceClass : "z-50 w-64 rounded-[1.6rem] border border-white/10 bg-base-800/95 p-2.5 shadow-2xl backdrop-blur-md",
+                          onClick: (e) => e.stopPropagation(),
+                          children: [
+                            portraitChrome ? pickerHeading(t("moreActions")) : null,
+                            phoneOverflowIds.map((id4) => renderPhoneOverflowRow(id4, phoneControls[id4])),
+                            dvColorFallback && /* @__PURE__ */ jsxs(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => setDvColorFallbackMuted((current2) => !current2),
+                                className: dtMoreRowClass,
+                                children: [
+                                  /* @__PURE__ */ jsxs("svg", { className: dtMoreIconClass, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
+                                    /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "9" }),
+                                    /* @__PURE__ */ jsx("path", { d: "M12 3a9 9 0 0 1 0 18z", fill: "currentColor", stroke: "none" })
+                                  ] }),
+                                  /* @__PURE__ */ jsxs("span", { className: dtMoreTextClass, children: [
+                                    t("dvColorLabel"),
+                                    ": ",
+                                    dvColorFallbackActive ? t("dvColorAuto") : t("dvColorOff")
+                                  ] })
+                                ]
+                              }
+                            ),
+                            isMpvEngine && /* @__PURE__ */ jsxs(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => {
+                                  const next2 = nightMode === "off" ? "mild" : nightMode === "mild" ? "strong" : "off";
+                                  setNightMode(next2);
+                                },
+                                className: dtMoreRowClass,
+                                children: [
+                                  /* @__PURE__ */ jsx("svg", { className: dtMoreIconClass, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z", strokeLinecap: "round", strokeLinejoin: "round" }) }),
+                                  /* @__PURE__ */ jsxs("span", { className: dtMoreTextClass, children: [
+                                    t("nightModeMenuLabel"),
+                                    ": ",
+                                    t(nightMode === "off" ? "nightModeOff" : nightMode === "mild" ? "nightModeMenuMild" : "nightModeMenuStrong")
+                                  ] })
+                                ]
+                              }
+                            ),
+                            /* @__PURE__ */ jsxs(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => void handleCopyStreamLink(),
+                                className: dtMoreRowClass,
+                                children: [
+                                  /* @__PURE__ */ jsxs("svg", { className: dtMoreIconClass, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
+                                    /* @__PURE__ */ jsx("path", { d: "M10 13a5 5 0 0 0 7.07 0l3.54-3.54a5 5 0 1 0-7.07-7.07L11 4", strokeLinecap: "round", strokeLinejoin: "round" }),
+                                    /* @__PURE__ */ jsx("path", { d: "M14 11a5 5 0 0 0-7.07 0L3.39 14.54a5 5 0 1 0 7.07 7.07L13 20", strokeLinecap: "round", strokeLinejoin: "round" })
+                                  ] }),
+                                  /* @__PURE__ */ jsx("span", { className: dtMoreTextClass, children: copiedLink ? t("copied") : t("copyStreamLink") })
+                                ]
+                              }
+                            ),
+                            !isClientSession() && !phoneChrome && /* @__PURE__ */ jsxs("div", { className: `flex items-center gap-2 transition ${newChrome ? "rounded-lg hover:bg-[rgb(var(--player-accent)/0.14)]" : "rounded-[1.15rem] hover:bg-white/5"}`, children: [
                               /* @__PURE__ */ jsxs(
                                 "button",
                                 {
                                   type: "button",
                                   "data-f": isTv ? "1" : void 0,
-                                  onClick: () => void handleCopyStreamLink(),
-                                  className: "flex w-full items-center gap-3 rounded-[1.15rem] px-4 py-3 text-left text-slate-100 transition hover:bg-white/5",
+                                  onClick: () => void handleDownload(),
+                                  disabled: downloadState.type === "picking-folder" || downloadState.type === "downloading",
+                                  className: `flex min-w-0 flex-1 items-center gap-3 text-left text-slate-100 disabled:cursor-wait disabled:opacity-70 ${desktopChrome ? "px-3 py-2.5" : "px-4 py-3"}`,
                                   children: [
-                                    /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
-                                      /* @__PURE__ */ jsx("path", { d: "M10 13a5 5 0 0 0 7.07 0l3.54-3.54a5 5 0 1 0-7.07-7.07L11 4", strokeLinecap: "round", strokeLinejoin: "round" }),
-                                      /* @__PURE__ */ jsx("path", { d: "M14 11a5 5 0 0 0-7.07 0L3.39 14.54a5 5 0 1 0 7.07 7.07L13 20", strokeLinecap: "round", strokeLinejoin: "round" })
+                                    /* @__PURE__ */ jsxs("svg", { className: dtMoreIconClass, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
+                                      /* @__PURE__ */ jsx("path", { d: "M12 3v12", strokeLinecap: "round" }),
+                                      /* @__PURE__ */ jsx("path", { d: "m7 10 5 5 5-5", strokeLinecap: "round", strokeLinejoin: "round" }),
+                                      /* @__PURE__ */ jsx("path", { d: "M5 21h14", strokeLinecap: "round" })
                                     ] }),
-                                    /* @__PURE__ */ jsx("span", { className: "text-[15px] leading-tight", children: copiedLink ? t("copied") : t("copyStreamLink") })
+                                    /* @__PURE__ */ jsx("span", { className: dtMoreTextClass, children: downloadState.type === "picking-folder" ? t("preparingDownload") : downloadState.type === "downloading" ? `${t("downloading")} ${downloadState.progress}%` : downloadState.type === "done" ? t("downloadComplete") : downloadState.type === "cancelled" ? t("cancel") : t("downloadThisVideo") })
                                   ]
                                 }
                               ),
-                              !isClientSession() && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 rounded-[1.15rem] transition hover:bg-white/5", children: [
-                                /* @__PURE__ */ jsxs(
-                                  "button",
-                                  {
-                                    type: "button",
-                                    "data-f": isTv ? "1" : void 0,
-                                    onClick: () => void handleDownload(),
-                                    disabled: downloadState.type === "picking-folder" || downloadState.type === "downloading",
-                                    className: "flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left text-slate-100 disabled:cursor-wait disabled:opacity-70",
-                                    children: [
-                                      /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
-                                        /* @__PURE__ */ jsx("path", { d: "M12 3v12", strokeLinecap: "round" }),
-                                        /* @__PURE__ */ jsx("path", { d: "m7 10 5 5 5-5", strokeLinecap: "round", strokeLinejoin: "round" }),
-                                        /* @__PURE__ */ jsx("path", { d: "M5 21h14", strokeLinecap: "round" })
-                                      ] }),
-                                      /* @__PURE__ */ jsx("span", { className: "text-[15px] leading-tight", children: downloadState.type === "picking-folder" ? t("preparingDownload") : downloadState.type === "downloading" ? `${t("downloading")} ${downloadState.progress}%` : downloadState.type === "done" ? t("downloadComplete") : downloadState.type === "cancelled" ? t("cancel") : t("downloadThisVideo") })
-                                    ]
-                                  }
-                                ),
-                                downloadState.type === "downloading" && /* @__PURE__ */ jsx(
-                                  "button",
-                                  {
-                                    type: "button",
-                                    "data-f": isTv ? "1" : void 0,
-                                    onClick: () => void handleCancelDownload(),
-                                    className: "mr-3 flex h-7 w-7 flex-none items-center justify-center rounded-full border border-white/10 text-slate-300 transition hover:border-red-400/40 hover:text-red-300",
-                                    title: t("cancel"),
-                                    children: /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12", strokeLinecap: "round" }) })
-                                  }
-                                )
-                              ] }),
-                              !isClientSession() && /* @__PURE__ */ jsxs(
+                              downloadState.type === "downloading" && /* @__PURE__ */ jsx(
                                 "button",
                                 {
                                   type: "button",
                                   "data-f": isTv ? "1" : void 0,
-                                  onClick: () => void handleOpenExternal(),
-                                  onMouseDown: (e) => e.stopPropagation(),
-                                  className: "relative z-10 mt-1 flex w-full items-center gap-3 rounded-[1.15rem] bg-white/5 px-4 py-3 text-left text-slate-100 transition hover:bg-white/10",
-                                  children: [
-                                    /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none text-slate-200", viewBox: "0 0 24 24", fill: "currentColor", children: [
-                                      /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }),
-                                      /* @__PURE__ */ jsx("path", { d: "M4 5h3v14H4z", opacity: ".55" })
-                                    ] }),
-                                    /* @__PURE__ */ jsx("span", { className: "text-[15px] leading-tight", children: isDesktopTauriEnv ? `${t("openInExternalPrefix")} ${getExternalPlayerApp()}` : t("openInExternalPlayer") })
-                                  ]
+                                  onClick: () => void handleCancelDownload(),
+                                  className: "mr-3 flex h-7 w-7 flex-none items-center justify-center rounded-full border border-white/10 text-slate-300 transition hover:border-red-400/40 hover:text-red-300",
+                                  title: t("cancel"),
+                                  children: /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12", strokeLinecap: "round" }) })
                                 }
-                              ),
-                              downloadState.type === "error" && /* @__PURE__ */ jsx("div", { className: "px-4 pb-1 pt-3 text-xs text-red-300", children: downloadState.message })
-                            ]
-                          }
-                        )
-                      ] }),
-                      fullscreen: (!isTauriEnv || isDesktopTauriEnv) && /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: toggleFullscreen, className: "shrink-0 text-slate-300 hover:text-white", children: cssFullscreen ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" }) }) })
-                    };
-                    const hiddenControls = new Set(playerLayout.hidden);
-                    return playerLayout.order.filter((id4) => !hiddenControls.has(id4)).map((id4) => /* @__PURE__ */ jsx(react_shim_default.Fragment, { children: controls[id4] }, id4));
-                  })() }),
-                  showAudioDelayMenu && useMpv && /* @__PURE__ */ jsxs(
-                    "div",
-                    {
-                      style: getAnchoredMenuStyle(audioDelayTriggerRef.current, 244),
-                      className: "z-50 w-[244px] rounded-[1.1rem] border border-white/10 bg-base-800/95 p-3 shadow-2xl backdrop-blur-md",
-                      onClick: (event) => event.stopPropagation(),
-                      children: [
-                        /* @__PURE__ */ jsx("p", { className: "px-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500", children: t("audioDelayTitle") }),
-                        /* @__PURE__ */ jsxs("div", { className: "mt-2 flex items-center justify-between gap-2", children: [
-                          /* @__PURE__ */ jsx(
-                            "button",
-                            {
-                              type: "button",
-                              "data-f": isTv ? "1" : void 0,
-                              onClick: () => setAudioDelayMs(audioDelayMs - AUDIO_DELAY_STEP_MS),
-                              "aria-label": `\u2212${AUDIO_DELAY_STEP_MS} ms`,
-                              className: "h-8 w-8 flex-none rounded-full border border-white/15 text-sm text-slate-200 transition hover:bg-white/10",
-                              children: "\u2212"
-                            }
-                          ),
-                          /* @__PURE__ */ jsxs("span", { className: "flex-1 text-center text-sm font-semibold tabular-nums text-white", children: [
-                            effectiveAudioDelayMs > 0 ? "+" : "",
-                            effectiveAudioDelayMs,
-                            " ms"
-                          ] }),
-                          /* @__PURE__ */ jsx(
-                            "button",
-                            {
-                              type: "button",
-                              "data-f": isTv ? "1" : void 0,
-                              onClick: () => setAudioDelayMs(audioDelayMs + AUDIO_DELAY_STEP_MS),
-                              "aria-label": `+${AUDIO_DELAY_STEP_MS} ms`,
-                              className: "h-8 w-8 flex-none rounded-full border border-white/15 text-sm text-slate-200 transition hover:bg-white/10 disabled:opacity-40",
-                              children: "+"
-                            }
-                          )
-                        ] }),
-                        outputIsBluetooth && getBluetoothAudioAutoOffset() ? /* @__PURE__ */ jsxs("p", { className: "mt-2 px-1 text-[11px] leading-snug text-slate-500", children: [
-                          t("btAudioAutoOffset"),
-                          " (",
-                          BLUETOOTH_AUDIO_OFFSET_MS,
-                          " ms)"
-                        ] }) : null,
-                        audioDelayMs !== 0 ? /* @__PURE__ */ jsx(
-                          "button",
-                          {
-                            type: "button",
-                            "data-f": isTv ? "1" : void 0,
-                            onClick: () => setAudioDelayMs(0),
-                            className: "mt-2 w-full rounded-lg px-2 py-1.5 text-xs text-aurora-300 transition hover:bg-white/5",
-                            children: t("reset")
-                          }
-                        ) : null
-                      ]
-                    }
-                  ),
-                  showAudioMenu && audioTracks.length > 0 && /* @__PURE__ */ jsxs(
-                    "div",
-                    {
-                      style: getAnchoredMenuStyle(audioTriggerRef.current),
-                      className: "z-50 min-w-[140px] rounded-xl border border-white/10 bg-slate-900/95 py-2 shadow-xl backdrop-blur-sm",
-                      onClick: (e) => e.stopPropagation(),
-                      children: [
-                        /* @__PURE__ */ jsx("div", { className: "px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("audio") }),
-                        audioTracks.map((track) => {
-                          const isActive = activeAudioTrack === track.index || activeAudioTrack === null && track === audioTracks[0];
-                          const label = toAudioLangGroup(track.language)?.toUpperCase() ?? `Track ${track.index}`;
-                          return /* @__PURE__ */ jsxs(
-                            "button",
-                            {
-                              type: "button",
-                              "data-f": isTv ? "1" : void 0,
-                              onClick: () => switchAudioTrack(track),
-                              className: `flex w-full items-center justify-between px-3 py-2 text-sm transition hover:bg-white/5 ${isActive ? "text-aurora-300" : "text-slate-300"}`,
-                              children: [
-                                /* @__PURE__ */ jsx("span", { className: "text-left", children: label }),
-                                isActive && /* @__PURE__ */ jsx("span", { className: "ml-2 h-2 w-2 flex-shrink-0 rounded-full bg-aurora-400" })
-                              ]
-                            },
-                            track.index
-                          );
-                        })
-                      ]
-                    }
-                  ),
-                  showAspectMenu && /* @__PURE__ */ jsxs(
-                    "div",
-                    {
-                      style: getAnchoredMenuStyle(aspectTriggerRef.current),
-                      className: "z-50 min-w-[150px] rounded-xl border border-white/10 bg-slate-900/95 py-2 shadow-xl backdrop-blur-sm",
-                      onClick: (e) => e.stopPropagation(),
-                      children: [
-                        /* @__PURE__ */ jsx("div", { className: "px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("aspectRatio") }),
-                        ["auto", "contain", "fill", "ratio_16_9", "ratio_4_3"].map((mode) => {
-                          const isActive = aspectRatioMode === mode;
-                          return /* @__PURE__ */ jsxs(
-                            "button",
-                            {
-                              type: "button",
-                              "data-f": isTv ? "1" : void 0,
-                              onClick: () => {
-                                setAspectRatioMode(mode);
-                                setShowAspectMenu(false);
-                              },
-                              className: `flex w-full items-center justify-between px-3 py-2 text-sm transition hover:bg-white/5 ${isActive ? "text-aurora-300" : "text-slate-300"}`,
-                              children: [
-                                /* @__PURE__ */ jsx("span", { children: getAspectRatioLabel(mode, t) }),
-                                isActive && /* @__PURE__ */ jsx("span", { className: "ml-2 h-2 w-2 flex-shrink-0 rounded-full bg-aurora-400" })
-                              ]
-                            },
-                            mode
-                          );
-                        })
-                      ]
-                    }
-                  ),
-                  showCropZoomMenu && /* @__PURE__ */ jsxs(
-                    "div",
-                    {
-                      style: getAnchoredMenuStyle(cropTriggerRef.current),
-                      className: "z-50 min-w-[150px] rounded-xl border border-white/10 bg-slate-900/95 py-2 shadow-xl backdrop-blur-sm",
-                      onClick: (e) => e.stopPropagation(),
-                      children: [
-                        /* @__PURE__ */ jsx("div", { className: "px-3 pb-1.5 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("cropZoom") }),
-                        ["off", "crop", "zoom", "zoom_plus"].map((mode) => {
-                          const isActive = cropZoomMode === mode;
-                          return /* @__PURE__ */ jsxs(
-                            "button",
-                            {
-                              type: "button",
-                              "data-f": isTv ? "1" : void 0,
-                              onClick: () => {
-                                setCropZoomMode(mode);
-                                setShowCropZoomMenu(false);
-                              },
-                              className: `flex w-full items-center justify-between px-3 py-2 text-sm transition hover:bg-white/5 ${isActive ? "text-aurora-300" : "text-slate-300"}`,
-                              children: [
-                                /* @__PURE__ */ jsx("span", { children: getCropZoomLabel(mode, t) }),
-                                isActive && /* @__PURE__ */ jsx("span", { className: "ml-2 h-2 w-2 flex-shrink-0 rounded-full bg-aurora-400" })
-                              ]
-                            },
-                            mode
-                          );
-                        })
-                      ]
-                    }
-                  )
-                ]
-              }
-            ),
-            showWiki && /* @__PURE__ */ jsx(
-              PlayerWikiPanel,
-              {
-                tmdbId: wikiTmdbId,
-                mediaType: mediaType ?? "movie",
-                imdbId: resolvedImdbId,
-                onClose: () => setShowWiki(false)
-              },
-              `wiki:${playbackSessionIdentity}`
-            ),
-            showEpisodes && episodes && /* @__PURE__ */ jsx(
-              PlayerEpisodesPanel,
-              {
-                seasonNumber: episodes.seasonNumber,
-                episodes: episodes.items,
-                currentEpisode: episodes.current,
-                onSelect: (number2) => {
-                  setShowEpisodes(false);
-                  episodes.onSelect(number2);
-                },
-                onClose: () => setShowEpisodes(false)
-              },
-              `episodes:${playbackSessionIdentity}`
-            ),
-            showSoundtrack && /* @__PURE__ */ jsx(
-              PlayerSoundtrackPanel,
-              {
-                title,
-                year,
-                onClose: () => setShowSoundtrack(false)
-              },
-              `soundtrack:${playbackSessionIdentity}`
-            )
-          ]
-        }
-      )
-    ] });
+                              )
+                            ] }),
+                            !isClientSession() && /* @__PURE__ */ jsxs(
+                              "button",
+                              {
+                                type: "button",
+                                "data-f": isTv ? "1" : void 0,
+                                onClick: () => void handleOpenExternal(),
+                                onMouseDown: (e) => e.stopPropagation(),
+                                className: `relative z-10 mt-1 flex w-full items-center gap-3 bg-white/5 text-left text-slate-100 transition hover:bg-white/10 ${desktopChrome ? "rounded-lg px-3 py-2.5" : "rounded-[1.15rem] px-4 py-3"}`,
+                                children: [
+                                  /* @__PURE__ */ jsxs("svg", { className: dtMoreIconClass, viewBox: "0 0 24 24", fill: "currentColor", children: [
+                                    /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }),
+                                    /* @__PURE__ */ jsx("path", { d: "M4 5h3v14H4z", opacity: ".55" })
+                                  ] }),
+                                  /* @__PURE__ */ jsx("span", { className: dtMoreTextClass, children: isDesktopTauriEnv ? `${t("openInExternalPrefix")} ${getExternalPlayerApp()}` : t("openInExternalPlayer") })
+                                ]
+                              }
+                            ),
+                            downloadState.type === "error" && /* @__PURE__ */ jsx("div", { className: "px-4 pb-1 pt-3 text-xs text-red-300", children: downloadState.message })
+                          ]
+                        }
+                      )
+                    ]
+                  }
+                ),
+                showWiki && /* @__PURE__ */ jsx(
+                  PlayerWikiPanel,
+                  {
+                    tmdbId: wikiTmdbId,
+                    mediaType: mediaType ?? "movie",
+                    imdbId: resolvedImdbId,
+                    onClose: () => setShowWiki(false)
+                  },
+                  `wiki:${playbackSessionIdentity}`
+                ),
+                showEpisodes && episodes && /* @__PURE__ */ jsx(
+                  PlayerEpisodesPanel,
+                  {
+                    seasonNumber: episodes.seasonNumber,
+                    episodes: episodes.items,
+                    currentEpisode: episodes.current,
+                    onSelect: (number2) => {
+                      setShowEpisodes(false);
+                      episodes.onSelect(number2);
+                    },
+                    onClose: () => setShowEpisodes(false)
+                  },
+                  `episodes:${playbackSessionIdentity}`
+                ),
+                showSoundtrack && /* @__PURE__ */ jsx(
+                  PlayerSoundtrackPanel,
+                  {
+                    title,
+                    year,
+                    onClose: () => setShowSoundtrack(false)
+                  },
+                  `soundtrack:${playbackSessionIdentity}`
+                )
+              ]
+            }
+          )
+        ]
+      }
+    );
     return portalEl ? (0, import_react_dom.createPortal)(content, portalEl) : content;
   }
 
@@ -188011,7 +189132,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.117",
+    version: "1.0.118",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
