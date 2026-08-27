@@ -166181,44 +166181,6 @@
   var removeScopedStorageItem = (baseKey) => sdk.removeScopedStorageItem(baseKey);
   var onProfileChanged = (listener) => sdk.onProfileChanged(listener);
 
-  // lib/media-stream/core-addons.ts
-  var KEY = "core_stream_addons_v1";
-  var EVENT = "lumio-core-stream-addons-changed";
-  function readCoreStreamAddons() {
-    if (typeof window === "undefined") return [];
-    try {
-      const raw = getScopedStorageItem(KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) return [];
-      return parsed.filter((entry) => Boolean(entry) && typeof entry === "object" && typeof entry.url === "string" && entry.url.length > 0);
-    } catch {
-      return [];
-    }
-  }
-  function writeCoreStreamAddons(entries) {
-    setScopedStorageItem(KEY, JSON.stringify(entries));
-    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT));
-  }
-  function getEnabledCoreStreamAddons() {
-    return readCoreStreamAddons().filter((entry) => entry.enabled !== false);
-  }
-  function upsertCoreStreamAddon(url, name) {
-    const trimmedUrl = url.trim();
-    if (!trimmedUrl) return;
-    const trimmedName = name.trim() || trimmedUrl;
-    const existing = readCoreStreamAddons();
-    const previous = existing.find((entry) => entry.url === trimmedUrl);
-    const next2 = {
-      url: trimmedUrl,
-      name: trimmedName,
-      enabled: previous ? previous.enabled : true,
-      installedAt: previous?.installedAt ?? (/* @__PURE__ */ new Date()).toISOString()
-    };
-    const filtered = existing.filter((entry) => entry.url !== trimmedUrl);
-    writeCoreStreamAddons([...filtered, next2]);
-  }
-
   // lib/app-storage.ts
   var store = null;
   function ensureStore() {
@@ -166273,6 +166235,378 @@
   function getItem(key) {
     if (typeof window === "undefined") return null;
     return ensureStore().get(key) ?? null;
+  }
+
+  // lib/media-stream/config.ts
+  var KEY_PRESET_URL = (id4) => `scraper_url_${id4}`;
+  var SCRAPER_PRESETS = [
+    {
+      id: "torrentio",
+      name: "Torrentio",
+      url: "https://torrentio.strem.fun",
+      type: "torrentio",
+      description: "Publik scraper, stabil och snabb. Kr\xE4ver Real-Debrid API-nyckel.",
+      configUrl: "https://torrentio.strem.fun/configure"
+    },
+    {
+      id: "comet",
+      name: "Comet",
+      url: "",
+      type: "preconfigured",
+      description: "Snabb scraper med bra tr\xE4ffar. Kr\xE4ver konfiguration med RD-nyckel.",
+      configUrl: "https://comet.elfhosted.com"
+    },
+    {
+      id: "jackettio",
+      name: "Jackettio",
+      url: "",
+      type: "preconfigured",
+      description: "Jackett-baserad scraper med breda indexers. Kr\xE4ver Real-Debrid eller AllDebrid.",
+      configUrl: "https://jackettio.elfhosted.com/configure"
+    },
+    {
+      id: "aiostreams",
+      name: "AIOStreams",
+      url: "",
+      type: "preconfigured",
+      description: "Aggregerar m\xE5nga addons och debrid-tj\xE4nster bakom en enda konfiguration.",
+      configUrl: "https://aiostreams-nightly.fortheweak.cloud/stremio/configure"
+    }
+  ];
+  var DEFAULT_SCRAPER_URL = SCRAPER_PRESETS[0].url;
+  function loadPresetUrl(id4) {
+    if (typeof window === "undefined") return "";
+    return getScopedStorageItem(KEY_PRESET_URL(id4)) ?? "";
+  }
+  var CONFIGS_KEY = "scraper_configs_v2";
+  var GLOBAL_STREAM_PROVIDER_TOKEN_KEY_PREFIX = "scraper_global_debrid_token_";
+  var GLOBAL_STREAM_PROVIDER_COOKIE_PREFIX = "lumio_provider_token_";
+  var LEGACY_STREAM_PROVIDER_COOKIE_PREFIX = "lumio_debrid_token_";
+  var LEGACY_RD_API_KEY = "rd_api_key";
+  var VALID_STREAM_PROVIDERS = /* @__PURE__ */ new Set([
+    "none",
+    "realdebrid",
+    "alldebrid",
+    "easydebrid",
+    "offcloud",
+    "torbox",
+    "putio"
+  ]);
+  function normalizeStreamProvider(provider) {
+    const normalized = provider?.trim().toLowerCase() || "realdebrid";
+    return VALID_STREAM_PROVIDERS.has(normalized) ? normalized : "realdebrid";
+  }
+  var JACKETTIO_STREAM_PROVIDERS = ["realdebrid", "alldebrid"];
+  function normalizeJackettioProvider(provider) {
+    const normalized = provider?.trim().toLowerCase() || "realdebrid";
+    return JACKETTIO_STREAM_PROVIDERS.includes(normalized) ? normalized : "realdebrid";
+  }
+  var DEFAULT_TORRENTIO_CONFIG = {
+    id: "torrentio",
+    preset: "torrentio",
+    enabled: true,
+    options: {
+      streamProvider: "realdebrid",
+      debridProvider: "realdebrid",
+      qualityFilter: [],
+      languages: [],
+      providers: [],
+      sort: "quality",
+      limit: 0
+    }
+  };
+  var TORRENTSDB_AUTOADD_KEY = "scraper_torrentsdb_autoadded_v1";
+  function dropAutoAddedTorrentsDb(configs) {
+    try {
+      if (getScopedStorageItem(TORRENTSDB_AUTOADD_KEY) !== "1") return configs;
+    } catch {
+      return configs;
+    }
+    const next2 = configs.filter((config) => config.preset !== "torrentsdb");
+    if (next2.length === configs.length) return configs;
+    try {
+      setScraperConfigs(next2);
+    } catch {
+    }
+    return next2;
+  }
+  function getActiveStreamProviderId() {
+    if (typeof window === "undefined") return "realdebrid";
+    const configs = getScraperConfigs();
+    const first = configs.find((c) => {
+      if (!c.enabled) return false;
+      const provider = normalizeStreamProvider(c.options.debridProvider);
+      return provider && provider !== "none";
+    });
+    return normalizeStreamProvider(first?.options?.debridProvider);
+  }
+  function getGlobalStreamProviderTokenStorageKey(provider) {
+    const normalized = normalizeStreamProvider(provider);
+    return `${GLOBAL_STREAM_PROVIDER_TOKEN_KEY_PREFIX}${normalized}`;
+  }
+  function getGlobalStreamProviderCookieKey(provider) {
+    const normalized = normalizeStreamProvider(provider);
+    return `${GLOBAL_STREAM_PROVIDER_COOKIE_PREFIX}${normalized}`;
+  }
+  function getLegacyGlobalStreamProviderCookieKey(provider) {
+    const normalized = normalizeStreamProvider(provider);
+    return `${LEGACY_STREAM_PROVIDER_COOKIE_PREFIX}${normalized}`;
+  }
+  function readCookieValue(name) {
+    if (typeof document === "undefined") return "";
+    const prefix = `${encodeURIComponent(name)}=`;
+    const entry = document.cookie.split("; ").find((cookie) => cookie.startsWith(prefix));
+    if (!entry) return "";
+    try {
+      return decodeURIComponent(entry.slice(prefix.length));
+    } catch {
+      return "";
+    }
+  }
+  function writeCookieValue(name, value) {
+    if (typeof document === "undefined") return;
+    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=Lax`;
+  }
+  function clearCookieValue(name) {
+    if (typeof document === "undefined") return;
+    document.cookie = `${encodeURIComponent(name)}=; path=/; max-age=0; SameSite=Lax`;
+  }
+  function getGlobalStreamProviderAccessKey(provider) {
+    if (typeof window === "undefined") return "";
+    const normalizedProvider = normalizeStreamProvider(provider);
+    const storageKey = getGlobalStreamProviderTokenStorageKey(normalizedProvider);
+    const key = getScopedStorageItem(storageKey) ?? "";
+    if (key.trim()) return key;
+    const unscopedKey = getItem(storageKey) ?? "";
+    if (unscopedKey.trim()) return unscopedKey;
+    const cookieKey = readCookieValue(getGlobalStreamProviderCookieKey(normalizedProvider));
+    if (cookieKey.trim()) return cookieKey;
+    const legacyCookieKey = readCookieValue(getLegacyGlobalStreamProviderCookieKey(normalizedProvider));
+    if (legacyCookieKey.trim()) return legacyCookieKey;
+    if (normalizedProvider === "realdebrid") {
+      const legacy = getScopedStorageItem(LEGACY_RD_API_KEY) ?? getItem(LEGACY_RD_API_KEY) ?? readCookieValue(LEGACY_RD_API_KEY) ?? "";
+      return legacy;
+    }
+    return "";
+  }
+  function getScraperStreamProviderId(config) {
+    if (config.preset === "aiostreams") return "none";
+    const opts = config.options;
+    return normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider);
+  }
+  function setGlobalStreamProviderAccessKey(provider, value) {
+    const normalizedProvider = normalizeStreamProvider(provider);
+    const trimmed = value.trim();
+    const storageKey = getGlobalStreamProviderTokenStorageKey(normalizedProvider);
+    if (trimmed) {
+      setScopedStorageItem(storageKey, trimmed);
+      writeCookieValue(getGlobalStreamProviderCookieKey(normalizedProvider), trimmed);
+      writeCookieValue(getLegacyGlobalStreamProviderCookieKey(normalizedProvider), trimmed);
+    } else {
+      removeScopedStorageItem(storageKey);
+      clearCookieValue(getGlobalStreamProviderCookieKey(normalizedProvider));
+      clearCookieValue(getLegacyGlobalStreamProviderCookieKey(normalizedProvider));
+    }
+    if (normalizedProvider === "realdebrid") {
+      if (trimmed) {
+        setScopedStorageItem(LEGACY_RD_API_KEY, trimmed);
+        writeCookieValue(LEGACY_RD_API_KEY, trimmed);
+      } else {
+        removeScopedStorageItem(LEGACY_RD_API_KEY);
+        clearCookieValue(LEGACY_RD_API_KEY);
+      }
+    }
+  }
+  function getScraperConfigs() {
+    if (typeof window === "undefined") return [DEFAULT_TORRENTIO_CONFIG];
+    try {
+      const scoped = getScopedStorageItem(CONFIGS_KEY);
+      const raw = scoped ?? (getActiveProfileId() ? null : getItem(CONFIGS_KEY));
+      if (!raw) {
+        return [DEFAULT_TORRENTIO_CONFIG];
+      }
+      const parsed = JSON.parse(raw);
+      return dropAutoAddedTorrentsDb(parsed.map(normalizeScraperConfig));
+    } catch {
+      return [DEFAULT_TORRENTIO_CONFIG];
+    }
+  }
+  function setScraperConfigs(configs) {
+    setScopedStorageItem(CONFIGS_KEY, JSON.stringify(configs));
+  }
+  function registerCustomScraperFromManifestUrl(rawUrl, displayName) {
+    const url = rawUrl.trim();
+    if (!url) return;
+    const id4 = `custom-${displayName?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || `addon-${Date.now()}`}`;
+    const newEntry = {
+      id: id4,
+      preset: "custom",
+      enabled: true,
+      options: { rawUrl: url }
+    };
+    const existing = getScraperConfigs();
+    const filtered = existing.filter((entry) => {
+      if (entry.preset !== "custom") return true;
+      return entry.options.rawUrl !== url;
+    });
+    setScraperConfigs([...filtered, newEntry]);
+  }
+  function normalizeScraperConfig(config) {
+    if (config.preset === "mediafusion") {
+      const opts = config.options;
+      config = {
+        ...config,
+        id: config.id === "mediafusion" ? "jackettio" : config.id,
+        preset: "jackettio",
+        options: {
+          streamProvider: opts.streamProvider ?? opts.debridProvider ?? "realdebrid",
+          debridProvider: opts.debridProvider ?? "realdebrid",
+          languages: [],
+          qualityFilter: [],
+          maxTorrents: 0,
+          hideUncached: false
+        }
+      };
+    }
+    switch (config.preset) {
+      case "torrentio": {
+        const opts = config.options;
+        return {
+          ...config,
+          options: {
+            streamProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
+            debridProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
+            qualityFilter: opts.qualityFilter ?? [],
+            languages: opts.languages ?? [],
+            providers: opts.providers ?? [],
+            sort: opts.sort ?? "quality",
+            limit: opts.limit ?? 0
+          }
+        };
+      }
+      case "torrentsdb": {
+        const opts = config.options;
+        return {
+          ...config,
+          options: {
+            streamProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
+            debridProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
+            qualityFilter: opts.qualityFilter ?? [],
+            languages: opts.languages ?? []
+          }
+        };
+      }
+      case "comet": {
+        const opts = config.options;
+        return {
+          ...config,
+          options: {
+            streamProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
+            debridProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
+            languages: opts.languages ?? [],
+            qualityFilter: opts.qualityFilter ?? [],
+            maxResults: opts.maxResults ?? 5,
+            maxSize: opts.maxSize ?? 0,
+            cachedOnly: opts.cachedOnly ?? false,
+            sortCachedUncachedTogether: opts.sortCachedUncachedTogether ?? false
+          }
+        };
+      }
+      case "jackettio": {
+        const opts = config.options;
+        return {
+          ...config,
+          options: {
+            streamProvider: normalizeJackettioProvider(opts.streamProvider ?? opts.debridProvider),
+            debridProvider: normalizeJackettioProvider(opts.streamProvider ?? opts.debridProvider),
+            languages: opts.languages ?? [],
+            qualityFilter: opts.qualityFilter ?? [],
+            maxTorrents: opts.maxTorrents ?? 0,
+            hideUncached: opts.hideUncached ?? false
+          }
+        };
+      }
+      case "aiostreams": {
+        const opts = config.options;
+        return {
+          ...config,
+          options: { manifestUrl: opts.manifestUrl ?? "" }
+        };
+      }
+      case "orion": {
+        const opts = config.options;
+        return {
+          ...config,
+          options: {
+            orionKey: opts.orionKey ?? "",
+            streamProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
+            debridProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider)
+          }
+        };
+      }
+      default:
+        return config;
+    }
+  }
+  function getStreamProviderConfigs() {
+    return getScraperConfigs();
+  }
+  function setStreamProviderConfigs(configs) {
+    setScraperConfigs(configs);
+  }
+
+  // lib/media-stream/core-addons.ts
+  var KEY = "core_stream_addons_v1";
+  var EVENT = "lumio-core-stream-addons-changed";
+  function readCoreStreamAddons() {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = getScopedStorageItem(KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((entry) => Boolean(entry) && typeof entry === "object" && typeof entry.url === "string" && entry.url.length > 0);
+    } catch {
+      return [];
+    }
+  }
+  function writeCoreStreamAddons(entries) {
+    setScopedStorageItem(KEY, JSON.stringify(entries));
+    if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT));
+  }
+  function getEnabledCoreStreamAddons() {
+    return readCoreStreamAddons().filter((entry) => entry.enabled !== false);
+  }
+  function upsertCoreStreamAddon(url, name) {
+    const trimmedUrl = url.trim();
+    if (!trimmedUrl) return;
+    const trimmedName = name.trim() || trimmedUrl;
+    const existing = readCoreStreamAddons();
+    const previous = existing.find((entry) => entry.url === trimmedUrl);
+    const next2 = {
+      url: trimmedUrl,
+      name: trimmedName,
+      enabled: previous ? previous.enabled : true,
+      installedAt: previous?.installedAt ?? (/* @__PURE__ */ new Date()).toISOString()
+    };
+    const filtered = existing.filter((entry) => entry.url !== trimmedUrl);
+    writeCoreStreamAddons([...filtered, next2]);
+  }
+  function syncCoreStreamAddonsToScraperSources() {
+    if (typeof window === "undefined") return;
+    const addons = getEnabledCoreStreamAddons();
+    if (addons.length === 0) return;
+    const normalize = (value) => value.trim().replace(/\/+$/, "");
+    const existing = getScraperConfigs();
+    for (const addon of addons) {
+      const alreadyThere = existing.some((entry) => {
+        if (entry.preset !== "custom") return false;
+        const raw = entry.options.rawUrl;
+        return typeof raw === "string" && normalize(raw) === normalize(addon.url);
+      });
+      if (alreadyThere) continue;
+      registerCustomScraperFromManifestUrl(addon.url, addon.name);
+    }
   }
 
   // lib/i18n.tsx
@@ -167785,6 +168119,20 @@
       introDebugLoading: "IntroDB loading",
       introDebugFound: "Intro found",
       introDebugMissing: "No intro match",
+      /* Ytor som låg med hårdkodad svenska: startsplashen, fjärranslutningen,
+         felgränserna och två Suspense-etiketter. De visades på svenska även för
+         en engelsk profil. */
+      advBackupSavedTitle: "Settings copy saved",
+      advBackupOpenOnOtherDevice: "Open this address on the other device, download the file, and press Import there.",
+      appStarting: "Starting Lumio",
+      remoteConnecting: "Connecting to Lumio at home\u2026",
+      clientStartFailed: "The client could not start",
+      clientStartFailedHint: "This is the actual error from the app, not a generic fallback.",
+      loadingPlayer: "Loading player\u2026",
+      loadingAudioPlayer: "Loading audio player\u2026",
+      syncFailed: "Sync failed",
+      genericError: "Error",
+      dlDone: "Done",
       introFound: "Intro found",
       /* Korta etiketter i telefonens kontrollrad — brickan är 62 px och pillret
          ska rymmas i en rullande rad, så namnen är avsiktligt kortare än de
@@ -169992,6 +170340,17 @@
       introDebugLoading: "IntroDB laddar",
       introDebugFound: "Intro hittat",
       introDebugMissing: "Ingen introtr\xE4ff",
+      advBackupSavedTitle: "Kopia av inst\xE4llningarna sparad",
+      advBackupOpenOnOtherDevice: "\xD6ppna adressen p\xE5 den andra enheten, h\xE4mta filen och tryck Importera d\xE4r.",
+      appStarting: "Startar Lumio",
+      remoteConnecting: "Ansluter till Lumio hemma\u2026",
+      clientStartFailed: "Klienten kunde inte starta korrekt",
+      clientStartFailedHint: "Det h\xE4r \xE4r det faktiska felmeddelandet fr\xE5n appen, inte en generisk reserv.",
+      loadingPlayer: "Laddar spelare\u2026",
+      loadingAudioPlayer: "Laddar ljudspelare\u2026",
+      syncFailed: "Fel vid synk",
+      genericError: "Fel",
+      dlDone: "Klar",
       introFound: "Intro hittad",
       plShortEpisodes: "Avsnitt",
       plShortPicture: "Bild",
@@ -171315,309 +171674,9 @@
     upsertStremioAddon(baseUrl, manifest);
     if (hasStream) {
       upsertCoreStreamAddon(url, manifest.name);
+      syncCoreStreamAddonsToScraperSources();
     }
     return manifest.name;
-  }
-
-  // lib/media-stream/config.ts
-  var KEY_PRESET_URL = (id4) => `scraper_url_${id4}`;
-  var SCRAPER_PRESETS = [
-    {
-      id: "torrentio",
-      name: "Torrentio",
-      url: "https://torrentio.strem.fun",
-      type: "torrentio",
-      description: "Publik scraper, stabil och snabb. Kr\xE4ver Real-Debrid API-nyckel.",
-      configUrl: "https://torrentio.strem.fun/configure"
-    },
-    {
-      id: "comet",
-      name: "Comet",
-      url: "",
-      type: "preconfigured",
-      description: "Snabb scraper med bra tr\xE4ffar. Kr\xE4ver konfiguration med RD-nyckel.",
-      configUrl: "https://comet.elfhosted.com"
-    },
-    {
-      id: "jackettio",
-      name: "Jackettio",
-      url: "",
-      type: "preconfigured",
-      description: "Jackett-baserad scraper med breda indexers. Kr\xE4ver Real-Debrid eller AllDebrid.",
-      configUrl: "https://jackettio.elfhosted.com/configure"
-    },
-    {
-      id: "aiostreams",
-      name: "AIOStreams",
-      url: "",
-      type: "preconfigured",
-      description: "Aggregerar m\xE5nga addons och debrid-tj\xE4nster bakom en enda konfiguration.",
-      configUrl: "https://aiostreams-nightly.fortheweak.cloud/stremio/configure"
-    }
-  ];
-  var DEFAULT_SCRAPER_URL = SCRAPER_PRESETS[0].url;
-  function loadPresetUrl(id4) {
-    if (typeof window === "undefined") return "";
-    return getScopedStorageItem(KEY_PRESET_URL(id4)) ?? "";
-  }
-  var CONFIGS_KEY = "scraper_configs_v2";
-  var GLOBAL_STREAM_PROVIDER_TOKEN_KEY_PREFIX = "scraper_global_debrid_token_";
-  var GLOBAL_STREAM_PROVIDER_COOKIE_PREFIX = "lumio_provider_token_";
-  var LEGACY_STREAM_PROVIDER_COOKIE_PREFIX = "lumio_debrid_token_";
-  var LEGACY_RD_API_KEY = "rd_api_key";
-  var VALID_STREAM_PROVIDERS = /* @__PURE__ */ new Set([
-    "none",
-    "realdebrid",
-    "alldebrid",
-    "easydebrid",
-    "offcloud",
-    "torbox",
-    "putio"
-  ]);
-  function normalizeStreamProvider(provider) {
-    const normalized = provider?.trim().toLowerCase() || "realdebrid";
-    return VALID_STREAM_PROVIDERS.has(normalized) ? normalized : "realdebrid";
-  }
-  var JACKETTIO_STREAM_PROVIDERS = ["realdebrid", "alldebrid"];
-  function normalizeJackettioProvider(provider) {
-    const normalized = provider?.trim().toLowerCase() || "realdebrid";
-    return JACKETTIO_STREAM_PROVIDERS.includes(normalized) ? normalized : "realdebrid";
-  }
-  var DEFAULT_TORRENTIO_CONFIG = {
-    id: "torrentio",
-    preset: "torrentio",
-    enabled: true,
-    options: {
-      streamProvider: "realdebrid",
-      debridProvider: "realdebrid",
-      qualityFilter: [],
-      languages: [],
-      providers: [],
-      sort: "quality",
-      limit: 0
-    }
-  };
-  var TORRENTSDB_AUTOADD_KEY = "scraper_torrentsdb_autoadded_v1";
-  function dropAutoAddedTorrentsDb(configs) {
-    try {
-      if (getScopedStorageItem(TORRENTSDB_AUTOADD_KEY) !== "1") return configs;
-    } catch {
-      return configs;
-    }
-    const next2 = configs.filter((config) => config.preset !== "torrentsdb");
-    if (next2.length === configs.length) return configs;
-    try {
-      setScraperConfigs(next2);
-    } catch {
-    }
-    return next2;
-  }
-  function getActiveStreamProviderId() {
-    if (typeof window === "undefined") return "realdebrid";
-    const configs = getScraperConfigs();
-    const first = configs.find((c) => {
-      if (!c.enabled) return false;
-      const provider = normalizeStreamProvider(c.options.debridProvider);
-      return provider && provider !== "none";
-    });
-    return normalizeStreamProvider(first?.options?.debridProvider);
-  }
-  function getGlobalStreamProviderTokenStorageKey(provider) {
-    const normalized = normalizeStreamProvider(provider);
-    return `${GLOBAL_STREAM_PROVIDER_TOKEN_KEY_PREFIX}${normalized}`;
-  }
-  function getGlobalStreamProviderCookieKey(provider) {
-    const normalized = normalizeStreamProvider(provider);
-    return `${GLOBAL_STREAM_PROVIDER_COOKIE_PREFIX}${normalized}`;
-  }
-  function getLegacyGlobalStreamProviderCookieKey(provider) {
-    const normalized = normalizeStreamProvider(provider);
-    return `${LEGACY_STREAM_PROVIDER_COOKIE_PREFIX}${normalized}`;
-  }
-  function readCookieValue(name) {
-    if (typeof document === "undefined") return "";
-    const prefix = `${encodeURIComponent(name)}=`;
-    const entry = document.cookie.split("; ").find((cookie) => cookie.startsWith(prefix));
-    if (!entry) return "";
-    try {
-      return decodeURIComponent(entry.slice(prefix.length));
-    } catch {
-      return "";
-    }
-  }
-  function writeCookieValue(name, value) {
-    if (typeof document === "undefined") return;
-    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; path=/; max-age=31536000; SameSite=Lax`;
-  }
-  function clearCookieValue(name) {
-    if (typeof document === "undefined") return;
-    document.cookie = `${encodeURIComponent(name)}=; path=/; max-age=0; SameSite=Lax`;
-  }
-  function getGlobalStreamProviderAccessKey(provider) {
-    if (typeof window === "undefined") return "";
-    const normalizedProvider = normalizeStreamProvider(provider);
-    const storageKey = getGlobalStreamProviderTokenStorageKey(normalizedProvider);
-    const key = getScopedStorageItem(storageKey) ?? "";
-    if (key.trim()) return key;
-    const unscopedKey = getItem(storageKey) ?? "";
-    if (unscopedKey.trim()) return unscopedKey;
-    const cookieKey = readCookieValue(getGlobalStreamProviderCookieKey(normalizedProvider));
-    if (cookieKey.trim()) return cookieKey;
-    const legacyCookieKey = readCookieValue(getLegacyGlobalStreamProviderCookieKey(normalizedProvider));
-    if (legacyCookieKey.trim()) return legacyCookieKey;
-    if (normalizedProvider === "realdebrid") {
-      const legacy = getScopedStorageItem(LEGACY_RD_API_KEY) ?? getItem(LEGACY_RD_API_KEY) ?? readCookieValue(LEGACY_RD_API_KEY) ?? "";
-      return legacy;
-    }
-    return "";
-  }
-  function getScraperStreamProviderId(config) {
-    if (config.preset === "aiostreams") return "none";
-    const opts = config.options;
-    return normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider);
-  }
-  function setGlobalStreamProviderAccessKey(provider, value) {
-    const normalizedProvider = normalizeStreamProvider(provider);
-    const trimmed = value.trim();
-    const storageKey = getGlobalStreamProviderTokenStorageKey(normalizedProvider);
-    if (trimmed) {
-      setScopedStorageItem(storageKey, trimmed);
-      writeCookieValue(getGlobalStreamProviderCookieKey(normalizedProvider), trimmed);
-      writeCookieValue(getLegacyGlobalStreamProviderCookieKey(normalizedProvider), trimmed);
-    } else {
-      removeScopedStorageItem(storageKey);
-      clearCookieValue(getGlobalStreamProviderCookieKey(normalizedProvider));
-      clearCookieValue(getLegacyGlobalStreamProviderCookieKey(normalizedProvider));
-    }
-    if (normalizedProvider === "realdebrid") {
-      if (trimmed) {
-        setScopedStorageItem(LEGACY_RD_API_KEY, trimmed);
-        writeCookieValue(LEGACY_RD_API_KEY, trimmed);
-      } else {
-        removeScopedStorageItem(LEGACY_RD_API_KEY);
-        clearCookieValue(LEGACY_RD_API_KEY);
-      }
-    }
-  }
-  function getScraperConfigs() {
-    if (typeof window === "undefined") return [DEFAULT_TORRENTIO_CONFIG];
-    try {
-      const scoped = getScopedStorageItem(CONFIGS_KEY);
-      const raw = scoped ?? (getActiveProfileId() ? null : getItem(CONFIGS_KEY));
-      if (!raw) {
-        return [DEFAULT_TORRENTIO_CONFIG];
-      }
-      const parsed = JSON.parse(raw);
-      return dropAutoAddedTorrentsDb(parsed.map(normalizeScraperConfig));
-    } catch {
-      return [DEFAULT_TORRENTIO_CONFIG];
-    }
-  }
-  function setScraperConfigs(configs) {
-    setScopedStorageItem(CONFIGS_KEY, JSON.stringify(configs));
-  }
-  function normalizeScraperConfig(config) {
-    if (config.preset === "mediafusion") {
-      const opts = config.options;
-      config = {
-        ...config,
-        id: config.id === "mediafusion" ? "jackettio" : config.id,
-        preset: "jackettio",
-        options: {
-          streamProvider: opts.streamProvider ?? opts.debridProvider ?? "realdebrid",
-          debridProvider: opts.debridProvider ?? "realdebrid",
-          languages: [],
-          qualityFilter: [],
-          maxTorrents: 0,
-          hideUncached: false
-        }
-      };
-    }
-    switch (config.preset) {
-      case "torrentio": {
-        const opts = config.options;
-        return {
-          ...config,
-          options: {
-            streamProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
-            debridProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
-            qualityFilter: opts.qualityFilter ?? [],
-            languages: opts.languages ?? [],
-            providers: opts.providers ?? [],
-            sort: opts.sort ?? "quality",
-            limit: opts.limit ?? 0
-          }
-        };
-      }
-      case "torrentsdb": {
-        const opts = config.options;
-        return {
-          ...config,
-          options: {
-            streamProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
-            debridProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
-            qualityFilter: opts.qualityFilter ?? [],
-            languages: opts.languages ?? []
-          }
-        };
-      }
-      case "comet": {
-        const opts = config.options;
-        return {
-          ...config,
-          options: {
-            streamProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
-            debridProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
-            languages: opts.languages ?? [],
-            qualityFilter: opts.qualityFilter ?? [],
-            maxResults: opts.maxResults ?? 5,
-            maxSize: opts.maxSize ?? 0,
-            cachedOnly: opts.cachedOnly ?? false,
-            sortCachedUncachedTogether: opts.sortCachedUncachedTogether ?? false
-          }
-        };
-      }
-      case "jackettio": {
-        const opts = config.options;
-        return {
-          ...config,
-          options: {
-            streamProvider: normalizeJackettioProvider(opts.streamProvider ?? opts.debridProvider),
-            debridProvider: normalizeJackettioProvider(opts.streamProvider ?? opts.debridProvider),
-            languages: opts.languages ?? [],
-            qualityFilter: opts.qualityFilter ?? [],
-            maxTorrents: opts.maxTorrents ?? 0,
-            hideUncached: opts.hideUncached ?? false
-          }
-        };
-      }
-      case "aiostreams": {
-        const opts = config.options;
-        return {
-          ...config,
-          options: { manifestUrl: opts.manifestUrl ?? "" }
-        };
-      }
-      case "orion": {
-        const opts = config.options;
-        return {
-          ...config,
-          options: {
-            orionKey: opts.orionKey ?? "",
-            streamProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider),
-            debridProvider: normalizeStreamProvider(opts.streamProvider ?? opts.debridProvider)
-          }
-        };
-      }
-      default:
-        return config;
-    }
-  }
-  function getStreamProviderConfigs() {
-    return getScraperConfigs();
-  }
-  function setStreamProviderConfigs(configs) {
-    setScraperConfigs(configs);
   }
 
   // lib/media-stream/storage.ts
@@ -177593,13 +177652,17 @@ ${cue.text}`).join("\n\n")}
     const [dvColorFallback, setDvColorFallback] = useState(false);
     const [dvColorFallbackMuted, setDvColorFallbackMuted] = useState(false);
     const dvColorFallbackActive = dvColorFallback && !dvColorFallbackMuted;
-    const [screenDim, setScreenDim] = useState(0);
+    const [gestureBrightness, setGestureBrightness] = useState(0);
     useEffect(() => {
-      setScreenDim(0);
+      setGestureBrightness(0);
     }, [playbackSessionIdentity]);
     const effectiveVideoTuning = useMemo(
-      () => dvColorFallbackActive ? { ...DEFAULT_TUNING, ...TUNING_PRESETS.vivid.patch } : videoTuning,
-      [dvColorFallbackActive, videoTuning]
+      () => {
+        const base = dvColorFallbackActive ? { ...DEFAULT_TUNING, ...TUNING_PRESETS.vivid.patch } : videoTuning;
+        if (!gestureBrightness) return base;
+        return { ...base, brightness: Math.min(50, Math.max(-50, base.brightness + gestureBrightness)) };
+      },
+      [dvColorFallbackActive, videoTuning, gestureBrightness]
     );
     useEffect(() => {
       setDvColorFallback(false);
@@ -181200,7 +181263,7 @@ ${cue.text}`).join("\n\n")}
         height: rect.height || 1,
         axis: null,
         startVolume: muted ? 0 : volume,
-        startBrightness: screenDim,
+        startBrightness: gestureBrightness,
         startTime: realTimeRef.current,
         pendingSeek: null
       };
@@ -181229,9 +181292,9 @@ ${cue.text}`).join("\n\n")}
         showGestureHud("volume", Math.round(next3 * 100));
         return;
       }
-      const next2 = Math.min(0.75, Math.max(0, gesture.startBrightness + dy / gesture.height));
-      setScreenDim(next2);
-      showGestureHud("brightness", Math.round((1 - next2) * 100));
+      const next2 = Math.min(50, Math.max(-50, gesture.startBrightness - dy / gesture.height * 100));
+      setGestureBrightness(next2);
+      showGestureHud("brightness", Math.round(next2));
     };
     const endGesture = () => {
       const gesture = gestureRef.current;
@@ -181343,10 +181406,10 @@ ${cue.text}`).join("\n\n")}
         onClick: spec.onClick,
         title: spec.title,
         "aria-label": spec.title,
-        className: `flex w-[62px] flex-none flex-col items-center gap-1 rounded-[10px] py-1.5 transition ${phoneStateClass(spec.state)}`,
+        className: `flex w-[54px] flex-none flex-col items-center gap-0.5 rounded-[10px] py-1 transition ${phoneStateClass(spec.state)}`,
         children: [
-          playerIcon(id4, "h-[19px] w-[19px]"),
-          /* @__PURE__ */ jsx("span", { className: "text-[11px] font-semibold leading-none", children: spec.label })
+          playerIcon(id4, "h-[17px] w-[17px]"),
+          /* @__PURE__ */ jsx("span", { className: "text-[10px] font-semibold leading-none", children: spec.label })
         ]
       },
       id4
@@ -181506,7 +181569,7 @@ ${cue.text}`).join("\n\n")}
                         "data-init": isTv ? "1" : void 0,
                         onClick: handleClose,
                         className: "text-xs text-slate-500 transition hover:text-slate-300",
-                        children: startError ? t("close") : "Avbryt"
+                        children: startError ? t("close") : t("cancel")
                       }
                     )
                   ] })
@@ -181870,7 +181933,7 @@ ${cue.text}`).join("\n\n")}
                 /* @__PURE__ */ jsx(
                   "div",
                   {
-                    className: "absolute inset-0 z-10",
+                    className: `absolute inset-0 z-10 ${phoneChrome ? "touch-none select-none" : ""}`,
                     onPointerDown: (e) => {
                       suppressNextOverlayToggleRef.current = e.pointerType !== "mouse" && !controlsVisible;
                       if (suppressNextOverlayToggleRef.current) onMouseActivity();
@@ -181893,13 +181956,6 @@ ${cue.text}`).join("\n\n")}
                     onMouseMove: onMouseActivity
                   }
                 ),
-                screenDim > 0 ? /* @__PURE__ */ jsx(
-                  "div",
-                  {
-                    className: "pointer-events-none absolute inset-0 z-[15] bg-black",
-                    style: { opacity: screenDim }
-                  }
-                ) : null,
                 gestureHud ? /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 z-[57] flex items-center justify-center", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 rounded-full bg-black/70 px-4 py-2.5 backdrop-blur-md", children: [
                   gestureHud.kind === "volume" ? /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px] text-white", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) : /* @__PURE__ */ jsxs("svg", { className: "h-[18px] w-[18px] text-white", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.9", strokeLinecap: "round", children: [
                     /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "4" }),
@@ -182422,7 +182478,7 @@ ${cue.text}`).join("\n\n")}
                   "div",
                   {
                     ref: controlsRef,
-                    className: `vp-controls absolute inset-x-0 bottom-0 z-40 ${desktopChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.35)_40%,rgba(0,0,0,0.85)_100%)] px-6 pb-5 pt-16" : landscapeChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.45)_45%,rgba(0,0,0,0.85)_100%)] px-[26px] pb-5 pt-14" : portraitChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.5)_35%,rgba(0,0,0,0.92)_100%)] pb-[max(1.375rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-3.5" : "bg-gradient-to-t from-black/80 via-black/30 to-transparent px-4 pb-[max(0.75rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-10"}`,
+                    className: `vp-controls absolute inset-x-0 bottom-0 z-40 ${desktopChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.35)_40%,rgba(0,0,0,0.85)_100%)] px-6 pb-5 pt-16" : landscapeChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.45)_50%,rgba(0,0,0,0.85)_100%)] px-[26px] pb-3 pt-10" : portraitChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.5)_35%,rgba(0,0,0,0.92)_100%)] pb-[max(1.375rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-3.5" : "bg-gradient-to-t from-black/80 via-black/30 to-transparent px-4 pb-[max(0.75rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-10"}`,
                     style: {
                       opacity: controlsVisible && controlsReady ? 1 : 0,
                       pointerEvents: controlsVisible && controlsReady ? "auto" : "none",
@@ -182457,7 +182513,7 @@ ${cue.text}`).join("\n\n")}
                            plats. Ingen sidoscroll: budgeten är just sex plus Mer. */
                         /* @__PURE__ */ jsxs(Fragment2, { children: [
                           renderSeekTrack("w-full"),
-                          /* @__PURE__ */ jsxs("div", { className: "mt-3 flex items-center justify-between gap-5", children: [
+                          /* @__PURE__ */ jsxs("div", { className: "mt-2 flex items-center justify-between gap-5", children: [
                             renderPhoneClock("text-[15px]", "text-[13px]"),
                             /* @__PURE__ */ jsxs("div", { className: "flex flex-none items-center gap-1.5", children: [
                               phoneRowIds.map((id4) => renderPhoneTile(id4, phoneControls[id4])),
@@ -182469,10 +182525,10 @@ ${cue.text}`).join("\n\n")}
                                   onClick: () => setShowMoreMenu((open) => !open),
                                   title: t("moreActions"),
                                   "aria-label": t("moreActions"),
-                                  className: `flex w-[62px] flex-none flex-col items-center gap-1 rounded-[10px] py-1.5 transition ${showMoreMenu ? "bg-[rgb(var(--player-accent)/0.34)] text-white" : "text-slate-200"}`,
+                                  className: `flex w-[54px] flex-none flex-col items-center gap-0.5 rounded-[10px] py-1 transition ${showMoreMenu ? "bg-[rgb(var(--player-accent)/0.34)] text-white" : "text-slate-200"}`,
                                   children: [
-                                    playerIcon("more", "h-[19px] w-[19px]"),
-                                    /* @__PURE__ */ jsx("span", { className: "text-[11px] font-semibold leading-none", children: t("plShortMore") })
+                                    playerIcon("more", "h-[17px] w-[17px]"),
+                                    /* @__PURE__ */ jsx("span", { className: "text-[10px] font-semibold leading-none", children: t("plShortMore") })
                                   ]
                                 }
                               )
@@ -183042,7 +183098,7 @@ ${cue.text}`).join("\n\n")}
                                 ]
                               }
                             ),
-                            /* @__PURE__ */ jsxs(
+                            !(desktopChrome || portraitChrome) && /* @__PURE__ */ jsxs(
                               "button",
                               {
                                 type: "button",
@@ -189202,7 +189258,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.120",
+    version: "1.0.121",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
