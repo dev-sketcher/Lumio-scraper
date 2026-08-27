@@ -3723,6 +3723,60 @@ function scraperInCooldown(configId: string): boolean {
           forceProxy={playerForceProxy}
           onTimeUpdate={handleTimeUpdate}
           onOutroStart={handleOutroStart}
+          /**
+           * Säsongens avsnitt till spelarens lista. Datan bor här — vi vet
+           * vilka avsnitt som finns och hur en ström byts — men panelen ritas i
+           * appen, så spelarens paneler blir en familj.
+           *
+           * Bara avsnitt som HAFT premiär: ett kommande avsnitt går inte att
+           * spela, och en rad man kan trycka på utan att något händer är sämre
+           * än ingen rad. Samma regel som nästa-avsnitt-kortet följer.
+           */
+          episodes={
+            mediaType === 'tv' && selectedSeason && episodes && episodes.length > 0
+              ? {
+                  seasonNumber: playerSeason ?? selectedSeason.season_number,
+                  items: episodes
+                    .filter((episode) => {
+                      if (!episode.air_date) return true
+                      const airMs = new Date(episode.air_date).getTime()
+                      return !Number.isFinite(airMs) || airMs <= Date.now()
+                    })
+                    .map((episode) => ({
+                      number: episode.episode_number,
+                      title: episode.name,
+                      stillUrl: episode.still_path
+                        ? `https://image.tmdb.org/t/p/w300${episode.still_path}`
+                        : null,
+                      airDate: episode.air_date,
+                      runtimeMinutes: episode.runtime ?? null,
+                      // Samma nyckelform som avsnittslistan i panelen använder
+                      // (numericTmdbId-S<n>E<n>) — watchedEps är ett Set av
+                      // id:n, inte av avsnittsnummer.
+                      watched: numericTmdbId
+                        ? watchedEps.has(`${numericTmdbId}-S${selectedSeason.season_number}E${episode.episode_number}`)
+                        : false,
+                    })),
+                  current: playerEpisode ?? selectedEpisode?.episode_number ?? null,
+                  onSelect: (episodeNumber: number) => {
+                    const mal = episodes.find((episode) => episode.episode_number === episodeNumber)
+                    if (!mal || !selectedSeason) return
+                    // Samma väg som nästa-avsnitt-kortet tar, med valt avsnitt
+                    // i stället för nästa i ordningen: den nollställer
+                    // avvisningsflaggan, byter ström och uppdaterar titeln.
+                    nextEpDismissedRef.current = false
+                    void handlePlayNextEpisode({
+                      season: selectedSeason.season_number,
+                      episode: mal.episode_number,
+                      episodeTitle: mal.name,
+                      stillUrl: mal.still_path
+                        ? `https://image.tmdb.org/t/p/w300${mal.still_path}`
+                        : null,
+                    })
+                  },
+                }
+              : undefined
+          }
           skipHomeKitOnClose={playerSkipHomeKitClose}
           skipHomeKitOnOpen={playerSkipHomeKitOpen}
           autoFullscreen={playerAutoFullscreen}
