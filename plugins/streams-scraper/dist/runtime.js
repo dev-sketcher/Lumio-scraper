@@ -182478,13 +182478,21 @@ ${cue.text}`).join("\n\n")}
                   "div",
                   {
                     ref: controlsRef,
-                    className: `vp-controls absolute inset-x-0 bottom-0 z-40 ${desktopChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.35)_40%,rgba(0,0,0,0.85)_100%)] px-6 pb-5 pt-16" : landscapeChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.45)_50%,rgba(0,0,0,0.85)_100%)] px-[26px] pb-3 pt-10" : portraitChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.5)_35%,rgba(0,0,0,0.92)_100%)] pb-[max(1.375rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-3.5" : "bg-gradient-to-t from-black/80 via-black/30 to-transparent px-4 pb-[max(0.75rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-10"}`,
+                    className: `vp-controls absolute inset-x-0 bottom-0 z-40 ${desktopChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.35)_40%,rgba(0,0,0,0.85)_100%)] px-6 pb-5 pt-16" : landscapeChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.45)_50%,rgba(0,0,0,0.85)_100%)] pb-3 pt-10" : portraitChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.5)_35%,rgba(0,0,0,0.92)_100%)] pb-[max(1.375rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-3.5" : "bg-gradient-to-t from-black/80 via-black/30 to-transparent px-4 pb-[max(0.75rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-10"}`,
                     style: {
                       opacity: controlsVisible && controlsReady ? 1 : 0,
                       pointerEvents: controlsVisible && controlsReady ? "auto" : "none",
                       // Sidoinsetet gäller bara liggande telefon: där ligger urklippet i
                       // sidan och skulle annars klippa tiden respektive Mer-brickan.
-                      ...landscapeChrome ? { marginLeft: PHONE_LEFT_INSET, marginRight: PHONE_RIGHT_INSET } : {}
+                      //
+                      // Padding, inte margin: marginalen drog in HELA lådan, så gradienten
+                      // slutade en urklippsbredd från skärmkanten och lämnade en ljus
+                      // remsa i vänsterkanten. Padding håller bakgrunden full bredd och
+                      // flyttar bara innehållet. Basen 26px är designens sidmarginal.
+                      ...landscapeChrome ? {
+                        paddingLeft: `calc(26px + ${PHONE_LEFT_INSET})`,
+                        paddingRight: `calc(26px + ${PHONE_RIGHT_INSET})`
+                      } : {}
                     },
                     onMouseMove: onMouseActivity,
                     onPointerDown: onMouseActivity,
@@ -189258,7 +189266,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.121",
+    version: "1.0.122",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
