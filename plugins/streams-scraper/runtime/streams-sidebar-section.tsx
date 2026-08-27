@@ -84,6 +84,14 @@ import {
 // Remembered "this stream actually played" per title/episode. Resuming used
 // to re-run the ranking from scratch, which both took longer and regularly
 // landed on a different source than the one the user was already watching.
+/**
+ * Pauserna mellan omförsök när en hämtning avbrutits av panelens egen
+ * livscykel. Växande, för en fast paus förlorar samma kapplöpning igen på en
+ * långsam telefon — och tre försök i stället för två, eftersom ett tungt svar
+ * (en serie med tjugo säsonger) är precis det fall som faller.
+ */
+const RETRY_DELAYS_MS = [300, 700, 1500] as const
+
 const LAST_PLAYED_KEY = 'streams_last_played_v1'
 const LAST_PLAYED_MAX_ENTRIES = 120
 
@@ -434,6 +442,7 @@ export function StreamsSidebarSection({
   const [seasons, setSeasons] = useState<TvSeason[] | null>(null)
   const [loadingSeasons, setLoadingSeasons] = useState(false)
   const seasonAbortRetryRef = useRef(0)
+  const episodeAbortRetryRef = useRef(0)
   const [seasonsError, setSeasonsError] = useState<string | null>(null)
   const [selectedSeason, setSelectedSeason] = useState<TvSeason | null>(null)
   const [episodes, setEpisodes] = useState<TvEpisode[] | null>(null)
@@ -1058,13 +1067,19 @@ export function StreamsSidebarSection({
     } catch (err) {
       if (requestId !== seasonRequestIdRef.current) return
       const detail = err instanceof Error ? `${err.name}: ${err.message}` : String(err)
-      void fetch(`/api/debug-log?msg=${encodeURIComponent(`loadSeasons misslyckades: ${detail} (requestId=${requestId})`)}`).catch(() => {})
+      void fetch(`/api/debug-log?msg=${encodeURIComponent(
+        `loadSeasons misslyckades: ${detail} (requestId=${requestId}, försök=${seasonAbortRetryRef.current + 1})`,
+      )}`).catch(() => {})
       if (isAbortLikeError(err)) {
         // Aborted by the sidebar's own remount/target sync — slower device
         // networks lose this race, so retry instead of surfacing an error.
-        if (seasonAbortRetryRef.current < 2) {
+        // Backoff, för en fast paus på 400 ms förlorar samma kapplöpning igen
+        // på en långsam telefon; och försöksnumret loggas så man ser om det var
+        // ett eller alla.
+        if (seasonAbortRetryRef.current < RETRY_DELAYS_MS.length) {
+          const delay = RETRY_DELAYS_MS[seasonAbortRetryRef.current]
           seasonAbortRetryRef.current += 1
-          window.setTimeout(() => { void loadSeasons() }, 400)
+          window.setTimeout(() => { void loadSeasons() }, delay)
           return
         }
         setSeasonsError('Could not load seasons')
@@ -1126,6 +1141,7 @@ export function StreamsSidebarSection({
       if (requestId !== episodeRequestIdRef.current) return
       if (data.error) throw new Error(data.error)
       const eps = data.episodes ?? []
+      episodeAbortRetryRef.current = 0
       episodeCacheRef.current.set(cacheKey, eps)
       setEpisodes(eps)
       sendTelemetry('streams.load_episodes', 'ok', 'episodes loaded', {
@@ -1137,6 +1153,18 @@ export function StreamsSidebarSection({
     } catch (err) {
       if (requestId !== episodeRequestIdRef.current) return
       if (isAbortLikeError(err)) {
+        /* En abort är inte ett svar. Utan retry blev listan tom för gott, och
+           spelarens Nästa avsnitt-knapp försvann tyst — den finns bara när
+           listan har poster. Samma backoff som säsongerna. */
+        void fetch(`/api/debug-log?msg=${encodeURIComponent(
+          `loadEpisodes avbröts: säsong=${season.season_number} (requestId=${requestId}, försök=${episodeAbortRetryRef.current + 1})`,
+        )}`).catch(() => {})
+        if (episodeAbortRetryRef.current < RETRY_DELAYS_MS.length) {
+          const delay = RETRY_DELAYS_MS[episodeAbortRetryRef.current]
+          episodeAbortRetryRef.current += 1
+          window.setTimeout(() => { void loadEpisodes(season) }, delay)
+          return
+        }
         setEpisodes([])
         return
       }
@@ -2657,7 +2685,26 @@ function scraperInCooldown(configId: string): boolean {
     return opened
   }
 
+  /**
+   * Nollställningen gäller ett BYTE av titel, inte monteringen.
+   *
+   * Effekten körs också på första rendern, och den ligger efter effekten som
+   * startar säsongs- och avsnittshämtningen — alltså avbröt panelen alltid sina
+   * egna första hämtningar med `AbortError`, och det som räddade den var en
+   * retry 400 ms senare. Avsnittslistan hade ingen retry alls: aborten satte
+   * `episodes = []` för gott, och då försvann Nästa avsnitt-knappen utan att
+   * något syntes vara fel (bekräftat i enhetsloggen på en 20-säsongers serie,
+   * där svaret är tungt nog att förlora kapplöpningen).
+   *
+   * Vid montering finns ingen gammal uppspelning att städa bort — tillståndet
+   * ÄR redan initialt — så hoppet är gratis.
+   */
+  const didInitialContextReset = useRef(false)
   useEffect(() => {
+    if (!didInitialContextReset.current) {
+      didInitialContextReset.current = true
+      return
+    }
     // Hard-reset async playback state when media context changes.
     cancelPlayAttempt()
     stopPolling()

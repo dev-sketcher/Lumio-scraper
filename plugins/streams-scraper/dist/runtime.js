@@ -176933,6 +176933,9 @@ ${cue.text}`).join("\n\n")}
   }
   var DESKTOP_CHROME_QUERY = "(min-width: 768px) and (min-height: 520px)";
   var LANDSCAPE_PHONE_QUERY = "(max-height: 519px) and (orientation: landscape)";
+  var PHONE_TOP_INSET = "max(env(safe-area-inset-top), var(--android-inset-top, 0px))";
+  var PHONE_LEFT_INSET = "env(safe-area-inset-left)";
+  var PHONE_RIGHT_INSET = "env(safe-area-inset-right)";
   function readChromeViewport() {
     if (typeof window === "undefined" || typeof window.matchMedia !== "function") return "desktop";
     if (window.matchMedia(DESKTOP_CHROME_QUERY).matches) return "desktop";
@@ -181328,21 +181331,10 @@ ${cue.text}`).join("\n\n")}
         onClick: toggleFullscreen
       } : void 0
     };
-    const PHONE_ROW_IDS = [
-      "subtitles",
-      "audioTrack",
-      "nextEpisode",
-      "tuning",
-      "wiki",
-      "soundtrack",
-      "cropZoom",
-      "aspect",
-      "cast",
-      "fullscreen"
-    ];
+    const PHONE_ROW_ORDER = landscapeChrome ? ["subtitles", "audioTrack", "cropZoom", "tuning", "wiki", "soundtrack", "aspect", "fullscreen"] : ["subtitles", "audioTrack", "nextEpisode", "tuning", "wiki", "soundtrack", "cropZoom", "aspect"];
     const LANDSCAPE_ROW_BUDGET = 6;
     const phoneDedicatedIds = landscapeChrome ? ["nextEpisode", "cast"] : ["cast", "fullscreen"];
-    const phoneRowCandidates = playerLayout.order.filter((id4) => PHONE_ROW_IDS.includes(id4) && !phoneDedicatedIds.includes(id4) && showsControl(id4) && Boolean(phoneControls[id4]));
+    const phoneRowCandidates = PHONE_ROW_ORDER.filter((id4) => !phoneDedicatedIds.includes(id4) && showsControl(id4) && Boolean(phoneControls[id4]));
     const phoneRowIds = landscapeChrome ? phoneRowCandidates.slice(0, LANDSCAPE_ROW_BUDGET) : phoneRowCandidates;
     const phoneOverflowIds = landscapeChrome ? phoneRowCandidates.slice(LANDSCAPE_ROW_BUDGET) : [];
     const phoneClusterIds = phoneDedicatedIds.filter((id4) => showsControl(id4) && Boolean(phoneControls[id4]));
@@ -181592,11 +181584,18 @@ ${cue.text}`).join("\n\n")}
             /* @__PURE__ */ jsxs(
               "div",
               {
-                className: `absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-2.5 overflow-hidden border-b border-white/[0.07] px-3.5 transition-[height,opacity] duration-300 ${collapseMpvTopBar || cssFullscreen && !controlsVisible ? "h-0" : "h-14 pt-[env(safe-area-inset-top)]"}`,
+                className: "absolute inset-x-0 top-0 z-30 flex items-center justify-between gap-2.5 overflow-hidden border-b border-white/[0.07] px-3.5 transition-[height,opacity] duration-300",
                 style: {
                   backgroundColor: "#0a0b12",
                   opacity: controlsVisible ? 1 : 0,
-                  pointerEvents: controlsVisible ? "auto" : "none"
+                  pointerEvents: controlsVisible ? "auto" : "none",
+                  /* Statusfältets höjd LÄGGS TILL listens 56 px, den äts inte av
+                     dem. Med `h-14` + `padding-top: env(safe-area-inset-top)` och
+                     overflow-hidden trycktes titeln och knapparna ner ur sin egen
+                     ruta: på en telefon med urklipp är insetet 44–59 px, alltså mer
+                     än listen är hög, och man såg halva raden. */
+                  height: collapseMpvTopBar || cssFullscreen && !controlsVisible ? 0 : `calc(3.5rem + ${PHONE_TOP_INSET})`,
+                  paddingTop: PHONE_TOP_INSET
                 },
                 children: [
                   /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate text-sm font-medium text-slate-100", children: headerTitle }),
@@ -181962,7 +181961,11 @@ ${cue.text}`).join("\n\n")}
                     className: "absolute inset-x-[26px] top-5 z-[26] flex items-center justify-between gap-6 transition-opacity duration-300",
                     style: {
                       opacity: controlsVisible ? 1 : 0,
-                      pointerEvents: controlsVisible ? "auto" : "none"
+                      pointerEvents: controlsVisible ? "auto" : "none",
+                      /* I landskap sitter urklippet i SIDAN, inte i toppen — annars
+                         hamnar bakåtpilen och nedladdningen under det. */
+                      marginLeft: PHONE_LEFT_INSET,
+                      marginRight: PHONE_RIGHT_INSET
                     },
                     children: [
                       /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-3", children: [
@@ -182417,7 +182420,13 @@ ${cue.text}`).join("\n\n")}
                   {
                     ref: controlsRef,
                     className: `vp-controls absolute inset-x-0 bottom-0 z-40 ${desktopChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.35)_40%,rgba(0,0,0,0.85)_100%)] px-6 pb-5 pt-16" : landscapeChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.45)_45%,rgba(0,0,0,0.85)_100%)] px-[26px] pb-5 pt-14" : portraitChrome ? "bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.5)_35%,rgba(0,0,0,0.92)_100%)] pb-[max(1.375rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-3.5" : "bg-gradient-to-t from-black/80 via-black/30 to-transparent px-4 pb-[max(0.75rem,env(safe-area-inset-bottom),var(--android-inset-bottom,0px))] pt-10"}`,
-                    style: { opacity: controlsVisible && controlsReady ? 1 : 0, pointerEvents: controlsVisible && controlsReady ? "auto" : "none" },
+                    style: {
+                      opacity: controlsVisible && controlsReady ? 1 : 0,
+                      pointerEvents: controlsVisible && controlsReady ? "auto" : "none",
+                      // Sidoinsetet gäller bara liggande telefon: där ligger urklippet i
+                      // sidan och skulle annars klippa tiden respektive Mer-brickan.
+                      ...landscapeChrome ? { marginLeft: PHONE_LEFT_INSET, marginRight: PHONE_RIGHT_INSET } : {}
+                    },
                     onMouseMove: onMouseActivity,
                     onPointerDown: onMouseActivity,
                     onClick: (e) => e.stopPropagation(),
@@ -185997,6 +186006,7 @@ ${cue.text}`).join("\n\n")}
 
   // ../Lumio-scraper/plugins/streams-scraper/runtime/streams-sidebar-section.tsx
   init_jsx_runtime_shim();
+  var RETRY_DELAYS_MS = [300, 700, 1500];
   var LAST_PLAYED_KEY = "streams_last_played_v1";
   var LAST_PLAYED_MAX_ENTRIES = 120;
   function readLastPlayedMap() {
@@ -186163,6 +186173,7 @@ ${cue.text}`).join("\n\n")}
     const [seasons, setSeasons] = useState(null);
     const [loadingSeasons, setLoadingSeasons] = useState(false);
     const seasonAbortRetryRef = useRef(0);
+    const episodeAbortRetryRef = useRef(0);
     const [seasonsError, setSeasonsError] = useState(null);
     const [selectedSeason, setSelectedSeason] = useState(null);
     const [episodes, setEpisodes] = useState(null);
@@ -186613,14 +186624,17 @@ ${cue.text}`).join("\n\n")}
       } catch (err) {
         if (requestId !== seasonRequestIdRef.current) return;
         const detail = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
-        void fetch(`/api/debug-log?msg=${encodeURIComponent(`loadSeasons misslyckades: ${detail} (requestId=${requestId})`)}`).catch(() => {
+        void fetch(`/api/debug-log?msg=${encodeURIComponent(
+          `loadSeasons misslyckades: ${detail} (requestId=${requestId}, f\xF6rs\xF6k=${seasonAbortRetryRef.current + 1})`
+        )}`).catch(() => {
         });
         if (isAbortLikeError(err)) {
-          if (seasonAbortRetryRef.current < 2) {
+          if (seasonAbortRetryRef.current < RETRY_DELAYS_MS.length) {
+            const delay2 = RETRY_DELAYS_MS[seasonAbortRetryRef.current];
             seasonAbortRetryRef.current += 1;
             window.setTimeout(() => {
               void loadSeasons();
-            }, 400);
+            }, delay2);
             return;
           }
           setSeasonsError("Could not load seasons");
@@ -186678,6 +186692,7 @@ ${cue.text}`).join("\n\n")}
         if (requestId !== episodeRequestIdRef.current) return;
         if (data.error) throw new Error(data.error);
         const eps = data.episodes ?? [];
+        episodeAbortRetryRef.current = 0;
         episodeCacheRef.current.set(cacheKey, eps);
         setEpisodes(eps);
         sendTelemetry("streams.load_episodes", "ok", "episodes loaded", {
@@ -186689,6 +186704,18 @@ ${cue.text}`).join("\n\n")}
       } catch (err) {
         if (requestId !== episodeRequestIdRef.current) return;
         if (isAbortLikeError(err)) {
+          void fetch(`/api/debug-log?msg=${encodeURIComponent(
+            `loadEpisodes avbr\xF6ts: s\xE4song=${season.season_number} (requestId=${requestId}, f\xF6rs\xF6k=${episodeAbortRetryRef.current + 1})`
+          )}`).catch(() => {
+          });
+          if (episodeAbortRetryRef.current < RETRY_DELAYS_MS.length) {
+            const delay2 = RETRY_DELAYS_MS[episodeAbortRetryRef.current];
+            episodeAbortRetryRef.current += 1;
+            window.setTimeout(() => {
+              void loadEpisodes(season);
+            }, delay2);
+            return;
+          }
           setEpisodes([]);
           return;
         }
@@ -187864,7 +187891,12 @@ ${cue.text}`).join("\n\n")}
       setPlayerSkipHomeKitOpen(false);
       return opened;
     }
+    const didInitialContextReset = useRef(false);
     useEffect(() => {
+      if (!didInitialContextReset.current) {
+        didInitialContextReset.current = true;
+        return;
+      }
       cancelPlayAttempt();
       stopPolling();
       abortAllNetworkRequests();
@@ -189132,7 +189164,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.118",
+    version: "1.0.119",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

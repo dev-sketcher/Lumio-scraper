@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.0.119
+
+- Avsnittslistan och Nästa avsnitt föll bort tyst på serier med många säsonger.
+  Panelens nollställningseffekt kördes också vid montering — efter effekten som
+  startar hämtningarna — så panelen avbröt sina egna första anrop med
+  `AbortError`. Säsongerna räddades av en retry; avsnittslistan hade ingen och
+  sattes till tom för gott, och då finns det inget att ge spelaren och knappen
+  ritas inte. Bekräftat i enhetsloggen (`loadSeasons misslyckades: AbortError`)
+  på en tjugo säsonger lång serie, där svaret är tungt nog att förlora
+  kapplöpningen.
+- Nollställningen gäller nu bara ett riktigt titelbyte, inte monteringen.
+- Både säsongs- och avsnittshämtningen gör om försöket vid abort, med växande
+  paus (300/700/1500 ms) i stället för en fast på 400 ms, och varje misslyckat
+  försök loggas med sitt nummer — så nästa gång syns det om det var ett eller
+  alla tre.
+
 ## 1.0.118
 
 - Spelaren är ombyggd i appen (nytt kontrollager för desktop och telefon), och
