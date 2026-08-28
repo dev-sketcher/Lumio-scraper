@@ -168468,6 +168468,11 @@
       kpFolderLabel: "Folder",
       kpFolderPlaceholder: "/Users/your-name/Movies",
       kpBrowse: "Browse",
+      kpStorageAccessTitle: "Storage access",
+      kpStorageAccessHint: "Android needs all-files access before Lumio can read a folder you type here. Grant it once in system settings.",
+      kpStorageAccessAction: "Open settings",
+      kpStorageAccessGranted: "Granted",
+      kpFolderScanFailed: "Could not read that folder",
       kpPathHint: "The path is read automatically when Lumio starts. Files are matched against TMDb in the background.",
       // Integrations panel
       ipCatAll: "All",
@@ -170683,6 +170688,11 @@
       kpFolderLabel: "Mapp",
       kpFolderPlaceholder: "/Users/ditt-namn/Movies",
       kpBrowse: "Bl\xE4ddra",
+      kpStorageAccessTitle: "Lagrings\xE5tkomst",
+      kpStorageAccessHint: "Android kr\xE4ver \xE5tkomst till alla filer innan Lumio kan l\xE4sa en mapp du skriver in h\xE4r. Sl\xE5 p\xE5 den en g\xE5ng i systeminst\xE4llningarna.",
+      kpStorageAccessAction: "\xD6ppna inst\xE4llningar",
+      kpStorageAccessGranted: "Beviljad",
+      kpFolderScanFailed: "Kunde inte l\xE4sa mappen",
       kpPathHint: "S\xF6kv\xE4gen l\xE4ses automatiskt n\xE4r Lumio startar. Filer matchas mot TMDb i bakgrunden.",
       // Integrations panel
       ipCatAll: "Alla",
@@ -178443,6 +178453,10 @@ ${cue.text}`).join("\n\n")}
     }, [useMpv, nightMode, audioTuning, mpv.fileLoaded, mpv.fileLoadedToken]);
     const [audioDelayMs, setAudioDelayMsState] = useState(() => getAudioDelayMs());
     const [outputIsBluetooth, setOutputIsBluetooth] = useState(false);
+    const droidAudioDelayAppliedRef = useRef(false);
+    useEffect(() => {
+      droidAudioDelayAppliedRef.current = false;
+    }, [url]);
     useEffect(() => onPlaybackSettingsChanged(() => setAudioDelayMsState(getAudioDelayMs())), []);
     useEffect(() => {
       if (!useMpv || !url) return;
@@ -178463,6 +178477,9 @@ ${cue.text}`).join("\n\n")}
     useEffect(() => {
       if (isDroidEngine) {
         if (!mpv.fileLoaded) return;
+        if (effectiveAudioDelayMs === 0 && !droidAudioDelayAppliedRef.current) return;
+        if (!hasStarted) return;
+        droidAudioDelayAppliedRef.current = effectiveAudioDelayMs !== 0;
         void nativeSetAudioDelay(effectiveAudioDelayMs);
         return;
       }
@@ -178472,7 +178489,7 @@ ${cue.text}`).join("\n\n")}
         const faktisk = await mpvCommand2(["get_property", "audio-delay"]);
         airplayLog(`audio-delay: beg\xE4rt ${effectiveAudioDelayMs} ms (manuellt ${audioDelayMs}, bt ${outputIsBluetooth ? "ja" : "nej"}) \u2192 mpv ${faktisk}`);
       })();
-    }, [isDroidEngine, isMpvEngine, mpv.fileLoaded, mpv.fileLoadedToken, effectiveAudioDelayMs, audioDelayMs, outputIsBluetooth]);
+    }, [isDroidEngine, isMpvEngine, mpv.fileLoaded, mpv.fileLoadedToken, hasStarted, effectiveAudioDelayMs, audioDelayMs, outputIsBluetooth]);
     const onTimeUpdateRef = useRef(onTimeUpdate);
     onTimeUpdateRef.current = onTimeUpdate;
     useEffect(() => {
@@ -189269,7 +189286,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.123",
+    version: "1.0.124",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
