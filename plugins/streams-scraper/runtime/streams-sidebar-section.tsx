@@ -25,7 +25,7 @@ import { getWatchedForSeries, markSeasonWatched, onWatchedEpisodesChanged, setWa
 import { VideoPlayerModal } from '@/components/player/video-player-modal'
 import { isRemoteSession } from '@/lib/remote-session'
 import { isClientSession } from '@/lib/session-host'
-import { isAndroidTauriEnv, openInExternalAndroidPlayer } from '@/lib/tauri-native-player'
+import { isAndroidTauriEnv, openInExternalAndroidPlayer, setAndroidImmersive } from '@/lib/tauri-native-player'
 import { openInVlc, prefersVlc, resolveDirectStreamUrl, vlcSupported } from '@/lib/vlc-deep-link'
 import { applyStreamFilters, getStreamFilters, DEFAULT_FILTERS } from '@/lib/media-stream/filters'
 import { useLang } from '@/lib/i18n'
@@ -57,7 +57,7 @@ import {
   resolveStreamProviderAccessKey,
 } from '@/lib/media-stream/url-builder'
 import { getAutoPlayNextEpisode, getNextEpPopupSeconds, getNextEpPreloadLeadSeconds } from '@/lib/autoplay-settings'
-import { getAutoPlayMaxStreamSizeGb, getDefaultAudioLanguage, normalizeLanguageCode } from '@/lib/playback-settings'
+import { getAutoPlayMaxResolution, getAutoPlayMaxStreamSizeGb, getDefaultAudioLanguage, normalizeLanguageCode } from '@/lib/playback-settings'
 import { checkEpisodeHasStream } from '@/lib/series-watchlist-feed'
 import { NextEpisodeCard } from '@/components/player/next-episode-card'
 import {
@@ -517,6 +517,33 @@ export function StreamsSidebarSection({
 
   // Playback state machine
   const [step, setStep] = useState<PlayStep>({ type: 'idle' })
+
+  /**
+   * Android: helskärm redan när LADDSKÄRMEN visas, inte först när spelaren
+   * monteras.
+   *
+   * Spelarmodalen går i immersive vid mount, men den monteras först när en
+   * ström är utlöst. Fram till dess visar vi laddskärmen — och under de två,
+   * tre sekunderna stod telefonens navigeringsfält kvar över den. Fälten göms
+   * därför så snart laddningen börjar, och lämnas tillbaka om flödet avbryts
+   * utan att någon spelare öppnades (annars äger modalens egen effekt dem).
+   */
+  const immersiveForLoadingRef = useRef(false)
+  useEffect(() => {
+    if (!isAndroidTauriEnv) return
+    if (step.type === 'processing') {
+      immersiveForLoadingRef.current = true
+      setAndroidImmersive(true)
+      return
+    }
+    // Avbrutet utan att någon spelare öppnades: lämna tillbaka fälten. Är
+    // spelaren igång äger dess egen mount-effekt läget, och vi rör det inte —
+    // annars hade fälten blinkat fram mitt i uppspelningen.
+    if (immersiveForLoadingRef.current && !playerUrl) {
+      immersiveForLoadingRef.current = false
+      setAndroidImmersive(false)
+    }
+  }, [step.type, playerUrl])
   const [playerUrl, setPlayerUrl] = useState<string | null>(null)
   // Torrent hash of the stream behind the current player session. Threaded to
   // the player so progress entries carry it — resume can then re-resolve a
@@ -1868,10 +1895,19 @@ function scraperInCooldown(configId: string): boolean {
           return qualityRank(b.name) - qualityRank(a.name)
         })
 
-        const candidates = [
-          ...streams.filter((s) => s.cached && (s.infoHash || s.directUrl)),
-          ...streams.filter((s) => !s.cached && (s.infoHash || s.directUrl)),
-        ].slice(0, 3)
+        /**
+         * Samma byggare som den vanliga autospelningen.
+         *
+         * Listan byggdes tidigare för hand här, och tappade därmed BÅDA taken:
+         * nästa avsnitt kunde välja en 70 GB-remux på en telefon där reglaget
+         * stod på 2 GB. Byggaren bär dessutom sorteringen som lägger format
+         * enheten inte kan avkoda sist — den gick också förlorad.
+         */
+        const candidates = buildAutoplayCandidates(streams, {
+          maxSizeGb: getAutoPlayMaxStreamSizeGb(),
+          maxResolution: getAutoPlayMaxResolution(),
+          preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage()),
+        }).slice(0, 3)
         if (candidates.length === 0) return
         pendingCardInfo.current = {
           season: targetSeason,
@@ -1919,11 +1955,13 @@ function scraperInCooldown(configId: string): boolean {
       const streams = apiStreamsList.flat()
       streams.sort((a, b) => qualityRank(b.name) - qualityRank(a.name))
 
-      // Build candidate list: cached first, then uncached, up to 3 attempts.
-      const candidates = [
-        ...streams.filter((s) => s.cached && (s.infoHash || s.directUrl)),
-        ...streams.filter((s) => !s.cached && (s.infoHash || s.directUrl)),
-      ].slice(0, 3)
+      // Samma byggare som ovan, och av samma skäl: den handbyggda listan
+      // tillämpade varken storleks- eller upplösningstaket.
+      const candidates = buildAutoplayCandidates(streams, {
+        maxSizeGb: getAutoPlayMaxStreamSizeGb(),
+        maxResolution: getAutoPlayMaxResolution(),
+        preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage()),
+      }).slice(0, 3)
       if (candidates.length === 0) return
       pendingCardInfo.current = {
         season: targetSeason,
@@ -2108,6 +2146,9 @@ function scraperInCooldown(configId: string): boolean {
     if (!selectedSeason || !selectedEpisode) return false
     const candidates = buildAutoplayCandidates(streamList, {
       maxSizeGb: getAutoPlayMaxStreamSizeGb(),
+      // Upplösningstaket fanns som inställning och som filter i byggaren, men
+      // skickades aldrig hit — det var alltså dött i hela appen.
+      maxResolution: getAutoPlayMaxResolution(),
       preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage()),
     })
 
@@ -2185,7 +2226,22 @@ function scraperInCooldown(configId: string): boolean {
     // one the user was watching) while the ranked list stays as fallback if
     // it has since disappeared.
     const remembered = getLastPlayedStream(playbackTargetKey)
-    const ordered = [...withinCap, ...oversized]
+    /**
+     * Taket är ett VETO när det finns något inom det — inte bara en sortering.
+     *
+     * Tidigare låg de för stora sist men provades ändå, med motiveringen att
+     * en kapad lista kunde sluta i tre dugglösa url-källor. Den oron är giltig,
+     * men priset betalades på fel ställe: en telefon med taket på 2 GB fick
+     * ändå försöka på en 3,3 GB-ström sedan de mindre fallerat, och en
+     * uppmätt runda på 70–75 GB-remuxar tog en minut och gav aldrig en bild.
+     * För en enhet som inte kan avkoda filen är den inte "sämre" — den är
+     * omöjlig, och varje försök kostar användaren väntan.
+     *
+     * Oron hanteras därför på sitt eget villkor i stället: finns INGET inom
+     * taket faller vi tillbaka på de för stora, så en snäv inställning aldrig
+     * kan lämna användaren utan någonting att spela.
+     */
+    const ordered = withinCap.length > 0 ? withinCap : oversized
     // Remote: reorder for the delivery path.
     //  • Mobile (VLC): VLC streams DIRECTLY from the debrid CDN over the phone's
     //    connection, so a 4K/HEVC release (~30-80 Mbps) stutters where 1080p is

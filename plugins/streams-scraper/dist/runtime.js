@@ -173387,6 +173387,13 @@
     if (typeof window === "undefined") return false;
     return (getScopedStorageItem(KEY_PREFER_EMBEDDED_SUBTITLES) ?? "0") === "1";
   }
+  var KEY_AUTO_PLAY_MAX_RESOLUTION = "playback_autoPlayMaxResolution";
+  var AUTO_PLAY_RESOLUTIONS = [720, 1080, 2160];
+  function getAutoPlayMaxResolution() {
+    if (typeof window === "undefined") return null;
+    const raw = Number.parseInt(getScopedStorageItem(KEY_AUTO_PLAY_MAX_RESOLUTION) ?? "", 10);
+    return AUTO_PLAY_RESOLUTIONS.includes(raw) ? raw : null;
+  }
   var KEY_EXTERNAL_PLAYER_APP = "playback_externalPlayerApp";
   function getExternalPlayerApp() {
     if (typeof window === "undefined") return "VLC";
@@ -181071,7 +181078,8 @@ ${cue.text}`).join("\n\n")}
       const controller = new AbortController();
       void fetch(`/api/tv-info?tmdbId=${seriesTmdbId}`, { signal: controller.signal }).then((response) => response.json()).then((data) => {
         if (controller.signal.aborted) return;
-        const next2 = (data.seasons ?? []).filter((entry) => entry.season_number > currentSeason && entry.episode_count > 0).sort((a, b) => a.season_number - b.season_number)[0];
+        const today = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+        const next2 = (data.seasons ?? []).filter((entry) => entry.season_number > currentSeason && entry.episode_count > 0).filter((entry) => typeof entry.air_date === "string" && entry.air_date.length > 0 && entry.air_date <= today).sort((a, b) => a.season_number - b.season_number)[0];
         setNextSeasonNumber(next2?.season_number ?? null);
       }).catch(() => {
       }).finally(() => {
@@ -181097,9 +181105,9 @@ ${cue.text}`).join("\n\n")}
     }, [url]);
     const creditsLogRef = useRef({ last: "", at: 0 });
     useEffect(() => {
-      const line = `till\xE5tet=${creditsModeAllowed} setting=${getCreditsRecommendations()} outroFlytt=${getAdvanceAtOutro()} typ=${mediaType ?? "-"} sistaAvsnitt=${isLastEpisodeOfSeason} s\xE4songKlar=${seasonLookupSettled} n\xE4staS\xE4song=${nextSeasonNumber} speltid=${Math.round(totalDuration)} bekr\xE4ftad=${durationConfirmed} tr\xF6skel=${creditsTriggerSeconds == null ? "null" : Math.round(creditsTriggerSeconds)} nu=${Math.round(realTime)} startad=${hasStarted} l\xE4ge=${creditsMode} utl\xF6st=${creditsFiredRef.current}`;
+      const line = `till\xE5tet=${creditsModeAllowed} setting=${getCreditsRecommendations()} outroFlytt=${getAdvanceAtOutro()} typ=${mediaType ?? "-"} sistaAvsnitt=${isLastEpisodeOfSeason} s\xE4songKlar=${seasonLookupSettled} n\xE4staS\xE4song=${nextSeasonNumber} speltid=${Math.round(totalDuration)} bekr\xE4ftad=${durationConfirmed} tr\xF6skel=${creditsTriggerSeconds == null ? "null" : Math.round(creditsTriggerSeconds)} startad=${hasStarted}`;
       const now3 = Date.now();
-      if (line !== creditsLogRef.current.last && now3 - creditsLogRef.current.at > 5e3) {
+      if (line !== creditsLogRef.current.last && now3 - creditsLogRef.current.at > 2e3) {
         creditsLogRef.current = { last: line, at: now3 };
         void fetch(`/api/debug-log?msg=${encodeURIComponent(`[credits] ${line}`)}`).catch(() => {
         });
@@ -186983,6 +186991,19 @@ ${cue.text}`).join("\n\n")}
     const [manualInput, setManualInput] = useState("");
     const [showManual, setShowManual] = useState(false);
     const [step, setStep] = useState({ type: "idle" });
+    const immersiveForLoadingRef = useRef(false);
+    useEffect(() => {
+      if (!isAndroidTauriEnv) return;
+      if (step.type === "processing") {
+        immersiveForLoadingRef.current = true;
+        setAndroidImmersive(true);
+        return;
+      }
+      if (immersiveForLoadingRef.current && !playerUrl) {
+        immersiveForLoadingRef.current = false;
+        setAndroidImmersive(false);
+      }
+    }, [step.type, playerUrl]);
     const [playerUrl, setPlayerUrl] = useState(null);
     const [playerInfoHash, setPlayerInfoHash] = useState(null);
     const playAttemptInfoHashRef = useRef(null);
@@ -188000,10 +188021,11 @@ ${cue.text}`).join("\n\n")}
             if (a.cached !== b.cached) return a.cached ? -1 : 1;
             return qualityRank2(b.name) - qualityRank2(a.name);
           });
-          const candidates2 = [
-            ...streams3.filter((s) => s.cached && (s.infoHash || s.directUrl)),
-            ...streams3.filter((s) => !s.cached && (s.infoHash || s.directUrl))
-          ].slice(0, 3);
+          const candidates2 = buildAutoplayCandidates(streams3, {
+            maxSizeGb: getAutoPlayMaxStreamSizeGb(),
+            maxResolution: getAutoPlayMaxResolution(),
+            preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage())
+          }).slice(0, 3);
           if (candidates2.length === 0) return;
           pendingCardInfo.current = {
             season: targetSeason,
@@ -188046,10 +188068,11 @@ ${cue.text}`).join("\n\n")}
         }
         const streams2 = apiStreamsList.flat();
         streams2.sort((a, b) => qualityRank2(b.name) - qualityRank2(a.name));
-        const candidates = [
-          ...streams2.filter((s) => s.cached && (s.infoHash || s.directUrl)),
-          ...streams2.filter((s) => !s.cached && (s.infoHash || s.directUrl))
-        ].slice(0, 3);
+        const candidates = buildAutoplayCandidates(streams2, {
+          maxSizeGb: getAutoPlayMaxStreamSizeGb(),
+          maxResolution: getAutoPlayMaxResolution(),
+          preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage())
+        }).slice(0, 3);
         if (candidates.length === 0) return;
         pendingCardInfo.current = {
           season: targetSeason,
@@ -188190,6 +188213,9 @@ ${cue.text}`).join("\n\n")}
       if (!selectedSeason || !selectedEpisode) return false;
       const candidates = buildAutoplayCandidates(streamList, {
         maxSizeGb: getAutoPlayMaxStreamSizeGb(),
+        // Upplösningstaket fanns som inställning och som filter i byggaren, men
+        // skickades aldrig hit — det var alltså dött i hela appen.
+        maxResolution: getAutoPlayMaxResolution(),
         preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage())
       });
       if (candidates.length === 0) return false;
@@ -188240,7 +188266,7 @@ ${cue.text}`).join("\n\n")}
       }) : playable;
       const oversized = playable.filter((s) => !withinCap.includes(s));
       const remembered = getLastPlayedStream(playbackTargetKey);
-      const ordered = [...withinCap, ...oversized];
+      const ordered = withinCap.length > 0 ? withinCap : oversized;
       if (isRemoteSession()) {
         const browserPlayback = !(prefersVlc() && vlcSupported());
         const rank = (name) => {
@@ -189969,7 +189995,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.125",
+    version: "1.0.126",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
