@@ -166182,6 +166182,24 @@
   var onProfileChanged = (listener) => sdk.onProfileChanged(listener);
 
   // lib/app-storage.ts
+  var pending = /* @__PURE__ */ new Set();
+  function nativeInvoke(command, payload) {
+    if (typeof window === "undefined") return false;
+    try {
+      const internals = window.__TAURI_INTERNALS__;
+      if (!internals || typeof internals.invoke !== "function") return false;
+      const result = internals.invoke(command, payload);
+      if (result && typeof result.then === "function") {
+        const tracked = result.catch(() => {
+        });
+        pending.add(tracked);
+        void tracked.finally(() => pending.delete(tracked));
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  }
   var store = null;
   function ensureStore() {
     if (store) return store;
@@ -166232,9 +166250,29 @@
     store = seeded;
     return seeded;
   }
+  function updateSnapshot(key, value) {
+    if (typeof window === "undefined") return;
+    try {
+      const holder = window;
+      if (!holder.__lumioNativeStorageSnapshot) return;
+      if (value === null) delete holder.__lumioNativeStorageSnapshot[key];
+      else holder.__lumioNativeStorageSnapshot[key] = value;
+    } catch {
+    }
+  }
   function getItem(key) {
     if (typeof window === "undefined") return null;
     return ensureStore().get(key) ?? null;
+  }
+  function removeItem(key) {
+    if (typeof window === "undefined") return;
+    ensureStore().delete(key);
+    nativeInvoke("storage_remove_item", { key });
+    updateSnapshot(key, null);
+    try {
+      localStorage.removeItem(key);
+    } catch {
+    }
   }
 
   // lib/media-stream/config.ts
@@ -166404,6 +166442,7 @@
       writeCookieValue(getLegacyGlobalStreamProviderCookieKey(normalizedProvider), trimmed);
     } else {
       removeScopedStorageItem(storageKey);
+      removeItem(storageKey);
       clearCookieValue(getGlobalStreamProviderCookieKey(normalizedProvider));
       clearCookieValue(getLegacyGlobalStreamProviderCookieKey(normalizedProvider));
     }
@@ -166413,6 +166452,7 @@
         writeCookieValue(LEGACY_RD_API_KEY, trimmed);
       } else {
         removeScopedStorageItem(LEGACY_RD_API_KEY);
+        removeItem(LEGACY_RD_API_KEY);
         clearCookieValue(LEGACY_RD_API_KEY);
       }
     }
@@ -166557,7 +166597,22 @@
 
   // lib/media-stream/core-addons.ts
   var KEY = "core_stream_addons_v1";
+  var SYNCED_KEY = "core_stream_addons_synced_v1";
   var EVENT = "lumio-core-stream-addons-changed";
+  function readSyncedUrls() {
+    if (typeof window === "undefined") return [];
+    try {
+      const raw = getScopedStorageItem(SYNCED_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed.filter((x) => typeof x === "string") : [];
+    } catch {
+      return [];
+    }
+  }
+  function writeSyncedUrls(urls) {
+    setScopedStorageItem(SYNCED_KEY, JSON.stringify([...new Set(urls)]));
+  }
   function readCoreStreamAddons() {
     if (typeof window === "undefined") return [];
     try {
@@ -166583,6 +166638,7 @@
     const trimmedName = name.trim() || trimmedUrl;
     const existing = readCoreStreamAddons();
     const previous = existing.find((entry) => entry.url === trimmedUrl);
+    writeSyncedUrls(readSyncedUrls().filter((url2) => url2 !== trimmedUrl));
     const next2 = {
       url: trimmedUrl,
       name: trimmedName,
@@ -166598,15 +166654,23 @@
     if (addons.length === 0) return;
     const normalize = (value) => value.trim().replace(/\/+$/, "");
     const existing = getScraperConfigs();
+    const synced = readSyncedUrls();
+    const nextSynced = [...synced];
     for (const addon of addons) {
       const alreadyThere = existing.some((entry) => {
         if (entry.preset !== "custom") return false;
         const raw = entry.options.rawUrl;
         return typeof raw === "string" && normalize(raw) === normalize(addon.url);
       });
-      if (alreadyThere) continue;
+      if (alreadyThere) {
+        if (!nextSynced.includes(addon.url)) nextSynced.push(addon.url);
+        continue;
+      }
+      if (synced.includes(addon.url)) continue;
       registerCustomScraperFromManifestUrl(addon.url, addon.name);
+      nextSynced.push(addon.url);
     }
+    if (nextSynced.length !== synced.length) writeSyncedUrls(nextSynced);
   }
 
   // lib/i18n.tsx
@@ -171484,6 +171548,9 @@
     const setAudioTrack = useCallback((aid) => {
       void setMpvAudioTrack(aid);
     }, []);
+    const resetTimePos = useCallback(() => {
+      setTimePos(0);
+    }, []);
     const resetFileLoaded = useCallback(() => {
       setFileLoaded(false);
     }, []);
@@ -171508,6 +171575,7 @@
       sid,
       fileLoaded,
       fileLoadedToken,
+      resetTimePos,
       resetEnded,
       playbackRestarted,
       playbackRestartedToken,
@@ -174149,8 +174217,10 @@
   async function closeNativePlayer() {
     await np({ cmd: "close" });
   }
-  function setAndroidImmersive(on) {
+  function setAndroidImmersive(on, reason = "-") {
     if (!isAndroidTauriEnv) return;
+    void fetch(`/api/debug-log?msg=${encodeURIComponent(`[immersive] ${on ? "P\xC5" : "av"} (${reason})`)}`).catch(() => {
+    });
     void np({ cmd: "setImmersive", on });
   }
   async function nativeGetAudioOutput() {
@@ -174285,6 +174355,9 @@
     const resetFileLoaded = useCallback(() => {
       setFileLoaded(false);
     }, []);
+    const resetTimePos = useCallback(() => {
+      setTimePos(0);
+    }, []);
     const resetEnded = useCallback(() => {
       setEnded(false);
     }, []);
@@ -174307,6 +174380,7 @@
       fileLoaded,
       fileLoadedToken,
       resetEnded,
+      resetTimePos,
       playbackRestarted,
       playbackRestartedToken,
       pausedForCache,
@@ -178437,8 +178511,8 @@ ${cue.text}`).join("\n\n")}
     const mpv = isDroidEngine ? droid : mpvDesktop;
     useEffect(() => {
       if (!isDroidEngine) return;
-      setAndroidImmersive(true);
-      return () => setAndroidImmersive(false);
+      setAndroidImmersive(true, "spelare-mount");
+      return () => setAndroidImmersive(false, "spelare-unmount");
     }, [isDroidEngine]);
     useEffect(() => {
       if (!isDroidEngine) return;
@@ -179257,6 +179331,7 @@ ${cue.text}`).join("\n\n")}
     useEffect(() => {
       if (!useMpv) return;
       let cancelled = false;
+      mpv.resetTimePos();
       mpv.resetFileLoaded();
       mpv.resetPlaybackRestarted();
       mpv.resetFirstFrameRendered();
@@ -179279,8 +179354,8 @@ ${cue.text}`).join("\n\n")}
       });
       return () => {
         cancelled = true;
-        const pending = openPromise;
-        void (pending ? pending.catch(() => {
+        const pending2 = openPromise;
+        void (pending2 ? pending2.catch(() => {
         }).then(() => closeMpvPlayer2()) : closeMpvPlayer2());
         releaseSourceCache(url);
         const v = airplayVideoRef.current;
@@ -181114,8 +181189,10 @@ ${cue.text}`).join("\n\n")}
       return outroSegment.startMs / 1e3;
     })();
     const creditsFiredRef = useRef(false);
+    const creditsArmedAtRef = useRef(null);
     useEffect(() => {
       creditsFiredRef.current = false;
+      creditsArmedAtRef.current = null;
     }, [url]);
     const creditsLogRef = useRef({ last: "", at: 0 });
     useEffect(() => {
@@ -181130,14 +181207,22 @@ ${cue.text}`).join("\n\n")}
     useEffect(() => {
       if (!creditsModeAllowed || creditsMode || creditsFiredRef.current) return;
       if (!hasStarted || !durationConfirmed || creditsTriggerSeconds == null) return;
+      if (realTime < creditsTriggerSeconds) creditsArmedAtRef.current = null;
       if (realTime < creditsTriggerSeconds) return;
+      if (creditsArmedAtRef.current === null) {
+        creditsArmedAtRef.current = realTime;
+        return;
+      }
+      if (totalDuration - realTime < 5) return;
       creditsFiredRef.current = true;
       void fetch(`/api/debug-log?msg=${encodeURIComponent(`[credits] UTL\xD6ST vid ${Math.round(realTime)}s av ${Math.round(totalDuration)}s`)}`).catch(() => {
       });
       creditsTouchedRef.current = false;
       setOpenSurface(null);
       setCreditsMode(true);
-    }, [creditsModeAllowed, creditsMode, hasStarted, durationConfirmed, creditsTriggerSeconds, realTime]);
+    }, [creditsModeAllowed, creditsMode, hasStarted, durationConfirmed, creditsTriggerSeconds, realTime, totalDuration]);
+    const leaveCreditsModeRef = useRef(() => {
+    });
     const [creditsItems, setCreditsItems] = useState([]);
     useEffect(() => {
       if (!creditsMode) return;
@@ -181158,7 +181243,11 @@ ${cue.text}`).join("\n\n")}
           );
           const list = await listResponse.json();
           const ids = (list.items ?? []).map((entry) => String(entry?.id ?? "").replace(/^(?:movie|tv)-/, "")).filter((id4) => /^\d+$/.test(id4)).slice(0, 5);
-          if (ids.length === 0 || controller.signal.aborted) return;
+          if (controller.signal.aborted) return;
+          if (ids.length === 0) {
+            leaveCreditsModeRef.current();
+            return;
+          }
           const hydrated = await Promise.all(ids.map(async (id4) => {
             try {
               const response = await fetch(`/api/item?tmdbId=${id4}&type=${type}`, { signal: controller.signal });
@@ -181169,7 +181258,12 @@ ${cue.text}`).join("\n\n")}
             }
           }));
           if (controller.signal.aborted) return;
-          setCreditsItems(hydrated.filter((entry) => entry !== null));
+          const usable = hydrated.filter((entry) => entry !== null);
+          if (usable.length === 0) {
+            leaveCreditsModeRef.current();
+            return;
+          }
+          setCreditsItems(usable);
         } catch {
         }
       })();
@@ -181228,6 +181322,7 @@ ${cue.text}`).join("\n\n")}
       setCreditsMode(false);
       window.requestAnimationFrame(() => scheduleBoundsResync());
     }, [scheduleBoundsResync]);
+    leaveCreditsModeRef.current = leaveCreditsMode;
     useEffect(() => {
       if (!useMpv) return;
       return () => {
@@ -185484,8 +185579,8 @@ ${cue.text}`).join("\n\n")}
       const selectedFiles = files.filter((file) => file.selected === 1);
       const resolvedLinks = await Promise.all(
         selectedFiles.map(async (file) => {
-          const pending = state.pendingDlUrls.get(file.id);
-          const url = pending != null ? await pending : await torboxRequestDl(state.torrentId, file.id);
+          const pending2 = state.pendingDlUrls.get(file.id);
+          const url = pending2 != null ? await pending2 : await torboxRequestDl(state.torrentId, file.id);
           return url ? { url, file } : null;
         })
       );
@@ -190017,7 +190112,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.128",
+    version: "1.0.129",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
