@@ -164551,8 +164551,8 @@
         async listen(event$1, handler) {
           if (this._handleTauriEvent(event$1, handler)) {
             return () => {
-              const listeners2 = this.listeners[event$1];
-              listeners2.splice(listeners2.indexOf(handler), 1);
+              const listeners = this.listeners[event$1];
+              listeners.splice(listeners.indexOf(handler), 1);
             };
           }
           return event.listen(event$1, handler, {
@@ -164581,8 +164581,8 @@
         async once(event$1, handler) {
           if (this._handleTauriEvent(event$1, handler)) {
             return () => {
-              const listeners2 = this.listeners[event$1];
-              listeners2.splice(listeners2.indexOf(handler), 1);
+              const listeners = this.listeners[event$1];
+              listeners.splice(listeners.indexOf(handler), 1);
             };
           }
           return event.once(event$1, handler, {
@@ -174475,14 +174475,10 @@
   }
 
   // lib/open-item-runtime.ts
-  var listeners = /* @__PURE__ */ new Set();
+  var OPEN_ITEM_EVENT = "lumio-open-media-item";
   function requestOpenMediaItem(request) {
-    for (const listener of listeners) {
-      try {
-        listener(request);
-      } catch {
-      }
-    }
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(new CustomEvent(OPEN_ITEM_EVENT, { detail: request }));
   }
 
   // ../../../../var/folders/lc/1hd2j0b57z10tx5mflylq4r80000gp/T/lumio-plugin-build/video-player-modal-shim.ts
@@ -177041,9 +177037,14 @@
   // components/player/credits-recommendations.tsx
   init_react_shim();
   init_jsx_runtime_shim();
-  var PIP_W = "min(29vw, 71vh)";
-  var PIP_H = "calc(min(29vw, 71vh) * 9 / 16)";
+  var PIP_W = "clamp(190px, min(29vw, 71vh), 460px)";
+  var PIP_H = "calc(clamp(190px, min(29vw, 71vh), 460px) * 9 / 16)";
+  var COVER_W = "max(100vw, 177.78vh)";
+  var COVER_H = "max(100vh, 56.25vw)";
+  var COVER_OFFSET_X = `calc((${COVER_W} - 100vw) / 2)`;
+  var COVER_OFFSET_Y = `calc((${COVER_H} - 100vh) / 2)`;
   var PIP_INSET = "clamp(0.75rem, 2vw, 2rem)";
+  var PIP_TOP = `max(${PIP_INSET}, calc(env(safe-area-inset-top) + 0.5rem), calc(var(--android-inset-top, 0px) + 0.5rem))`;
   function formatRemaining(seconds) {
     if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
     const total = Math.round(seconds);
@@ -177056,7 +177057,6 @@
     progress: progress2,
     remainingSeconds,
     onBackToPlayback,
-    onOpenDetails,
     onInteract,
     pipRef,
     isTv
@@ -177079,6 +177079,21 @@
         return Math.max(0, Math.min(count - 1, value + direction));
       });
     }, [count, markInteracted]);
+    const swipeStartRef = useRef(null);
+    const onTouchStart = useCallback((event) => {
+      const touch = event.touches[0];
+      swipeStartRef.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+    }, []);
+    const onTouchEnd = useCallback((event) => {
+      const start2 = swipeStartRef.current;
+      swipeStartRef.current = null;
+      const touch = event.changedTouches[0];
+      if (!start2 || !touch) return;
+      const dx = touch.clientX - start2.x;
+      const dy = touch.clientY - start2.y;
+      if (Math.abs(dx) < 45 || Math.abs(dx) <= Math.abs(dy)) return;
+      step(dx < 0 ? 1 : -1);
+    }, [step]);
     useEffect(() => {
       const onKey = (event) => {
         if (event.key === "ArrowLeft") {
@@ -177108,27 +177123,33 @@
         className: "absolute inset-0 z-[70] overflow-hidden",
         onPointerDown: markInteracted,
         onWheel: markInteracted,
+        onTouchStart,
+        onTouchEnd,
         children: [
           [
             // vänster om fönstret, full höjd
-            { box: { left: 0, top: 0, right: `calc(${PIP_W} + ${PIP_INSET})`, bottom: 0 }, bgX: "0px", bgY: "0px" },
+            {
+              box: { left: 0, top: 0, right: `calc(${PIP_W} + ${PIP_INSET})`, bottom: 0 },
+              bgX: `calc(0px - ${COVER_OFFSET_X})`,
+              bgY: `calc(0px - ${COVER_OFFSET_Y})`
+            },
             // ovanför fönstret
             {
-              box: { left: `calc(100% - ${PIP_W} - ${PIP_INSET})`, top: 0, right: 0, height: PIP_INSET },
-              bgX: `calc(0px - 100vw + ${PIP_W} + ${PIP_INSET})`,
-              bgY: "0px"
+              box: { left: `calc(100% - ${PIP_W} - ${PIP_INSET})`, top: 0, right: 0, height: PIP_TOP },
+              bgX: `calc(0px - 100vw + ${PIP_W} + ${PIP_INSET} - ${COVER_OFFSET_X})`,
+              bgY: `calc(0px - ${COVER_OFFSET_Y})`
             },
             // under fönstret
             {
-              box: { left: `calc(100% - ${PIP_W} - ${PIP_INSET})`, top: `calc(${PIP_INSET} + ${PIP_H})`, right: 0, bottom: 0 },
-              bgX: `calc(0px - 100vw + ${PIP_W} + ${PIP_INSET})`,
-              bgY: `calc(0px - ${PIP_INSET} - ${PIP_H})`
+              box: { left: `calc(100% - ${PIP_W} - ${PIP_INSET})`, top: `calc(${PIP_TOP} + ${PIP_H})`, right: 0, bottom: 0 },
+              bgX: `calc(0px - 100vw + ${PIP_W} + ${PIP_INSET} - ${COVER_OFFSET_X})`,
+              bgY: `calc(0px - ${PIP_TOP} - ${PIP_H} - ${COVER_OFFSET_Y})`
             },
             // till höger om fönstret
             {
-              box: { right: 0, width: PIP_INSET, top: PIP_INSET, height: PIP_H },
-              bgX: `calc(0px - 100vw + ${PIP_INSET})`,
-              bgY: `calc(0px - ${PIP_INSET})`
+              box: { right: 0, width: PIP_INSET, top: PIP_TOP, height: PIP_H },
+              bgX: `calc(0px - 100vw + ${PIP_INSET} - ${COVER_OFFSET_X})`,
+              bgY: `calc(0px - ${PIP_TOP} - ${COVER_OFFSET_Y})`
             }
           ].map((panel, panelIndex) => /* @__PURE__ */ jsxs("div", { className: "pointer-events-none absolute overflow-hidden", style: panel.box, children: [
             backdrop && /* @__PURE__ */ jsx(
@@ -177147,7 +177168,7 @@
                    * samma duk, fyra fönster mot den, överallt.
                    */
                   inset: 0,
-                  backgroundSize: "100vw 100vh",
+                  backgroundSize: `${COVER_W} ${COVER_H}`,
                   backgroundPosition: `${panel.bgX} ${panel.bgY}`,
                   backgroundRepeat: "no-repeat"
                 }
@@ -177179,7 +177200,7 @@
                 ] })
               ] })
             ] }),
-            current2.item.overview && /* @__PURE__ */ jsx("p", { className: "max-w-[46ch] text-[clamp(0.75rem,1.9vh,1rem)] leading-relaxed text-slate-300/85 line-clamp-3 [@media(max-height:420px)]:hidden", children: current2.item.overview }),
+            current2.item.overview && /* @__PURE__ */ jsx("p", { className: "max-w-[46ch] text-[clamp(0.75rem,1.9vh,1rem)] leading-relaxed text-slate-300/85 line-clamp-3 [@media(max-height:420px)]:line-clamp-2", children: current2.item.overview }),
             /* @__PURE__ */ jsxs("div", { className: "mt-1 flex flex-wrap items-center gap-3", children: [
               /* @__PURE__ */ jsxs(
                 "button",
@@ -177196,19 +177217,6 @@
                     /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }),
                     current2.primaryLabel
                   ]
-                }
-              ),
-              /* @__PURE__ */ jsx(
-                "button",
-                {
-                  type: "button",
-                  "data-f": isTv ? "1" : void 0,
-                  onClick: () => {
-                    markInteracted();
-                    onOpenDetails(current2.item);
-                  },
-                  className: "inline-flex h-10 items-center rounded-full border border-white/10 bg-white/5 px-4 text-sm text-slate-200 transition hover:bg-white/10 hover:text-white",
-                  children: t("moreInfo")
                 }
               ),
               count > 1 && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
@@ -177251,7 +177259,7 @@
             {
               ref: pipRef,
               className: "absolute overflow-hidden rounded-lg border border-white/20 shadow-[0_14px_40px_rgba(0,0,0,0.6)]",
-              style: { right: PIP_INSET, top: PIP_INSET, width: PIP_W, height: PIP_H },
+              style: { right: PIP_INSET, top: PIP_TOP, width: PIP_W, height: PIP_H },
               children: [
                 /* @__PURE__ */ jsx(
                   "button",
@@ -182003,7 +182011,9 @@ ${cue.text}`).join("\n\n")}
       {
         className: `relative cursor-pointer rounded-full bg-white/[0.18] ${widthClass} ${seekHeightClass}`,
         onPointerDown: handleSeekPointerDown,
+        style: { touchAction: "none" },
         children: [
+          /* @__PURE__ */ jsx("span", { "aria-hidden": true, className: "absolute -inset-y-3 inset-x-0" }),
           !useMpv && !isServerStreamUrl(videoSrc) && /* @__PURE__ */ jsx("div", { className: "absolute inset-y-0 left-0 rounded-full bg-white/30", style: { width: `${buffered}%` } }),
           introZone ? /* @__PURE__ */ jsx(
             "div",
@@ -182017,6 +182027,14 @@ ${cue.text}`).join("\n\n")}
             {
               className: "absolute -bottom-[3px] -top-[3px] rounded border border-[rgb(var(--player-accent)/0.45)] bg-[rgb(var(--player-accent)/0.30)]",
               style: { left: `${outroZone.left}%`, width: `${outroZone.width}%` }
+            }
+          ) : null,
+          scrubPercent !== null && totalDuration > 0 ? /* @__PURE__ */ jsx(
+            "div",
+            {
+              className: "pointer-events-none absolute -top-9 z-20 -translate-x-1/2 rounded-md bg-black/85 px-2 py-1 text-[13px] font-semibold tabular-nums text-white shadow-lg backdrop-blur-sm",
+              style: { left: `clamp(1.75rem, ${seekPercent}%, calc(100% - 1.75rem))` },
+              children: fmt(seekTime)
             }
           ) : null,
           totalDuration > 0 ? /* @__PURE__ */ jsxs(Fragment2, { children: [
@@ -182255,18 +182273,19 @@ ${cue.text}`).join("\n\n")}
     const downloadLabel = downloadState.type === "downloading" ? `${downloadState.progress}%` : downloadState.type === "done" ? t("downloadComplete") : downloadState.type === "picking-folder" ? "\u2026" : null;
     const renderPhoneDownload = (variant) => {
       if (isClientSession()) return null;
-      const busy = downloadState.type === "picking-folder" || downloadState.type === "downloading";
+      const downloading = downloadState.type === "downloading";
+      const busy = downloadState.type === "picking-folder";
       const active = downloadLabel !== null;
       return /* @__PURE__ */ jsxs(
         "button",
         {
           type: "button",
           onClick: () => {
-            void handleDownload();
+            void (downloading ? handleCancelDownload() : handleDownload());
           },
           disabled: busy,
-          title: t("downloadThisVideo"),
-          "aria-label": t("downloadThisVideo"),
+          title: downloading ? t("cancel") : t("downloadThisVideo"),
+          "aria-label": downloading ? t("cancel") : t("downloadThisVideo"),
           className: variant === "round" ? `flex h-10 flex-none items-center gap-2 rounded-full transition ${active ? "bg-[rgb(var(--player-accent)/0.22)] px-4 text-white" : "w-10 justify-center bg-[rgba(13,14,22,0.6)] text-slate-100"}` : `flex h-[34px] flex-none items-center gap-1.5 rounded-lg transition ${active ? "px-2 text-[rgb(var(--player-accent))]" : "w-[34px] justify-center text-slate-300"}`,
           children: [
             downloadIcon(variant === "round" ? "h-[19px] w-[19px]" : "h-[17px] w-[17px]"),
@@ -182455,6 +182474,7 @@ ${cue.text}`).join("\n\n")}
                 children: [
                   /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1 truncate text-sm font-medium text-slate-100", children: headerTitle }),
                   /* @__PURE__ */ jsxs("div", { className: "flex flex-none items-center gap-2", children: [
+                    renderPhoneDownload("flat"),
                     /* @__PURE__ */ jsx(
                       "button",
                       {
@@ -182944,7 +182964,6 @@ ${cue.text}`).join("\n\n")}
                     progress: creditsProgress,
                     remainingSeconds: creditsRemainingSeconds,
                     onBackToPlayback: leaveCreditsMode,
-                    onOpenDetails: openCreditsItem,
                     onInteract: () => {
                       creditsTouchedRef.current = true;
                     },
@@ -183368,10 +183387,7 @@ ${cue.text}`).join("\n\n")}
                             renderSeekTrack("w-full"),
                             /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-3", children: [
                               renderPhoneClock("text-sm", "text-xs"),
-                              /* @__PURE__ */ jsxs("div", { className: "flex flex-none items-center gap-1", children: [
-                                phoneClusterIds.map((id4) => renderPhoneFlatButton(id4, phoneControls[id4])),
-                                renderPhoneDownload("flat")
-                              ] })
+                              /* @__PURE__ */ jsx("div", { className: "flex flex-none items-center gap-1", children: phoneClusterIds.map((id4) => renderPhoneFlatButton(id4, phoneControls[id4])) })
                             ] })
                           ] }),
                           /* @__PURE__ */ jsxs("div", { className: "vp-controls-row mt-3 flex min-h-[44px] flex-none items-center gap-2 overflow-x-auto overflow-y-hidden px-3.5", children: [
@@ -190112,7 +190128,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.129",
+    version: "1.0.130",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
