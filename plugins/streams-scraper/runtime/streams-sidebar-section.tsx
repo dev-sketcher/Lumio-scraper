@@ -37,7 +37,6 @@ import {
   isPluginDesktopHost,
   setScopedStorageItem,
   lookupPluginStreams,
-  lookupPluginStreamsBatchRanked,
   useTvMode,
   requestOpenMediaItem,
 } from '@/lib/plugin-sdk'
@@ -450,6 +449,9 @@ export function StreamsSidebarSection({
   const [primaryProviderLabel, setPrimaryProviderLabel] = useState(() => getEnabledScraperAccessState().primaryProviderLabel)
   const [streamFilters, setStreamFilters] = useState(DEFAULT_FILTERS)
   const [resolvedImdbId, setResolvedImdbId] = useState<string | null>(imdbId ?? null)
+  /** Vilka källor som fortfarande söker respektive inte svarade — visas under
+   *  listan så en tidig, delvis lista inte ser färdig ut. */
+  const [sourceStatus, setSourceStatus] = useState<Record<string, SourceStatus>>({})
   // Skilj "posten har inget IMDb-id" från "uppslaget kom aldrig fram" — se
   // effekten nedan. Samma tomma lista, två helt olika orsaker och åtgärder.
   const [imdbLookupFailed, setImdbLookupFailed] = useState(false)
@@ -1339,6 +1341,19 @@ export function StreamsSidebarSection({
 const RATE_LIMIT_COOLDOWN_MS = 5 * 60 * 1000
 const scraperRateLimitedUntil = new Map<string, number>()
 
+/** Budgetar för EN förfrågan per väg. Native kan vara generös nu när ingen
+ *  annan källa väntar på den (resultat publiceras per källa). */
+const NATIVE_LOOKUP_TIMEOUT_MS = 10_000
+const API_TIMEOUT_MS = 12_000
+/** Jackettio/AIOStreams söker live och behöver upp till en minut kallt. */
+const SLOW_API_TIMEOUT_MS = 55_000
+const BROWSER_TIMEOUT_MS = 8_000
+const COMMUNITY_TIMEOUT_MS = 12_000
+const RETRY_DELAY_MS = 1500
+/** Utfall per källa — 'pending' medan den fortfarande söker. */
+type SourceOutcome = 'ok' | 'empty' | 'error' | 'rate-limited'
+type SourceStatus = 'pending' | SourceOutcome
+
 function isRateLimitError(message: string): boolean {
   return /rate.?limit/i.test(message)
 }
@@ -1460,110 +1475,78 @@ function scraperInCooldown(configId: string): boolean {
         return collected
       }
 
+      const searchStartedAt = performance.now()
+      let firstStreamsAtMs: number | null = null
       const publishPartial = (items: StreamResult[]) => {
         if (requestId !== searchRequestIdRef.current || items.length === 0) return
         const merged = mergeStreams(items)
         if (!published) published = true
+        if (firstStreamsAtMs == null) firstStreamsAtMs = Math.round(performance.now() - searchStartedAt)
         // Show partial results immediately; do not wait on cache enrichment/filters.
         setStreams(sortByPriority(normalizeCached(merged)))
         setLoadingStreams(false)
       }
 
-      const failedNativeSources = new Set<string>()
-      // Slow aggregators (jackettio, AIOStreams) can never answer inside the
-      // batch's 3 s budget — the two aborted probes still LAND upstream and
-      // count against tight per-IP limits. They skip the batch entirely and
-      // go straight to the per-scraper path with budgets sized for them.
+      /**
+       * Alla källor frågas SAMTIDIGT och publiceras var för sig när de svarar.
+       *
+       * Tidigare kördes en native-batch först (3 s × 2 försök, join-all — den
+       * väntade på den LÅNGSAMMASTE), och först därefter startade
+       * AIOStreams/Jackettio och community-addonsen. Mätt i telemetrin: median
+       * 3,1 s, p75 7,4 s, och samma titel kunde ta 0,8 s eller 28 s beroende på
+       * vilken källa som råkade hänga. Nu syns den snabbaste källans rader när
+       * den svarar; de andra fylls på.
+       *
+       * Rate-limit-hänsyn (torbox m.fl.): varje källa får EN förfrågan per väg
+       * (native → serverrutt → webbläsare) och nästa väg prövas bara vid FEL —
+       * ett tomt men giltigt svar frågas aldrig om. Ett enda nytt försök görs
+       * efter 1,5 s, bara för nätfel och bara för indexerade scrapers; de
+       * långsamma aggregatorerna får aldrig mer än en förfrågan per sökning,
+       * och ett rate-limit-svar sätter källan i vila utan nytt försök. Det är
+       * FÄRRE förfrågningar än förut (batchens två sonder + fallback-kedjan +
+       * en hel omkörning vid tomt resultat).
+       */
+      type SourceRun = { list: StreamResult[]; outcome: SourceOutcome; path: 'native' | 'api' | 'browser' | 'addon' }
+      const sourceReport: Record<string, { ms: number; outcome: SourceOutcome; path: string; streams: number }> = {}
       const isSlowPreset = (req: ScraperRequest) =>
         req.config.preset === 'jackettio' || req.config.preset === 'aiostreams'
-      const batchRequests = streamProviderRequests.filter((req) => !isSlowPreset(req))
-      for (const req of streamProviderRequests.filter(isSlowPreset)) {
-        failedNativeSources.add(req.name)
+      const desktopHost = isPluginDesktopHost()
+      const communityLabel = lt('communitySource')
+
+      const settleSource = (name: string, status: SourceOutcome) => {
+        if (requestId !== searchRequestIdRef.current) return
+        setSourceStatus((prev) => ({ ...prev, [name]: status }))
       }
-      try {
-        const nativeBatch = await lookupPluginStreamsBatchRanked(
-          batchRequests.map((req) => ({
-            url: `${req.baseUrl}/${streamPath}`,
-            streamProviderName: req.name,
-            timeoutMs: 3000,
-            retryCount: 1,
-          })),
-          tType === 'series' ? 'series' : 'movie',
-          season ? Number.parseInt(season, 10) : undefined,
-          episode ? Number.parseInt(episode, 10) : undefined,
-        )
+      setSourceStatus(Object.fromEntries([
+        ...streamProviderRequests.map((req) => [req.name, 'pending' as const]),
+        ...(harCommunityKälla ? [[communityLabel, 'pending' as const]] : []),
+      ]))
 
-        if (nativeBatch) {
-          const grouped = new Map<string, StreamResult[]>()
-          for (const stream of nativeBatch.streams ?? []) {
-            const source = stream.source ?? 'scraper'
-            const list = grouped.get(source) ?? []
-            list.push({
-              ...stream,
-              source,
-            })
-            grouped.set(source, list)
-          }
-
-          for (const req of streamProviderRequests) {
-            const list = grouped.get(req.name)
-            if (list && list.length > 0) {
-              publishPartial(list)
-            }
-          }
-
-          for (const failure of nativeBatch.failures ?? []) {
-            const source = failure.streamProviderName?.trim()
-            if (source) failedNativeSources.add(source)
-          }
-        } else {
-          for (const req of streamProviderRequests) failedNativeSources.add(req.name)
-        }
-      } catch {
-        for (const req of streamProviderRequests) failedNativeSources.add(req.name)
-      }
-
-      const fallbackRequests = (
-        published
-          ? streamProviderRequests.filter((req) => failedNativeSources.has(req.name))
-          : streamProviderRequests
-      )
-
-      const apiPromises = fallbackRequests.map(async (req) => {
+      const runScraperOnce = async (req: ScraperRequest): Promise<SourceRun> => {
         const directUrl = `${req.baseUrl}/${streamPath}`
-        // Jackettio queries Jackett indexers live and routinely needs 20-50 s
-        // on a cold search; the ordinary budgets abort it long before it can
-        // answer. Results publish per scraper, so the long wait only delays
-        // jackettio's own rows.
-        const isSlowScraper = req.config.preset === 'jackettio' || req.config.preset === 'aiostreams'
-        const nativeLookupTimeoutMs = 3000
-        const apiFetchTimeoutMs = isSlowScraper ? 55_000 : 12_000
+        const slow = isSlowPreset(req)
+        const tag = (s: StreamResult): StreamResult => ({ ...s, source: s.source ?? req.name })
 
-        // Desktop primary path: native lookup via Tauri command (bypasses both
-        // Next.js server DNS and webview fetch/CORS edge-cases). Slow
-        // aggregators skip it — their one request per search goes through
-        // the server route, which turns rate-limit notices into errors.
-        try {
-          const nativeList = isSlowScraper
-            ? null
-            : await lookupPluginStreams(directUrl, req.name, nativeLookupTimeoutMs)
-          if (nativeList && nativeList.length > 0) {
-            const list = nativeList.map((s) => ({
-              ...s,
-              source: s.source ?? req.name,
-            }))
-            publishPartial(list)
-            return list
+        // 1) Native (desktop, indexerade scrapers): kringgår webbvyns DNS/CORS.
+        //    Aggregatorerna hoppar över den — deras enda förfrågan per sökning
+        //    går via serverrutten, som gör rate-limit-notiser till fel.
+        if (desktopHost && !slow) {
+          try {
+            const nativeList = await lookupPluginStreams(directUrl, req.name, NATIVE_LOOKUP_TIMEOUT_MS)
+            if (nativeList) {
+              const list = nativeList.map(tag)
+              return { list, outcome: list.length > 0 ? 'ok' : 'empty', path: 'native' }
+            }
+          } catch (error) {
+            providerErrors.push(`${req.name}: ${error instanceof Error ? error.message : 'native lookup failed'}`)
           }
-        } catch {
-          // Ignore and continue with existing web fallbacks.
         }
 
-        // Primary: server-side API route
+        // 2) Serverrutten.
         try {
           const data = await fetchJsonWithTimeout<{ streams?: StreamResult[]; error?: string }>(
             `/api/streams?${params}`,
-            apiFetchTimeoutMs,
+            slow ? SLOW_API_TIMEOUT_MS : API_TIMEOUT_MS,
             {
               headers: {
                 'x-stream-provider-url': req.baseUrl,
@@ -1574,31 +1557,25 @@ function scraperInCooldown(configId: string): boolean {
             },
           )
           if (!data.error) {
-            const list = (data.streams ?? []).map((s) => ({
-              ...s,
-              source: s.source ?? req.name,
-            }))
-            publishPartial(list)
-            return list
+            const list = (data.streams ?? []).map(tag)
+            return { list, outcome: list.length > 0 ? 'ok' : 'empty', path: 'api' }
           }
           providerErrors.push(`${req.name}: ${data.error}`)
           if (isRateLimitError(data.error)) {
-            // The provider is telling us to back off — a direct retry from
-            // the browser would be one more request against a hot window.
+            // Källan säger själv åt oss att backa — inget mer härifrån, och
+            // den sitter ute nästa sökningar tills fönstret stängts.
             markScraperRateLimited(req.config.id)
-            return []
+            return { list: [], outcome: 'rate-limited', path: 'api' }
           }
         } catch (error) {
-          // Server-side fetch failed (DNS, timeout) — try direct browser fetch
-          const message = error instanceof Error ? error.message : 'server fetch failed'
-          providerErrors.push(`${req.name}: ${message}`)
+          providerErrors.push(`${req.name}: ${error instanceof Error ? error.message : 'server fetch failed'}`)
         }
 
-        // Fallback: direct browser fetch to scraper (bypasses server DNS)
+        // 3) Direkt från webbläsaren (kringgår serverns DNS).
         try {
           const data = await fetchJsonWithTimeout<{ streams?: Array<{ name: string; title?: string; infoHash?: string; url?: string; fileIdx?: number }> }>(
             directUrl,
-            8000,
+            BROWSER_TIMEOUT_MS,
             undefined,
           )
           const list: StreamResult[] = (data.streams ?? [])
@@ -1619,17 +1596,39 @@ function scraperInCooldown(configId: string): boolean {
                 source: req.name,
               }
             })
-          publishPartial(list)
-          return list
+          return { list, outcome: list.length > 0 ? 'ok' : 'empty', path: 'browser' }
         } catch (error) {
-          const message = error instanceof Error ? error.message : 'browser fetch failed'
-          providerErrors.push(`${req.name}: ${message}`)
-          return []
+          providerErrors.push(`${req.name}: ${error instanceof Error ? error.message : 'browser fetch failed'}`)
+          return { list: [], outcome: 'error', path: 'browser' }
         }
-      })
+      }
+
+      const runScraper = async (req: ScraperRequest): Promise<StreamResult[]> => {
+        const startedAt = performance.now()
+        let run = await runScraperOnce(req)
+        if (requestId !== searchRequestIdRef.current) return []
+        // Ett nytt försök, bara vid NÄTFEL (inte tomt svar, inte rate-limit),
+        // och bara för indexerade scrapers. Ersätter den gamla hela
+        // omkörningen efter 1,5 s, som frågade om ALLA källor.
+        if (run.outcome === 'error' && !isSlowPreset(req)) {
+          await sleep(RETRY_DELAY_MS)
+          if (requestId !== searchRequestIdRef.current) return []
+          run = await runScraperOnce(req)
+          if (requestId !== searchRequestIdRef.current) return []
+        }
+        sourceReport[req.name] = {
+          ms: Math.round(performance.now() - startedAt),
+          outcome: run.outcome,
+          path: run.path,
+          streams: run.list.length,
+        }
+        if (run.list.length > 0) publishPartial(run.list)
+        settleSource(req.name, run.outcome)
+        return run.list
+      }
 
       /**
-       * Community-addonsen frågas vid sidan av scrapern.
+       * Community-addonsen frågas vid sidan av scrapern — samtidigt, inte efter.
        *
        * Utan detta kunde ett manifest inlagt under "kataloger från communityn"
        * aldrig ge en spelbar ström: panelen hämtade bara /api/streams, som
@@ -1637,54 +1636,84 @@ function scraperInCooldown(configId: string): boolean {
        * i listan som cachade (vilket de i praktiken är) och sorteras först.
        *
        * Säsong/avsnitt skickas med — utan dem svarar addons med hela serien.
+       * Varje addon publiceras när den svarar och har en egen budget; en addon
+       * som hänger (uppmätt: 25 s) håller inte längre tillbaka listan.
        */
-      const communityStreams: StreamResult[] = effectiveImdbId
-        ? (await resolveCoreAddonStreams({
-            imdbId: effectiveImdbId,
-            type: mediaType === 'tv' ? 'series' : 'movie',
-            season: season != null ? Number(season) : null,
-            episode: episode != null ? Number(episode) : null,
-          }).catch(() => [])).map((entry, index) => ({
-            infoHash: '',
-            name: entry.title,
-            // Sekundärraden visade samma korta namn en gång till. Filnamnet
-            // först, addonens beskrivning (storlek, seeders, språk) därnäst —
-            // och namnet bara om varken finns.
-            title: entry.filename ?? entry.description ?? entry.title,
-            fileIdx: index,
-            cached: true,
-            downloadable: true,
-            cachedFiles: [],
-            directUrl: entry.url,
-            // Storleken kommer ur behaviorHints.videoSize eller addonens
-            // fritext; utan den räknades raden som "storlek okänd" och föll
-            // dessutom igenom storleksfiltret utan att kunna prövas.
-            sizeBytes: entry.sizeBytes,
-            // Beskrivningen följer med community-vägen av samma skäl som
-            // scraper-vägen skickar den: språken står bara där.
-            description: entry.description,
-            // Addonens egna undertextspråk — riktig data, inte gissad ur namnet.
-            subtitleLangs: entry.subtitles
-              ?.map((sub) => sub.lang)
-              .filter((lang): lang is string => Boolean(lang)),
-            source: lt('communitySource'),
-          }))
-        : []
+      const mapCommunity = (entries: Awaited<ReturnType<typeof resolveCoreAddonStreams>>): StreamResult[] =>
+        entries.map((entry, index) => ({
+          infoHash: '',
+          name: entry.title,
+          // Sekundärraden visade samma korta namn en gång till. Filnamnet
+          // först, addonens beskrivning (storlek, seeders, språk) därnäst —
+          // och namnet bara om varken finns.
+          title: entry.filename ?? entry.description ?? entry.title,
+          fileIdx: index,
+          cached: true,
+          downloadable: true,
+          cachedFiles: [],
+          directUrl: entry.url,
+          // Storleken kommer ur behaviorHints.videoSize eller addonens
+          // fritext; utan den räknades raden som "storlek okänd" och föll
+          // dessutom igenom storleksfiltret utan att kunna prövas.
+          sizeBytes: entry.sizeBytes,
+          // Beskrivningen följer med community-vägen av samma skäl som
+          // scraper-vägen skickar den: språken står bara där.
+          description: entry.description,
+          // Addonens egna undertextspråk — riktig data, inte gissad ur namnet.
+          subtitleLangs: entry.subtitles
+            ?.map((sub) => sub.lang)
+            .filter((lang): lang is string => Boolean(lang)),
+          source: communityLabel,
+        }))
 
-      const apiStreamsList = await Promise.all(apiPromises)
+      const communityStartedAt = performance.now()
+      const communityPromise: Promise<StreamResult[]> = harCommunityKälla && effectiveImdbId
+        ? resolveCoreAddonStreams(
+            {
+              imdbId: effectiveImdbId,
+              type: mediaType === 'tv' ? 'series' : 'movie',
+              season: season != null ? Number(season) : null,
+              episode: episode != null ? Number(episode) : null,
+            },
+            {
+              timeoutMs: COMMUNITY_TIMEOUT_MS,
+              onAddon: (entries) => {
+                const list = mapCommunity(entries)
+                if (list.length > 0) publishPartial(list)
+              },
+            },
+          )
+            .then((entries) => {
+              const list = mapCommunity(entries)
+              sourceReport[communityLabel] = {
+                ms: Math.round(performance.now() - communityStartedAt),
+                outcome: list.length > 0 ? 'ok' : 'empty',
+                path: 'addon',
+                streams: list.length,
+              }
+              settleSource(communityLabel, list.length > 0 ? 'ok' : 'empty')
+              return list
+            })
+            .catch(() => {
+              sourceReport[communityLabel] = {
+                ms: Math.round(performance.now() - communityStartedAt),
+                outcome: 'error',
+                path: 'addon',
+                streams: 0,
+              }
+              settleSource(communityLabel, 'error')
+              return []
+            })
+        : Promise.resolve([])
+
+      const [apiStreamsList, communityStreams] = await Promise.all([
+        Promise.all(streamProviderRequests.map(runScraper)),
+        communityPromise,
+      ])
       if (requestId !== searchRequestIdRef.current) return
 
       const allStreams = [...apiStreamsList.flat(), ...communityStreams]
-      // First attempt that returned zero streams: schedule a single retry
-      // before showing the noStreams/error message. Providers sometimes
-      // return empty mid-cache-refresh (Real-Debrid or scraper warm-up);
-      // a 1.5 s nudge usually picks up the populated result on attempt two.
-      const willRetry =
-        !published
-        && allStreams.length === 0
-        && (streamProviderRequests.length > 0 || harCommunityKälla)
-        && retryAttempt === 0
-      if (!published && !willRetry) {
+      if (!published) {
         const merged = mergeStreams(allStreams)
         const prepared = sortByPriority(normalizeCached(merged))
         setStreams(prepared)
@@ -1697,16 +1726,12 @@ function scraperInCooldown(configId: string): boolean {
         streamProviderCount: streamProviderRequests.length,
         streamCount: allStreams.length,
         retryAttempt,
+        // Per källa: tid, utfall och väg — så att en seg källa går att peka ut
+        // i en användares logg i stället för att gissa.
+        totalMs: Math.round(performance.now() - searchStartedAt),
+        firstStreamsMs: firstStreamsAtMs,
+        sources: sourceReport,
       })
-
-      if (willRetry) {
-        setLoadingStreams(true)
-        window.setTimeout(() => {
-          if (requestId !== searchRequestIdRef.current) return
-          void searchStreams(season, episode, 1)
-        }, 1500)
-        return
-      }
 
       // Surface error when all providers returned zero results (likely DNS or network failure).
       if (!published && allStreams.length === 0 && (streamProviderRequests.length > 0 || harCommunityKälla)) {
@@ -3718,7 +3743,19 @@ function scraperInCooldown(configId: string): boolean {
         )}
 
         {/* Streams */}
-        {loadingStreams && <p className="text-sm text-slate-400">{t('searchingStreams')}</p>}
+        {/* Laddning: en riktig spinner i appens accentfärg, inte bara en
+            textrad. Strömsökningen tar sekunder, och inline på detaljsidan
+            var en ensam grå rad lätt att missa — det såg ut som att inget
+            hände. Ringen är samma form som appens övriga spinners. */}
+        {loadingStreams && (
+          <div className="flex items-center gap-3 py-3 text-sm text-slate-300" role="status" aria-live="polite">
+            <svg className="h-5 w-5 flex-none animate-spin motion-reduce:animate-none text-accent-400" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeOpacity="0.2" strokeWidth="3" />
+              <path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+            </svg>
+            <span>{t('searchingStreams')}</span>
+          </div>
+        )}
         {streamsError && <p className="text-sm text-red-400">{streamsError}</p>}
         {streams && streams.length === 0 && <p className="text-sm text-slate-400">{t('noStreams')}</p>}
         {streams && streams.length > 0 && step.type === 'idle' && (() => {
@@ -3747,6 +3784,31 @@ function scraperInCooldown(configId: string): boolean {
           )
         })()}
 
+        {/* Källstatus: en tidig, delvis lista ska inte se färdig ut. Raden
+            säger vilka källor som fortfarande söker och vilka som inte
+            svarade — tidigare fanns ingen skillnad mellan "klar" och
+            "väntar på AIOStreams". Spinnern ovan täcker fallet innan något
+            alls publicerats. */}
+        {(() => {
+          if (loadingStreams) return null
+          const pending = Object.entries(sourceStatus).filter(([, s]) => s === 'pending').map(([n]) => n)
+          const failed = Object.entries(sourceStatus).filter(([, s]) => s === 'error' || s === 'rate-limited').map(([n]) => n)
+          if (pending.length === 0 && failed.length === 0) return null
+          return (
+            <div className="space-y-1 text-xs text-slate-500" aria-live="polite">
+              {pending.length > 0 && (
+                <p className="flex items-center gap-2">
+                  <svg className="h-3 w-3 flex-none animate-spin motion-reduce:animate-none text-accent-400" viewBox="0 0 24 24" fill="none" aria-hidden>
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeOpacity="0.2" strokeWidth="3" />
+                    <path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                  </svg>
+                  <span>{t('sourcesStillSearching')} {pending.join(', ')}</span>
+                </p>
+              )}
+              {failed.length > 0 && <p>{t('sourcesNoAnswer')} {failed.join(', ')}</p>}
+            </div>
+          )
+        })()}
         {/* Playback state machine */}
         {step.type === 'processing' && (
           <div className="flex items-center gap-3">
@@ -4032,38 +4094,87 @@ function StreamList({
   // överst bland de cachade och bli det första man klickar.
   const byPlayability = (items: StreamResult[]) =>
     [...items].sort((a, b) => Number(unsupported(a)) - Number(unsupported(b)))
-  const cached = byPlayability(streams.filter((s) => s.cached))
-  const uncached = byPlayability(streams.filter((s) => !s.cached))
+
+  /**
+   * KÄLLOR — filter och gruppering.
+   *
+   * Med flera skrapor (AIOStreams, PenguPlay, Torrentio …) blandades allt i en
+   * lista och det enda som skilde dem var en liten chip per rad. Nu:
+   *
+   *  - En chiprad överst med "Alla källor" + en chip per källa (med antal).
+   *    Vågrätt rullande, så den funkar på en telefon utan att brytas i höjd.
+   *  - Vald källa filtrerar listan. "Alla" visar allt, men med en liten
+   *    rubrik före varje källas grupp när det finns fler än en — då ser man
+   *    var raderna kommer ifrån utan att läsa chipen på varje rad.
+   *
+   * Cachade före ocachade behålls INOM varje grupp. Valet är lokalt state:
+   * komponenten monteras om per titel/avsnitt (nyckeln på SidebarSection),
+   * så ett val följer inte med till nästa titel — det är rätt, källorna
+   * skiljer sig titel för titel.
+   */
+  const sourceOf = (s: StreamResult) => s.source ?? 'scraper'
+  const sources = Array.from(
+    streams.reduce((acc, s) => acc.set(sourceOf(s), (acc.get(sourceOf(s)) ?? 0) + 1), new Map<string, number>()),
+  )
+  const [selectedSource, setSelectedSource] = useState<string | null>(null)
+  const activeSource = selectedSource && sources.some(([name]) => name === selectedSource) ? selectedSource : null
+  const shown = activeSource ? streams.filter((s) => sourceOf(s) === activeSource) : streams
+  const groups: Array<{ source: string | null; items: StreamResult[] }> =
+    !activeSource && sources.length > 1
+      ? sources.map(([name]) => ({ source: name, items: shown.filter((s) => sourceOf(s) === name) }))
+      : [{ source: null, items: shown }]
+
+  const renderRows = (items: StreamResult[], keyPrefix: string) => {
+    const cached = byPlayability(items.filter((s) => s.cached))
+    const uncached = byPlayability(items.filter((s) => !s.cached))
+    return [...cached, ...uncached].map((s, i) => (
+      <StreamRow
+        key={`${keyPrefix}-${s.infoHash}-${i}`}
+        stream={s}
+        onPlay={onPlay}
+        onDownload={onDownload}
+        status={streamKey ? downloadStatus[streamKey(s)] : undefined}
+        unsupported={unsupported(s)}
+      />
+    ))
+  }
+
+  const chipClass = (active: boolean) =>
+    `flex-none rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] transition ${
+      active ? 'bg-white/15 text-white' : 'bg-white/[0.06] text-slate-400 hover:bg-white/10 hover:text-white'
+    }`
+
   return (
     <div className="space-y-2">
-      {cached.length > 0 && (
-        <>
-          {cached.map((s, i) => (
-            <StreamRow
-              key={`${s.infoHash}-${i}`}
-              stream={s}
-              onPlay={onPlay}
-              onDownload={onDownload}
-              status={streamKey ? downloadStatus[streamKey(s)] : undefined}
-              unsupported={unsupported(s)}
-            />
+      {sources.length > 1 && (
+        <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="tablist">
+          <button type="button" role="tab" aria-selected={activeSource === null} onClick={() => setSelectedSource(null)} className={chipClass(activeSource === null)}>
+            {t('allSources')} <span className="opacity-60">{streams.length}</span>
+          </button>
+          {sources.map(([name, count]) => (
+            <button
+              key={name}
+              type="button"
+              role="tab"
+              aria-selected={activeSource === name}
+              onClick={() => setSelectedSource(name)}
+              className={chipClass(activeSource === name)}
+            >
+              {name} <span className="opacity-60">{count}</span>
+            </button>
           ))}
-        </>
+        </div>
       )}
-      {uncached.length > 0 && (
-        <>
-          {uncached.map((s, i) => (
-            <StreamRow
-              key={`${s.infoHash}-${i}`}
-              stream={s}
-              onPlay={onPlay}
-              onDownload={onDownload}
-              status={streamKey ? downloadStatus[streamKey(s)] : undefined}
-              unsupported={unsupported(s)}
-            />
-          ))}
-        </>
-      )}
+      {groups.map((group, gi) => (
+        <div key={group.source ?? 'all'} className="space-y-2">
+          {group.source ? (
+            <p className={`text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 ${gi > 0 ? 'pt-2' : ''}`}>
+              {group.source}
+            </p>
+          ) : null}
+          {renderRows(group.items, group.source ?? 'all')}
+        </div>
+      ))}
     </div>
   )
 }
@@ -4276,8 +4387,8 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
           {...(isTvMode ? { 'data-f': '' } : {})}
           onClick={() => onPlay(stream)}
           className={isTvMode
-            ? 'min-h-[44px] flex-shrink-0 rounded-full bg-aurora-500/80 px-5 text-sm font-medium text-white transition hover:bg-aurora-400/80'
-            : 'flex-shrink-0 rounded-full bg-aurora-500/80 px-3 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-white transition hover:bg-aurora-400/80'}
+            ? 'min-h-[44px] flex-shrink-0 rounded-full bg-accent-500 px-5 text-sm font-semibold text-white transition hover:bg-accent-400'
+            : 'flex-shrink-0 rounded-full bg-accent-500 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-accent-400'}
         >
           {t('play')}
         </button>
@@ -4431,7 +4542,7 @@ function LinkList({ links, onPlay, onBack }: {
             <button
               type="button"
               onClick={() => onPlay(link)}
-              className="rounded-full bg-aurora-500/80 px-3 py-1.5 text-xs font-medium uppercase tracking-[0.18em] text-white transition hover:bg-aurora-400/80"
+              className="rounded-full bg-accent-500 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-accent-400"
             >
               {t('play')}
             </button>

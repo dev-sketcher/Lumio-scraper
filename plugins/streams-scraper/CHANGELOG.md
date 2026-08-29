@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.0.132
+
+- Strömsökningen frågar alla källor samtidigt och visar varje källas rader så
+  fort den svarar. Tidigare kördes en native-batch först och den väntade på den
+  långsammaste källan (3 s × 2 försök) innan AIOStreams, Jackettio och
+  community-addons ens fick sin första förfrågan — median 3,1 s, p75 7,4 s i
+  telemetrin, och samma titel kunde ta 0,8 s eller 28 s.
+- Färre förfrågningar mot källorna, inte fler: en förfrågan per väg, nästa väg
+  bara vid nätfel, ett tomt svar frågas aldrig om, rate-limit ger vila utan
+  nytt försök, och den gamla omkörningen av ALLA källor vid tomt resultat är
+  borta. Aggregatorerna får aldrig mer än en förfrågan per sökning.
+- Community-addons har nu en budget (12 s) och publiceras var för sig; en addon
+  som hängde (uppmätt 25 s) höll tidigare tillbaka hela listan.
+- Under listan syns vilka källor som fortfarande söker och vilka som inte
+  svarade, så en tidig, delvis lista inte ser färdig ut.
+- Telemetrin för `streams.lookup` bär nu total tid, tid till första rader och
+  tid/utfall/väg per källa.
+- "DV HDR"-strömmar (Dolby Vision profil 8, med HDR10-baslager) märks inte
+  längre som inkompatibla på enheter utan DV-avkodare — de spelas som HDR10.
+  Bara profil 5 (ensamt "DV") märks. "Atmos" ensamt räknas inte längre som
+  förlustfritt ljud: på WEB-DL är det E-AC-3, som alla enheter avkodar.
+
 ## 1.0.120
 
 - Avsnittslistan i spelaren fanns bara om man BLÄDDRAT i säsongslistan först.

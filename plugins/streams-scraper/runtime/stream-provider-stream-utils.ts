@@ -461,9 +461,28 @@ export function streamLooksDolbyVision(stream: StreamResult): boolean {
  * fäller uppspelningen (eller spelas utan ljud). Kodeken står nästan alltid i
  * releasenamnet, så heuristiken är träffsäker.
  */
+/**
+ * "Atmos" ensamt räknas INTE längre som förlustfritt: på WEB-DL är Atmos
+ * nästan alltid E-AC-3 JOC (DD+), som varje modern enhet avkodar. Det
+ * förlustfria fallet är TrueHD Atmos, och då står TrueHD i namnet.
+ */
 export function streamLooksLosslessAudio(stream: StreamResult): boolean {
-  return /(true[.\s_-]?hd|atmos|dts[.\s_-]?hd|dts[.\s_-]?x|\bdtsma\b)/i.test(
+  return /(true[.\s_-]?hd|dts[.\s_-]?hd|dts[.\s_-]?x|\bdtsma\b)/i.test(
     `${stream.name} ${stream.title}`)
+}
+
+/**
+ * Dolby Vision MED HDR10-baslager (profil 8, "DV HDR", "DoVi HDR10+"): spelas
+ * som vanlig HDR10 på en enhet utan DV-avkodare, så den ska varken sorteras
+ * sist eller märkas. Bara profil 5 (ensamt "DV", eller uttryckligen P5) saknar
+ * baslager. En användare på TV fick alla "DV HDR"-rader märkta inkompatibla
+ * trots att de spelades — det här är varför.
+ */
+export function streamLooksDolbyVisionWithFallback(stream: StreamResult): boolean {
+  const text = `${stream.name} ${stream.title}`
+  if (/(?:^|[.\s_\-\[(])(?:p|profile[.\s_-]?)5(?:$|[.\s_\-\])])/i.test(text)) return false
+  if (/(?:^|[.\s_\-\[(])(?:p|profile[.\s_-]?)8(?:\.\d)?(?:$|[.\s_\-\])])/i.test(text)) return true
+  return /(?:^|[.\s_\-\[(])hdr(?:10\+?)?(?:$|[.\s_\-\])])/i.test(text)
 }
 
 /** Enhetens saknade avkodare, satt av värdappens kapabilitetsprobe. */
@@ -478,7 +497,11 @@ export function deviceLacksLosslessAudioSync(): boolean {
 /** Sann när enheten saknar avkodare för strömmens spår (ljud eller DV). */
 export function streamUnsupportedOnDevice(stream: StreamResult): boolean {
   if (deviceLacksLosslessAudioSync() && streamLooksLosslessAudio(stream)) return true
-  if (deviceLacksDolbyVisionSync() && streamLooksDolbyVision(stream)) return true
+  if (
+    deviceLacksDolbyVisionSync()
+    && streamLooksDolbyVision(stream)
+    && !streamLooksDolbyVisionWithFallback(stream)
+  ) return true
   return false
 }
 
