@@ -39,6 +39,7 @@ import {
   lookupPluginStreams,
   lookupPluginStreamsBatchRanked,
   useTvMode,
+  requestOpenMediaItem,
 } from '@/lib/plugin-sdk'
 import {
   getStreamProviderConfigs,
@@ -234,7 +235,22 @@ function isExpirableStreamUrl(url: string): boolean {
 /// Tre sekunder ger alltså gott om marginal för ett äkta svar och kapar
 /// stallet. En källa som är långsammare än så hinner ändå fångas: spelarens
 /// laddfel och första-bildrutan-vakten går båda vidare till nästa release.
-async function streamUrlServesMedia(url: string, timeoutMs = 3_000, minBytes = SLATE_MIN_BYTES): Promise<boolean> {
+/**
+ * Livskontrollen ligger i den KRITISKA vägen: den körs innan spelaren öppnas,
+ * och först därefter öppnar mpv sin egen anslutning. Två anslutningar i följd
+ * alltså, och användaren väntar på båda.
+ *
+ * Taket sänkt från 3 s till 1,5. Uppmätt tar kontrollen 0,63–0,82 s mot en
+ * frisk källa, så 1,5 är fortfarande rundligt — men en trög källa kostar nu
+ * halva tiden innan uppspelningen ändå startar.
+ *
+ * Detta är SÄKERT eftersom kontrollen faller öppen: både timeout och nätfel
+ * fångas nedan och returnerar true, alltså "spela ändå". Ett lägre tak kan
+ * därför bara göra starten snabbare, aldrig döma ut en fungerande länk. Den
+ * som svarar långsammare än så hinner ändå bevisa sig genom spelarens egen
+ * laddningsfel och första-bildrutan-vakthund.
+ */
+async function streamUrlServesMedia(url: string, timeoutMs = 1_500, minBytes = SLATE_MIN_BYTES): Promise<boolean> {
   if (typeof window === 'undefined') return true
   /// CLIENT SESSION (LAN/remote): the host must not judge the link.
   ///
@@ -3718,6 +3734,14 @@ function scraperInCooldown(configId: string): boolean {
           title={playerTitle}
           sourceInfoHash={playerInfoHash ?? undefined}
           onClose={handlePlayerClose}
+          /*
+            Eftertextläget. Spelaren ritas här, men appen äger detaljvyn — en
+            vald rekommendation går därför via SDK-seamen. Och att stänga
+            spelaren landar redan på titelns egen detaljsida, vilket är precis
+            vad autoåtergången ska göra.
+          */
+          onCreditsOpenDetails={(item) => requestOpenMediaItem({ item, source: 'credits-mode' })}
+          onCreditsFinished={handlePlayerClose}
           onLoadFailed={() => {
             // mpv rejected the source before first frame. While the autoplay
             // candidate loop runs, keep the modal open and flag the failure —
