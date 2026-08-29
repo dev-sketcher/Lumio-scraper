@@ -181303,7 +181303,19 @@ ${cue.text}`).join("\n\n")}
           heading: item.title,
           logoUrl: creditsLogos[item.id] ?? getCachedTitleLogo(item.type, item.id) ?? null,
           primaryLabel: t("play"),
-          onPrimary: () => onCreditsOpenDetails?.(item)
+          /**
+           * Play betyder SPELA.
+           *
+           * Knappen anropade tidigare samma väg som "Mer info" och landade på
+           * titelns detaljsida, där man fick trycka en gång till. Den går nu
+           * via seamen med `autoPlay`, som armerar samma avsikt heron använder:
+           * detaljsidan öppnas och startar filmen själv.
+           *
+           * Direkt till seamen, inte via `onCreditsOpenDetails` — den propen
+           * betyder "visa titeln" och används av anropare som inte ska starta
+           * uppspelning.
+           */
+          onPrimary: () => requestOpenMediaItem({ item, autoPlay: true, source: "credits-play" })
         });
       }
       return cards;
@@ -190128,7 +190140,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.130",
+    version: "1.0.131",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
