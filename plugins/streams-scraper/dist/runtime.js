@@ -167537,6 +167537,8 @@
       themeSystem: "Follow system",
       uiScale: "Interface scale",
       uiScaleDesc: "Scales the entire interface. Useful on 4K and ultrawide screens.",
+      menuScale: "Menu scale",
+      menuScaleDesc: "Scales only the side menu \u2014 icons and labels \u2014 independently of the interface scale.",
       reduceMotion: "Reduce motion",
       reduceMotionDesc: "Turns off animations and soft transitions throughout the app.",
       settingsPagePluginManage: "Manage plugins",
@@ -169843,6 +169845,8 @@
       themeSystem: "F\xF6lj systemet",
       uiScale: "Gr\xE4nssnittsskala",
       uiScaleDesc: "Skalar hela gr\xE4nssnittet. Bra p\xE5 4K- och ultrawide-sk\xE4rmar.",
+      menuScale: "Menyskalning",
+      menuScaleDesc: "Skalar bara sidomenyn \u2014 ikoner och etiketter \u2014 oberoende av gr\xE4nssnittsskalan.",
       reduceMotion: "Minska r\xF6relse",
       reduceMotionDesc: "St\xE4nger av animationer och mjuka \xF6verg\xE5ngar i hela appen.",
       settingsPagePluginManage: "Hantera plugins",
@@ -189812,41 +189816,30 @@ ${cue.text}`).join("\n\n")}
             )
           ] })
         ] }),
-        mediaType === "tv" && selectedSeason && selectedEpisode && /* @__PURE__ */ jsxs("div", { className: "-mb-2 flex items-center justify-between gap-3 text-xs text-slate-400", children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-2", children: [
-            /* @__PURE__ */ jsxs(
-              "button",
-              {
-                type: "button",
-                onClick: () => {
-                  setSelectedEpisode(null);
-                  setStreams(null);
-                },
-                className: "flex-none hover:text-slate-200",
-                children: [
-                  "\u2190 ",
-                  selectedSeason.name
-                ]
-              }
-            ),
-            /* @__PURE__ */ jsx("span", { children: "/" }),
-            /* @__PURE__ */ jsxs("span", { className: "truncate text-slate-300", children: [
-              "E",
-              String(selectedEpisode.episode_number).padStart(2, "0"),
-              " \u2013 ",
-              selectedEpisode.name
-            ] })
-          ] }),
-          streams && streams.length > 0 && step.type === "idle" ? /* @__PURE__ */ jsx(
-            SourceFilterMenu,
+        mediaType === "tv" && selectedSeason && selectedEpisode && /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2 text-xs text-slate-400", children: /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-2", children: [
+          /* @__PURE__ */ jsxs(
+            "button",
             {
-              streams: streams.filter((_, i) => applyStreamFilters(streams, streamFilters)[i]),
-              value: sourceFilter,
-              onChange: setSourceFilter,
-              pending: Object.entries(sourceStatus).filter(([, st]) => st === "pending").map(([name]) => name)
+              type: "button",
+              onClick: () => {
+                setSelectedEpisode(null);
+                setStreams(null);
+              },
+              className: "flex-none hover:text-slate-200",
+              children: [
+                "\u2190 ",
+                selectedSeason.name
+              ]
             }
-          ) : null
-        ] }),
+          ),
+          /* @__PURE__ */ jsx("span", { children: "/" }),
+          /* @__PURE__ */ jsxs("span", { className: "truncate text-slate-300", children: [
+            "E",
+            String(selectedEpisode.episode_number).padStart(2, "0"),
+            " \u2013 ",
+            selectedEpisode.name
+          ] })
+        ] }) }),
         !effectiveImdbId && step.type === "idle" && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: imdbLookupFailed ? lt("imdbLookupFailed") : "No IMDb ID \u2014 use manual input below." }),
         loadingStreams && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 py-3 text-sm text-slate-300", role: "status", "aria-live": "polite", children: [
           /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none animate-spin motion-reduce:animate-none text-accent-400", viewBox: "0 0 24 24", fill: "none", "aria-hidden": true, children: [
@@ -189868,7 +189861,7 @@ ${cue.text}`).join("\n\n")}
                 deviceLacksDolbyVision,
                 streams: filtered,
                 sourceFilter,
-                header: mediaType !== "tv" ? /* @__PURE__ */ jsx(
+                header: /* @__PURE__ */ jsx(
                   SourceFilterMenu,
                   {
                     streams: filtered,
@@ -189876,7 +189869,7 @@ ${cue.text}`).join("\n\n")}
                     onChange: setSourceFilter,
                     pending: Object.entries(sourceStatus).filter(([, st]) => st === "pending").map(([name]) => name)
                   }
-                ) : null,
+                ),
                 onPlay: handlePlayStream,
                 onDownload: handleDownloadStream,
                 downloadStatus: radNedladdning,
@@ -190630,7 +190623,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.135",
+    version: "1.0.136",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

@@ -3722,7 +3722,7 @@ function scraperInCooldown(configId: string): boolean {
 
         {/* TV: back breadcrumb when episode is selected */}
         {mediaType === 'tv' && selectedSeason && selectedEpisode && (
-          <div className="-mb-2 flex items-center justify-between gap-3 text-xs text-slate-400">
+          <div className="flex items-center gap-2 text-xs text-slate-400">
             <div className="flex min-w-0 items-center gap-2">
               <button
                 type="button"
@@ -3736,16 +3736,6 @@ function scraperInCooldown(configId: string): boolean {
                 E{String(selectedEpisode.episode_number).padStart(2, '0')} – {selectedEpisode.name}
               </span>
             </div>
-            {/* Källväljaren på samma rad, till höger — inte som en chiprad
-                som sköt ner listan. */}
-            {streams && streams.length > 0 && step.type === 'idle' ? (
-              <SourceFilterMenu
-                streams={streams.filter((_, i) => applyStreamFilters(streams, streamFilters)[i])}
-                value={sourceFilter}
-                onChange={setSourceFilter}
-                pending={Object.entries(sourceStatus).filter(([, st]) => st === 'pending').map(([name]) => name)}
-              />
-            ) : null}
           </div>
         )}
 
@@ -3787,16 +3777,18 @@ function scraperInCooldown(configId: string): boolean {
                     deviceLacksDolbyVision={deviceLacksDolbyVision}
                     streams={filtered}
                     sourceFilter={sourceFilter}
-                    /* Film: väljaren som listans första rad (se header-propen).
-                       Serier har den på brödsmuleraden ovanför i stället. */
-                    header={mediaType !== 'tv' ? (
+                    /* Väljaren som listans rubrikrad, för både film och serier
+                       (se header-propen): etikett vänster, väljare höger, 8 px
+                       ner till första strömmen. Låg på brödsmuleraden för
+                       serier förut, med ett helt space-y-steg ner till listan. */
+                    header={(
                       <SourceFilterMenu
                         streams={filtered}
                         value={sourceFilter}
                         onChange={setSourceFilter}
                         pending={Object.entries(sourceStatus).filter(([, st]) => st === 'pending').map(([name]) => name)}
                       />
-                    ) : null}
+                    )}
                     onPlay={handlePlayStream}
                     onDownload={handleDownloadStream}
                     downloadStatus={radNedladdning}

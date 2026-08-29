@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.136
+
+- Serier: källväljaren ligger nu på strömlistans rubrikrad (etikett vänster,
+  väljare höger) i stället för på brödsmuleraden — samma 8 px ner till första
+  strömmen som för film.
+
 ## 1.0.135
 
 - Källväljaren syns så fort den första källan svarat, inte först när det finns
