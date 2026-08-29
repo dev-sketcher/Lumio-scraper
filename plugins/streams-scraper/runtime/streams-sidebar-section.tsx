@@ -518,6 +518,8 @@ export function StreamsSidebarSection({
   // Playback state machine
   const [step, setStep] = useState<PlayStep>({ type: 'idle' })
 
+  const [playerUrl, setPlayerUrl] = useState<string | null>(null)
+
   /**
    * Android: helskärm redan när LADDSKÄRMEN visas, inte först när spelaren
    * monteras.
@@ -544,7 +546,6 @@ export function StreamsSidebarSection({
       setAndroidImmersive(false)
     }
   }, [step.type, playerUrl])
-  const [playerUrl, setPlayerUrl] = useState<string | null>(null)
   // Torrent hash of the stream behind the current player session. Threaded to
   // the player so progress entries carry it — resume can then re-resolve a
   // fresh debrid link when the cached URL has expired.

@@ -168371,6 +168371,13 @@
       onboardingControlEyebrow: "READY",
       onboardingControlTitle: "You are in control",
       onboardingControlDesc: "Customise the start page, filters, language and layout exactly the way you want before you begin.",
+      onboardingPerfEyebrow: "Performance",
+      onboardingPerfTitle: "Matched to your device",
+      onboardingPerfDesc: "We measured this device and set a ceiling for what autoplay may pick on its own. You can raise it now, or change it any time under Playback.",
+      onboardingPerfWhy: "Big remuxes are 40\u201375 GB with audio and video formats a phone or TV box often cannot decode. Autoplay then spends its attempts on files that were never going to play \u2014 a minute of waiting, and a black screen at the end.",
+      onboardingPerfCapLabel: "Largest stream autoplay may pick",
+      onboardingPerfUnlimited: "No limit",
+      onboardingPerfLater: "This only sets the starting point. Nothing is blocked \u2014 you can always pick any stream yourself from the list.",
       onboardingWillInstall: "{count} plugin(s) will be installed when you finish.",
       onboardingInstallFailed: "{names} could not be installed right now \u2014 you can find them under Settings \u2192 Plugins.",
       onboardingOpenAppNow: "Open Lumio now",
@@ -170606,6 +170613,13 @@
       onboardingControlEyebrow: "KLART",
       onboardingControlTitle: "Du har full kontroll",
       onboardingControlDesc: "Anpassa startsidan, filter, spr\xE5k och utseende precis som du vill ha det innan du b\xF6rjar.",
+      onboardingPerfEyebrow: "Prestanda",
+      onboardingPerfTitle: "Anpassat efter din enhet",
+      onboardingPerfDesc: "Vi m\xE4tte den h\xE4r enheten och satte ett tak f\xF6r vad autospelningen f\xE5r v\xE4lja p\xE5 egen hand. Du kan h\xF6ja det nu, eller \xE4ndra det n\xE4r som helst under Uppspelning.",
+      onboardingPerfWhy: "Stora remuxar \xE4r 40\u201375 GB med ljud- och bildformat som en telefon eller TV-box ofta inte kan avkoda. Autospelningen l\xE4gger d\xE5 sina f\xF6rs\xF6k p\xE5 filer som aldrig skulle g\xE5 att spela \u2014 en minuts v\xE4ntan, och svart sk\xE4rm p\xE5 slutet.",
+      onboardingPerfCapLabel: "St\xF6rsta str\xF6m autospelningen f\xE5r v\xE4lja",
+      onboardingPerfUnlimited: "Ingen gr\xE4ns",
+      onboardingPerfLater: "Det h\xE4r s\xE4tter bara utg\xE5ngsl\xE4get. Ingenting sp\xE4rras \u2014 du kan alltid v\xE4lja vilken str\xF6m du vill sj\xE4lv ur listan.",
       onboardingWillInstall: "{count} till\xE4gg installeras n\xE4r du \xE4r klar.",
       onboardingInstallFailed: "{names} kunde inte installeras just nu \u2014 du hittar dem under Inst\xE4llningar \u2192 Plugins.",
       onboardingOpenAppNow: "\xD6ppna Lumio nu",
@@ -186991,6 +187005,7 @@ ${cue.text}`).join("\n\n")}
     const [manualInput, setManualInput] = useState("");
     const [showManual, setShowManual] = useState(false);
     const [step, setStep] = useState({ type: "idle" });
+    const [playerUrl, setPlayerUrl] = useState(null);
     const immersiveForLoadingRef = useRef(false);
     useEffect(() => {
       if (!isAndroidTauriEnv) return;
@@ -187004,7 +187019,6 @@ ${cue.text}`).join("\n\n")}
         setAndroidImmersive(false);
       }
     }, [step.type, playerUrl]);
-    const [playerUrl, setPlayerUrl] = useState(null);
     const [playerInfoHash, setPlayerInfoHash] = useState(null);
     const playAttemptInfoHashRef = useRef(null);
     const [playerFilename, setPlayerFilename] = useState(void 0);
@@ -189995,7 +190009,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.126",
+    version: "1.0.127",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
