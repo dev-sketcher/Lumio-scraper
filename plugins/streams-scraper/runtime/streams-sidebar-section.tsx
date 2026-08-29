@@ -3556,8 +3556,8 @@ function scraperInCooldown(configId: string): boolean {
       ) : null}
 
       <section className="space-y-4">
-        {/* TV: season list */}
-        {mediaType === 'tv' && !selectedSeason && (
+        {/* TV: season list — inte inline: panelen äger säsonger och avsnitt där. */}
+        {mediaType === 'tv' && !selectedSeason && !inlineLayout && (
           <div>
             {!hasTmdbId && (
               <p className="text-sm text-slate-400">
@@ -3592,8 +3592,20 @@ function scraperInCooldown(configId: string): boolean {
           </div>
         )}
 
-        {/* TV: episode list */}
-        {mediaType === 'tv' && selectedSeason && !selectedEpisode && (
+        {/* Inline under avsnittet: medan avsnittet ännu inte är valt (avsnitten
+            laddas efter ett byte) visas en lugn snurra i stället för pluginets
+            egen avsnittslista, som blinkade fram med "← Säsong" en sekund. */}
+        {mediaType === 'tv' && inlineLayout && !selectedEpisode && step.type === 'idle' && (
+          <div className="flex items-center gap-3 py-3 text-sm text-slate-300" role="status" aria-live="polite">
+            <svg className="h-5 w-5 flex-none animate-spin motion-reduce:animate-none text-accent-400" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeOpacity="0.2" strokeWidth="3" />
+              <path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+            </svg>
+            <span>{t('searchingStreams')}</span>
+          </div>
+        )}
+        {/* TV: episode list — inte inline (se ovan). */}
+        {mediaType === 'tv' && selectedSeason && !selectedEpisode && !inlineLayout && (
           <div className="space-y-3">
             <button
               type="button"

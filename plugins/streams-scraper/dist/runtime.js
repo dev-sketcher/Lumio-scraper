@@ -189676,7 +189676,7 @@ ${cue.text}`).join("\n\n")}
         document.body
       ) : null,
       /* @__PURE__ */ jsxs("section", { className: "space-y-4", children: [
-        mediaType === "tv" && !selectedSeason && /* @__PURE__ */ jsxs("div", { children: [
+        mediaType === "tv" && !selectedSeason && !inlineLayout && /* @__PURE__ */ jsxs("div", { children: [
           !hasTmdbId && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: "Seasons unavailable \u2014 this title is from local sample data without a real TMDb ID." }),
           hasTmdbId && loadingSeasons && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("loadingSeasons") }),
           hasTmdbId && seasonsError && /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
@@ -189701,7 +189701,14 @@ ${cue.text}`).join("\n\n")}
             s.season_number
           )) })
         ] }),
-        mediaType === "tv" && selectedSeason && !selectedEpisode && /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
+        mediaType === "tv" && inlineLayout && !selectedEpisode && step.type === "idle" && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 py-3 text-sm text-slate-300", role: "status", "aria-live": "polite", children: [
+          /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5 flex-none animate-spin motion-reduce:animate-none text-accent-400", viewBox: "0 0 24 24", fill: "none", "aria-hidden": true, children: [
+            /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "10", stroke: "currentColor", strokeOpacity: "0.2", strokeWidth: "3" }),
+            /* @__PURE__ */ jsx("path", { d: "M22 12a10 10 0 0 0-10-10", stroke: "currentColor", strokeWidth: "3", strokeLinecap: "round" })
+          ] }),
+          /* @__PURE__ */ jsx("span", { children: t("searchingStreams") })
+        ] }),
+        mediaType === "tv" && selectedSeason && !selectedEpisode && !inlineLayout && /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
           /* @__PURE__ */ jsxs(
             "button",
             {
@@ -190624,7 +190631,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.137",
+    version: "1.0.138",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

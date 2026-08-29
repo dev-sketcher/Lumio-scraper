@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.138
+
+- Inline under avsnittet visar sektionen aldrig sina egna säsongs- och
+  avsnittsvyer — panelen äger dem. Vid avsnittsbyte blinkade "← Säsong" och
+  avsnittslistan fram en sekund medan avsnitten laddades; nu en lugn snurra.
+
 ## 1.0.137
 
 - När strömlistan ligger inline under avsnittet (detaljsidans layoutval) döljs
