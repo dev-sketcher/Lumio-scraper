@@ -3722,7 +3722,7 @@ function scraperInCooldown(configId: string): boolean {
 
         {/* TV: back breadcrumb when episode is selected */}
         {mediaType === 'tv' && selectedSeason && selectedEpisode && (
-          <div className="flex items-center justify-between gap-3 text-xs text-slate-400">
+          <div className="-mb-2 flex items-center justify-between gap-3 text-xs text-slate-400">
             <div className="flex min-w-0 items-center gap-2">
               <button
                 type="button"
@@ -3743,6 +3743,7 @@ function scraperInCooldown(configId: string): boolean {
                 streams={streams.filter((_, i) => applyStreamFilters(streams, streamFilters)[i])}
                 value={sourceFilter}
                 onChange={setSourceFilter}
+                pending={Object.entries(sourceStatus).filter(([, st]) => st === 'pending').map(([name]) => name)}
               />
             ) : null}
           </div>
@@ -3782,24 +3783,25 @@ function scraperInCooldown(configId: string): boolean {
               {filtered.length === 0
                 ? <p className="text-sm text-slate-400">{t('allFiltered')}</p>
                 : (
-                  <>
-                    {/* Film: väljaren i listans övre högra hörn. Serier har
-                        den på brödsmuleraden ovanför i stället. */}
-                    {mediaType !== 'tv' ? (
-                      <div className="flex justify-end">
-                        <SourceFilterMenu streams={filtered} value={sourceFilter} onChange={setSourceFilter} />
-                      </div>
+                  <StreamList
+                    deviceLacksDolbyVision={deviceLacksDolbyVision}
+                    streams={filtered}
+                    sourceFilter={sourceFilter}
+                    /* Film: väljaren som listans första rad (se header-propen).
+                       Serier har den på brödsmuleraden ovanför i stället. */
+                    header={mediaType !== 'tv' ? (
+                      <SourceFilterMenu
+                        streams={filtered}
+                        value={sourceFilter}
+                        onChange={setSourceFilter}
+                        pending={Object.entries(sourceStatus).filter(([, st]) => st === 'pending').map(([name]) => name)}
+                      />
                     ) : null}
-                    <StreamList
-                      deviceLacksDolbyVision={deviceLacksDolbyVision}
-                      streams={filtered}
-                      sourceFilter={sourceFilter}
-                      onPlay={handlePlayStream}
-                      onDownload={handleDownloadStream}
-                      downloadStatus={radNedladdning}
-                      streamKey={radNyckel}
-                    />
-                  </>
+                    onPlay={handlePlayStream}
+                    onDownload={handleDownloadStream}
+                    downloadStatus={radNedladdning}
+                    streamKey={radNyckel}
+                  />
                 )
               }
               {hiddenCount > 0 && (
@@ -4121,15 +4123,23 @@ function SourceFilterMenu({
   streams,
   value,
   onChange,
+  pending = [],
 }: {
   streams: StreamResult[]
   value: string | null
   onChange: (source: string | null) => void
+  /** Källor som fortfarande söker. Väljaren visas så fort den första källan
+   *  svarat — inte först när det finns två — och de som är på väg står med
+   *  i listan med egen snurra, så knappen inte dyker upp sekunder senare
+   *  och skjuter listan. */
+  pending?: string[]
 }) {
   const { t } = useLang()
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement | null>(null)
   const sources = streamSourceEntries(streams)
+  const known = new Set(sources.map(([name]) => name))
+  const stillSearching = pending.filter((name) => !known.has(name))
   const active = value && sources.some(([name]) => name === value) ? value : null
   useEffect(() => {
     if (!open) return
@@ -4152,7 +4162,7 @@ function SourceFilterMenu({
       window.removeEventListener('keydown', onKey, true)
     }
   }, [open])
-  if (sources.length <= 1) return null
+  if (sources.length === 0 && stillSearching.length === 0) return null
   const activeCount = active ? (sources.find(([name]) => name === active)?.[1] ?? 0) : streams.length
   const itemClass = (selected: boolean) =>
     `flex w-full items-center justify-between gap-4 rounded-lg px-3 py-2 text-left text-[12px] transition ${
@@ -4163,20 +4173,29 @@ function SourceFilterMenu({
       <button
         type="button"
         data-f=""
+        // Undantagen TV-lägets minimihöjd för knappar — det var den som gjorde
+        // väljaren till ett stort piller på TV:n trots den lilla klassen här.
+        data-tv-nosize=""
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={t('sourceFilter')}
         title={t('sourceFilter')}
         onClick={() => setOpen((current) => !current)}
-        className={`flex h-8 items-center gap-2 rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition ${
+        className={`flex h-6 items-center gap-1.5 rounded-full px-2 text-[9px] font-semibold uppercase tracking-[0.12em] transition ${
           open || active ? 'bg-white/15 text-white' : 'bg-white/[0.06] text-slate-400 hover:bg-white/10 hover:text-white'
         }`}
       >
-        <svg className="h-3.5 w-3.5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+        <svg className="h-2.5 w-2.5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden>
           <path strokeLinecap="round" d="M3 7h18M3 12h18M3 17h18" />
         </svg>
         <span className="max-w-[12rem] truncate">{active ?? t('allSources')}</span>
         <span className="opacity-60">{activeCount}</span>
+        {stillSearching.length > 0 ? (
+          <svg className="h-3 w-3 flex-none animate-spin motion-reduce:animate-none text-accent-400" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeOpacity="0.2" strokeWidth="3" />
+            <path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+          </svg>
+        ) : null}
       </button>
       {open ? (
         <div
@@ -4188,6 +4207,7 @@ function SourceFilterMenu({
             role="menuitemradio"
             aria-checked={active === null}
             data-f=""
+            data-tv-nosize=""
             onClick={() => { onChange(null); setOpen(false) }}
             className={itemClass(active === null)}
           >
@@ -4201,12 +4221,22 @@ function SourceFilterMenu({
               role="menuitemradio"
               aria-checked={active === name}
               data-f=""
+              data-tv-nosize=""
               onClick={() => { onChange(name); setOpen(false) }}
               className={itemClass(active === name)}
             >
               <span className="truncate">{name}</span>
               <span className="flex-none opacity-60">{count}</span>
             </button>
+          ))}
+          {stillSearching.map((name) => (
+            <div key={`pending-${name}`} className="flex w-full items-center justify-between gap-4 rounded-lg px-3 py-2 text-[12px] text-slate-500" aria-live="polite">
+              <span className="truncate">{name}</span>
+              <svg className="h-3 w-3 flex-none animate-spin motion-reduce:animate-none text-accent-400" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeOpacity="0.2" strokeWidth="3" />
+                <path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+              </svg>
+            </div>
           ))}
         </div>
       ) : null}
@@ -4222,6 +4252,7 @@ function StreamList({
   streamKey,
   deviceLacksDolbyVision = false,
   sourceFilter = null,
+  header = null,
 }: {
   streams: StreamResult[]
   onPlay: (s: StreamResult) => void
@@ -4232,6 +4263,10 @@ function StreamList({
   deviceLacksDolbyVision?: boolean
   /** Vald källa (se SourceFilterMenu); null = alla, grupperade per källa. */
   sourceFilter?: string | null
+  /** Ritas som listans första rad (källväljaren för film) — inne i samma
+   *  space-y-2 som raderna, så avståndet ner till första strömmen är
+   *  detsamma som mellan två strömmar. */
+  header?: React.ReactNode
 }) {
   const unsupported = (s: StreamResult) => deviceLacksDolbyVision && streamUnsupportedOnDevice(s)
   // Ospelbara sist inom varje grupp — annars kan en cachad DV-ström ligga
@@ -4283,16 +4318,27 @@ function StreamList({
 
   return (
     <div className="space-y-2">
-      {groups.map((group, gi) => (
-        <div key={group.source ?? 'all'} className="space-y-2">
-          {group.source ? (
-            <p className={`text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 ${gi > 0 ? 'pt-2' : ''}`}>
-              {group.source}
-            </p>
-          ) : null}
-          {renderRows(group.items, group.source ?? 'all')}
-        </div>
-      ))}
+      {groups.map((group, gi) => {
+        const showHeader = gi === 0 && Boolean(header)
+        if (!group.source && !showHeader) {
+          return <div key="all" className="space-y-2">{renderRows(group.items, 'all')}</div>
+        }
+        return (
+          <div key={group.source ?? 'all'} className="space-y-2">
+            {/* Gruppetikett och källväljare på SAMMA rad: etiketten till vänster,
+                väljaren till höger. Två rader ovanför listan var en för mycket. */}
+            <div className={`flex min-h-6 items-center justify-between gap-3 ${gi > 0 ? 'pt-2' : ''}`}>
+              {group.source ? (
+                <p className="truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  {group.source}
+                </p>
+              ) : <span />}
+              {showHeader ? header : null}
+            </div>
+            {renderRows(group.items, group.source ?? 'all')}
+          </div>
+        )
+      })}
     </div>
   )
 }

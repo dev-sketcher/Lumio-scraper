@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.135
+
+- Källväljaren syns så fort den första källan svarat, inte först när det finns
+  två; källor som fortfarande söker står med i rullistan med egen snurra.
+- Mindre knapp, och för film ligger den som första rad i strömlistan så
+  avståndet ner till första strömmen är samma som mellan två strömmar.
+
 ## 1.0.134
 
 - Källfiltret är en rullista bakom en hamburgare uppe till höger i stället för

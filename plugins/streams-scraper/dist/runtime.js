@@ -189812,7 +189812,7 @@ ${cue.text}`).join("\n\n")}
             )
           ] })
         ] }),
-        mediaType === "tv" && selectedSeason && selectedEpisode && /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-3 text-xs text-slate-400", children: [
+        mediaType === "tv" && selectedSeason && selectedEpisode && /* @__PURE__ */ jsxs("div", { className: "-mb-2 flex items-center justify-between gap-3 text-xs text-slate-400", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-2", children: [
             /* @__PURE__ */ jsxs(
               "button",
@@ -189842,7 +189842,8 @@ ${cue.text}`).join("\n\n")}
             {
               streams: streams.filter((_, i) => applyStreamFilters(streams, streamFilters)[i]),
               value: sourceFilter,
-              onChange: setSourceFilter
+              onChange: setSourceFilter,
+              pending: Object.entries(sourceStatus).filter(([, st]) => st === "pending").map(([name]) => name)
             }
           ) : null
         ] }),
@@ -189861,21 +189862,27 @@ ${cue.text}`).join("\n\n")}
           const filtered = streams.filter((_, i) => visible[i]);
           const hiddenCount = streams.length - filtered.length;
           return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            filtered.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("allFiltered") }) : /* @__PURE__ */ jsxs(Fragment2, { children: [
-              mediaType !== "tv" ? /* @__PURE__ */ jsx("div", { className: "flex justify-end", children: /* @__PURE__ */ jsx(SourceFilterMenu, { streams: filtered, value: sourceFilter, onChange: setSourceFilter }) }) : null,
-              /* @__PURE__ */ jsx(
-                StreamList,
-                {
-                  deviceLacksDolbyVision,
-                  streams: filtered,
-                  sourceFilter,
-                  onPlay: handlePlayStream,
-                  onDownload: handleDownloadStream,
-                  downloadStatus: radNedladdning,
-                  streamKey: radNyckel
-                }
-              )
-            ] }),
+            filtered.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("allFiltered") }) : /* @__PURE__ */ jsx(
+              StreamList,
+              {
+                deviceLacksDolbyVision,
+                streams: filtered,
+                sourceFilter,
+                header: mediaType !== "tv" ? /* @__PURE__ */ jsx(
+                  SourceFilterMenu,
+                  {
+                    streams: filtered,
+                    value: sourceFilter,
+                    onChange: setSourceFilter,
+                    pending: Object.entries(sourceStatus).filter(([, st]) => st === "pending").map(([name]) => name)
+                  }
+                ) : null,
+                onPlay: handlePlayStream,
+                onDownload: handleDownloadStream,
+                downloadStatus: radNedladdning,
+                streamKey: radNyckel
+              }
+            ),
             hiddenCount > 0 && /* @__PURE__ */ jsxs("p", { className: "text-xs text-slate-600", children: [
               hiddenCount,
               " stream",
@@ -190101,12 +190108,15 @@ ${cue.text}`).join("\n\n")}
   function SourceFilterMenu({
     streams,
     value,
-    onChange
+    onChange,
+    pending: pending2 = []
   }) {
     const { t } = useLang();
     const [open, setOpen] = useState(false);
     const rootRef = useRef(null);
     const sources = streamSourceEntries(streams);
+    const known = new Set(sources.map(([name]) => name));
+    const stillSearching = pending2.filter((name) => !known.has(name));
     const active = value && sources.some(([name]) => name === value) ? value : null;
     useEffect(() => {
       if (!open) return;
@@ -190129,7 +190139,7 @@ ${cue.text}`).join("\n\n")}
         window.removeEventListener("keydown", onKey, true);
       };
     }, [open]);
-    if (sources.length <= 1) return null;
+    if (sources.length === 0 && stillSearching.length === 0) return null;
     const activeCount = active ? sources.find(([name]) => name === active)?.[1] ?? 0 : streams.length;
     const itemClass = (selected) => `flex w-full items-center justify-between gap-4 rounded-lg px-3 py-2 text-left text-[12px] transition ${selected ? "bg-white/15 text-white" : "text-slate-300 hover:bg-white/10 hover:text-white"}`;
     return /* @__PURE__ */ jsxs("div", { ref: rootRef, className: "relative flex-none", children: [
@@ -190138,16 +190148,21 @@ ${cue.text}`).join("\n\n")}
         {
           type: "button",
           "data-f": "",
+          "data-tv-nosize": "",
           "aria-haspopup": "menu",
           "aria-expanded": open,
           "aria-label": t("sourceFilter"),
           title: t("sourceFilter"),
           onClick: () => setOpen((current2) => !current2),
-          className: `flex h-8 items-center gap-2 rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition ${open || active ? "bg-white/15 text-white" : "bg-white/[0.06] text-slate-400 hover:bg-white/10 hover:text-white"}`,
+          className: `flex h-6 items-center gap-1.5 rounded-full px-2 text-[9px] font-semibold uppercase tracking-[0.12em] transition ${open || active ? "bg-white/15 text-white" : "bg-white/[0.06] text-slate-400 hover:bg-white/10 hover:text-white"}`,
           children: [
-            /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5 flex-none", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", "aria-hidden": true, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", d: "M3 7h18M3 12h18M3 17h18" }) }),
+            /* @__PURE__ */ jsx("svg", { className: "h-2.5 w-2.5 flex-none", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.2", "aria-hidden": true, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", d: "M3 7h18M3 12h18M3 17h18" }) }),
             /* @__PURE__ */ jsx("span", { className: "max-w-[12rem] truncate", children: active ?? t("allSources") }),
-            /* @__PURE__ */ jsx("span", { className: "opacity-60", children: activeCount })
+            /* @__PURE__ */ jsx("span", { className: "opacity-60", children: activeCount }),
+            stillSearching.length > 0 ? /* @__PURE__ */ jsxs("svg", { className: "h-3 w-3 flex-none animate-spin motion-reduce:animate-none text-accent-400", viewBox: "0 0 24 24", fill: "none", "aria-hidden": true, children: [
+              /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "10", stroke: "currentColor", strokeOpacity: "0.2", strokeWidth: "3" }),
+              /* @__PURE__ */ jsx("path", { d: "M22 12a10 10 0 0 0-10-10", stroke: "currentColor", strokeWidth: "3", strokeLinecap: "round" })
+            ] }) : null
           ]
         }
       ),
@@ -190164,6 +190179,7 @@ ${cue.text}`).join("\n\n")}
                 role: "menuitemradio",
                 "aria-checked": active === null,
                 "data-f": "",
+                "data-tv-nosize": "",
                 onClick: () => {
                   onChange(null);
                   setOpen(false);
@@ -190182,6 +190198,7 @@ ${cue.text}`).join("\n\n")}
                 role: "menuitemradio",
                 "aria-checked": active === name,
                 "data-f": "",
+                "data-tv-nosize": "",
                 onClick: () => {
                   onChange(name);
                   setOpen(false);
@@ -190193,7 +190210,14 @@ ${cue.text}`).join("\n\n")}
                 ]
               },
               name
-            ))
+            )),
+            stillSearching.map((name) => /* @__PURE__ */ jsxs("div", { className: "flex w-full items-center justify-between gap-4 rounded-lg px-3 py-2 text-[12px] text-slate-500", "aria-live": "polite", children: [
+              /* @__PURE__ */ jsx("span", { className: "truncate", children: name }),
+              /* @__PURE__ */ jsxs("svg", { className: "h-3 w-3 flex-none animate-spin motion-reduce:animate-none text-accent-400", viewBox: "0 0 24 24", fill: "none", "aria-hidden": true, children: [
+                /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "10", stroke: "currentColor", strokeOpacity: "0.2", strokeWidth: "3" }),
+                /* @__PURE__ */ jsx("path", { d: "M22 12a10 10 0 0 0-10-10", stroke: "currentColor", strokeWidth: "3", strokeLinecap: "round" })
+              ] })
+            ] }, `pending-${name}`))
           ]
         }
       ) : null
@@ -190206,7 +190230,8 @@ ${cue.text}`).join("\n\n")}
     downloadStatus = {},
     streamKey,
     deviceLacksDolbyVision = false,
-    sourceFilter = null
+    sourceFilter = null,
+    header = null
   }) {
     const unsupported = (s) => deviceLacksDolbyVision && streamUnsupportedOnDevice(s);
     const byPlayability = (items) => [...items].sort((a, b) => Number(unsupported(a)) - Number(unsupported(b)));
@@ -190230,10 +190255,19 @@ ${cue.text}`).join("\n\n")}
         `${keyPrefix}-${s.infoHash}-${i}`
       ));
     };
-    return /* @__PURE__ */ jsx("div", { className: "space-y-2", children: groups.map((group, gi) => /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-      group.source ? /* @__PURE__ */ jsx("p", { className: `text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 ${gi > 0 ? "pt-2" : ""}`, children: group.source }) : null,
-      renderRows(group.items, group.source ?? "all")
-    ] }, group.source ?? "all")) });
+    return /* @__PURE__ */ jsx("div", { className: "space-y-2", children: groups.map((group, gi) => {
+      const showHeader = gi === 0 && Boolean(header);
+      if (!group.source && !showHeader) {
+        return /* @__PURE__ */ jsx("div", { className: "space-y-2", children: renderRows(group.items, "all") }, "all");
+      }
+      return /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxs("div", { className: `flex min-h-6 items-center justify-between gap-3 ${gi > 0 ? "pt-2" : ""}`, children: [
+          group.source ? /* @__PURE__ */ jsx("p", { className: "truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500", children: group.source }) : /* @__PURE__ */ jsx("span", {}),
+          showHeader ? header : null
+        ] }),
+        renderRows(group.items, group.source ?? "all")
+      ] }, group.source ?? "all");
+    }) });
   }
   async function copyTextToClipboard(text) {
     try {
@@ -190596,7 +190630,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.134",
+    version: "1.0.135",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
