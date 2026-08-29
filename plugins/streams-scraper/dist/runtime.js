@@ -166887,6 +166887,7 @@
       searchingStreams: "Searching for streams\u2026",
       allSources: "All sources",
       sourcesStillSearching: "Still searching:",
+      sourceFilter: "Source",
       sourcesNoAnswer: "No answer from:",
       noStreams: "No streams found.",
       allFiltered: "All streams filtered by quality settings.",
@@ -169192,6 +169193,7 @@
       searchingStreams: "S\xF6ker str\xF6mmar\u2026",
       allSources: "Alla k\xE4llor",
       sourcesStillSearching: "S\xF6ker fortfarande:",
+      sourceFilter: "K\xE4lla",
       sourcesNoAnswer: "Inget svar fr\xE5n:",
       noStreams: "Inga str\xF6mmar hittades.",
       allFiltered: "Alla str\xF6mmar filtrerade bort av kvalitetsinst\xE4llningar.",
@@ -173041,6 +173043,49 @@
   function useTvFocus() {
     const sdk3 = hostSdk();
     return sdk3?.useTvFocus ? sdk3.useTvFocus() : null;
+  }
+
+  // lib/spoiler-settings.ts
+  var KEY_ENABLED = "spoiler_blurEnabled";
+  var KEY_BLUR_THUMBNAILS = "spoiler_blurThumbnails";
+  var KEY_BLUR_TITLES = "spoiler_blurTitles";
+  var KEY_BLUR_DESCRIPTIONS = "spoiler_blurDescriptions";
+  var KEY_KEEP_NEXT_VISIBLE = "spoiler_keepNextVisible";
+  var DEFAULT_ENABLED = false;
+  var DEFAULT_BLUR_THUMBNAILS = true;
+  var DEFAULT_BLUR_TITLES = true;
+  var DEFAULT_BLUR_DESCRIPTIONS = true;
+  var DEFAULT_KEEP_NEXT_VISIBLE = true;
+  function getStoredBool(key, fallback) {
+    if (typeof window === "undefined") return fallback;
+    const raw = getScopedStorageItem(key);
+    if (raw === "1") return true;
+    if (raw === "0") return false;
+    return fallback;
+  }
+  function getSpoilerBlurEnabled() {
+    return getStoredBool(KEY_ENABLED, DEFAULT_ENABLED);
+  }
+  function getSpoilerBlurThumbnails() {
+    return getStoredBool(KEY_BLUR_THUMBNAILS, DEFAULT_BLUR_THUMBNAILS);
+  }
+  function getSpoilerBlurTitles() {
+    return getStoredBool(KEY_BLUR_TITLES, DEFAULT_BLUR_TITLES);
+  }
+  function getSpoilerBlurDescriptions() {
+    return getStoredBool(KEY_BLUR_DESCRIPTIONS, DEFAULT_BLUR_DESCRIPTIONS);
+  }
+  function getSpoilerKeepNextVisible() {
+    return getStoredBool(KEY_KEEP_NEXT_VISIBLE, DEFAULT_KEEP_NEXT_VISIBLE);
+  }
+  function getSpoilerMaskSettings() {
+    return {
+      enabled: getSpoilerBlurEnabled(),
+      blurThumbnails: getSpoilerBlurThumbnails(),
+      blurTitles: getSpoilerBlurTitles(),
+      blurDescriptions: getSpoilerBlurDescriptions(),
+      keepNextVisible: getSpoilerKeepNextVisible()
+    };
   }
 
   // lib/trakt-storage.ts
@@ -176913,49 +176958,6 @@
 
   // components/player/player-episodes-panel.tsx
   init_react_shim();
-
-  // lib/spoiler-settings.ts
-  var KEY_ENABLED = "spoiler_blurEnabled";
-  var KEY_BLUR_THUMBNAILS = "spoiler_blurThumbnails";
-  var KEY_BLUR_TITLES = "spoiler_blurTitles";
-  var KEY_BLUR_DESCRIPTIONS = "spoiler_blurDescriptions";
-  var KEY_KEEP_NEXT_VISIBLE = "spoiler_keepNextVisible";
-  var DEFAULT_ENABLED = false;
-  var DEFAULT_BLUR_THUMBNAILS = true;
-  var DEFAULT_BLUR_TITLES = true;
-  var DEFAULT_BLUR_DESCRIPTIONS = true;
-  var DEFAULT_KEEP_NEXT_VISIBLE = true;
-  function getStoredBool(key, fallback) {
-    if (typeof window === "undefined") return fallback;
-    const raw = getScopedStorageItem(key);
-    if (raw === "1") return true;
-    if (raw === "0") return false;
-    return fallback;
-  }
-  function getSpoilerBlurEnabled() {
-    return getStoredBool(KEY_ENABLED, DEFAULT_ENABLED);
-  }
-  function getSpoilerBlurThumbnails() {
-    return getStoredBool(KEY_BLUR_THUMBNAILS, DEFAULT_BLUR_THUMBNAILS);
-  }
-  function getSpoilerBlurTitles() {
-    return getStoredBool(KEY_BLUR_TITLES, DEFAULT_BLUR_TITLES);
-  }
-  function getSpoilerBlurDescriptions() {
-    return getStoredBool(KEY_BLUR_DESCRIPTIONS, DEFAULT_BLUR_DESCRIPTIONS);
-  }
-  function getSpoilerKeepNextVisible() {
-    return getStoredBool(KEY_KEEP_NEXT_VISIBLE, DEFAULT_KEEP_NEXT_VISIBLE);
-  }
-  function getSpoilerMaskSettings() {
-    return {
-      enabled: getSpoilerBlurEnabled(),
-      blurThumbnails: getSpoilerBlurThumbnails(),
-      blurTitles: getSpoilerBlurTitles(),
-      blurDescriptions: getSpoilerBlurDescriptions(),
-      keepNextVisible: getSpoilerKeepNextVisible()
-    };
-  }
 
   // lib/spoilers.ts
   var CLEAR = { thumb: false, title: false, desc: false };
@@ -187365,6 +187367,7 @@ ${cue.text}`).join("\n\n")}
     const [streamFilters, setStreamFilters] = useState(DEFAULT_FILTERS);
     const [resolvedImdbId, setResolvedImdbId] = useState(imdbId ?? null);
     const [sourceStatus, setSourceStatus] = useState({});
+    const [sourceFilter, setSourceFilter] = useState(null);
     const [imdbLookupFailed, setImdbLookupFailed] = useState(false);
     const [seasons, setSeasons] = useState(null);
     const [loadingSeasons, setLoadingSeasons] = useState(false);
@@ -189809,29 +189812,39 @@ ${cue.text}`).join("\n\n")}
             )
           ] })
         ] }),
-        mediaType === "tv" && selectedSeason && selectedEpisode && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-xs text-slate-400", children: [
-          /* @__PURE__ */ jsxs(
-            "button",
+        mediaType === "tv" && selectedSeason && selectedEpisode && /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-3 text-xs text-slate-400", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-2", children: [
+            /* @__PURE__ */ jsxs(
+              "button",
+              {
+                type: "button",
+                onClick: () => {
+                  setSelectedEpisode(null);
+                  setStreams(null);
+                },
+                className: "flex-none hover:text-slate-200",
+                children: [
+                  "\u2190 ",
+                  selectedSeason.name
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsx("span", { children: "/" }),
+            /* @__PURE__ */ jsxs("span", { className: "truncate text-slate-300", children: [
+              "E",
+              String(selectedEpisode.episode_number).padStart(2, "0"),
+              " \u2013 ",
+              selectedEpisode.name
+            ] })
+          ] }),
+          streams && streams.length > 0 && step.type === "idle" ? /* @__PURE__ */ jsx(
+            SourceFilterMenu,
             {
-              type: "button",
-              onClick: () => {
-                setSelectedEpisode(null);
-                setStreams(null);
-              },
-              className: "hover:text-slate-200",
-              children: [
-                "\u2190 ",
-                selectedSeason.name
-              ]
+              streams: streams.filter((_, i) => applyStreamFilters(streams, streamFilters)[i]),
+              value: sourceFilter,
+              onChange: setSourceFilter
             }
-          ),
-          /* @__PURE__ */ jsx("span", { children: "/" }),
-          /* @__PURE__ */ jsxs("span", { className: "text-slate-300", children: [
-            "E",
-            String(selectedEpisode.episode_number).padStart(2, "0"),
-            " \u2013 ",
-            selectedEpisode.name
-          ] })
+          ) : null
         ] }),
         !effectiveImdbId && step.type === "idle" && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: imdbLookupFailed ? lt("imdbLookupFailed") : "No IMDb ID \u2014 use manual input below." }),
         loadingStreams && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 py-3 text-sm text-slate-300", role: "status", "aria-live": "polite", children: [
@@ -189848,17 +189861,21 @@ ${cue.text}`).join("\n\n")}
           const filtered = streams.filter((_, i) => visible[i]);
           const hiddenCount = streams.length - filtered.length;
           return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            filtered.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("allFiltered") }) : /* @__PURE__ */ jsx(
-              StreamList,
-              {
-                deviceLacksDolbyVision,
-                streams: filtered,
-                onPlay: handlePlayStream,
-                onDownload: handleDownloadStream,
-                downloadStatus: radNedladdning,
-                streamKey: radNyckel
-              }
-            ),
+            filtered.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("allFiltered") }) : /* @__PURE__ */ jsxs(Fragment2, { children: [
+              mediaType !== "tv" ? /* @__PURE__ */ jsx("div", { className: "flex justify-end", children: /* @__PURE__ */ jsx(SourceFilterMenu, { streams: filtered, value: sourceFilter, onChange: setSourceFilter }) }) : null,
+              /* @__PURE__ */ jsx(
+                StreamList,
+                {
+                  deviceLacksDolbyVision,
+                  streams: filtered,
+                  sourceFilter,
+                  onPlay: handlePlayStream,
+                  onDownload: handleDownloadStream,
+                  downloadStatus: radNedladdning,
+                  streamKey: radNyckel
+                }
+              )
+            ] }),
             hiddenCount > 0 && /* @__PURE__ */ jsxs("p", { className: "text-xs text-slate-600", children: [
               hiddenCount,
               " stream",
@@ -190073,23 +190090,129 @@ ${cue.text}`).join("\n\n")}
       )
     ] });
   }
+  function streamSourceEntries(streams) {
+    return Array.from(
+      streams.reduce((acc, s) => {
+        const source = s.source ?? "scraper";
+        return acc.set(source, (acc.get(source) ?? 0) + 1);
+      }, /* @__PURE__ */ new Map())
+    );
+  }
+  function SourceFilterMenu({
+    streams,
+    value,
+    onChange
+  }) {
+    const { t } = useLang();
+    const [open, setOpen] = useState(false);
+    const rootRef = useRef(null);
+    const sources = streamSourceEntries(streams);
+    const active = value && sources.some(([name]) => name === value) ? value : null;
+    useEffect(() => {
+      if (!open) return;
+      const onDown = (event) => {
+        if (rootRef.current && !rootRef.current.contains(event.target)) setOpen(false);
+      };
+      const onKey = (event) => {
+        if (event.key === "Escape" || event.key === "Backspace") {
+          event.preventDefault();
+          event.stopPropagation();
+          setOpen(false);
+        }
+      };
+      document.addEventListener("mousedown", onDown);
+      document.addEventListener("touchstart", onDown);
+      window.addEventListener("keydown", onKey, true);
+      return () => {
+        document.removeEventListener("mousedown", onDown);
+        document.removeEventListener("touchstart", onDown);
+        window.removeEventListener("keydown", onKey, true);
+      };
+    }, [open]);
+    if (sources.length <= 1) return null;
+    const activeCount = active ? sources.find(([name]) => name === active)?.[1] ?? 0 : streams.length;
+    const itemClass = (selected) => `flex w-full items-center justify-between gap-4 rounded-lg px-3 py-2 text-left text-[12px] transition ${selected ? "bg-white/15 text-white" : "text-slate-300 hover:bg-white/10 hover:text-white"}`;
+    return /* @__PURE__ */ jsxs("div", { ref: rootRef, className: "relative flex-none", children: [
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          "data-f": "",
+          "aria-haspopup": "menu",
+          "aria-expanded": open,
+          "aria-label": t("sourceFilter"),
+          title: t("sourceFilter"),
+          onClick: () => setOpen((current2) => !current2),
+          className: `flex h-8 items-center gap-2 rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition ${open || active ? "bg-white/15 text-white" : "bg-white/[0.06] text-slate-400 hover:bg-white/10 hover:text-white"}`,
+          children: [
+            /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5 flex-none", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", "aria-hidden": true, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", d: "M3 7h18M3 12h18M3 17h18" }) }),
+            /* @__PURE__ */ jsx("span", { className: "max-w-[12rem] truncate", children: active ?? t("allSources") }),
+            /* @__PURE__ */ jsx("span", { className: "opacity-60", children: activeCount })
+          ]
+        }
+      ),
+      open ? /* @__PURE__ */ jsxs(
+        "div",
+        {
+          role: "menu",
+          className: "absolute right-0 top-full z-30 mt-2 min-w-[14rem] max-w-[min(80vw,24rem)] rounded-xl border border-white/10 bg-[#0b0f1c]/95 p-1.5 shadow-2xl backdrop-blur-md",
+          children: [
+            /* @__PURE__ */ jsxs(
+              "button",
+              {
+                type: "button",
+                role: "menuitemradio",
+                "aria-checked": active === null,
+                "data-f": "",
+                onClick: () => {
+                  onChange(null);
+                  setOpen(false);
+                },
+                className: itemClass(active === null),
+                children: [
+                  /* @__PURE__ */ jsx("span", { className: "truncate", children: t("allSources") }),
+                  /* @__PURE__ */ jsx("span", { className: "flex-none opacity-60", children: streams.length })
+                ]
+              }
+            ),
+            sources.map(([name, count]) => /* @__PURE__ */ jsxs(
+              "button",
+              {
+                type: "button",
+                role: "menuitemradio",
+                "aria-checked": active === name,
+                "data-f": "",
+                onClick: () => {
+                  onChange(name);
+                  setOpen(false);
+                },
+                className: itemClass(active === name),
+                children: [
+                  /* @__PURE__ */ jsx("span", { className: "truncate", children: name }),
+                  /* @__PURE__ */ jsx("span", { className: "flex-none opacity-60", children: count })
+                ]
+              },
+              name
+            ))
+          ]
+        }
+      ) : null
+    ] });
+  }
   function StreamList({
     streams,
     onPlay,
     onDownload,
     downloadStatus = {},
     streamKey,
-    deviceLacksDolbyVision = false
+    deviceLacksDolbyVision = false,
+    sourceFilter = null
   }) {
-    const { t } = useLang();
     const unsupported = (s) => deviceLacksDolbyVision && streamUnsupportedOnDevice(s);
     const byPlayability = (items) => [...items].sort((a, b) => Number(unsupported(a)) - Number(unsupported(b)));
     const sourceOf = (s) => s.source ?? "scraper";
-    const sources = Array.from(
-      streams.reduce((acc, s) => acc.set(sourceOf(s), (acc.get(sourceOf(s)) ?? 0) + 1), /* @__PURE__ */ new Map())
-    );
-    const [selectedSource, setSelectedSource] = useState(null);
-    const activeSource = selectedSource && sources.some(([name]) => name === selectedSource) ? selectedSource : null;
+    const sources = streamSourceEntries(streams);
+    const activeSource = sourceFilter && sources.some(([name]) => name === sourceFilter) ? sourceFilter : null;
     const shown = activeSource ? streams.filter((s) => sourceOf(s) === activeSource) : streams;
     const groups = !activeSource && sources.length > 1 ? sources.map(([name]) => ({ source: name, items: shown.filter((s) => sourceOf(s) === name) })) : [{ source: null, items: shown }];
     const renderRows = (items, keyPrefix) => {
@@ -190107,36 +190230,10 @@ ${cue.text}`).join("\n\n")}
         `${keyPrefix}-${s.infoHash}-${i}`
       ));
     };
-    const chipClass = (active) => `flex-none rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] transition ${active ? "bg-white/15 text-white" : "bg-white/[0.06] text-slate-400 hover:bg-white/10 hover:text-white"}`;
-    return /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-      sources.length > 1 && /* @__PURE__ */ jsxs("div", { className: "-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden", role: "tablist", children: [
-        /* @__PURE__ */ jsxs("button", { type: "button", role: "tab", "aria-selected": activeSource === null, onClick: () => setSelectedSource(null), className: chipClass(activeSource === null), children: [
-          t("allSources"),
-          " ",
-          /* @__PURE__ */ jsx("span", { className: "opacity-60", children: streams.length })
-        ] }),
-        sources.map(([name, count]) => /* @__PURE__ */ jsxs(
-          "button",
-          {
-            type: "button",
-            role: "tab",
-            "aria-selected": activeSource === name,
-            onClick: () => setSelectedSource(name),
-            className: chipClass(activeSource === name),
-            children: [
-              name,
-              " ",
-              /* @__PURE__ */ jsx("span", { className: "opacity-60", children: count })
-            ]
-          },
-          name
-        ))
-      ] }),
-      groups.map((group, gi) => /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-        group.source ? /* @__PURE__ */ jsx("p", { className: `text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 ${gi > 0 ? "pt-2" : ""}`, children: group.source }) : null,
-        renderRows(group.items, group.source ?? "all")
-      ] }, group.source ?? "all"))
-    ] });
+    return /* @__PURE__ */ jsx("div", { className: "space-y-2", children: groups.map((group, gi) => /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
+      group.source ? /* @__PURE__ */ jsx("p", { className: `text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500 ${gi > 0 ? "pt-2" : ""}`, children: group.source }) : null,
+      renderRows(group.items, group.source ?? "all")
+    ] }, group.source ?? "all")) });
   }
   async function copyTextToClipboard(text) {
     try {
@@ -190499,7 +190596,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.133",
+    version: "1.0.134",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

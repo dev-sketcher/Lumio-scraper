@@ -452,6 +452,10 @@ export function StreamsSidebarSection({
   /** Vilka källor som fortfarande söker respektive inte svarade — visas under
    *  listan så en tidig, delvis lista inte ser färdig ut. */
   const [sourceStatus, setSourceStatus] = useState<Record<string, SourceStatus>>({})
+  /** Vald källa i strömlistan (null = alla). Ligger i sektionen, inte i
+   *  StreamList: väljaren ritas på brödsmuleraden för serier och över listan
+   *  för film, medan filtreringen sker i listan. */
+  const [sourceFilter, setSourceFilter] = useState<string | null>(null)
   // Skilj "posten har inget IMDb-id" från "uppslaget kom aldrig fram" — se
   // effekten nedan. Samma tomma lista, två helt olika orsaker och åtgärder.
   const [imdbLookupFailed, setImdbLookupFailed] = useState(false)
@@ -3718,18 +3722,29 @@ function scraperInCooldown(configId: string): boolean {
 
         {/* TV: back breadcrumb when episode is selected */}
         {mediaType === 'tv' && selectedSeason && selectedEpisode && (
-          <div className="flex items-center gap-2 text-xs text-slate-400">
-            <button
-              type="button"
-              onClick={() => { setSelectedEpisode(null); setStreams(null) }}
-              className="hover:text-slate-200"
-            >
-              ← {selectedSeason.name}
-            </button>
-            <span>/</span>
-            <span className="text-slate-300">
-              E{String(selectedEpisode.episode_number).padStart(2, '0')} – {selectedEpisode.name}
-            </span>
+          <div className="flex items-center justify-between gap-3 text-xs text-slate-400">
+            <div className="flex min-w-0 items-center gap-2">
+              <button
+                type="button"
+                onClick={() => { setSelectedEpisode(null); setStreams(null) }}
+                className="flex-none hover:text-slate-200"
+              >
+                ← {selectedSeason.name}
+              </button>
+              <span>/</span>
+              <span className="truncate text-slate-300">
+                E{String(selectedEpisode.episode_number).padStart(2, '0')} – {selectedEpisode.name}
+              </span>
+            </div>
+            {/* Källväljaren på samma rad, till höger — inte som en chiprad
+                som sköt ner listan. */}
+            {streams && streams.length > 0 && step.type === 'idle' ? (
+              <SourceFilterMenu
+                streams={streams.filter((_, i) => applyStreamFilters(streams, streamFilters)[i])}
+                value={sourceFilter}
+                onChange={setSourceFilter}
+              />
+            ) : null}
           </div>
         )}
 
@@ -3767,14 +3782,24 @@ function scraperInCooldown(configId: string): boolean {
               {filtered.length === 0
                 ? <p className="text-sm text-slate-400">{t('allFiltered')}</p>
                 : (
-                  <StreamList
-                    deviceLacksDolbyVision={deviceLacksDolbyVision}
-                    streams={filtered}
-                    onPlay={handlePlayStream}
-                    onDownload={handleDownloadStream}
-                    downloadStatus={radNedladdning}
-                    streamKey={radNyckel}
-                  />
+                  <>
+                    {/* Film: väljaren i listans övre högra hörn. Serier har
+                        den på brödsmuleraden ovanför i stället. */}
+                    {mediaType !== 'tv' ? (
+                      <div className="flex justify-end">
+                        <SourceFilterMenu streams={filtered} value={sourceFilter} onChange={setSourceFilter} />
+                      </div>
+                    ) : null}
+                    <StreamList
+                      deviceLacksDolbyVision={deviceLacksDolbyVision}
+                      streams={filtered}
+                      sourceFilter={sourceFilter}
+                      onPlay={handlePlayStream}
+                      onDownload={handleDownloadStream}
+                      downloadStatus={radNedladdning}
+                      streamKey={radNyckel}
+                    />
+                  </>
                 )
               }
               {hiddenCount > 0 && (
@@ -4073,6 +4098,122 @@ function scraperInCooldown(configId: string): boolean {
 
 // ---- sub-components ----
 
+/** Källa → antal, i listans ordning. Delas av väljaren och listan så att
+ *  siffrorna i rullistan alltid är samma som rubrikerna i listan. */
+function streamSourceEntries(streams: StreamResult[]): Array<[string, number]> {
+  return Array.from(
+    streams.reduce((acc, s) => {
+      const source = s.source ?? 'scraper'
+      return acc.set(source, (acc.get(source) ?? 0) + 1)
+    }, new Map<string, number>()),
+  )
+}
+
+/**
+ * Källväljaren: en hamburgare uppe till höger som fäller ut en rullista med
+ * "Alla källor" + en rad per källa (med antal). Ersätter chipraden, som tog
+ * en hel rad över listan. Ritas inte alls med bara en källa — då finns inget
+ * att välja. Stängs på val, Escape och klick utanför; fungerar med fjärr
+ * (data-f på knapparna) och mus. Egen useLang — komponenten ärver inget
+ * från sektionen (jfr kraschen i 1.0.132).
+ */
+function SourceFilterMenu({
+  streams,
+  value,
+  onChange,
+}: {
+  streams: StreamResult[]
+  value: string | null
+  onChange: (source: string | null) => void
+}) {
+  const { t } = useLang()
+  const [open, setOpen] = useState(false)
+  const rootRef = useRef<HTMLDivElement | null>(null)
+  const sources = streamSourceEntries(streams)
+  const active = value && sources.some(([name]) => name === value) ? value : null
+  useEffect(() => {
+    if (!open) return
+    const onDown = (event: MouseEvent | TouchEvent) => {
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) setOpen(false)
+    }
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' || event.key === 'Backspace') {
+        event.preventDefault()
+        event.stopPropagation()
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onDown)
+    document.addEventListener('touchstart', onDown)
+    window.addEventListener('keydown', onKey, true)
+    return () => {
+      document.removeEventListener('mousedown', onDown)
+      document.removeEventListener('touchstart', onDown)
+      window.removeEventListener('keydown', onKey, true)
+    }
+  }, [open])
+  if (sources.length <= 1) return null
+  const activeCount = active ? (sources.find(([name]) => name === active)?.[1] ?? 0) : streams.length
+  const itemClass = (selected: boolean) =>
+    `flex w-full items-center justify-between gap-4 rounded-lg px-3 py-2 text-left text-[12px] transition ${
+      selected ? 'bg-white/15 text-white' : 'text-slate-300 hover:bg-white/10 hover:text-white'
+    }`
+  return (
+    <div ref={rootRef} className="relative flex-none">
+      <button
+        type="button"
+        data-f=""
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={t('sourceFilter')}
+        title={t('sourceFilter')}
+        onClick={() => setOpen((current) => !current)}
+        className={`flex h-8 items-center gap-2 rounded-full px-3 text-[11px] font-semibold uppercase tracking-[0.14em] transition ${
+          open || active ? 'bg-white/15 text-white' : 'bg-white/[0.06] text-slate-400 hover:bg-white/10 hover:text-white'
+        }`}
+      >
+        <svg className="h-3.5 w-3.5 flex-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+          <path strokeLinecap="round" d="M3 7h18M3 12h18M3 17h18" />
+        </svg>
+        <span className="max-w-[12rem] truncate">{active ?? t('allSources')}</span>
+        <span className="opacity-60">{activeCount}</span>
+      </button>
+      {open ? (
+        <div
+          role="menu"
+          className="absolute right-0 top-full z-30 mt-2 min-w-[14rem] max-w-[min(80vw,24rem)] rounded-xl border border-white/10 bg-[#0b0f1c]/95 p-1.5 shadow-2xl backdrop-blur-md"
+        >
+          <button
+            type="button"
+            role="menuitemradio"
+            aria-checked={active === null}
+            data-f=""
+            onClick={() => { onChange(null); setOpen(false) }}
+            className={itemClass(active === null)}
+          >
+            <span className="truncate">{t('allSources')}</span>
+            <span className="flex-none opacity-60">{streams.length}</span>
+          </button>
+          {sources.map(([name, count]) => (
+            <button
+              key={name}
+              type="button"
+              role="menuitemradio"
+              aria-checked={active === name}
+              data-f=""
+              onClick={() => { onChange(name); setOpen(false) }}
+              className={itemClass(active === name)}
+            >
+              <span className="truncate">{name}</span>
+              <span className="flex-none opacity-60">{count}</span>
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 function StreamList({
   streams,
   onPlay,
@@ -4080,6 +4221,7 @@ function StreamList({
   downloadStatus = {},
   streamKey,
   deviceLacksDolbyVision = false,
+  sourceFilter = null,
 }: {
   streams: StreamResult[]
   onPlay: (s: StreamResult) => void
@@ -4088,11 +4230,9 @@ function StreamList({
   downloadStatus?: Record<string, { typ: 'laddar' } | { typ: 'klar' } | { typ: 'fel'; meddelande: string }>
   streamKey?: (s: StreamResult) => string
   deviceLacksDolbyVision?: boolean
+  /** Vald källa (se SourceFilterMenu); null = alla, grupperade per källa. */
+  sourceFilter?: string | null
 }) {
-  // Egen t: StreamList är en egen komponent och ärver inte sektionens. Utan
-  // raden blev det "Can't find variable: t" i första rendern av chip-raden —
-  // och det kraschade hela klienten hos alla på 1.0.132.
-  const { t } = useLang()
   const unsupported = (s: StreamResult) => deviceLacksDolbyVision && streamUnsupportedOnDevice(s)
   // Ospelbara sist inom varje grupp — annars kan en cachad DV-ström ligga
   // överst bland de cachade och bli det första man klickar.
@@ -4105,23 +4245,21 @@ function StreamList({
    * Med flera skrapor (AIOStreams, PenguPlay, Torrentio …) blandades allt i en
    * lista och det enda som skilde dem var en liten chip per rad. Nu:
    *
-   *  - En chiprad överst med "Alla källor" + en chip per källa (med antal).
-   *    Vågrätt rullande, så den funkar på en telefon utan att brytas i höjd.
+   *  - Källan väljs i SourceFilterMenu (hamburgare med rullista uppe till
+   *    höger — på brödsmuleraden för serier, över listan för film). Chipraden
+   *    som låg här tidigare tog en hel rad och sköt ner listan.
    *  - Vald källa filtrerar listan. "Alla" visar allt, men med en liten
    *    rubrik före varje källas grupp när det finns fler än en — då ser man
    *    var raderna kommer ifrån utan att läsa chipen på varje rad.
    *
-   * Cachade före ocachade behålls INOM varje grupp. Valet är lokalt state:
-   * komponenten monteras om per titel/avsnitt (nyckeln på SidebarSection),
-   * så ett val följer inte med till nästa titel — det är rätt, källorna
-   * skiljer sig titel för titel.
+   * Cachade före ocachade behålls INOM varje grupp. Valet ägs av sektionen
+   * (sourceFilter), som monteras om per titel, så ett val följer inte med
+   * till nästa titel — rätt, källorna skiljer sig titel för titel. En vald
+   * källa som saknas i just den här listan faller tillbaka på "alla".
    */
   const sourceOf = (s: StreamResult) => s.source ?? 'scraper'
-  const sources = Array.from(
-    streams.reduce((acc, s) => acc.set(sourceOf(s), (acc.get(sourceOf(s)) ?? 0) + 1), new Map<string, number>()),
-  )
-  const [selectedSource, setSelectedSource] = useState<string | null>(null)
-  const activeSource = selectedSource && sources.some(([name]) => name === selectedSource) ? selectedSource : null
+  const sources = streamSourceEntries(streams)
+  const activeSource = sourceFilter && sources.some(([name]) => name === sourceFilter) ? sourceFilter : null
   const shown = activeSource ? streams.filter((s) => sourceOf(s) === activeSource) : streams
   const groups: Array<{ source: string | null; items: StreamResult[] }> =
     !activeSource && sources.length > 1
@@ -4143,32 +4281,8 @@ function StreamList({
     ))
   }
 
-  const chipClass = (active: boolean) =>
-    `flex-none rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] transition ${
-      active ? 'bg-white/15 text-white' : 'bg-white/[0.06] text-slate-400 hover:bg-white/10 hover:text-white'
-    }`
-
   return (
     <div className="space-y-2">
-      {sources.length > 1 && (
-        <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" role="tablist">
-          <button type="button" role="tab" aria-selected={activeSource === null} onClick={() => setSelectedSource(null)} className={chipClass(activeSource === null)}>
-            {t('allSources')} <span className="opacity-60">{streams.length}</span>
-          </button>
-          {sources.map(([name, count]) => (
-            <button
-              key={name}
-              type="button"
-              role="tab"
-              aria-selected={activeSource === name}
-              onClick={() => setSelectedSource(name)}
-              className={chipClass(activeSource === name)}
-            >
-              {name} <span className="opacity-60">{count}</span>
-            </button>
-          ))}
-        </div>
-      )}
       {groups.map((group, gi) => (
         <div key={group.source ?? 'all'} className="space-y-2">
           {group.source ? (

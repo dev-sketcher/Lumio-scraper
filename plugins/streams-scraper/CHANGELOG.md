@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.134
+
+- Källfiltret är en rullista bakom en hamburgare uppe till höger i stället för
+  en chiprad över listan: på brödsmuleraden för serier (bredvid avsnittet), i
+  listans övre högra hörn för film. Grupprubrikerna per källa är kvar när
+  "Alla källor" är valt.
+
 ## 1.0.133
 
 - HOTFIX: 1.0.132 kraschade klienten ("Can't find variable: t") så fort
