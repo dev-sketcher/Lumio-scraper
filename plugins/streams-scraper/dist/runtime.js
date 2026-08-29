@@ -187353,6 +187353,7 @@ ${cue.text}`).join("\n\n")}
     autoPlayInitialEpisode = false,
     playRequestToken,
     playRequestInitialTime = null,
+    inlineLayout = false,
     onAutoPlayFallback,
     onAutoPlayPlayerClose,
     onOpenedInVlc,
@@ -189816,7 +189817,7 @@ ${cue.text}`).join("\n\n")}
             )
           ] })
         ] }),
-        mediaType === "tv" && selectedSeason && selectedEpisode && /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2 text-xs text-slate-400", children: /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-2", children: [
+        mediaType === "tv" && selectedSeason && selectedEpisode && !inlineLayout && /* @__PURE__ */ jsx("div", { className: "flex items-center gap-2 text-xs text-slate-400", children: /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-2", children: [
           /* @__PURE__ */ jsxs(
             "button",
             {
@@ -190623,7 +190624,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.136",
+    version: "1.0.137",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.137
+
+- När strömlistan ligger inline under avsnittet (detaljsidans layoutval) döljs
+  sektionens egen brödsmula "← Säsong / E01": säsong och avsnitt står redan i
+  panelen ovanför. Kräver app med `inlineLayout`-propen; äldre appar visar
+  brödsmulan som förut.
+
 ## 1.0.136
 
 - Serier: källväljaren ligger nu på strömlistans rubrikrad (etikett vänster,

@@ -398,6 +398,8 @@ interface RdStreamingSectionProps {
   autoPlayInitialEpisode?: boolean
   playRequestToken?: number
   playRequestInitialTime?: number | null
+  /** Ritas inline under avsnittet (detaljsidans layoutval) — brödsmulan döljs då. */
+  inlineLayout?: boolean
   onAutoPlayFallback?: () => void
   onAutoPlayPlayerClose?: () => void
   onOpenedInVlc?: () => void
@@ -424,6 +426,7 @@ export function StreamsSidebarSection({
   autoPlayInitialEpisode = false,
   playRequestToken,
   playRequestInitialTime = null,
+  inlineLayout = false,
   onAutoPlayFallback,
   onAutoPlayPlayerClose,
   onOpenedInVlc,
@@ -3721,7 +3724,9 @@ function scraperInCooldown(configId: string): boolean {
         )}
 
         {/* TV: back breadcrumb when episode is selected */}
-        {mediaType === 'tv' && selectedSeason && selectedEpisode && (
+        {/* Brödsmulan bara i sidopanelen: inline under avsnittet står säsong
+            och avsnitt redan i panelen ovanför. */}
+        {mediaType === 'tv' && selectedSeason && selectedEpisode && !inlineLayout && (
           <div className="flex items-center gap-2 text-xs text-slate-400">
             <div className="flex min-w-0 items-center gap-2">
               <button
