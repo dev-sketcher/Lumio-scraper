@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.133
+
+- HOTFIX: 1.0.132 kraschade klienten ("Can't find variable: t") så fort
+  strömlistan med källchips renderades — `StreamList` använde `t()` utan att
+  hämta det via `useLang()`. Samma fel (TS2304, namn som inte finns) fanns i
+  nedladdningen av flerfilspaket (`VIDEO_EXTS`). Båda lagade, och byggets
+  typkontrollgrind fäller nu även TS2304.
+
 ## 1.0.132
 
 - Strömsökningen frågar alla källor samtidigt och visar varje källas rader så

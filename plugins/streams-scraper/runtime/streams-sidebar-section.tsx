@@ -4089,6 +4089,10 @@ function StreamList({
   streamKey?: (s: StreamResult) => string
   deviceLacksDolbyVision?: boolean
 }) {
+  // Egen t: StreamList är en egen komponent och ärver inte sektionens. Utan
+  // raden blev det "Can't find variable: t" i första rendern av chip-raden —
+  // och det kraschade hela klienten hos alla på 1.0.132.
+  const { t } = useLang()
   const unsupported = (s: StreamResult) => deviceLacksDolbyVision && streamUnsupportedOnDevice(s)
   // Ospelbara sist inom varje grupp — annars kan en cachad DV-ström ligga
   // överst bland de cachade och bli det första man klickar.

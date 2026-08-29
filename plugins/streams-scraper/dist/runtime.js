@@ -4595,19 +4595,19 @@
         const f = h - Math.floor(h);
         const p = 255 * v * (1 - s);
         const q = 255 * v * (1 - s * f);
-        const t2 = 255 * v * (1 - s * (1 - f));
+        const t = 255 * v * (1 - s * (1 - f));
         v *= 255;
         switch (hi) {
           case 0:
-            return [v, t2, p];
+            return [v, t, p];
           case 1:
             return [q, v, p];
           case 2:
-            return [p, v, t2];
+            return [p, v, t];
           case 3:
             return [p, q, v];
           case 4:
-            return [t2, p, v];
+            return [t, p, v];
           case 5:
             return [v, p, q];
         }
@@ -5547,10 +5547,10 @@
         return { handler: i, config: n };
       }
       g.withOptions = function(i, n = () => ({})) {
-        function t2(o) {
+        function t(o) {
           return { handler: i(o), config: n(o) };
         }
-        return t2.__isOptionsFunction = true, t2;
+        return t.__isOptionsFunction = true, t;
       };
       var u = g;
       module.exports = u;
@@ -19263,15 +19263,15 @@
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
   }
   function __rest(s, e) {
-    var t2 = {};
+    var t = {};
     for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-      t2[p] = s[p];
+      t[p] = s[p];
     if (s != null && typeof Object.getOwnPropertySymbols === "function")
       for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
         if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-          t2[p[i]] = s[p[i]];
+          t[p[i]] = s[p[i]];
       }
-    return t2;
+    return t;
   }
   function __decorate(decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -19362,9 +19362,9 @@
   }
   function __generator(thisArg, body) {
     var _ = { label: 0, sent: function() {
-      if (t2[0] & 1) throw t2[1];
-      return t2[1];
-    }, trys: [], ops: [] }, f, y, t2, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+      if (t[0] & 1) throw t[1];
+      return t[1];
+    }, trys: [], ops: [] }, f, y, t, g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
     return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function() {
       return this;
     }), g;
@@ -19376,12 +19376,12 @@
     function step(op) {
       if (f) throw new TypeError("Generator is already executing.");
       while (g && (g = 0, op[0] && (_ = 0)), _) try {
-        if (f = 1, y && (t2 = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t2 = y["return"]) && t2.call(y), 0) : y.next) && !(t2 = t2.call(y, op[1])).done) return t2;
-        if (y = 0, t2) op = [op[0] & 2, t2.value];
+        if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+        if (y = 0, t) op = [op[0] & 2, t.value];
         switch (op[0]) {
           case 0:
           case 1:
-            t2 = op;
+            t = op;
             break;
           case 4:
             _.label++;
@@ -19396,25 +19396,25 @@
             _.trys.pop();
             continue;
           default:
-            if (!(t2 = _.trys, t2 = t2.length > 0 && t2[t2.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+            if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
               _ = 0;
               continue;
             }
-            if (op[0] === 3 && (!t2 || op[1] > t2[0] && op[1] < t2[3])) {
+            if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
               _.label = op[1];
               break;
             }
-            if (op[0] === 6 && _.label < t2[1]) {
-              _.label = t2[1];
-              t2 = op;
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
+              t = op;
               break;
             }
-            if (t2 && _.label < t2[2]) {
-              _.label = t2[2];
+            if (t && _.label < t[2]) {
+              _.label = t[2];
               _.ops.push(op);
               break;
             }
-            if (t2[2]) _.ops.pop();
+            if (t[2]) _.ops.pop();
             _.trys.pop();
             continue;
         }
@@ -19423,7 +19423,7 @@
         op = [6, e];
         y = 0;
       } finally {
-        f = t2 = 0;
+        f = t = 0;
       }
       if (op[0] & 5) throw op[1];
       return { value: op[0] ? op[1] : void 0, done: true };
@@ -19665,12 +19665,12 @@
         return extendStatics(d, b);
       };
       __assign = function() {
-        __assign = Object.assign || function __assign2(t2) {
+        __assign = Object.assign || function __assign2(t) {
           for (var s, i = 1, n = arguments.length; i < n; i++) {
             s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t2[p] = s[p];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
           }
-          return t2;
+          return t;
         };
         return __assign.apply(this, arguments);
       };
@@ -27120,16 +27120,16 @@
   var require_clsx = __commonJS({
     "node_modules/clsx/dist/clsx.js"(exports, module) {
       function r(e2) {
-        var o, t2, f = "";
+        var o, t, f = "";
         if ("string" == typeof e2 || "number" == typeof e2) f += e2;
         else if ("object" == typeof e2) if (Array.isArray(e2)) {
           var n = e2.length;
-          for (o = 0; o < n; o++) e2[o] && (t2 = r(e2[o])) && (f && (f += " "), f += t2);
-        } else for (t2 in e2) e2[t2] && (f && (f += " "), f += t2);
+          for (o = 0; o < n; o++) e2[o] && (t = r(e2[o])) && (f && (f += " "), f += t);
+        } else for (t in e2) e2[t] && (f && (f += " "), f += t);
         return f;
       }
       function e() {
-        for (var e2, o, t2 = 0, f = "", n = arguments.length; t2 < n; t2++) (e2 = arguments[t2]) && (o = r(e2)) && (f && (f += " "), f += o);
+        for (var e2, o, t = 0, f = "", n = arguments.length; t < n; t++) (e2 = arguments[t]) && (o = r(e2)) && (f && (f += " "), f += o);
         return f;
       }
       module.exports = e, module.exports.clsx = e;
@@ -29825,7 +29825,7 @@
         const rangeSize = max - min;
         return ((v - min) % rangeSize + rangeSize) % rangeSize + min;
       };
-      var calcBezier2 = (t2, a1, a2) => (((1 - 3 * a2 + 3 * a1) * t2 + (3 * a2 - 6 * a1)) * t2 + 3 * a1) * t2;
+      var calcBezier2 = (t, a1, a2) => (((1 - 3 * a2 + 3 * a1) * t + (3 * a2 - 6 * a1)) * t + 3 * a1) * t;
       var subdivisionPrecision2 = 1e-7;
       var subdivisionMaxIterations2 = 12;
       function binarySubdivide2(x, lowerBound, upperBound, mX1, mX2) {
@@ -29847,7 +29847,7 @@
         if (mX1 === mY1 && mX2 === mY2)
           return noop5;
         const getTForX = (aX) => binarySubdivide2(aX, 0, 1, mX1, mX2);
-        return (t2) => t2 === 0 || t2 === 1 ? t2 : calcBezier2(getTForX(t2), mY1, mY2);
+        return (t) => t === 0 || t === 1 ? t : calcBezier2(getTForX(t), mY1, mY2);
       }
       var mirrorEasing2 = (easing) => (p) => p <= 0.5 ? easing(2 * p) / 2 : (2 - easing(2 * (1 - p))) / 2;
       var reverseEasing2 = (easing) => (p) => 1 - easing(1 - p);
@@ -30337,17 +30337,17 @@
         createTransformer: createTransformer2,
         getAnimatableNone: getAnimatableNone$1
       };
-      function hueToRgb2(p, q, t2) {
-        if (t2 < 0)
-          t2 += 1;
-        if (t2 > 1)
-          t2 -= 1;
-        if (t2 < 1 / 6)
-          return p + (q - p) * 6 * t2;
-        if (t2 < 1 / 2)
+      function hueToRgb2(p, q, t) {
+        if (t < 0)
+          t += 1;
+        if (t > 1)
+          t -= 1;
+        if (t < 1 / 6)
+          return p + (q - p) * 6 * t;
+        if (t < 1 / 2)
           return q;
-        if (t2 < 2 / 3)
-          return p + (q - p) * (2 / 3 - t2) * 6;
+        if (t < 2 / 3)
+          return p + (q - p) * (2 / 3 - t) * 6;
         return p;
       }
       function hslaToRgba2({ hue, saturation, lightness, alpha: alpha3 }) {
@@ -30703,56 +30703,56 @@
         if (dampingRatio < 1) {
           angularFreq = calcAngularFreq2(undampedAngularFreq, dampingRatio);
           A = (initialVelocity + dampingRatio * undampedAngularFreq * initialDelta) / angularFreq;
-          resolveSpring = (t2) => {
-            const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t2);
-            return target - envelope * (A * Math.sin(angularFreq * t2) + initialDelta * Math.cos(angularFreq * t2));
+          resolveSpring = (t) => {
+            const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t);
+            return target - envelope * (A * Math.sin(angularFreq * t) + initialDelta * Math.cos(angularFreq * t));
           };
           sinCoeff = dampingRatio * undampedAngularFreq * A + initialDelta * angularFreq;
           cosCoeff = dampingRatio * undampedAngularFreq * initialDelta - A * angularFreq;
-          resolveVelocity = (t2) => {
-            const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t2);
-            return envelope * (sinCoeff * Math.sin(angularFreq * t2) + cosCoeff * Math.cos(angularFreq * t2));
+          resolveVelocity = (t) => {
+            const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t);
+            return envelope * (sinCoeff * Math.sin(angularFreq * t) + cosCoeff * Math.cos(angularFreq * t));
           };
         } else if (dampingRatio === 1) {
-          resolveSpring = (t2) => target - Math.exp(-undampedAngularFreq * t2) * (initialDelta + (initialVelocity + undampedAngularFreq * initialDelta) * t2);
+          resolveSpring = (t) => target - Math.exp(-undampedAngularFreq * t) * (initialDelta + (initialVelocity + undampedAngularFreq * initialDelta) * t);
           const C = initialVelocity + undampedAngularFreq * initialDelta;
-          resolveVelocity = (t2) => Math.exp(-undampedAngularFreq * t2) * (undampedAngularFreq * C * t2 - initialVelocity);
+          resolveVelocity = (t) => Math.exp(-undampedAngularFreq * t) * (undampedAngularFreq * C * t - initialVelocity);
         } else {
           const dampedAngularFreq = undampedAngularFreq * Math.sqrt(dampingRatio * dampingRatio - 1);
-          resolveSpring = (t2) => {
-            const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t2);
-            const freqForT = Math.min(dampedAngularFreq * t2, 300);
+          resolveSpring = (t) => {
+            const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t);
+            const freqForT = Math.min(dampedAngularFreq * t, 300);
             return target - envelope * ((initialVelocity + dampingRatio * undampedAngularFreq * initialDelta) * Math.sinh(freqForT) + dampedAngularFreq * initialDelta * Math.cosh(freqForT)) / dampedAngularFreq;
           };
           const P = (initialVelocity + dampingRatio * undampedAngularFreq * initialDelta) / dampedAngularFreq;
           const sinhCoeff = dampingRatio * undampedAngularFreq * P - initialDelta * dampedAngularFreq;
           const coshCoeff = dampingRatio * undampedAngularFreq * initialDelta - P * dampedAngularFreq;
-          resolveVelocity = (t2) => {
-            const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t2);
-            const freqForT = Math.min(dampedAngularFreq * t2, 300);
+          resolveVelocity = (t) => {
+            const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t);
+            const freqForT = Math.min(dampedAngularFreq * t, 300);
             return envelope * (sinhCoeff * Math.sinh(freqForT) + coshCoeff * Math.cosh(freqForT));
           };
         }
         const generator = {
           calculatedDuration: isResolvedFromDuration ? duration || null : null,
-          velocity: (t2) => motionUtils.secondsToMilliseconds(resolveVelocity(t2)),
-          next: (t2) => {
+          velocity: (t) => motionUtils.secondsToMilliseconds(resolveVelocity(t)),
+          next: (t) => {
             if (!isResolvedFromDuration && dampingRatio < 1) {
-              const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t2);
-              const sin = Math.sin(angularFreq * t2);
-              const cos = Math.cos(angularFreq * t2);
+              const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t);
+              const sin = Math.sin(angularFreq * t);
+              const cos = Math.cos(angularFreq * t);
               const current4 = target - envelope * (A * sin + initialDelta * cos);
               const currentVelocity = motionUtils.secondsToMilliseconds(envelope * (sinCoeff * sin + cosCoeff * cos));
               state.done = Math.abs(currentVelocity) <= restSpeed && Math.abs(target - current4) <= restDelta;
               state.value = state.done ? target : current4;
               return state;
             }
-            const current3 = resolveSpring(t2);
+            const current3 = resolveSpring(t);
             if (!isResolvedFromDuration) {
-              const currentVelocity = motionUtils.secondsToMilliseconds(resolveVelocity(t2));
+              const currentVelocity = motionUtils.secondsToMilliseconds(resolveVelocity(t));
               state.done = Math.abs(currentVelocity) <= restSpeed && Math.abs(target - current3) <= restDelta;
             } else {
-              state.done = t2 >= duration;
+              state.done = t >= duration;
             }
             state.value = state.done ? target : current3;
             return state;
@@ -30775,9 +30775,9 @@
         return options;
       };
       var velocitySampleDuration2 = 5;
-      function getGeneratorVelocity2(resolveValue, t2, current3) {
-        const prevT = Math.max(t2 - velocitySampleDuration2, 0);
-        return motionUtils.velocityPerSecond(current3 - resolveValue(prevT), t2 - prevT);
+      function getGeneratorVelocity2(resolveValue, t, current3) {
+        const prevT = Math.max(t - velocitySampleDuration2, 0);
+        return motionUtils.velocityPerSecond(current3 - resolveValue(prevT), t - prevT);
       }
       function inertia2({ keyframes: keyframes3, velocity = 0, power = 0.8, timeConstant = 325, bounceDamping = 10, bounceStiffness = 500, modifyTarget, min, max, restDelta = 0.5, restSpeed }) {
         const origin = keyframes3[0];
@@ -30798,23 +30798,23 @@
         const target = modifyTarget === void 0 ? ideal : modifyTarget(ideal);
         if (target !== ideal)
           amplitude = target - origin;
-        const calcDelta = (t2) => -amplitude * Math.exp(-t2 / timeConstant);
-        const calcLatest = (t2) => target + calcDelta(t2);
-        const applyFriction = (t2) => {
-          const delta = calcDelta(t2);
-          const latest = calcLatest(t2);
+        const calcDelta = (t) => -amplitude * Math.exp(-t / timeConstant);
+        const calcLatest = (t) => target + calcDelta(t);
+        const applyFriction = (t) => {
+          const delta = calcDelta(t);
+          const latest = calcLatest(t);
           state.done = Math.abs(delta) <= restDelta;
           state.value = state.done ? target : latest;
         };
         let timeReachedBoundary;
         let spring$1;
-        const checkCatchBoundary = (t2) => {
+        const checkCatchBoundary = (t) => {
           if (!isOutOfBounds(state.value))
             return;
-          timeReachedBoundary = t2;
+          timeReachedBoundary = t;
           spring$1 = spring2({
             keyframes: [state.value, nearestBoundary(state.value)],
-            velocity: getGeneratorVelocity2(calcLatest, t2, state.value),
+            velocity: getGeneratorVelocity2(calcLatest, t, state.value),
             // TODO: This should be passing * 1000
             damping: bounceDamping,
             stiffness: bounceStiffness,
@@ -30825,17 +30825,17 @@
         checkCatchBoundary(0);
         return {
           calculatedDuration: null,
-          next: (t2) => {
+          next: (t) => {
             let hasUpdatedFrame = false;
             if (!spring$1 && timeReachedBoundary === void 0) {
               hasUpdatedFrame = true;
-              applyFriction(t2);
-              checkCatchBoundary(t2);
+              applyFriction(t);
+              checkCatchBoundary(t);
             }
-            if (timeReachedBoundary !== void 0 && t2 >= timeReachedBoundary) {
-              return spring$1.next(t2 - timeReachedBoundary);
+            if (timeReachedBoundary !== void 0 && t >= timeReachedBoundary) {
+              return spring$1.next(t - timeReachedBoundary);
             } else {
-              !hasUpdatedFrame && applyFriction(t2);
+              !hasUpdatedFrame && applyFriction(t);
               return state;
             }
           }
@@ -30919,9 +30919,9 @@
         });
         return {
           calculatedDuration: duration,
-          next: (t2) => {
-            state.value = mapTimeToKeyframe(t2);
-            state.done = t2 >= duration;
+          next: (t) => {
+            state.value = mapTimeToKeyframe(t);
+            state.done = t >= duration;
             return state;
           }
         };
@@ -31151,14 +31151,14 @@
          * the MotionValue's frame-dependent velocity estimation.
          */
         getGeneratorVelocity() {
-          const t2 = this.currentTime;
-          if (t2 <= 0)
+          const t = this.currentTime;
+          if (t <= 0)
             return this.options.velocity || 0;
           if (this.generator.velocity) {
-            return this.generator.velocity(t2);
+            return this.generator.velocity(t);
           }
-          const current3 = this.generator.next(t2).value;
-          return getGeneratorVelocity2((s) => this.generator.next(s).value, t2, current3);
+          const current3 = this.generator.next(t).value;
+          return getGeneratorVelocity2((s) => this.generator.next(s).value, t, current3);
         }
         get speed() {
           return this.playbackSpeed;
@@ -40846,7 +40846,7 @@
       }
       function useTime2() {
         const time2 = useMotionValue2(0);
-        useAnimationFrame2((t2) => time2.set(t2));
+        useAnimationFrame2((t) => time2.set(t));
         return time2;
       }
       function useVelocity2(value) {
@@ -48784,10 +48784,10 @@
         return { handler: i, config: n };
       }
       g.withOptions = function(i, n = () => ({})) {
-        function t2(o) {
+        function t(o) {
           return { handler: i(o), config: n(o) };
         }
-        return t2.__isOptionsFunction = true, t2;
+        return t.__isOptionsFunction = true, t;
       };
       var u = g;
       module.exports = u;
@@ -71996,13 +71996,13 @@
     if (mX1 === mY1 && mX2 === mY2)
       return noop;
     const getTForX = (aX) => binarySubdivide(aX, 0, 1, mX1, mX2);
-    return (t2) => t2 === 0 || t2 === 1 ? t2 : calcBezier(getTForX(t2), mY1, mY2);
+    return (t) => t === 0 || t === 1 ? t : calcBezier(getTForX(t), mY1, mY2);
   }
   var calcBezier, subdivisionPrecision, subdivisionMaxIterations;
   var init_cubic_bezier = __esm({
     "node_modules/motion-utils/dist/es/easing/cubic-bezier.mjs"() {
       init_noop();
-      calcBezier = (t2, a1, a2) => (((1 - 3 * a2 + 3 * a1) * t2 + (3 * a2 - 6 * a1)) * t2 + 3 * a1) * t2;
+      calcBezier = (t, a1, a2) => (((1 - 3 * a2 + 3 * a1) * t + (3 * a2 - 6 * a1)) * t + 3 * a1) * t;
       subdivisionPrecision = 1e-7;
       subdivisionMaxIterations = 12;
     }
@@ -72751,17 +72751,17 @@
   });
 
   // node_modules/motion-dom/dist/es/value/types/color/hsla-to-rgba.mjs
-  function hueToRgb(p, q, t2) {
-    if (t2 < 0)
-      t2 += 1;
-    if (t2 > 1)
-      t2 -= 1;
-    if (t2 < 1 / 6)
-      return p + (q - p) * 6 * t2;
-    if (t2 < 1 / 2)
+  function hueToRgb(p, q, t) {
+    if (t < 0)
+      t += 1;
+    if (t > 1)
+      t -= 1;
+    if (t < 1 / 6)
+      return p + (q - p) * 6 * t;
+    if (t < 1 / 2)
       return q;
-    if (t2 < 2 / 3)
-      return p + (q - p) * (2 / 3 - t2) * 6;
+    if (t < 2 / 3)
+      return p + (q - p) * (2 / 3 - t) * 6;
     return p;
   }
   function hslaToRgba({ hue, saturation, lightness, alpha: alpha2 }) {
@@ -73178,56 +73178,56 @@
     if (dampingRatio < 1) {
       angularFreq = calcAngularFreq(undampedAngularFreq, dampingRatio);
       A = (initialVelocity + dampingRatio * undampedAngularFreq * initialDelta) / angularFreq;
-      resolveSpring = (t2) => {
-        const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t2);
-        return target - envelope * (A * Math.sin(angularFreq * t2) + initialDelta * Math.cos(angularFreq * t2));
+      resolveSpring = (t) => {
+        const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t);
+        return target - envelope * (A * Math.sin(angularFreq * t) + initialDelta * Math.cos(angularFreq * t));
       };
       sinCoeff = dampingRatio * undampedAngularFreq * A + initialDelta * angularFreq;
       cosCoeff = dampingRatio * undampedAngularFreq * initialDelta - A * angularFreq;
-      resolveVelocity = (t2) => {
-        const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t2);
-        return envelope * (sinCoeff * Math.sin(angularFreq * t2) + cosCoeff * Math.cos(angularFreq * t2));
+      resolveVelocity = (t) => {
+        const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t);
+        return envelope * (sinCoeff * Math.sin(angularFreq * t) + cosCoeff * Math.cos(angularFreq * t));
       };
     } else if (dampingRatio === 1) {
-      resolveSpring = (t2) => target - Math.exp(-undampedAngularFreq * t2) * (initialDelta + (initialVelocity + undampedAngularFreq * initialDelta) * t2);
+      resolveSpring = (t) => target - Math.exp(-undampedAngularFreq * t) * (initialDelta + (initialVelocity + undampedAngularFreq * initialDelta) * t);
       const C = initialVelocity + undampedAngularFreq * initialDelta;
-      resolveVelocity = (t2) => Math.exp(-undampedAngularFreq * t2) * (undampedAngularFreq * C * t2 - initialVelocity);
+      resolveVelocity = (t) => Math.exp(-undampedAngularFreq * t) * (undampedAngularFreq * C * t - initialVelocity);
     } else {
       const dampedAngularFreq = undampedAngularFreq * Math.sqrt(dampingRatio * dampingRatio - 1);
-      resolveSpring = (t2) => {
-        const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t2);
-        const freqForT = Math.min(dampedAngularFreq * t2, 300);
+      resolveSpring = (t) => {
+        const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t);
+        const freqForT = Math.min(dampedAngularFreq * t, 300);
         return target - envelope * ((initialVelocity + dampingRatio * undampedAngularFreq * initialDelta) * Math.sinh(freqForT) + dampedAngularFreq * initialDelta * Math.cosh(freqForT)) / dampedAngularFreq;
       };
       const P = (initialVelocity + dampingRatio * undampedAngularFreq * initialDelta) / dampedAngularFreq;
       const sinhCoeff = dampingRatio * undampedAngularFreq * P - initialDelta * dampedAngularFreq;
       const coshCoeff = dampingRatio * undampedAngularFreq * initialDelta - P * dampedAngularFreq;
-      resolveVelocity = (t2) => {
-        const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t2);
-        const freqForT = Math.min(dampedAngularFreq * t2, 300);
+      resolveVelocity = (t) => {
+        const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t);
+        const freqForT = Math.min(dampedAngularFreq * t, 300);
         return envelope * (sinhCoeff * Math.sinh(freqForT) + coshCoeff * Math.cosh(freqForT));
       };
     }
     const generator = {
       calculatedDuration: isResolvedFromDuration ? duration || null : null,
-      velocity: (t2) => secondsToMilliseconds(resolveVelocity(t2)),
-      next: (t2) => {
+      velocity: (t) => secondsToMilliseconds(resolveVelocity(t)),
+      next: (t) => {
         if (!isResolvedFromDuration && dampingRatio < 1) {
-          const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t2);
-          const sin = Math.sin(angularFreq * t2);
-          const cos = Math.cos(angularFreq * t2);
+          const envelope = Math.exp(-dampingRatio * undampedAngularFreq * t);
+          const sin = Math.sin(angularFreq * t);
+          const cos = Math.cos(angularFreq * t);
           const current3 = target - envelope * (A * sin + initialDelta * cos);
           const currentVelocity = secondsToMilliseconds(envelope * (sinCoeff * sin + cosCoeff * cos));
           state.done = Math.abs(currentVelocity) <= restSpeed && Math.abs(target - current3) <= restDelta;
           state.value = state.done ? target : current3;
           return state;
         }
-        const current2 = resolveSpring(t2);
+        const current2 = resolveSpring(t);
         if (!isResolvedFromDuration) {
-          const currentVelocity = secondsToMilliseconds(resolveVelocity(t2));
+          const currentVelocity = secondsToMilliseconds(resolveVelocity(t));
           state.done = Math.abs(currentVelocity) <= restSpeed && Math.abs(target - current2) <= restDelta;
         } else {
-          state.done = t2 >= duration;
+          state.done = t >= duration;
         }
         state.value = state.done ? target : current2;
         return state;
@@ -73293,9 +73293,9 @@
   });
 
   // node_modules/motion-dom/dist/es/animation/generators/utils/velocity.mjs
-  function getGeneratorVelocity(resolveValue, t2, current2) {
-    const prevT = Math.max(t2 - velocitySampleDuration, 0);
-    return velocityPerSecond(current2 - resolveValue(prevT), t2 - prevT);
+  function getGeneratorVelocity(resolveValue, t, current2) {
+    const prevT = Math.max(t - velocitySampleDuration, 0);
+    return velocityPerSecond(current2 - resolveValue(prevT), t - prevT);
   }
   var velocitySampleDuration;
   var init_velocity = __esm({
@@ -73325,23 +73325,23 @@
     const target = modifyTarget === void 0 ? ideal : modifyTarget(ideal);
     if (target !== ideal)
       amplitude = target - origin;
-    const calcDelta = (t2) => -amplitude * Math.exp(-t2 / timeConstant);
-    const calcLatest = (t2) => target + calcDelta(t2);
-    const applyFriction = (t2) => {
-      const delta = calcDelta(t2);
-      const latest = calcLatest(t2);
+    const calcDelta = (t) => -amplitude * Math.exp(-t / timeConstant);
+    const calcLatest = (t) => target + calcDelta(t);
+    const applyFriction = (t) => {
+      const delta = calcDelta(t);
+      const latest = calcLatest(t);
       state.done = Math.abs(delta) <= restDelta;
       state.value = state.done ? target : latest;
     };
     let timeReachedBoundary;
     let spring$1;
-    const checkCatchBoundary = (t2) => {
+    const checkCatchBoundary = (t) => {
       if (!isOutOfBounds(state.value))
         return;
-      timeReachedBoundary = t2;
+      timeReachedBoundary = t;
       spring$1 = spring({
         keyframes: [state.value, nearestBoundary(state.value)],
-        velocity: getGeneratorVelocity(calcLatest, t2, state.value),
+        velocity: getGeneratorVelocity(calcLatest, t, state.value),
         // TODO: This should be passing * 1000
         damping: bounceDamping,
         stiffness: bounceStiffness,
@@ -73352,17 +73352,17 @@
     checkCatchBoundary(0);
     return {
       calculatedDuration: null,
-      next: (t2) => {
+      next: (t) => {
         let hasUpdatedFrame = false;
         if (!spring$1 && timeReachedBoundary === void 0) {
           hasUpdatedFrame = true;
-          applyFriction(t2);
-          checkCatchBoundary(t2);
+          applyFriction(t);
+          checkCatchBoundary(t);
         }
-        if (timeReachedBoundary !== void 0 && t2 >= timeReachedBoundary) {
-          return spring$1.next(t2 - timeReachedBoundary);
+        if (timeReachedBoundary !== void 0 && t >= timeReachedBoundary) {
+          return spring$1.next(t - timeReachedBoundary);
         } else {
-          !hasUpdatedFrame && applyFriction(t2);
+          !hasUpdatedFrame && applyFriction(t);
           return state;
         }
       }
@@ -73483,9 +73483,9 @@
     });
     return {
       calculatedDuration: duration,
-      next: (t2) => {
-        state.value = mapTimeToKeyframe(t2);
-        state.done = t2 >= duration;
+      next: (t) => {
+        state.value = mapTimeToKeyframe(t);
+        state.done = t >= duration;
         return state;
       }
     };
@@ -73767,14 +73767,14 @@
          * the MotionValue's frame-dependent velocity estimation.
          */
         getGeneratorVelocity() {
-          const t2 = this.currentTime;
-          if (t2 <= 0)
+          const t = this.currentTime;
+          if (t <= 0)
             return this.options.velocity || 0;
           if (this.generator.velocity) {
-            return this.generator.velocity(t2);
+            return this.generator.velocity(t);
           }
-          const current2 = this.generator.next(t2).value;
-          return getGeneratorVelocity((s) => this.generator.next(s).value, t2, current2);
+          const current2 = this.generator.next(t).value;
+          return getGeneratorVelocity((s) => this.generator.next(s).value, t, current2);
         }
         get speed() {
           return this.playbackSpeed;
@@ -85043,7 +85043,7 @@
   // node_modules/framer-motion/dist/es/value/use-time.mjs
   function useTime() {
     const time2 = useMotionValue(0);
-    useAnimationFrame((t2) => time2.set(t2));
+    useAnimationFrame((t) => time2.set(t));
     return time2;
   }
   var init_use_time = __esm({
@@ -93452,10 +93452,10 @@
         return { handler: i, config: n };
       }
       g.withOptions = function(i, n = () => ({})) {
-        function t2(o) {
+        function t(o) {
           return { handler: i(o), config: n(o) };
         }
-        return t2.__isOptionsFunction = true, t2;
+        return t.__isOptionsFunction = true, t;
       };
       var u = g;
       module.exports = u;
@@ -110059,52 +110059,52 @@
     "node_modules/compute-scroll-into-view/dist/index.cjs"(exports) {
       "use strict";
       Object.defineProperty(exports, "__esModule", { value: true });
-      var t2 = (t3) => "object" == typeof t3 && null != t3 && 1 === t3.nodeType;
-      var e = (t3, e2) => (!e2 || "hidden" !== t3) && ("visible" !== t3 && "clip" !== t3);
-      var o = (t3, o2) => {
-        if (t3.clientHeight < t3.scrollHeight || t3.clientWidth < t3.scrollWidth) {
-          const n2 = getComputedStyle(t3, null);
-          return e(n2.overflowY, o2) || e(n2.overflowX, o2) || ((t4) => {
-            const e2 = ((t5) => {
-              if (!t5.ownerDocument || !t5.ownerDocument.defaultView) return null;
+      var t = (t2) => "object" == typeof t2 && null != t2 && 1 === t2.nodeType;
+      var e = (t2, e2) => (!e2 || "hidden" !== t2) && ("visible" !== t2 && "clip" !== t2);
+      var o = (t2, o2) => {
+        if (t2.clientHeight < t2.scrollHeight || t2.clientWidth < t2.scrollWidth) {
+          const n2 = getComputedStyle(t2, null);
+          return e(n2.overflowY, o2) || e(n2.overflowX, o2) || ((t3) => {
+            const e2 = ((t4) => {
+              if (!t4.ownerDocument || !t4.ownerDocument.defaultView) return null;
               try {
-                return t5.ownerDocument.defaultView.frameElement;
-              } catch (t6) {
+                return t4.ownerDocument.defaultView.frameElement;
+              } catch (t5) {
                 return null;
               }
-            })(t4);
-            return !!e2 && (e2.clientHeight < t4.scrollHeight || e2.clientWidth < t4.scrollWidth);
-          })(t3);
+            })(t3);
+            return !!e2 && (e2.clientHeight < t3.scrollHeight || e2.clientWidth < t3.scrollWidth);
+          })(t2);
         }
         return false;
       };
-      var n = (t3, e2, o2, n2, l2, r, i, s) => r < t3 && i > e2 || r > t3 && i < e2 ? 0 : r <= t3 && s <= o2 || i >= e2 && s >= o2 ? r - t3 - n2 : i > e2 && s < o2 || r < t3 && s > o2 ? i - e2 + l2 : 0;
-      var l = (t3) => {
-        const e2 = t3.parentElement;
-        return null == e2 ? t3.getRootNode().host || null : e2;
+      var n = (t2, e2, o2, n2, l2, r, i, s) => r < t2 && i > e2 || r > t2 && i < e2 ? 0 : r <= t2 && s <= o2 || i >= e2 && s >= o2 ? r - t2 - n2 : i > e2 && s < o2 || r < t2 && s > o2 ? i - e2 + l2 : 0;
+      var l = (t2) => {
+        const e2 = t2.parentElement;
+        return null == e2 ? t2.getRootNode().host || null : e2;
       };
       exports.compute = (e2, r) => {
         var i, s, d, c;
         if ("undefined" == typeof document) return [];
-        const { scrollMode: h, block: u, inline: f, boundary: a, skipOverflowHiddenElements: g } = r, p = "function" == typeof a ? a : (t3) => t3 !== a;
-        if (!t2(e2)) throw new TypeError("Invalid target");
+        const { scrollMode: h, block: u, inline: f, boundary: a, skipOverflowHiddenElements: g } = r, p = "function" == typeof a ? a : (t2) => t2 !== a;
+        if (!t(e2)) throw new TypeError("Invalid target");
         const m2 = document.scrollingElement || document.documentElement, w = [];
         let W = e2;
-        for (; t2(W) && p(W); ) {
+        for (; t(W) && p(W); ) {
           if (W = l(W), W === m2) {
             w.push(W);
             break;
           }
           null != W && W === document.body && o(W) && !o(document.documentElement) || null != W && o(W, g) && w.push(W);
         }
-        const b = null != (s = null == (i = window.visualViewport) ? void 0 : i.width) ? s : innerWidth, H = null != (c = null == (d = window.visualViewport) ? void 0 : d.height) ? c : innerHeight, { scrollX: y, scrollY: M } = window, { height: v, width: E, top: x, right: C, bottom: I, left: R } = e2.getBoundingClientRect(), { top: T, right: B, bottom: F, left: V } = ((t3) => {
-          const e3 = window.getComputedStyle(t3);
+        const b = null != (s = null == (i = window.visualViewport) ? void 0 : i.width) ? s : innerWidth, H = null != (c = null == (d = window.visualViewport) ? void 0 : d.height) ? c : innerHeight, { scrollX: y, scrollY: M } = window, { height: v, width: E, top: x, right: C, bottom: I, left: R } = e2.getBoundingClientRect(), { top: T, right: B, bottom: F, left: V } = ((t2) => {
+          const e3 = window.getComputedStyle(t2);
           return { top: parseFloat(e3.scrollMarginTop) || 0, right: parseFloat(e3.scrollMarginRight) || 0, bottom: parseFloat(e3.scrollMarginBottom) || 0, left: parseFloat(e3.scrollMarginLeft) || 0 };
         })(e2);
         let k = "start" === u || "nearest" === u ? x - T : "end" === u ? I + F : x + v / 2 - T + F, D = "center" === f ? R + E / 2 - V + B : "end" === f ? C + B : R - V;
         const L = [];
-        for (let t3 = 0; t3 < w.length; t3++) {
-          const e3 = w[t3], { height: l2, width: r2, top: i2, right: s2, bottom: d2, left: c2 } = e3.getBoundingClientRect();
+        for (let t2 = 0; t2 < w.length; t2++) {
+          const e3 = w[t2], { height: l2, width: r2, top: i2, right: s2, bottom: d2, left: c2 } = e3.getBoundingClientRect();
           if ("if-needed" === h && x >= 0 && R >= 0 && I <= H && C <= b && (e3 === m2 && !o(e3) || x >= i2 && I <= d2 && R >= c2 && C <= s2)) return L;
           const a2 = getComputedStyle(e3), g2 = parseInt(a2.borderLeftWidth, 10), p2 = parseInt(a2.borderTopWidth, 10), W2 = parseInt(a2.borderRightWidth, 10), T2 = parseInt(a2.borderBottomWidth, 10);
           let B2 = 0, F2 = 0;
@@ -110112,8 +110112,8 @@
           if (m2 === e3) B2 = "start" === u ? k : "end" === u ? k - H : "nearest" === u ? n(M, M + H, H, p2, T2, M + k, M + k + v, v) : k - H / 2, F2 = "start" === f ? D : "center" === f ? D - b / 2 : "end" === f ? D - b : n(y, y + b, b, g2, W2, y + D, y + D + E, E), B2 = Math.max(0, B2 + M), F2 = Math.max(0, F2 + y);
           else {
             B2 = "start" === u ? k - i2 - p2 : "end" === u ? k - d2 + T2 + S : "nearest" === u ? n(i2, d2, l2, p2, T2 + S, k, k + v, v) : k - (i2 + l2 / 2) + S / 2, F2 = "start" === f ? D - c2 - g2 : "center" === f ? D - (c2 + r2 / 2) + V2 / 2 : "end" === f ? D - s2 + W2 + V2 : n(c2, s2, r2, g2, W2 + V2, D, D + E, E);
-            const { scrollLeft: t4, scrollTop: o2 } = e3;
-            B2 = 0 === O ? 0 : Math.max(0, Math.min(o2 + B2 / O, e3.scrollHeight - l2 / O + S)), F2 = 0 === j ? 0 : Math.max(0, Math.min(t4 + F2 / j, e3.scrollWidth - r2 / j + V2)), k += o2 - B2, D += t4 - F2;
+            const { scrollLeft: t3, scrollTop: o2 } = e3;
+            B2 = 0 === O ? 0 : Math.max(0, Math.min(o2 + B2 / O, e3.scrollHeight - l2 / O + S)), F2 = 0 === j ? 0 : Math.max(0, Math.min(t3 + F2 / j, e3.scrollWidth - r2 / j + V2)), k += o2 - B2, D += t3 - F2;
           }
           L.push({ el: e3, top: B2, left: F2 });
         }
@@ -110128,18 +110128,18 @@
       "use strict";
       var e = require_dist39();
       var o = (e2) => false === e2 ? { block: "end", inline: "nearest" } : ((e3) => e3 === Object(e3) && 0 !== Object.keys(e3).length)(e2) ? e2 : { block: "start", inline: "nearest" };
-      module.exports = function(t2, n) {
-        if (!t2.isConnected || !((e2) => {
+      module.exports = function(t, n) {
+        if (!t.isConnected || !((e2) => {
           let o2 = e2;
           for (; o2 && o2.parentNode; ) {
             if (o2.parentNode === document) return true;
             o2 = o2.parentNode instanceof ShadowRoot ? o2.parentNode.host : o2.parentNode;
           }
           return false;
-        })(t2)) return;
-        if (((e2) => "object" == typeof e2 && "function" == typeof e2.behavior)(n)) return n.behavior(e.compute(t2, n));
+        })(t)) return;
+        if (((e2) => "object" == typeof e2 && "function" == typeof e2.behavior)(n)) return n.behavior(e.compute(t, n));
         const r = "boolean" == typeof n || null == n ? void 0 : n.behavior;
-        for (const { el: i, top: c, left: l } of e.compute(t2, o(n))) i.scroll({ top: c, left: l, behavior: r });
+        for (const { el: i, top: c, left: l } of e.compute(t, o(n))) i.scroll({ top: c, left: l, behavior: r });
       };
     }
   });
@@ -115549,10 +115549,10 @@
         ]);
         const preContent = (0, import_react210.useMemo)(() => {
           if (isMultiLine && children && Array.isArray(children)) {
-            return /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("div", { className: slots.content({ class: classNames == null ? void 0 : classNames.content }), children: children.map((t2, index3) => /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("pre", { className: slots.pre({ class: classNames == null ? void 0 : classNames.pre }), children: [
+            return /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("div", { className: slots.content({ class: classNames == null ? void 0 : classNames.content }), children: children.map((t, index3) => /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("pre", { className: slots.pre({ class: classNames == null ? void 0 : classNames.pre }), children: [
               !hideSymbol && /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("span", { className: slots.symbol({ class: classNames == null ? void 0 : classNames.symbol }), children: symbolBefore }),
-              t2
-            ] }, `${index3}-${t2}`)) });
+              t
+            ] }, `${index3}-${t}`)) });
           }
           return /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)("pre", { ref: preRef, className: slots.pre({ class: classNames == null ? void 0 : classNames.pre }), children: [
             !hideSymbol && /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("span", { className: slots.symbol({ class: classNames == null ? void 0 : classNames.symbol }), children: symbolBefore }),
@@ -116862,8 +116862,8 @@
   function _extends() {
     return _extends = Object.assign ? Object.assign.bind() : function(n) {
       for (var e = 1; e < arguments.length; e++) {
-        var t2 = arguments[e];
-        for (var r in t2) ({}).hasOwnProperty.call(t2, r) && (n[r] = t2[r]);
+        var t = arguments[e];
+        for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
       }
       return n;
     }, _extends.apply(null, arguments);
@@ -116876,12 +116876,12 @@
   // node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
   function _objectWithoutPropertiesLoose(r, e) {
     if (null == r) return {};
-    var t2 = {};
+    var t = {};
     for (var n in r) if ({}.hasOwnProperty.call(r, n)) {
       if (-1 !== e.indexOf(n)) continue;
-      t2[n] = r[n];
+      t[n] = r[n];
     }
-    return t2;
+    return t;
   }
   var init_objectWithoutPropertiesLoose = __esm({
     "node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js"() {
@@ -158811,19 +158811,19 @@
       Lt = forwardRef2((A, B) => {
         var z = A, { value: r, onChange: s, maxLength: e, textAlign: u = "left", pattern: P, placeholder: D, inputMode: G = "numeric", onComplete: H, pushPasswordManagerStrategy: F = "increase-width", pasteTransformer: W, containerClassName: Z, noScriptCSSFallback: T = Nt, render: f, children: h } = z, a = Pt(z, ["value", "onChange", "maxLength", "textAlign", "pattern", "placeholder", "inputMode", "onComplete", "pushPasswordManagerStrategy", "pasteTransformer", "containerClassName", "noScriptCSSFallback", "render", "children"]);
         var X, lt2, ut, dt, ft;
-        let [q, nt] = useState(typeof a.defaultValue == "string" ? a.defaultValue : ""), i = r != null ? r : q, I = _t(i), x = useCallback((t2) => {
-          s == null || s(t2), nt(t2);
+        let [q, nt] = useState(typeof a.defaultValue == "string" ? a.defaultValue : ""), i = r != null ? r : q, I = _t(i), x = useCallback((t) => {
+          s == null || s(t), nt(t);
         }, [s]), m2 = useMemo(() => P ? typeof P == "string" ? new RegExp(P) : P : null, [P]), l = useRef(null), K = useRef(null), J = useRef({ value: i, onChange: x, isIOS: typeof window != "undefined" && ((lt2 = (X = window == null ? void 0 : window.CSS) == null ? void 0 : X.supports) == null ? void 0 : lt2.call(X, "-webkit-touch-callout", "none")) }), V = useRef({ prev: [(ut = l.current) == null ? void 0 : ut.selectionStart, (dt = l.current) == null ? void 0 : dt.selectionEnd, (ft = l.current) == null ? void 0 : ft.selectionDirection] });
         useImperativeHandle(B, () => l.current, []), useEffect(() => {
-          let t2 = l.current, o = K.current;
-          if (!t2 || !o) return;
-          J.current.value !== t2.value && J.current.onChange(t2.value), V.current.prev = [t2.selectionStart, t2.selectionEnd, t2.selectionDirection];
+          let t = l.current, o = K.current;
+          if (!t || !o) return;
+          J.current.value !== t.value && J.current.onChange(t.value), V.current.prev = [t.selectionStart, t.selectionEnd, t.selectionDirection];
           function d() {
-            if (document.activeElement !== t2) {
+            if (document.activeElement !== t) {
               L(null), N(null);
               return;
             }
-            let c = t2.selectionStart, b = t2.selectionEnd, mt = t2.selectionDirection, v = t2.maxLength, C = t2.value, _ = V.current.prev, g = -1, E = -1, w;
+            let c = t.selectionStart, b = t.selectionEnd, mt = t.selectionDirection, v = t.maxLength, C = t.value, _ = V.current.prev, g = -1, E = -1, w;
             if (C.length !== 0 && c !== null && b !== null) {
               let Dt = c === b, Ht = c === C.length && C.length < v;
               if (Dt && !Ht) {
@@ -158845,7 +158845,7 @@
             let pt = g !== -1 ? g : c, Rt = E !== -1 ? E : b, yt = w != null ? w : mt;
             L(pt), N(Rt), V.current.prev = [pt, Rt, yt];
           }
-          if (document.addEventListener("selectionchange", d, { capture: true }), d(), document.activeElement === t2 && Q(true), !document.getElementById("input-otp-style")) {
+          if (document.addEventListener("selectionchange", d, { capture: true }), d(), document.activeElement === t && Q(true), !document.getElementById("input-otp-style")) {
             let c = document.createElement("style");
             if (c.id = "input-otp-style", document.head.appendChild(c), c.sheet) {
               let b = "background: transparent !important; color: transparent !important; border-color: transparent !important; opacity: 0 !important; box-shadow: none !important; -webkit-box-shadow: none !important; -webkit-text-fill-color: transparent !important;";
@@ -158853,11 +158853,11 @@
             }
           }
           let p = () => {
-            o && o.style.setProperty("--root-height", `${t2.clientHeight}px`);
+            o && o.style.setProperty("--root-height", `${t.clientHeight}px`);
           };
           p();
           let R = new ResizeObserver(p);
-          return R.observe(t2), () => {
+          return R.observe(t), () => {
             document.removeEventListener("selectionchange", d, { capture: true }), R.disconnect();
           };
         }, []);
@@ -158866,53 +158866,53 @@
           ht(() => {
             var p, R, c, b;
             (p = l.current) == null || p.dispatchEvent(new Event("input"));
-            let t2 = (R = l.current) == null ? void 0 : R.selectionStart, o = (c = l.current) == null ? void 0 : c.selectionEnd, d = (b = l.current) == null ? void 0 : b.selectionDirection;
-            t2 !== null && o !== null && (L(t2), N(o), V.current.prev = [t2, o, d]);
+            let t = (R = l.current) == null ? void 0 : R.selectionStart, o = (c = l.current) == null ? void 0 : c.selectionEnd, d = (b = l.current) == null ? void 0 : b.selectionDirection;
+            t !== null && o !== null && (L(t), N(o), V.current.prev = [t, o, d]);
           });
         }, [i, j]), useEffect(() => {
           I !== void 0 && i !== I && I.length < e && i.length === e && (H == null || H(i));
         }, [e, H, I, i]);
-        let O = Tt({ containerRef: K, inputRef: l, pushPasswordManagerStrategy: F, isFocused: j }), st = useCallback((t2) => {
-          let o = t2.currentTarget.value.slice(0, e);
+        let O = Tt({ containerRef: K, inputRef: l, pushPasswordManagerStrategy: F, isFocused: j }), st = useCallback((t) => {
+          let o = t.currentTarget.value.slice(0, e);
           if (o.length > 0 && m2 && !m2.test(o)) {
-            t2.preventDefault();
+            t.preventDefault();
             return;
           }
           typeof I == "string" && o.length < I.length && document.dispatchEvent(new Event("selectionchange")), x(o);
         }, [e, x, I, m2]), at = useCallback(() => {
-          var t2;
+          var t;
           if (l.current) {
             let o = Math.min(l.current.value.length, e - 1), d = l.current.value.length;
-            (t2 = l.current) == null || t2.setSelectionRange(o, d), L(o), N(d);
+            (t = l.current) == null || t.setSelectionRange(o, d), L(o), N(d);
           }
           Q(true);
-        }, [e]), ct = useCallback((t2) => {
+        }, [e]), ct = useCallback((t) => {
           var g, E;
           let o = l.current;
-          if (!W && (!J.current.isIOS || !t2.clipboardData || !o)) return;
-          let d = t2.clipboardData.getData("text/plain"), p = W ? W(d) : d;
-          console.log({ _content: d, content: p }), t2.preventDefault();
+          if (!W && (!J.current.isIOS || !t.clipboardData || !o)) return;
+          let d = t.clipboardData.getData("text/plain"), p = W ? W(d) : d;
+          console.log({ _content: d, content: p }), t.preventDefault();
           let R = (g = l.current) == null ? void 0 : g.selectionStart, c = (E = l.current) == null ? void 0 : E.selectionEnd, v = (R !== c ? i.slice(0, R) + p + i.slice(c) : i.slice(0, R) + p + i.slice(R)).slice(0, e);
           if (v.length > 0 && m2 && !m2.test(v)) return;
           o.value = v, x(v);
           let C = Math.min(v.length, e - 1), _ = v.length;
           o.setSelectionRange(C, _), L(C), N(_);
-        }, [e, x, m2, i]), It = useMemo(() => ({ position: "relative", cursor: a.disabled ? "default" : "text", userSelect: "none", WebkitUserSelect: "none", pointerEvents: "none" }), [a.disabled]), it = useMemo(() => ({ position: "absolute", inset: 0, width: O.willPushPWMBadge ? `calc(100% + ${O.PWM_BADGE_SPACE_WIDTH})` : "100%", clipPath: O.willPushPWMBadge ? `inset(0 ${O.PWM_BADGE_SPACE_WIDTH} 0 0)` : void 0, height: "100%", display: "flex", textAlign: u, opacity: "1", color: "transparent", pointerEvents: "all", background: "transparent", caretColor: "transparent", border: "0 solid transparent", outline: "0 solid transparent", boxShadow: "none", lineHeight: "1", letterSpacing: "-.5em", fontSize: "var(--root-height)", fontFamily: "monospace", fontVariantNumeric: "tabular-nums" }), [O.PWM_BADGE_SPACE_WIDTH, O.willPushPWMBadge, u]), Mt = useMemo(() => createElement("input", bt(St({ autoComplete: a.autoComplete || "one-time-code" }, a), { "data-input-otp": true, "data-input-otp-placeholder-shown": i.length === 0 || void 0, "data-input-otp-mss": M, "data-input-otp-mse": k, inputMode: G, pattern: m2 == null ? void 0 : m2.source, "aria-placeholder": D, style: it, maxLength: e, value: i, ref: l, onPaste: (t2) => {
+        }, [e, x, m2, i]), It = useMemo(() => ({ position: "relative", cursor: a.disabled ? "default" : "text", userSelect: "none", WebkitUserSelect: "none", pointerEvents: "none" }), [a.disabled]), it = useMemo(() => ({ position: "absolute", inset: 0, width: O.willPushPWMBadge ? `calc(100% + ${O.PWM_BADGE_SPACE_WIDTH})` : "100%", clipPath: O.willPushPWMBadge ? `inset(0 ${O.PWM_BADGE_SPACE_WIDTH} 0 0)` : void 0, height: "100%", display: "flex", textAlign: u, opacity: "1", color: "transparent", pointerEvents: "all", background: "transparent", caretColor: "transparent", border: "0 solid transparent", outline: "0 solid transparent", boxShadow: "none", lineHeight: "1", letterSpacing: "-.5em", fontSize: "var(--root-height)", fontFamily: "monospace", fontVariantNumeric: "tabular-nums" }), [O.PWM_BADGE_SPACE_WIDTH, O.willPushPWMBadge, u]), Mt = useMemo(() => createElement("input", bt(St({ autoComplete: a.autoComplete || "one-time-code" }, a), { "data-input-otp": true, "data-input-otp-placeholder-shown": i.length === 0 || void 0, "data-input-otp-mss": M, "data-input-otp-mse": k, inputMode: G, pattern: m2 == null ? void 0 : m2.source, "aria-placeholder": D, style: it, maxLength: e, value: i, ref: l, onPaste: (t) => {
           var o;
-          ct(t2), (o = a.onPaste) == null || o.call(a, t2);
-        }, onChange: st, onMouseOver: (t2) => {
+          ct(t), (o = a.onPaste) == null || o.call(a, t);
+        }, onChange: st, onMouseOver: (t) => {
           var o;
-          rt(true), (o = a.onMouseOver) == null || o.call(a, t2);
-        }, onMouseLeave: (t2) => {
+          rt(true), (o = a.onMouseOver) == null || o.call(a, t);
+        }, onMouseLeave: (t) => {
           var o;
-          rt(false), (o = a.onMouseLeave) == null || o.call(a, t2);
-        }, onFocus: (t2) => {
+          rt(false), (o = a.onMouseLeave) == null || o.call(a, t);
+        }, onFocus: (t) => {
           var o;
-          at(), (o = a.onFocus) == null || o.call(a, t2);
-        }, onBlur: (t2) => {
+          at(), (o = a.onFocus) == null || o.call(a, t);
+        }, onBlur: (t) => {
           var o;
-          Q(false), (o = a.onBlur) == null || o.call(a, t2);
-        } })), [st, at, ct, G, it, e, k, M, a, m2 == null ? void 0 : m2.source, i]), tt = useMemo(() => ({ slots: Array.from({ length: e }).map((t2, o) => {
+          Q(false), (o = a.onBlur) == null || o.call(a, t);
+        } })), [st, at, ct, G, it, e, k, M, a, m2 == null ? void 0 : m2.source, i]), tt = useMemo(() => ({ slots: Array.from({ length: e }).map((t, o) => {
           var c;
           let d = j && M !== null && k !== null && (M === k && o === M || o >= M && o < k), p = i[o] !== void 0 ? i[o] : null, R = i[0] !== void 0 ? null : (c = D == null ? void 0 : D[o]) != null ? c : null;
           return { char: p, placeholderChar: R, isActive: d, hasFakeCaret: d && p === null };
@@ -161948,16 +161948,16 @@
           toasts.current = [
             ...ref.current.querySelectorAll('[role="alertdialog"]')
           ];
-          if (prevVisibleToasts.current.length === state.visibleToasts.length && state.visibleToasts.every((t2, i) => t2.key === prevVisibleToasts.current[i].key)) {
+          if (prevVisibleToasts.current.length === state.visibleToasts.length && state.visibleToasts.every((t, i) => t.key === prevVisibleToasts.current[i].key)) {
             prevVisibleToasts.current = state.visibleToasts;
             return;
           }
-          let allToasts = prevVisibleToasts.current.map((t2, i) => ({
-            ...t2,
+          let allToasts = prevVisibleToasts.current.map((t, i) => ({
+            ...t,
             i,
-            isRemoved: !state.visibleToasts.some((t22) => t2.key === t22.key)
+            isRemoved: !state.visibleToasts.some((t2) => t.key === t2.key)
           }));
-          let removedFocusedToastIndex = allToasts.findIndex((t2) => t2.i === focusedToast.current && t2.isRemoved);
+          let removedFocusedToastIndex = allToasts.findIndex((t) => t.i === focusedToast.current && t.isRemoved);
           if (removedFocusedToastIndex > -1) {
             var _lastFocused_current;
             if ((0, $eO7VF$reactariainteractions.getInteractionModality)() === "pointer" && ((_lastFocused_current = lastFocused.current) === null || _lastFocused_current === void 0 ? void 0 : _lastFocused_current.isConnected)) (0, $eO7VF$reactariautils.focusWithoutScrolling)(lastFocused.current);
@@ -162035,7 +162035,7 @@
             // and we need to follow all focus changes
             onFocus: (e) => {
               let target = (0, $eO7VF$reactariautils.getEventTarget)(e).closest('[role="alertdialog"]');
-              focusedToast.current = toasts.current.findIndex((t2) => t2 === target);
+              focusedToast.current = toasts.current.findIndex((t) => t === target);
             },
             onBlur: () => {
               focusedToast.current = -1;
@@ -162124,7 +162124,7 @@
         * Closes a toast.
         */
         close(key) {
-          let index3 = this.queue.findIndex((t2) => t2.key === key);
+          let index3 = this.queue.findIndex((t) => t.key === key);
           if (index3 >= 0) {
             var _this_queue_index_onClose, _this_queue_index;
             (_this_queue_index_onClose = (_this_queue_index = this.queue[index3]).onClose) === null || _this_queue_index_onClose === void 0 ? void 0 : _this_queue_index_onClose.call(_this_queue_index);
@@ -162372,16 +162372,16 @@
         else if (ref != null) ref.current = value;
       }
       function r(e) {
-        var t2, f, n = "";
+        var t, f, n = "";
         if ("string" == typeof e || "number" == typeof e) n += e;
         else if ("object" == typeof e) if (Array.isArray(e)) {
           var o = e.length;
-          for (t2 = 0; t2 < o; t2++) e[t2] && (f = r(e[t2])) && (n && (n += " "), n += f);
+          for (t = 0; t < o; t++) e[t] && (f = r(e[t])) && (n && (n += " "), n += f);
         } else for (f in e) e[f] && (n && (n += " "), n += f);
         return n;
       }
       function clsx() {
-        for (var e, t2, f = 0, n = "", o = arguments.length; f < o; f++) (e = arguments[f]) && (t2 = r(e)) && (n && (n += " "), n += t2);
+        for (var e, t, f = 0, n = "", o = arguments.length; f < o; f++) (e = arguments[f]) && (t = r(e)) && (n && (n += " "), n += t);
         return n;
       }
       var clsx_default = clsx;
@@ -171617,11 +171617,11 @@
       void (0, import_event.listen)("mpv://sid", (e) => setSid(e.payload)).then((u) => cleanups.push(u));
       void (0, import_event.listen)("mpv://file-loaded", () => {
         setFileLoaded(true);
-        setFileLoadedToken((t2) => t2 + 1);
+        setFileLoadedToken((t) => t + 1);
       }).then((u) => cleanups.push(u));
       void (0, import_event.listen)("mpv://playback-restart", () => {
         setPlaybackRestarted(true);
-        setPlaybackRestartedToken((t2) => t2 + 1);
+        setPlaybackRestartedToken((t) => t + 1);
       }).then((u) => cleanups.push(u));
       void (0, import_event.listen)("mpv://paused-for-cache", (e) => setPausedForCache(e.payload)).then((u) => cleanups.push(u));
       void (0, import_event.listen)("mpv://core-idle", (e) => setCoreIdle(e.payload)).then((u) => cleanups.push(u));
@@ -171632,7 +171632,7 @@
       void (0, import_event.listen)("mpv://load-failed", (e) => {
         setLoadFailedError(typeof e.payload === "number" ? e.payload : null);
         setLoadFailed(true);
-        setLoadFailedToken((t2) => t2 + 1);
+        setLoadFailedToken((t) => t + 1);
       }).then((u) => cleanups.push(u));
       return () => cleanups.forEach((fn) => fn());
     }, [enabled]);
@@ -172208,7 +172208,7 @@
     debridProvider,
     onProviderChange
   }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const [keyValue, setKeyValue] = useState(() => getStreamProviderAccessKey(debridProvider));
     useEffect(() => {
       setKeyValue(getStreamProviderAccessKey(debridProvider));
@@ -172216,7 +172216,7 @@
     if (debridProvider === "none") return null;
     return /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
       /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-        /* @__PURE__ */ jsx(FieldHeader, { label: t2("streamProviderSelection") }),
+        /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderSelection") }),
         /* @__PURE__ */ jsx(
           DebridSelect,
           {
@@ -172229,7 +172229,7 @@
         )
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-        /* @__PURE__ */ jsx(SectionLabel, { children: `${getDebridProviderLabel(debridProvider)} ${t2("apiKeyLabel")}` }),
+        /* @__PURE__ */ jsx(SectionLabel, { children: `${getDebridProviderLabel(debridProvider)} ${t("apiKeyLabel")}` }),
         /* @__PURE__ */ jsx(
           import_react57.Input,
           {
@@ -172239,7 +172239,7 @@
               setKeyValue(v);
               setStreamProviderAccessKey(debridProvider, v);
             },
-            placeholder: t2("streamProviderApiKeyPlaceholder"),
+            placeholder: t("streamProviderApiKeyPlaceholder"),
             radius: "lg",
             classNames: heroInputClassNames
           }
@@ -172265,7 +172265,7 @@
     isFirst,
     isLast
   }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const [catalogs, setCatalogs] = useState(cachedCatalogs);
     useEffect(() => {
       let cancelled = false;
@@ -172346,7 +172346,7 @@
       onChange({ ...config, options: { ...config.options, ...patch } });
     }
     const isCustom = config.preset === "custom";
-    const title = isCustom ? manifest.state === "ok" && manifest.name ? manifest.name : t2("streamProviderCustomUrl") : PRESET_NAMES[config.preset];
+    const title = isCustom ? manifest.state === "ok" && manifest.name ? manifest.name : t("streamProviderCustomUrl") : PRESET_NAMES[config.preset];
     return /* @__PURE__ */ jsxs("div", { className: `rounded-xl border transition ${config.enabled ? "border-aurora-400/30 bg-aurora-400/5" : "border-white/10 bg-slate-900/60"}`, children: [
       /* @__PURE__ */ jsxs(
         "div",
@@ -172382,7 +172382,7 @@
               ),
               isCustom && /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-600", children: (() => {
                 const rawUrl = config.options.rawUrl;
-                if (!rawUrl) return t2("streamProviderNoUrl");
+                if (!rawUrl) return t("streamProviderNoUrl");
                 try {
                   return new URL(rawUrl.replace(/^stremio:\/\//, "https://").replace(/\/manifest\.json$/i, "")).hostname;
                 } catch {
@@ -172417,7 +172417,7 @@
                   type: "button",
                   onClick: onRemove,
                   className: "text-[10px] uppercase tracking-[0.1em] text-red-400/70 transition hover:text-red-300",
-                  children: t2("remove")
+                  children: t("remove")
                 }
               ),
               /* @__PURE__ */ jsx("span", { className: "ml-1 text-[10px] text-slate-600", children: expanded ? "\u25B2" : "\u25BC" })
@@ -172437,37 +172437,37 @@
               }
             ),
             /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t2("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
               /* @__PURE__ */ jsx(
                 MultiSelectDropdown,
                 {
                   value: opts.qualityFilter,
                   onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t2("streamProviderSelectQualities"),
+                  placeholder: t("streamProviderSelectQualities"),
                   options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
                 }
               )
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t2("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
               /* @__PURE__ */ jsx(
                 MultiSelectDropdown,
                 {
                   value: opts.languages,
                   onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t2("streamProviderSelectLanguages"),
+                  placeholder: t("streamProviderSelectLanguages"),
                   options: catalogs?.languages ?? TORRENTIO_LANGUAGE_OPTIONS
                 }
               )
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t2("streamProviderSources") }),
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderSources") }),
               /* @__PURE__ */ jsx(
                 MultiSelectDropdown,
                 {
                   value: opts.providers,
                   onChange: (v) => updateOptions({ providers: v }),
-                  placeholder: t2("streamProviderSelectSources"),
+                  placeholder: t("streamProviderSelectSources"),
                   options: catalogs?.providers ?? TORRENTIO_PROVIDERS.map((p) => ({ id: p, label: p }))
                 }
               )
@@ -172512,25 +172512,25 @@
               }
             ),
             /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t2("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
               /* @__PURE__ */ jsx(
                 MultiSelectDropdown,
                 {
                   value: opts.qualityFilter,
                   onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t2("streamProviderSelectQualities"),
+                  placeholder: t("streamProviderSelectQualities"),
                   options: catalogs?.qualities ?? TORRENTIO_QUALITY_OPTIONS
                 }
               )
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t2("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
               /* @__PURE__ */ jsx(
                 MultiSelectDropdown,
                 {
                   value: opts.languages,
                   onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t2("streamProviderSelectLanguages"),
+                  placeholder: t("streamProviderSelectLanguages"),
                   options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
                 }
               )
@@ -172548,32 +172548,32 @@
               }
             ),
             /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t2("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
               /* @__PURE__ */ jsx(
                 MultiSelectDropdown,
                 {
                   value: opts.qualityFilter,
                   onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t2("streamProviderSelectQualities"),
+                  placeholder: t("streamProviderSelectQualities"),
                   options: COMET_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))
                 }
               )
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t2("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
               /* @__PURE__ */ jsx(
                 MultiSelectDropdown,
                 {
                   value: opts.languages,
                   onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t2("streamProviderSelectLanguages"),
+                  placeholder: t("streamProviderSelectLanguages"),
                   options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
                 }
               )
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
               /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-                /* @__PURE__ */ jsx(FieldHeader, { label: t2("streamProviderMaxResults") }),
+                /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderMaxResults") }),
                 /* @__PURE__ */ jsx(
                   import_react57.Input,
                   {
@@ -172645,25 +172645,25 @@
             ),
             /* @__PURE__ */ jsx("p", { className: "text-[11px] text-slate-600", children: "Jackettio st\xF6djer Real-Debrid och AllDebrid \u2014 andra val faller tillbaka till Real-Debrid." }),
             /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t2("streamProviderQualityFilter") }),
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderQualityFilter") }),
               /* @__PURE__ */ jsx(
                 MultiSelectDropdown,
                 {
                   value: opts.qualityFilter,
                   onChange: (v) => updateOptions({ qualityFilter: v }),
-                  placeholder: t2("streamProviderSelectQualities"),
+                  placeholder: t("streamProviderSelectQualities"),
                   options: JACKETTIO_QUALITY_OPTIONS.map((q) => ({ id: q, label: q }))
                 }
               )
             ] }),
             /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t2("streamProviderLanguages") }),
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("streamProviderLanguages") }),
               /* @__PURE__ */ jsx(
                 MultiSelectDropdown,
                 {
                   value: opts.languages,
                   onChange: (v) => updateOptions({ languages: v }),
-                  placeholder: t2("streamProviderSelectLanguages"),
+                  placeholder: t("streamProviderSelectLanguages"),
                   options: ISO_LANGUAGE_OPTIONS.map(({ code, label }) => ({ id: code, label }))
                 }
               )
@@ -172707,11 +172707,11 @@
                 type: "button",
                 onClick: () => void openExternalUrl("https://aiostreams-nightly.fortheweak.cloud/stremio/configure"),
                 className: "inline-flex rounded-full border border-white/10 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-slate-300 transition hover:border-white/30 hover:text-white",
-                children: t2("aiostreamsOpenConfig")
+                children: t("aiostreamsOpenConfig")
               }
             ),
             /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-              /* @__PURE__ */ jsx(FieldHeader, { label: t2("aiostreamsManifestLabel") }),
+              /* @__PURE__ */ jsx(FieldHeader, { label: t("aiostreamsManifestLabel") }),
               /* @__PURE__ */ jsx(
                 import_react57.Input,
                 {
@@ -172755,14 +172755,14 @@
         config.preset === "custom" && (() => {
           const opts = config.options;
           return /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
-            /* @__PURE__ */ jsx(SectionLabel, { children: t2("streamProviderManifestUrl") }),
+            /* @__PURE__ */ jsx(SectionLabel, { children: t("streamProviderManifestUrl") }),
             /* @__PURE__ */ jsx(
               import_react57.Input,
               {
                 type: "text",
                 value: opts.rawUrl,
                 onValueChange: (v) => updateOptions({ rawUrl: v.trim() }),
-                placeholder: t2("streamProviderManifestPlaceholder"),
+                placeholder: t("streamProviderManifestPlaceholder"),
                 radius: "lg",
                 classNames: heroInputClassNames
               }
@@ -172856,7 +172856,7 @@
     "custom"
   ];
   function ScrapersSettingsSection() {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const [configs, setConfigsState] = useState(() => getStreamProviderConfigs());
     const configsRef = useRef(configs);
     configsRef.current = configs;
@@ -172908,7 +172908,7 @@
           type: "button",
           onClick: () => handleAddPreset(preset),
           className: "rounded-xl border border-dashed border-white/15 px-3 py-2 text-xs text-slate-500 transition hover:border-white/30 hover:text-slate-300",
-          children: preset === "torrentio" ? lt("streamProviderAddStandard") : preset === "torrentsdb" ? lt("streamProviderAddIndexed") : preset === "comet" ? t2("streamProviderAddComet") : preset === "jackettio" ? t2("streamProviderAddJackettio") : preset === "aiostreams" ? t2("streamProviderAddAiostreams") : preset === "orion" ? "+ Orion" : t2("streamProviderAddCustom")
+          children: preset === "torrentio" ? lt("streamProviderAddStandard") : preset === "torrentsdb" ? lt("streamProviderAddIndexed") : preset === "comet" ? t("streamProviderAddComet") : preset === "jackettio" ? t("streamProviderAddJackettio") : preset === "aiostreams" ? t("streamProviderAddAiostreams") : preset === "orion" ? "+ Orion" : t("streamProviderAddCustom")
         },
         preset
       )) })
@@ -174362,8 +174362,8 @@
   async function nativeSetAudioDelay(ms) {
     await np({ cmd: "setAudioDelay", ms: Math.max(-2e3, Math.min(2e3, Math.round(ms))) });
   }
-  async function nativeSetVideoTuning(t2) {
-    await np({ cmd: "setTuning", brightness: t2.brightness, contrast: t2.contrast, saturation: t2.saturation });
+  async function nativeSetVideoTuning(t) {
+    await np({ cmd: "setTuning", brightness: t.brightness, contrast: t.contrast, saturation: t.saturation });
   }
   async function nativeSetVideoGeometry(opts) {
     await np({
@@ -174430,14 +174430,14 @@
         setSelectedAudio(s.selectedAudio);
         if (s.fileLoaded && !prev.fileLoaded) {
           setFileLoaded(true);
-          setFileLoadedToken((t2) => t2 + 1);
+          setFileLoadedToken((t) => t + 1);
         }
         if (!s.fileLoaded) setFileLoaded(false);
         prev.fileLoaded = s.fileLoaded;
         if (s.firstFrame && !prev.firstFrame) {
           setFirstFrameRendered(true);
           setPlaybackRestarted(true);
-          setPlaybackRestartedToken((t2) => t2 + 1);
+          setPlaybackRestartedToken((t) => t + 1);
         }
         prev.firstFrame = s.firstFrame;
         if (prev.failToken === -1) {
@@ -174445,7 +174445,7 @@
         } else if (s.loadFailedToken > prev.failToken) {
           prev.failToken = s.loadFailedToken;
           setLoadFailed(true);
-          setLoadFailedToken((t2) => t2 + 1);
+          setLoadFailedToken((t) => t + 1);
           setLoadFailedError(null);
           if (s.loadFailedMessage === "DEVICE_NO_DOLBY_VISION" || s.loadFailedMessage === "DEVICE_FORMAT_UNSUPPORTED") {
             window.dispatchEvent(new CustomEvent("lumio-device-format-unsupported", {
@@ -175000,39 +175000,39 @@
     setScopedStorageItem(RENDER_KEY, JSON.stringify(tuning));
     if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent(EVENT7));
   }
-  function renderTuningProperties(t2, isNetworkStream = false) {
+  function renderTuningProperties(t, isNetworkStream = false) {
     const props = [
-      ["hwdec", t2.hwdec ? "auto-safe" : "no"],
-      ["tone-mapping", t2.toneMapping === "auto" ? "auto" : t2.toneMapping],
-      ["inverse-tone-mapping", t2.inverseToneMapping ? "yes" : "no"],
-      ["interpolation", t2.interpolation ? "yes" : "no"],
-      ["video-sync", t2.interpolation ? "display-resample" : "audio"]
+      ["hwdec", t.hwdec ? "auto-safe" : "no"],
+      ["tone-mapping", t.toneMapping === "auto" ? "auto" : t.toneMapping],
+      ["inverse-tone-mapping", t.inverseToneMapping ? "yes" : "no"],
+      ["interpolation", t.interpolation ? "yes" : "no"],
+      ["video-sync", t.interpolation ? "display-resample" : "audio"]
     ];
     if (!isNetworkStream) {
       props.push(
-        ["demuxer-max-bytes", t2.largeBuffer ? "768MiB" : "150MiB"],
-        ["demuxer-max-back-bytes", t2.largeBuffer ? "256MiB" : "50MiB"],
-        ["demuxer-readahead-secs", t2.largeBuffer ? "120" : "1"]
+        ["demuxer-max-bytes", t.largeBuffer ? "768MiB" : "150MiB"],
+        ["demuxer-max-back-bytes", t.largeBuffer ? "256MiB" : "50MiB"],
+        ["demuxer-readahead-secs", t.largeBuffer ? "120" : "1"]
       );
-    } else if (t2.largeBuffer) {
+    } else if (t.largeBuffer) {
       props.push(["demuxer-max-back-bytes", "512MiB"]);
     }
-    if (t2.profile === "light") {
+    if (t.profile === "light") {
       props.push(["scale", "bilinear"], ["dscale", "bilinear"], ["deband", "no"]);
-    } else if (t2.profile === "max") {
+    } else if (t.profile === "max") {
       props.push(["scale", "ewa_lanczossharp"], ["dscale", "mitchell"], ["deband", "yes"]);
     } else {
       props.push(["scale", "lanczos"], ["dscale", "mitchell"], ["deband", "no"]);
     }
     return props;
   }
-  function isDefaultTuning(t2) {
-    return t2.brightness === 0 && t2.contrast === 0 && t2.saturation === 0 && t2.gamma === 0 && t2.sharpen === 0;
+  function isDefaultTuning(t) {
+    return t.brightness === 0 && t.contrast === 0 && t.saturation === 0 && t.gamma === 0 && t.sharpen === 0;
   }
-  function tuningToCssFilter(t2) {
-    if (t2.brightness === 0 && t2.contrast === 0 && t2.saturation === 0) return "";
+  function tuningToCssFilter(t) {
+    if (t.brightness === 0 && t.contrast === 0 && t.saturation === 0) return "";
     const mul = (v) => (1 + v / 100).toFixed(3);
-    return `brightness(${mul(t2.brightness)}) contrast(${mul(t2.contrast)}) saturate(${mul(t2.saturation)})`;
+    return `brightness(${mul(t.brightness)}) contrast(${mul(t.contrast)}) saturate(${mul(t.saturation)})`;
   }
 
   // lib/audio-tuning.ts
@@ -175070,11 +175070,11 @@
     window.addEventListener(EVENT8, listener);
     return () => window.removeEventListener(EVENT8, listener);
   }
-  function audioTuningFilters(t2) {
+  function audioTuningFilters(t) {
     const filters = [];
-    if (t2.bassBoost) filters.push("lavfi=[bass=g=6]");
-    if (t2.voiceClarity) filters.push("lavfi=[highpass=f=90,equalizer=f=2000:t=q:w=0.7:g=6,equalizer=f=4000:t=q:w=1.0:g=3]");
-    if (t2.normalize) filters.push("lavfi=[dynaudnorm=f=250:g=15]");
+    if (t.bassBoost) filters.push("lavfi=[bass=g=6]");
+    if (t.voiceClarity) filters.push("lavfi=[highpass=f=90,equalizer=f=2000:t=q:w=0.7:g=6,equalizer=f=4000:t=q:w=1.0:g=3]");
+    if (t.normalize) filters.push("lavfi=[dynaudnorm=f=250:g=15]");
     return filters;
   }
 
@@ -175111,7 +175111,7 @@
     );
   }
   function PlayerTuningPanel({ onClose }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const isTv = useTvMode();
     const closeRef = useRef(null);
     const [tuning, setTuningState] = useState(() => getVideoTuning());
@@ -175188,8 +175188,8 @@
         },
         children: [
           /* @__PURE__ */ jsxs("div", { className: "mb-3 flex items-center justify-between", children: [
-            /* @__PURE__ */ jsx("p", { className: "text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400", children: t2("vtTitle") }),
-            /* @__PURE__ */ jsx("button", { type: "button", ref: closeRef, ...isTv ? { "data-f": "", "data-init": "" } : {}, onClick: onClose, className: "text-slate-400 transition hover:text-white", "aria-label": t2("close"), children: /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12" }) }) })
+            /* @__PURE__ */ jsx("p", { className: "text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400", children: t("vtTitle") }),
+            /* @__PURE__ */ jsx("button", { type: "button", ref: closeRef, ...isTv ? { "data-f": "", "data-init": "" } : {}, onClick: onClose, className: "text-slate-400 transition hover:text-white", "aria-label": t("close"), children: /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.2", strokeLinecap: "round", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12" }) }) })
           ] }),
           /* @__PURE__ */ jsx("div", { className: "mb-3 flex flex-wrap gap-1.5", children: Object.entries(TUNING_PRESETS).map(([id4, preset]) => /* @__PURE__ */ jsx(
             "button",
@@ -175198,7 +175198,7 @@
               ...isTv ? { "data-f": "" } : {},
               onClick: () => apply({ ...DEFAULT_TUNING, ...preset.patch }),
               className: `rounded-full border px-2.5 py-1 text-[10.5px] font-medium transition ${matchesPreset2(preset.patch) ? "border-accent-400/60 bg-accent-500/15 text-accent-200" : "border-white/10 text-slate-300 hover:border-white/25"}`,
-              children: t2(preset.labelKey)
+              children: t(preset.labelKey)
             },
             id4
           )) }),
@@ -175214,7 +175214,7 @@
                   apply({ ...tuning, [key]: next2 });
                 }),
                 children: [
-                  /* @__PURE__ */ jsx("span", { className: "w-16 flex-none text-[11px] text-slate-300", children: t2(labelKey) }),
+                  /* @__PURE__ */ jsx("span", { className: "w-16 flex-none text-[11px] text-slate-300", children: t(labelKey) }),
                   /* @__PURE__ */ jsx(
                     "input",
                     {
@@ -175234,12 +175234,12 @@
               key
             )
           )) }),
-          /* @__PURE__ */ jsx(MiniHeader, { children: t2("atEyebrow") }),
+          /* @__PURE__ */ jsx(MiniHeader, { children: t("atEyebrow") }),
           /* @__PURE__ */ jsx("div", { className: "space-y-2", children: AUDIO_TOGGLES.map(([key, labelKey]) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-2", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-[11px] text-slate-300", children: t2(labelKey) }),
+            /* @__PURE__ */ jsx("span", { className: "text-[11px] text-slate-300", children: t(labelKey) }),
             /* @__PURE__ */ jsx(MiniToggle, { tv: isTv, checked: audio[key], onChange: () => applyAudio({ ...audio, [key]: !audio[key] }) })
           ] }, key)) }),
-          /* @__PURE__ */ jsx(MiniHeader, { children: t2("rtEyebrow") }),
+          /* @__PURE__ */ jsx(MiniHeader, { children: t("rtEyebrow") }),
           /* @__PURE__ */ jsxs("div", { className: "space-y-2.5", children: [
             /* @__PURE__ */ jsx("div", { className: "flex flex-wrap gap-1.5", children: ["light", "balanced", "max"].map((profile) => /* @__PURE__ */ jsx(
               "button",
@@ -175248,7 +175248,7 @@
                 ...isTv ? { "data-f": "" } : {},
                 onClick: () => applyRender({ ...render, profile }),
                 className: `rounded-full border px-2.5 py-1 text-[10.5px] font-medium transition ${render.profile === profile ? "border-accent-400/60 bg-accent-500/15 text-accent-200" : "border-white/10 text-slate-300 hover:border-white/25"}`,
-                children: t2(profile === "light" ? "rtProfileLight" : profile === "max" ? "rtProfileMax" : "rtProfileBalanced")
+                children: t(profile === "light" ? "rtProfileLight" : profile === "max" ? "rtProfileMax" : "rtProfileBalanced")
               },
               profile
             )) }),
@@ -175262,7 +175262,7 @@
                   applyRender({ ...render, toneMapping: next2 });
                 }),
                 children: [
-                  /* @__PURE__ */ jsx("span", { className: "text-[11px] text-slate-300", children: t2("rtToneMapping") }),
+                  /* @__PURE__ */ jsx("span", { className: "text-[11px] text-slate-300", children: t("rtToneMapping") }),
                   /* @__PURE__ */ jsx(
                     "select",
                     {
@@ -175283,7 +175283,7 @@
               ["anime4k", "rtAnime4k"],
               ["largeBuffer", "rtBuffer"]
             ].map(([key, labelKey]) => /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between gap-2", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-[11px] text-slate-300", children: t2(labelKey) }),
+              /* @__PURE__ */ jsx("span", { className: "text-[11px] text-slate-300", children: t(labelKey) }),
               /* @__PURE__ */ jsx(
                 MiniToggle,
                 {
@@ -175306,10 +175306,10 @@
                   applyRender({ ...DEFAULT_RENDER_TUNING });
                 },
                 className: "rounded-full border border-white/10 px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-slate-300 transition hover:border-white/30 hover:text-white disabled:opacity-30",
-                children: t2("shortcutsReset")
+                children: t("shortcutsReset")
               }
             ),
-            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-slate-500", children: t2("vtLiveNote") })
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] text-slate-500", children: t("vtLiveNote") })
           ] })
         ]
       }
@@ -176193,7 +176193,7 @@
     className = "",
     variant = "standalone"
   }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const [person, setPerson] = useState(null);
     const [fetchError, setFetchError] = useState(false);
     const [errorKind, setErrorKind] = useState(null);
@@ -176239,8 +176239,8 @@
     const birthYear = person.birthday ? person.birthday.slice(0, 4) : null;
     const ageLabel = age !== null ? person.deathday ? `${birthYear} \u2013 ${person.deathday.slice(0, 4)} (${age})` : `${birthYear} (${age})` : birthYear;
     const shortBio = person.biography?.trim();
-    const movieLabel = t2("movie");
-    const seriesLabel = t2("series");
+    const movieLabel = t("movie");
+    const seriesLabel = t("series");
     if (variant === "sidebar") {
       return /* @__PURE__ */ jsxs("div", { className: `mb-4 ${className}`, children: [
         /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 px-1 py-2", children: [
@@ -176275,7 +176275,7 @@
                 type: "button",
                 onClick: () => setExpanded(true),
                 className: "rounded-full border border-white/10 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-slate-400 transition hover:border-white/20 hover:text-white",
-                children: t2("readMore")
+                children: t("readMore")
               }
             ) : null
           ] })
@@ -176286,19 +176286,19 @@
               /* @__PURE__ */ jsx("div", { className: "h-32 w-24 flex-shrink-0 overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10", children: person.profileUrl ? /* @__PURE__ */ jsx("img", { src: person.profileUrl, alt: person.name, className: "h-full w-full object-cover" }) : /* @__PURE__ */ jsx("div", { className: "flex h-full w-full items-center justify-center text-2xl font-semibold text-slate-600", children: person.name.charAt(0) }) }),
               /* @__PURE__ */ jsx("div", { className: "min-w-0 flex-1 space-y-3", children: /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-x-4 gap-y-3 text-[11px] leading-5", children: [
                 person.knownFor ? /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsx("div", { className: "uppercase tracking-[0.16em] text-slate-500", children: t2("knownFor") }),
+                  /* @__PURE__ */ jsx("div", { className: "uppercase tracking-[0.16em] text-slate-500", children: t("knownFor") }),
                   /* @__PURE__ */ jsx("div", { className: "text-slate-300", children: person.knownFor })
                 ] }) : null,
                 person.knownCreditsCount > 0 ? /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsx("div", { className: "uppercase tracking-[0.16em] text-slate-500", children: t2("credits") }),
+                  /* @__PURE__ */ jsx("div", { className: "uppercase tracking-[0.16em] text-slate-500", children: t("credits") }),
                   /* @__PURE__ */ jsx("div", { className: "text-slate-300", children: person.knownCreditsCount })
                 ] }) : null,
                 person.gender ? /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsx("div", { className: "uppercase tracking-[0.16em] text-slate-500", children: t2("gender") }),
+                  /* @__PURE__ */ jsx("div", { className: "uppercase tracking-[0.16em] text-slate-500", children: t("gender") }),
                   /* @__PURE__ */ jsx("div", { className: "text-slate-300", children: person.gender })
                 ] }) : null,
                 ageLabel ? /* @__PURE__ */ jsxs("div", { children: [
-                  /* @__PURE__ */ jsx("div", { className: "uppercase tracking-[0.16em] text-slate-500", children: t2("birth") }),
+                  /* @__PURE__ */ jsx("div", { className: "uppercase tracking-[0.16em] text-slate-500", children: t("birth") }),
                   /* @__PURE__ */ jsx("div", { className: "text-slate-300", children: ageLabel })
                 ] }) : null
               ] }) })
@@ -176318,22 +176318,22 @@
                   type: "button",
                   onClick: () => setBioExpanded((value) => !value),
                   className: "text-xs font-medium text-accent-300 transition hover:text-accent-200",
-                  children: bioExpanded ? t2("readLess") : t2("readMore")
+                  children: bioExpanded ? t("readLess") : t("readMore")
                 }
               )
             ] }) : person.topCredits.length > 0 ? /* @__PURE__ */ jsxs("p", { className: "text-sm leading-6 text-slate-500", children: [
-              t2("knownFor"),
+              t("knownFor"),
               " ",
               person.topCredits.map((credit) => credit.title).slice(0, 3).join(", "),
               "."
-            ] }) : /* @__PURE__ */ jsx("p", { className: "text-sm leading-6 text-slate-600", children: t2("noBiography") }),
+            ] }) : /* @__PURE__ */ jsx("p", { className: "text-sm leading-6 text-slate-600", children: t("noBiography") }),
             person.placeOfBirth ? /* @__PURE__ */ jsxs("p", { className: "text-xs leading-5 text-slate-500", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-slate-400", children: t2("bornIn") }),
+              /* @__PURE__ */ jsx("span", { className: "text-slate-400", children: t("bornIn") }),
               " ",
               person.placeOfBirth
             ] }) : null,
             person.alsoKnownAs.length > 0 ? /* @__PURE__ */ jsxs("p", { className: "text-xs leading-5 text-slate-500", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-slate-400", children: t2("alsoKnownAs") }),
+              /* @__PURE__ */ jsx("span", { className: "text-slate-400", children: t("alsoKnownAs") }),
               " ",
               person.alsoKnownAs.join(", ")
             ] }) : null
@@ -176345,7 +176345,7 @@
               onCreditClick,
               movieLabel,
               seriesLabel,
-              title: t2("knownFor")
+              title: t("knownFor")
             }
           )
         ] }) : null
@@ -176383,7 +176383,7 @@
               type: "button",
               onClick: () => setExpanded((value) => !value),
               className: "rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] uppercase tracking-[0.18em] text-slate-300 transition hover:border-white/20 hover:bg-white/10 hover:text-white",
-              children: expanded ? t2("readLess") : t2("readMore")
+              children: expanded ? t("readLess") : t("readMore")
             }
           ) : null
         ] })
@@ -176394,29 +176394,29 @@
           /* @__PURE__ */ jsxs("div", { className: "space-y-4", children: [
             /* @__PURE__ */ jsxs("div", { className: "grid grid-cols-2 gap-x-6 gap-y-4 text-sm leading-6", children: [
               person.knownFor ? /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("div", { className: "mb-1 uppercase tracking-[0.22em] text-slate-500", children: t2("knownFor") }),
+                /* @__PURE__ */ jsx("div", { className: "mb-1 uppercase tracking-[0.22em] text-slate-500", children: t("knownFor") }),
                 /* @__PURE__ */ jsx("div", { className: "text-slate-200", children: person.knownFor })
               ] }) : null,
               person.knownCreditsCount > 0 ? /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("div", { className: "mb-1 uppercase tracking-[0.22em] text-slate-500", children: t2("credits") }),
+                /* @__PURE__ */ jsx("div", { className: "mb-1 uppercase tracking-[0.22em] text-slate-500", children: t("credits") }),
                 /* @__PURE__ */ jsx("div", { className: "text-slate-200", children: person.knownCreditsCount })
               ] }) : null,
               person.gender ? /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("div", { className: "mb-1 uppercase tracking-[0.22em] text-slate-500", children: t2("gender") }),
+                /* @__PURE__ */ jsx("div", { className: "mb-1 uppercase tracking-[0.22em] text-slate-500", children: t("gender") }),
                 /* @__PURE__ */ jsx("div", { className: "text-slate-200", children: person.gender })
               ] }) : null,
               ageLabel ? /* @__PURE__ */ jsxs("div", { children: [
-                /* @__PURE__ */ jsx("div", { className: "mb-1 uppercase tracking-[0.22em] text-slate-500", children: t2("birth") }),
+                /* @__PURE__ */ jsx("div", { className: "mb-1 uppercase tracking-[0.22em] text-slate-500", children: t("birth") }),
                 /* @__PURE__ */ jsx("div", { className: "text-slate-200", children: ageLabel })
               ] }) : null
             ] }),
             person.placeOfBirth ? /* @__PURE__ */ jsxs("p", { className: "text-sm leading-6 text-slate-400", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: t2("bornIn") }),
+              /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: t("bornIn") }),
               " ",
               person.placeOfBirth
             ] }) : null,
             person.alsoKnownAs.length > 0 ? /* @__PURE__ */ jsxs("p", { className: "text-sm leading-6 text-slate-500", children: [
-              /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: t2("alsoKnownAs") }),
+              /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: t("alsoKnownAs") }),
               " ",
               person.alsoKnownAs.join(", ")
             ] }) : null
@@ -176434,11 +176434,11 @@
               children: shortBio
             }
           ) : person.topCredits.length > 0 ? /* @__PURE__ */ jsxs("p", { className: "text-sm leading-7 text-slate-500", children: [
-            t2("knownFor"),
+            t("knownFor"),
             " ",
             person.topCredits.map((credit) => credit.title).slice(0, 3).join(", "),
             "."
-          ] }) : /* @__PURE__ */ jsx("p", { className: "text-sm leading-7 text-slate-600", children: t2("noBiography") }) })
+          ] }) : /* @__PURE__ */ jsx("p", { className: "text-sm leading-7 text-slate-600", children: t("noBiography") }) })
         ] }) }),
         /* @__PURE__ */ jsx(
           CreditRail,
@@ -176447,7 +176447,7 @@
             onCreditClick,
             movieLabel,
             seriesLabel,
-            title: t2("knownFor")
+            title: t("knownFor")
           }
         )
       ] }) : null
@@ -176457,7 +176457,7 @@
   // components/results/person-sidebar-panel.tsx
   init_jsx_runtime_shim();
   function PersonSidebarPanel({ personId, personName, onClose, onBack, onCreditClick }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const isTv = useTvMode();
     const closeRef = useRef(null);
     useEffect(() => {
@@ -176508,7 +176508,7 @@
                   children: /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.5, children: /* @__PURE__ */ jsx("path", { d: "m15 18-6-6 6-6" }) })
                 }
               ) : null,
-              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400", children: t2("actor") })
+              /* @__PURE__ */ jsx("span", { className: "text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400", children: t("actor") })
             ] }),
             /* @__PURE__ */ jsx(
               "button",
@@ -176769,7 +176769,7 @@
   init_react_shim();
   init_jsx_runtime_shim();
   function PlayerSoundtrackPanel({ title, year, onClose }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const isTv = useTvMode();
     const closeRef = useRef(null);
     const [state, setState] = useState("loading");
@@ -176834,7 +176834,7 @@
         ...isTv ? { "data-panel-root": "" } : {},
         children: [
           /* @__PURE__ */ jsxs("div", { className: "flex flex-shrink-0 items-center justify-between border-b border-white/[0.07] px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top),var(--android-inset-top,0px))]", children: [
-            /* @__PURE__ */ jsx("span", { className: "text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400", children: t2("soundtrack") }),
+            /* @__PURE__ */ jsx("span", { className: "text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400", children: t("soundtrack") }),
             /* @__PURE__ */ jsx(
               "button",
               {
@@ -176850,12 +176850,12 @@
           /* @__PURE__ */ jsxs("div", { className: `flex min-h-0 flex-1 flex-col ${state === "embed" ? "" : "overflow-y-auto overscroll-contain"}`, ...isTv && state !== "embed" ? { "data-scroll": "" } : {}, children: [
             state === "loading" && /* @__PURE__ */ jsx("div", { className: "flex h-32 items-center justify-center", children: /* @__PURE__ */ jsx("svg", { className: "h-6 w-6 animate-spin text-slate-500", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, children: /* @__PURE__ */ jsx("path", { d: "M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" }) }) }),
             state === "error" && /* @__PURE__ */ jsxs("div", { className: "flex h-32 items-center justify-center text-sm text-slate-500", children: [
-              t2("soundtrackLoadError"),
+              t("soundtrackLoadError"),
               errorKind === "timeout" ? " (timeout)" : ""
             ] }),
             state === "fallback" && result && /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-4 px-4 py-8 text-center", children: [
               /* @__PURE__ */ jsx("svg", { className: "h-10 w-10 text-green-400", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" }) }),
-              /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t2("noSoundtrackFound") }),
+              /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("noSoundtrackFound") }),
               /* @__PURE__ */ jsxs(
                 "a",
                 {
@@ -176865,7 +176865,7 @@
                   ...isTv ? { "data-f": "" } : {},
                   className: "rounded-full border border-green-500/40 bg-green-500/10 px-4 py-1.5 text-xs font-medium text-green-400 transition hover:bg-green-500/20",
                   children: [
-                    t2("searchOnSpotify"),
+                    t("searchOnSpotify"),
                     " \u2197"
                   ]
                 }
@@ -176887,7 +176887,7 @@
                     rel: "noopener noreferrer",
                     ...isTv ? { "data-f": "" } : {},
                     className: "flex-shrink-0 text-[10px] text-slate-500 transition hover:text-green-400",
-                    title: t2("openOnSpotify"),
+                    title: t("openOnSpotify"),
                     children: /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" }) })
                   }
                 )
@@ -176901,7 +176901,7 @@
                   loading: "lazy",
                   className: "min-h-0 flex-1",
                   style: { border: "none", display: "block", height: "100%" },
-                  title: result.albumName ?? t2("soundtrack")
+                  title: result.albumName ?? t("soundtrack")
                 }
               )
             ] })
@@ -176982,7 +176982,7 @@
     onSelect,
     onClose
   }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const isTv = useTvMode();
     const currentRef = useRef(null);
     const spoiler = getSpoilerMaskSettings();
@@ -177019,7 +177019,7 @@
         children: [
           /* @__PURE__ */ jsxs("div", { className: "flex flex-shrink-0 items-center justify-between border-b border-white/[0.07] px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top),var(--android-inset-top,0px))]", children: [
             /* @__PURE__ */ jsxs("span", { className: "text-[10px] font-semibold uppercase tracking-[0.22em] text-slate-400", children: [
-              t2("seasonLabel"),
+              t("seasonLabel"),
               " ",
               seasonNumber
             ] }),
@@ -177029,7 +177029,7 @@
                 type: "button",
                 ...isTv ? { "data-f": "" } : {},
                 onClick: onClose,
-                "aria-label": t2("close"),
+                "aria-label": t("close"),
                 className: "flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition hover:bg-white/10 hover:text-white",
                 children: /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.5, children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12" }) })
               }
@@ -177040,17 +177040,17 @@
             {
               className: "flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain",
               ...isTv ? { "data-scroll": "" } : {},
-              children: episodes.length === 0 ? /* @__PURE__ */ jsx("p", { className: "px-4 py-6 text-sm text-slate-500", children: t2("noEpisodes") }) : episodes.map((episode) => {
+              children: episodes.length === 0 ? /* @__PURE__ */ jsx("p", { className: "px-4 py-6 text-sm text-slate-500", children: t("noEpisodes") }) : episodes.map((episode) => {
                 const isCurrent = episode.number === currentEpisode;
                 const mask2 = spoilerMaskFor(spoiler, {
                   watched: Boolean(episode.watched) || isCurrent,
                   isNextUp: false
                 });
                 const isNext = currentEpisode != null && episode.number === currentEpisode + 1;
-                const etikett = isCurrent ? t2("epPlaying") : isNext ? t2("epNext") : null;
+                const etikett = isCurrent ? t("epPlaying") : isNext ? t("epNext") : null;
                 const delar = [
                   episode.runtimeMinutes ? `${episode.runtimeMinutes} min` : null,
-                  isCurrent && currentRemaining ? t2("epRemaining").replace("{time}", currentRemaining) : episode.watched && !isCurrent ? t2("epWatched") : null
+                  isCurrent && currentRemaining ? t("epRemaining").replace("{time}", currentRemaining) : episode.watched && !isCurrent ? t("epWatched") : null
                 ].filter(Boolean);
                 const meta = delar.join(" \xB7 ");
                 return /* @__PURE__ */ jsxs(
@@ -177197,7 +177197,7 @@
     pipRef,
     isTv
   }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const [index3, setIndex] = useState(0);
     const [failedLogos, setFailedLogos] = useState(/* @__PURE__ */ new Set());
     const interactedRef = useRef(false);
@@ -177361,7 +177361,7 @@
                   {
                     type: "button",
                     "data-f": isTv ? "1" : void 0,
-                    "aria-label": t2("previous"),
+                    "aria-label": t("previous"),
                     disabled: index3 === 0,
                     onClick: () => step(-1),
                     className: "grid h-9 w-9 place-items-center rounded-full border border-white/18 bg-white/5 text-slate-200 disabled:opacity-40",
@@ -177373,7 +177373,7 @@
                   {
                     type: "button",
                     "data-f": isTv ? "1" : void 0,
-                    "aria-label": t2("next"),
+                    "aria-label": t("next"),
                     disabled: index3 >= count - 1,
                     onClick: () => step(1),
                     className: "grid h-9 w-9 place-items-center rounded-full border border-accent-500/70 bg-accent-500/15 text-white disabled:opacity-40",
@@ -177402,7 +177402,7 @@
                   {
                     type: "button",
                     "data-f": isTv ? "1" : void 0,
-                    "aria-label": t2("creditsBackToFilm"),
+                    "aria-label": t("creditsBackToFilm"),
                     onClick: () => {
                       markInteracted();
                       onBackToPlayback();
@@ -177413,7 +177413,7 @@
                 ),
                 /* @__PURE__ */ jsxs("div", { className: "absolute inset-x-0 bottom-0 z-10 flex flex-col gap-1.5 bg-[linear-gradient(to_top,rgba(2,4,10,0.96)_40%,rgba(2,4,10,0))] px-3 pb-2 pt-4", children: [
                   /* @__PURE__ */ jsxs("div", { className: "flex items-baseline justify-between gap-2", children: [
-                    /* @__PURE__ */ jsx("span", { className: "text-[10px] uppercase tracking-[0.13em] text-slate-300/75", children: t2("creditsRemaining") }),
+                    /* @__PURE__ */ jsx("span", { className: "text-[10px] uppercase tracking-[0.13em] text-slate-300/75", children: t("creditsRemaining") }),
                     /* @__PURE__ */ jsx("span", { className: "text-[11px] font-semibold tabular-nums text-white", children: formatRemaining(remainingSeconds) })
                   ] }),
                   /* @__PURE__ */ jsx("div", { className: "h-1 overflow-hidden rounded-full bg-white/15", children: /* @__PURE__ */ jsx(
@@ -177901,32 +177901,32 @@ ${cue.text}`).join("\n\n")}
     if (!res.ok) throw new Error(`hls init failed: ${res.status}`);
     return await res.json();
   }
-  function getAspectRatioLabel(mode, t2) {
+  function getAspectRatioLabel(mode, t) {
     switch (mode) {
       case "contain":
-        return t2("aspectContain");
+        return t("aspectContain");
       case "fill":
-        return t2("aspectFill");
+        return t("aspectFill");
       case "ratio_16_9":
-        return t2("aspect16_9");
+        return t("aspect16_9");
       case "ratio_4_3":
-        return t2("aspect4_3");
+        return t("aspect4_3");
       case "auto":
       default:
-        return t2("aspectAuto");
+        return t("aspectAuto");
     }
   }
-  function getCropZoomLabel(mode, t2) {
+  function getCropZoomLabel(mode, t) {
     switch (mode) {
       case "crop":
-        return t2("cropZoomCrop");
+        return t("cropZoomCrop");
       case "zoom":
-        return t2("cropZoomZoom");
+        return t("cropZoomZoom");
       case "zoom_plus":
-        return t2("cropZoomZoomPlus");
+        return t("cropZoomZoomPlus");
       case "off":
       default:
-        return t2("cropZoomOff");
+        return t("cropZoomOff");
     }
   }
   function getCropZoomVideoStyle(mode) {
@@ -178179,7 +178179,7 @@ ${cue.text}`).join("\n\n")}
     const boundsSyncFrameRef = useRef(null);
     const boundsResyncTimersRef = useRef([]);
     const didSeekRef = useRef(false);
-    const { lang, t: t2 } = useLang();
+    const { lang, t } = useLang();
     const derivedTmdbId = mediaId && !mediaId.startsWith("local-") ? mediaId.replace(/^(movie|tv)-/, "") : null;
     const wikiTmdbId = tmdbId ?? derivedTmdbId;
     const inferredMediaType = mediaType ?? (season != null || episode != null ? "tv" : "movie");
@@ -178512,7 +178512,7 @@ ${cue.text}`).join("\n\n")}
     useEffect(() => {
       const video = videoRef.current;
       if (!video || useMpv) return;
-      video.querySelectorAll("track[data-lumio-subs]").forEach((t3) => t3.remove());
+      video.querySelectorAll("track[data-lumio-subs]").forEach((t2) => t2.remove());
       subtitleTrackRef.current = null;
       if (cues.length === 0) return;
       const vtt = cuesToVtt(cues, subDelay);
@@ -178681,10 +178681,10 @@ ${cue.text}`).join("\n\n")}
     }
     function getSubtitleUiError(error) {
       const kind = classifyFetchError(error);
-      if (kind === "timeout") return t2("vpSubTimeout");
-      if (kind === "network") return t2("vpSubNetwork");
-      if (kind === "http") return t2("vpSubHttp");
-      return t2("vpSubLoadFailed");
+      if (kind === "timeout") return t("vpSubTimeout");
+      if (kind === "network") return t("vpSubNetwork");
+      if (kind === "http") return t("vpSubHttp");
+      return t("vpSubLoadFailed");
     }
     function getTrackChannels(trackIndex) {
       if (trackIndex === null) return audioTracks[0]?.channels ?? null;
@@ -178704,24 +178704,24 @@ ${cue.text}`).join("\n\n")}
     }, [isDroidEngine]);
     useEffect(() => {
       if (!isDroidEngine) return;
-      setAudioTracks(droid.audioTracks.map((t3) => ({
-        index: t3.id,
-        codec: t3.codec ?? "audio",
-        language: t3.lang || null,
-        title: t3.title || null,
-        channels: typeof t3.channels === "number" ? t3.channels : null
+      setAudioTracks(droid.audioTracks.map((t2) => ({
+        index: t2.id,
+        codec: t2.codec ?? "audio",
+        language: t2.lang || null,
+        title: t2.title || null,
+        channels: typeof t2.channels === "number" ? t2.channels : null
       })));
       setActiveAudioTrack((prev) => {
         if (droid.selectedAudio > 0) return droid.selectedAudio;
-        if (prev !== null && droid.audioTracks.some((t3) => t3.id === prev)) return prev;
+        if (prev !== null && droid.audioTracks.some((t2) => t2.id === prev)) return prev;
         return droid.audioTracks[0]?.id ?? null;
       });
-      setMpvSubtitleTracks(droid.subtitleTracks.map((t3) => ({
-        sid: t3.id,
-        language: t3.lang || null,
-        title: t3.title || null,
+      setMpvSubtitleTracks(droid.subtitleTracks.map((t2) => ({
+        sid: t2.id,
+        language: t2.lang || null,
+        title: t2.title || null,
         external: false,
-        selected: t3.id === droid.sid,
+        selected: t2.id === droid.sid,
         forced: false
       })));
     }, [isDroidEngine, droid.audioTracks, droid.subtitleTracks, droid.selectedAudio, droid.sid]);
@@ -178754,20 +178754,20 @@ ${cue.text}`).join("\n\n")}
     const setMpvVideoGeometry2 = isDroidEngine ? async (args) => {
       await nativeSetVideoGeometry(args);
     } : setMpvVideoGeometry;
-    const getMpvAudioTracks2 = isDroidEngine ? async () => droid.audioTracks.map((t3) => ({
-      aid: t3.id,
-      language: t3.lang || null,
-      title: t3.title || null,
-      codec: t3.codec ?? null,
-      channels: t3.channels ?? null,
-      selected: t3.id === droid.selectedAudio
+    const getMpvAudioTracks2 = isDroidEngine ? async () => droid.audioTracks.map((t2) => ({
+      aid: t2.id,
+      language: t2.lang || null,
+      title: t2.title || null,
+      codec: t2.codec ?? null,
+      channels: t2.channels ?? null,
+      selected: t2.id === droid.selectedAudio
     })) : getMpvAudioTracks;
-    const getMpvSubtitleTracks2 = isDroidEngine ? async () => droid.subtitleTracks.map((t3) => ({
-      sid: t3.id,
-      language: t3.lang || null,
-      title: t3.title || null,
+    const getMpvSubtitleTracks2 = isDroidEngine ? async () => droid.subtitleTracks.map((t2) => ({
+      sid: t2.id,
+      language: t2.lang || null,
+      title: t2.title || null,
       external: false,
-      selected: t3.id === droid.sid,
+      selected: t2.id === droid.sid,
       forced: false
     })) : getMpvSubtitleTracks;
     const getMpvSid2 = isDroidEngine ? async () => droid.sid : getMpvSid;
@@ -179063,8 +179063,8 @@ ${cue.text}`).join("\n\n")}
     const audioChannelLabel = activeAudioChannels ? activeAudioChannels === 1 ? "Mono" : activeAudioChannels === 2 ? "Stereo" : activeAudioChannels === 6 ? "5.1" : `${activeAudioChannels}ch` : null;
     const audioCodecLabel = activeAudioInfo?.codec?.toUpperCase() ?? null;
     const audioIndicator = useMpv ? audioChannelLabel ? `Original via mpv ${audioChannelLabel}` : "Original via mpv" : isServerStreamUrl(videoSrc) ? `${audioOutputMode === "compatible" ? "AAC Stereo" : `AAC ${audioChannelLabel ?? "Audio"}`}` : `${audioCodecLabel ?? "Direct"}${audioChannelLabel ? ` ${audioChannelLabel}` : ""}`;
-    const aspectLabel = getAspectRatioLabel(aspectRatioMode, t2);
-    const cropZoomLabel = getCropZoomLabel(cropZoomMode, t2);
+    const aspectLabel = getAspectRatioLabel(aspectRatioMode, t);
+    const cropZoomLabel = getCropZoomLabel(cropZoomMode, t);
     const videoPresentation = getVideoPresentation(aspectRatioMode);
     const cropZoomVideoStyle = getCropZoomVideoStyle(cropZoomMode);
     const aspectFrameStyle = (() => {
@@ -179237,11 +179237,11 @@ ${cue.text}`).join("\n\n")}
         };
         applyAspectAndZoom();
         const t1 = window.setTimeout(applyAspectAndZoom, 150);
-        const t22 = window.setTimeout(applyAspectAndZoom, 700);
+        const t2 = window.setTimeout(applyAspectAndZoom, 700);
         const t3 = window.setTimeout(applyAspectAndZoom, 1500);
         return () => {
           window.clearTimeout(t1);
-          window.clearTimeout(t22);
+          window.clearTimeout(t2);
           window.clearTimeout(t3);
         };
       }
@@ -179832,7 +179832,7 @@ ${cue.text}`).join("\n\n")}
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ url, app: getExternalPlayerApp() })
           });
-          if (!response.ok) throw new Error(t2("openExternalPlayerFailed"));
+          if (!response.ok) throw new Error(t("openExternalPlayerFailed"));
         }
       } catch (error) {
         console.error("[player] open external failed", error);
@@ -179860,9 +179860,9 @@ ${cue.text}`).join("\n\n")}
             filename: filename || title
           })
         });
-        if (!res.ok) throw new Error(t2("vpDownloadStartFailed"));
+        if (!res.ok) throw new Error(t("vpDownloadStartFailed"));
         const { jobId } = await res.json();
-        setDownloadState({ type: "downloading", jobId, progress: 0, filename: t2("preparingDownload") });
+        setDownloadState({ type: "downloading", jobId, progress: 0, filename: t("preparingDownload") });
         const es = new EventSource(`/api/download/progress?jobId=${jobId}`);
         downloadEsRef.current = es;
         es.onmessage = (event) => {
@@ -179880,28 +179880,28 @@ ${cue.text}`).join("\n\n")}
               setDownloadState({ type: "cancelled" });
             } else if (job.status === "error") {
               es.close();
-              setDownloadState({ type: "error", message: job.error ?? t2("downloadFailed") });
+              setDownloadState({ type: "error", message: job.error ?? t("downloadFailed") });
             } else {
               setDownloadState({ type: "downloading", jobId, progress: job.progress, filename: job.filename });
             }
           } catch {
             es.close();
-            setDownloadState({ type: "error", message: t2("downloadFailed") });
+            setDownloadState({ type: "error", message: t("downloadFailed") });
           }
         };
         es.onerror = () => {
           es.close();
-          setDownloadState({ type: "error", message: t2("downloadFailed") });
+          setDownloadState({ type: "error", message: t("downloadFailed") });
         };
       } catch (error) {
         setDownloadState({
           type: "error",
-          message: error instanceof Error ? error.message : t2("downloadFailed")
+          message: error instanceof Error ? error.message : t("downloadFailed")
         });
       } finally {
         setShowMoreMenu(false);
       }
-    }, [filename, t2, title, url]);
+    }, [filename, t, title, url]);
     const handleCancelDownload = useCallback(async () => {
       if (downloadState.type !== "downloading") {
         setDownloadState({ type: "idle" });
@@ -180195,7 +180195,7 @@ ${cue.text}`).join("\n\n")}
       const loadingGuard = window.setTimeout(() => {
         if (subtitleDownloadRequestIdRef.current === requestId) {
           setLoadingSub(false);
-          setSubtitleLoadError((prev) => prev ?? t2("vpSubDownloadTimeout"));
+          setSubtitleLoadError((prev) => prev ?? t("vpSubDownloadTimeout"));
         }
       }, 12e3);
       try {
@@ -180263,7 +180263,7 @@ ${cue.text}`).join("\n\n")}
             setLoadingSub(false);
             setActiveSubId(null);
             setCues([]);
-            setSubtitleLoadError(error instanceof Error ? t2("vpSubMpvFailedWith").replace("{message}", error.message) : t2("vpSubMpvFailed"));
+            setSubtitleLoadError(error instanceof Error ? t("vpSubMpvFailedWith").replace("{message}", error.message) : t("vpSubMpvFailed"));
             return;
           }
         }
@@ -181003,7 +181003,7 @@ ${cue.text}`).join("\n\n")}
             setSubtitleLoadError(null);
           } else {
             setSubtitles([]);
-            setSubtitleLoadError(t2("vpNoSubsFound"));
+            setSubtitleLoadError(t("vpNoSubsFound"));
           }
         } catch (error) {
           if (cancelled || subtitleListRequestIdRef.current !== requestId) return;
@@ -181211,7 +181211,7 @@ ${cue.text}`).join("\n\n")}
     }, [subtitles, embeddedSubtitleOptions]);
     useEffect(() => {
       if (embeddedSubtitleOptions.length === 0) return;
-      setSubtitleLoadError((current2) => current2 === t2("vpNoSubsFound") ? null : current2);
+      setSubtitleLoadError((current2) => current2 === t("vpNoSubsFound") ? null : current2);
     }, [embeddedSubtitleOptions.length]);
     useEffect(() => {
       if (manualSubtitleOverrideRef.current) return;
@@ -181486,7 +181486,7 @@ ${cue.text}`).join("\n\n")}
           item,
           heading: item.title,
           logoUrl: creditsLogos[item.id] ?? getCachedTitleLogo(item.type, item.id) ?? null,
-          primaryLabel: t2("play"),
+          primaryLabel: t("play"),
           /**
            * Play betyder SPELA.
            *
@@ -181503,7 +181503,7 @@ ${cue.text}`).join("\n\n")}
         });
       }
       return cards;
-    }, [creditsItems, creditsLogos, t2, onCreditsOpenDetails]);
+    }, [creditsItems, creditsLogos, t, onCreditsOpenDetails]);
     const creditsProgress = (() => {
       if (totalDuration <= 0) return 0;
       const start2 = creditsTriggerSeconds;
@@ -181653,7 +181653,7 @@ ${cue.text}`).join("\n\n")}
           setSubDrift(Math.abs(slope) > 5e-4 ? { slope, anchor: t1 } : null);
           setSubtitleAutoSyncState({
             type: "done",
-            message: `${t2("subtitleAnchorApplied")} ${t1 - s1 > 0 ? "+" : ""}${(t1 - s1).toFixed(1)}s \xB7 ${t2("subtitleAnchorDrift")}`
+            message: `${t("subtitleAnchorApplied")} ${t1 - s1 > 0 ? "+" : ""}${(t1 - s1).toFixed(1)}s \xB7 ${t("subtitleAnchorDrift")}`
           });
           setManualSyncFirstAnchor(null);
         } else {
@@ -181662,7 +181662,7 @@ ${cue.text}`).join("\n\n")}
           setManualSyncFirstAnchor({ time: tapTime, cueStart: cue.start });
           setSubtitleAutoSyncState({
             type: "done",
-            message: `${t2("subtitleAnchorApplied")} ${finalDelay > 0 ? "+" : ""}${finalDelay.toFixed(1)}s`
+            message: `${t("subtitleAnchorApplied")} ${finalDelay > 0 ? "+" : ""}${finalDelay.toFixed(1)}s`
           });
         }
         setManualSyncOpen(false);
@@ -181670,7 +181670,7 @@ ${cue.text}`).join("\n\n")}
       } finally {
         setManualSyncBusy(false);
       }
-    }, [activeAudioTrack, audioTracks, cues, manualSyncFirstAnchor, manualSyncTapTime, subDelay, t2, url, useMpv]);
+    }, [activeAudioTrack, audioTracks, cues, manualSyncFirstAnchor, manualSyncTapTime, subDelay, t, url, useMpv]);
     const scanCastDevices = useCallback(async () => {
       setCastScanning(true);
       setCastError(null);
@@ -181679,11 +181679,11 @@ ${cue.text}`).join("\n\n")}
         const data = await res.json();
         setCastDevices(Array.isArray(data.devices) ? data.devices : []);
       } catch {
-        setCastError(t2("castScanFailed"));
+        setCastError(t("castScanFailed"));
       } finally {
         setCastScanning(false);
       }
-    }, [t2]);
+    }, [t]);
     const sendToCast = useCallback(async (device, action) => {
       setCastError(null);
       try {
@@ -181703,7 +181703,7 @@ ${cue.text}`).join("\n\n")}
         });
         if (!res.ok) {
           const payload = await res.json().catch(() => ({}));
-          setCastError(payload.error ?? t2("castFailed"));
+          setCastError(payload.error ?? t("castFailed"));
           return;
         }
         if (action === "play") {
@@ -181712,9 +181712,9 @@ ${cue.text}`).join("\n\n")}
         }
         if (action === "stop") setCastTarget(null);
       } catch {
-        setCastError(t2("castFailed"));
+        setCastError(t("castFailed"));
       }
-    }, [mediaTitle, t2, title, url, useMpv]);
+    }, [mediaTitle, t, title, url, useMpv]);
     const prepareAirplaySession = useCallback(async () => {
       setAirplayPrepare("preparing");
       try {
@@ -181863,7 +181863,7 @@ ${cue.text}`).join("\n\n")}
         {
           type: "button",
           onClick: () => setOpenSurface(null),
-          "aria-label": t2("close"),
+          "aria-label": t("close"),
           className: "flex h-6 w-6 flex-none items-center justify-center rounded-full text-slate-500",
           children: /* @__PURE__ */ jsx("svg", { className: "h-3 w-3", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", strokeLinecap: "round", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12" }) })
         }
@@ -181987,19 +181987,19 @@ ${cue.text}`).join("\n\n")}
       /* @__PURE__ */ jsx("text", { x: "12", y: "13", fontSize: "8", fontWeight: "700", fill: "currentColor", stroke: "none", textAnchor: "middle", dominantBaseline: "middle", children: "10" })
     ] });
     const desktopControls = {
-      playPause: /* @__PURE__ */ jsx("button", { type: "button", onClick: togglePlay, "aria-label": t2("plPlayPause"), className: dtIconButtonClass(), children: isPlaying ? /* @__PURE__ */ jsx("svg", { className: "h-[19px] w-[19px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M6 19h4V5H6v14zm8-14v14h4V5h-4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }) }),
+      playPause: /* @__PURE__ */ jsx("button", { type: "button", onClick: togglePlay, "aria-label": t("plPlayPause"), className: dtIconButtonClass(), children: isPlaying ? /* @__PURE__ */ jsx("svg", { className: "h-[19px] w-[19px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M6 19h4V5H6v14zm8-14v14h4V5h-4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }) }),
       nextEpisode: episodes && episodes.items.length > 0 ? /* @__PURE__ */ jsx(
         "button",
         {
           type: "button",
           onClick: () => setShowEpisodes((open) => !open),
-          title: t2("plNextEpisode"),
-          "aria-label": t2("plNextEpisode"),
+          title: t("plNextEpisode"),
+          "aria-label": t("plNextEpisode"),
           className: dtIconButtonClass(showEpisodes ? "open" : "idle"),
           children: playerIcon("nextEpisode", "h-[19px] w-[19px]")
         }
       ) : null,
-      mute: /* @__PURE__ */ jsx("button", { type: "button", onClick: toggleMute, "aria-label": t2("plMute"), className: "flex-none p-1 text-slate-300 transition hover:text-white", children: muted || volume === 0 ? /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4 9.91 6.09 12 8.18V4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) }),
+      mute: /* @__PURE__ */ jsx("button", { type: "button", onClick: toggleMute, "aria-label": t("plMute"), className: "flex-none p-1 text-slate-300 transition hover:text-white", children: muted || volume === 0 ? /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73 4.27 3zM12 4 9.91 6.09 12 8.18V4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) }),
       volume: playerLayout.volumeStyle === "icon" ? null : playerLayout.volumeStyle === "stepper" ? /* @__PURE__ */ jsxs("span", { className: "flex flex-none items-center gap-1.5", children: [
         /* @__PURE__ */ jsx("button", { type: "button", onClick: () => applyVolume((muted ? 0 : volume) - 0.05), className: "flex h-6 w-6 items-center justify-center rounded-full border border-white/[0.14] text-xs text-slate-300 transition hover:bg-white/10 hover:text-white", children: "\u2212" }),
         /* @__PURE__ */ jsxs("span", { className: "min-w-[2.5rem] text-center text-xs tabular-nums text-slate-300", children: [
@@ -182016,7 +182016,7 @@ ${cue.text}`).join("\n\n")}
           {
             role: "slider",
             tabIndex: 0,
-            "aria-label": t2("plVolume"),
+            "aria-label": t("plVolume"),
             "aria-valuemin": 0,
             "aria-valuemax": 100,
             "aria-valuenow": Math.round((muted ? 0 : volume) * 100),
@@ -182041,8 +182041,8 @@ ${cue.text}`).join("\n\n")}
          "Hoppa över intro"-pillret, och "hittades inte" utgår helt — det var en
          rad som aldrig hade något att erbjuda. */
       segmentBadges: mediaType === "tv" && (introSegment || outroSegment) ? /* @__PURE__ */ jsxs(Fragment2, { children: [
-        introSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: introKind === "recap" ? t2("recapFound") : t2("introFound") }) : null,
-        outroSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: t2("outroFound") }) : null
+        introSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: introKind === "recap" ? t("recapFound") : t("introFound") }) : null,
+        outroSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: t("outroFound") }) : null
       ] }) : null,
       subtitles: /* @__PURE__ */ jsxs(
         "button",
@@ -182056,7 +182056,7 @@ ${cue.text}`).join("\n\n")}
             }
             setShowSubMenu((v) => !v);
           },
-          title: t2("subtitlesLabel"),
+          title: t("subtitlesLabel"),
           className: dtLabelButtonClass(showSubMenu ? "open" : activeSubId ? "active" : "idle"),
           children: [
             playerIcon("subtitles", "h-[17px] w-[17px]"),
@@ -182070,7 +182070,7 @@ ${cue.text}`).join("\n\n")}
           type: "button",
           ref: audioTriggerRef,
           onClick: () => setShowAudioMenu((v) => !v),
-          title: t2("audioLanguage"),
+          title: t("audioLanguage"),
           className: dtLabelButtonClass(showAudioMenu ? "open" : "idle"),
           children: [
             playerIcon("audioTrack", "h-[17px] w-[17px]"),
@@ -182084,7 +182084,7 @@ ${cue.text}`).join("\n\n")}
           type: "button",
           ref: aspectTriggerRef,
           onClick: () => setShowAspectMenu((value) => !value),
-          title: t2("aspectRatio"),
+          title: t("aspectRatio"),
           className: dtLabelButtonClass(showAspectMenu ? "open" : aspectRatioMode !== "auto" ? "active" : "idle"),
           children: [
             playerIcon("aspect", "h-[17px] w-[17px]"),
@@ -182101,7 +182101,7 @@ ${cue.text}`).join("\n\n")}
           type: "button",
           ref: cropTriggerRef,
           onClick: () => setShowCropZoomMenu((value) => !value),
-          title: t2("cropZoom"),
+          title: t("cropZoom"),
           className: dtLabelButtonClass(showCropZoomMenu ? "open" : cropZoomMode !== "off" ? "active" : "idle"),
           children: [
             playerIcon("cropZoom", "h-[17px] w-[17px]"),
@@ -182114,8 +182114,8 @@ ${cue.text}`).join("\n\n")}
         {
           type: "button",
           onClick: () => setShowWiki((v) => !v),
-          title: t2("info"),
-          "aria-label": t2("info"),
+          title: t("info"),
+          "aria-label": t("info"),
           className: dtIconButtonClass(showWiki ? "open" : "idle"),
           children: playerIcon("wiki", "h-[19px] w-[19px]")
         }
@@ -182125,8 +182125,8 @@ ${cue.text}`).join("\n\n")}
         {
           type: "button",
           onClick: () => setShowSoundtrack((v) => !v),
-          title: t2("soundtrack"),
-          "aria-label": t2("soundtrack"),
+          title: t("soundtrack"),
+          "aria-label": t("soundtrack"),
           className: dtIconButtonClass(showSoundtrack ? "open" : "idle"),
           children: playerIcon("soundtrack", "h-[19px] w-[19px]")
         }
@@ -182141,8 +182141,8 @@ ${cue.text}`).join("\n\n")}
             if (opening && castDevices.length === 0) void scanCastDevices();
             if (opening && isMpvEngine && !airplaySession) void prepareAirplaySession();
           },
-          title: t2("castTitle"),
-          "aria-label": t2("castTitle"),
+          title: t("castTitle"),
+          "aria-label": t("castTitle"),
           className: dtIconButtonClass(showCastMenu ? "open" : castTarget ? "active" : "idle"),
           children: playerIcon("cast", "h-[19px] w-[19px]")
         }
@@ -182153,8 +182153,8 @@ ${cue.text}`).join("\n\n")}
           type: "button",
           ref: tuningTriggerRef,
           onClick: () => setShowTuningPanel((v) => !v),
-          title: t2("vtTitle"),
-          "aria-label": t2("vtTitle"),
+          title: t("vtTitle"),
+          "aria-label": t("vtTitle"),
           className: dtIconButtonClass(showTuningPanel ? "open" : "idle"),
           children: playerIcon("tuning", "h-[19px] w-[19px]")
         }
@@ -182165,8 +182165,8 @@ ${cue.text}`).join("\n\n")}
           ref: moreTriggerRef,
           type: "button",
           onClick: () => setShowMoreMenu((value) => !value),
-          title: t2("moreActions"),
-          "aria-label": t2("moreActions"),
+          title: t("moreActions"),
+          "aria-label": t("moreActions"),
           className: dtIconButtonClass(showMoreMenu ? "open" : "idle"),
           children: playerIcon("more", "h-[19px] w-[19px]")
         }
@@ -182176,8 +182176,8 @@ ${cue.text}`).join("\n\n")}
         {
           type: "button",
           onClick: toggleFullscreen,
-          title: t2("plFullscreen"),
-          "aria-label": t2("plFullscreen"),
+          title: t("plFullscreen"),
+          "aria-label": t("plFullscreen"),
           className: dtIconButtonClass(),
           children: cssFullscreen ? /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" }) })
         }
@@ -182332,7 +182332,7 @@ ${cue.text}`).join("\n\n")}
           const current2 = modes.indexOf(aspectRatioMode);
           const next3 = modes[(current2 + (ratio > 1 ? 1 : modes.length - 1)) % modes.length];
           setAspectRatioMode(next3);
-          showGestureHud("aspect", 0, getAspectRatioLabel(next3, t2));
+          showGestureHud("aspect", 0, getAspectRatioLabel(next3, t));
         }
         return;
       }
@@ -182356,7 +182356,7 @@ ${cue.text}`).join("\n\n")}
       if (gesture.axis === "none") return;
       if (gesture.axis === "close") {
         gesture.closeOffset = Math.max(0, dy);
-        if (gesture.closeOffset > gesture.height * 0.25) showGestureHud("close", 0, t2("close"));
+        if (gesture.closeOffset > gesture.height * 0.25) showGestureHud("close", 0, t("close"));
         return;
       }
       if (gesture.axis === "seek") {
@@ -182430,46 +182430,46 @@ ${cue.text}`).join("\n\n")}
     const phoneControls = {
       subtitles: {
         label: activeSubLangCode,
-        title: t2("subtitlesLabel"),
+        title: t("subtitlesLabel"),
         state: showSubMenu ? "open" : activeSubId ? "active" : "idle",
         onClick: toggleSubtitleMenu,
         triggerRef: subTriggerRef
       },
       audioTrack: audioTracks.length > 0 ? {
         label: activeAudioLangCode,
-        title: t2("audioLanguage"),
+        title: t("audioLanguage"),
         state: showAudioMenu ? "open" : "idle",
         onClick: () => setShowAudioMenu((open) => !open),
         triggerRef: audioTriggerRef
       } : void 0,
       nextEpisode: episodes && episodes.items.length > 0 ? {
-        label: t2("plShortEpisodes"),
-        title: t2("plNextEpisode"),
+        label: t("plShortEpisodes"),
+        title: t("plNextEpisode"),
         state: showEpisodes ? "open" : "idle",
         onClick: () => setShowEpisodes((open) => !open)
       } : void 0,
       tuning: {
-        label: t2("plShortPicture"),
-        title: t2("vtTitle"),
+        label: t("plShortPicture"),
+        title: t("vtTitle"),
         state: showTuningPanel ? "open" : "idle",
         onClick: () => setShowTuningPanel((open) => !open),
         triggerRef: tuningTriggerRef
       },
       wiki: wikiTmdbId || resolvedImdbId ? {
-        label: t2("plShortWiki"),
-        title: t2("info"),
+        label: t("plShortWiki"),
+        title: t("info"),
         state: showWiki ? "open" : "idle",
         onClick: () => setShowWiki((open) => !open)
       } : void 0,
       soundtrack: title ? {
-        label: t2("plShortMusic"),
-        title: t2("soundtrack"),
+        label: t("plShortMusic"),
+        title: t("soundtrack"),
         state: showSoundtrack ? "open" : "idle",
         onClick: () => setShowSoundtrack((open) => !open)
       } : void 0,
       cropZoom: {
-        label: t2("plShortZoom"),
-        title: t2("cropZoom"),
+        label: t("plShortZoom"),
+        title: t("cropZoom"),
         value: cropZoomLabel,
         state: showCropZoomMenu ? "open" : cropZoomMode !== "off" ? "active" : "idle",
         onClick: () => setShowCropZoomMenu((open) => !open),
@@ -182477,21 +182477,21 @@ ${cue.text}`).join("\n\n")}
       },
       aspect: {
         label: aspectLabel.toUpperCase(),
-        title: t2("aspectRatio"),
+        title: t("aspectRatio"),
         value: aspectLabel,
         state: showAspectMenu ? "open" : aspectRatioMode !== "auto" ? "active" : "idle",
         onClick: () => setShowAspectMenu((open) => !open),
         triggerRef: aspectTriggerRef
       },
       cast: !isClientSession() ? {
-        label: t2("plShortCast"),
-        title: t2("castTitle"),
+        label: t("plShortCast"),
+        title: t("castTitle"),
         state: showCastMenu ? "open" : castTarget ? "active" : "idle",
         onClick: toggleCastMenu
       } : void 0,
       fullscreen: !isTauriEnv || isDesktopTauriEnv ? {
-        label: t2("plShortFullscreen"),
-        title: t2("plFullscreen"),
+        label: t("plShortFullscreen"),
+        title: t("plFullscreen"),
         state: cssFullscreen ? "active" : "idle",
         onClick: toggleFullscreen
       } : void 0
@@ -182567,7 +182567,7 @@ ${cue.text}`).join("\n\n")}
       },
       id4
     );
-    const downloadLabel = downloadState.type === "downloading" ? `${downloadState.progress}%` : downloadState.type === "done" ? t2("downloadComplete") : downloadState.type === "picking-folder" ? "\u2026" : null;
+    const downloadLabel = downloadState.type === "downloading" ? `${downloadState.progress}%` : downloadState.type === "done" ? t("downloadComplete") : downloadState.type === "picking-folder" ? "\u2026" : null;
     const renderPhoneDownload = (variant) => {
       if (isClientSession()) return null;
       const downloading = downloadState.type === "downloading";
@@ -182581,8 +182581,8 @@ ${cue.text}`).join("\n\n")}
             void (downloading ? handleCancelDownload() : handleDownload());
           },
           disabled: busy,
-          title: downloading ? t2("cancel") : t2("downloadThisVideo"),
-          "aria-label": downloading ? t2("cancel") : t2("downloadThisVideo"),
+          title: downloading ? t("cancel") : t("downloadThisVideo"),
+          "aria-label": downloading ? t("cancel") : t("downloadThisVideo"),
           className: variant === "round" ? `flex h-10 flex-none items-center gap-2 rounded-full transition ${active ? "bg-[rgb(var(--player-accent)/0.22)] px-4 text-white" : "w-10 justify-center bg-[rgba(13,14,22,0.6)] text-slate-100"}` : `flex h-[34px] flex-none items-center gap-1.5 rounded-lg transition ${active ? "px-2 text-[rgb(var(--player-accent))]" : "w-[34px] justify-center text-slate-300"}`,
           children: [
             downloadIcon(variant === "round" ? "h-[19px] w-[19px]" : "h-[17px] w-[17px]"),
@@ -182594,8 +182594,8 @@ ${cue.text}`).join("\n\n")}
     const renderSegmentPills = () => {
       if (mediaType !== "tv" || !showsControl("segmentBadges") || !introSegment && !outroSegment) return null;
       return /* @__PURE__ */ jsxs(Fragment2, { children: [
-        introSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: introKind === "recap" ? t2("recapFound") : t2("introFound") }) : null,
-        outroSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: t2("outroFound") }) : null
+        introSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: introKind === "recap" ? t("recapFound") : t("introFound") }) : null,
+        outroSegment ? /* @__PURE__ */ jsx("span", { className: dtStatusPillClass, children: t("outroFound") }) : null
       ] });
     };
     const renderPhoneClock = (bigClass, smallClass) => {
@@ -182648,9 +182648,9 @@ ${cue.text}`).join("\n\n")}
                     /* @__PURE__ */ jsx("p", { className: "text-lg font-semibold text-white", children: title }),
                     year && /* @__PURE__ */ jsx("p", { className: "mt-0.5 text-sm text-slate-500", children: year })
                   ] }),
-                  startError ? /* @__PURE__ */ jsx("p", { className: "max-w-xs text-sm text-rose-300", children: t2("sourceNotResponding") }) : /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-sm text-slate-400", children: [
+                  startError ? /* @__PURE__ */ jsx("p", { className: "max-w-xs text-sm text-rose-300", children: t("sourceNotResponding") }) : /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 text-sm text-slate-400", children: [
                     /* @__PURE__ */ jsx("svg", { className: "h-4 w-4 animate-spin", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }),
-                    mediaType === "tv" ? t2("startingEpisode") : t2("startingMovie")
+                    mediaType === "tv" ? t("startingEpisode") : t("startingMovie")
                   ] }),
                   /* @__PURE__ */ jsxs("div", { className: "flex flex-col items-center gap-3", children: [
                     clientOwnsSplash && resolveDirectStreamUrl2(url) && /* @__PURE__ */ jsx(
@@ -182664,7 +182664,7 @@ ${cue.text}`).join("\n\n")}
                           }
                         },
                         className: "rounded-full border border-orange-400/50 bg-orange-500/15 px-4 py-2 text-xs font-medium uppercase tracking-[0.16em] text-orange-200 transition hover:border-orange-400 hover:text-orange-100",
-                        children: t2("openInExternalPlayer")
+                        children: t("openInExternalPlayer")
                       }
                     ),
                     /* @__PURE__ */ jsx(
@@ -182676,7 +182676,7 @@ ${cue.text}`).join("\n\n")}
                         "data-init": isTv ? "1" : void 0,
                         onClick: handleClose,
                         className: "text-xs text-slate-500 transition hover:text-slate-300",
-                        children: startError ? t2("close") : t2("cancel")
+                        children: startError ? t("close") : t("cancel")
                       }
                     )
                   ] })
@@ -182711,7 +182711,7 @@ ${cue.text}`).join("\n\n")}
                     showsControl("audioOutput") ? /* @__PURE__ */ jsx(
                       "span",
                       {
-                        title: t2("currentAudioOutput"),
+                        title: t("currentAudioOutput"),
                         className: "flex-none rounded-md border border-white/[0.14] px-[7px] py-[3px] text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400",
                         children: audioIndicator
                       }
@@ -182731,7 +182731,7 @@ ${cue.text}`).join("\n\n")}
                             /* @__PURE__ */ jsx("path", { d: "M10 13a5 5 0 0 0 7.07 0l3.54-3.54a5 5 0 1 0-7.07-7.07L11 4" }),
                             /* @__PURE__ */ jsx("path", { d: "M14 11a5 5 0 0 0-7.07 0L3.39 14.54a5 5 0 1 0 7.07 7.07L13 20" })
                           ] }),
-                          copiedLink ? t2("copied") : t2("copyLink")
+                          copiedLink ? t("copied") : t("copyLink")
                         ]
                       }
                     ),
@@ -182741,7 +182741,7 @@ ${cue.text}`).join("\n\n")}
                         type: "button",
                         onClick: handleClose,
                         className: "rounded-lg border border-white/[0.14] px-3 py-1.5 text-xs font-medium text-slate-300 transition hover:bg-white/[0.07] hover:text-white",
-                        children: t2("close")
+                        children: t("close")
                       }
                     )
                   ] })
@@ -182780,7 +182780,7 @@ ${cue.text}`).join("\n\n")}
                           void handleCopyStreamLink();
                         },
                         className: "rounded-full border border-[rgb(var(--player-accent)/0.40)] px-3 py-[7px] text-[11px] font-medium text-[rgb(var(--player-accent))]",
-                        children: copiedLink ? t2("copied") : t2("copyLink")
+                        children: copiedLink ? t("copied") : t("copyLink")
                       }
                     ),
                     /* @__PURE__ */ jsx(
@@ -182789,7 +182789,7 @@ ${cue.text}`).join("\n\n")}
                         type: "button",
                         onClick: handleClose,
                         className: "rounded-full border border-white/[0.14] px-3 py-[7px] text-[11px] font-medium text-slate-300",
-                        children: t2("close")
+                        children: t("close")
                       }
                     )
                   ] })
@@ -182842,7 +182842,7 @@ ${cue.text}`).join("\n\n")}
                             void handleCopyStreamLink();
                           },
                           className: "rounded-full border border-white/10 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-slate-300 transition hover:border-white/30 hover:text-white",
-                          children: t2("copyLink")
+                          children: t("copyLink")
                         }
                       ),
                       /* @__PURE__ */ jsx(
@@ -182852,7 +182852,7 @@ ${cue.text}`).join("\n\n")}
                           "data-f": isTv ? "1" : void 0,
                           onClick: handleClose,
                           className: "rounded-full border border-white/10 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-slate-300 transition hover:border-white/30 hover:text-white",
-                          children: t2("close")
+                          children: t("close")
                         }
                       )
                     ]
@@ -182883,7 +182883,7 @@ ${cue.text}`).join("\n\n")}
                 ),
                 airplayActive && /* @__PURE__ */ jsxs("div", { className: "absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-black/80", children: [
                   /* @__PURE__ */ jsxs("span", { className: "text-lg text-white", children: [
-                    t2("castPlayingOn"),
+                    t("castPlayingOn"),
                     " AirPlay"
                   ] }),
                   /* @__PURE__ */ jsx(
@@ -182904,7 +182904,7 @@ ${cue.text}`).join("\n\n")}
                         void mpvCommand2(["seek", resumeAt, "absolute"]);
                         void setMpvPause2(false);
                       },
-                      children: t2("castStop")
+                      children: t("castStop")
                     }
                   )
                 ] }),
@@ -183123,7 +183123,7 @@ ${cue.text}`).join("\n\n")}
                         {
                           type: "button",
                           onClick: togglePlay,
-                          "aria-label": t2("plPlayPause"),
+                          "aria-label": t("plPlayPause"),
                           className: `flex items-center justify-center rounded-full border-[1.5px] text-white transition ${desktopChrome ? "h-[86px] w-[86px] border-white/20 bg-[rgba(13,14,22,0.3)] hover:bg-[rgb(var(--player-accent)/0.20)]" : landscapeChrome ? "h-[78px] w-[78px] border-[rgb(var(--player-accent)/0.50)] bg-[rgb(var(--player-accent)/0.16)] shadow-[0_0_40px_rgb(var(--player-accent)/0.25)]" : "h-[58px] w-[58px] border-white/[0.22] bg-[rgba(13,14,22,0.34)]"}`,
                           children: isPlaying ? /* @__PURE__ */ jsx("svg", { className: desktopChrome ? "h-[30px] w-[30px]" : landscapeChrome ? "h-[26px] w-[26px]" : "h-5 w-5", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M6 19h4V5H6v14zm8-14v14h4V5h-4z" }) }) : /* @__PURE__ */ jsx("svg", { className: desktopChrome ? "h-8 w-8" : landscapeChrome ? "h-7 w-7" : "h-[22px] w-[22px]", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) })
                         }
@@ -183155,7 +183155,7 @@ ${cue.text}`).join("\n\n")}
                     },
                     children: [
                       /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 items-center gap-3", children: [
-                        /* @__PURE__ */ jsx("button", { type: "button", onClick: handleClose, "aria-label": t2("close"), className: "flex-none p-1 text-white", children: /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: [
+                        /* @__PURE__ */ jsx("button", { type: "button", onClick: handleClose, "aria-label": t("close"), className: "flex-none p-1 text-white", children: /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round", children: [
                           /* @__PURE__ */ jsx("path", { d: "M19 12H5" }),
                           /* @__PURE__ */ jsx("path", { d: "m11 6-6 6 6 6" })
                         ] }) }),
@@ -183175,7 +183175,7 @@ ${cue.text}`).join("\n\n")}
                 ),
                 seekingProxy && hasEverStarted && /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 z-30 flex items-center justify-center", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3 rounded-full bg-black/55 px-5 py-3 backdrop-blur-md", children: [
                   /* @__PURE__ */ jsx("svg", { className: "h-6 w-6 animate-spin text-white", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }),
-                  /* @__PURE__ */ jsx("span", { className: "text-sm text-white/90", children: t2("startingMovie") })
+                  /* @__PURE__ */ jsx("span", { className: "text-sm text-white/90", children: t("startingMovie") })
                 ] }) }),
                 !hasStarted && requiresUserStart && /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-40 flex items-center justify-center bg-black/35", children: /* @__PURE__ */ jsx(
                   "button",
@@ -183186,7 +183186,7 @@ ${cue.text}`).join("\n\n")}
                       void attemptHtml5Start(true);
                     },
                     className: "rounded-full border border-white/20 bg-black/55 px-5 py-2 text-xs uppercase tracking-[0.18em] text-white transition hover:border-white/40",
-                    children: t2("pressToStart")
+                    children: t("pressToStart")
                   }
                 ) }),
                 manualSyncOpen && /* @__PURE__ */ jsx(
@@ -183203,7 +183203,7 @@ ${cue.text}`).join("\n\n")}
                         className: "mb-24 w-full max-w-xl rounded-2xl border border-white/10 bg-slate-900/95 p-5 shadow-2xl",
                         onClick: (event) => event.stopPropagation(),
                         children: manualSyncTapTime === null ? /* @__PURE__ */ jsxs(Fragment2, { children: [
-                          /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-200", children: t2("subtitleManualSyncTapPrompt") }),
+                          /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-200", children: t("subtitleManualSyncTapPrompt") }),
                           /* @__PURE__ */ jsx(
                             "button",
                             {
@@ -183212,20 +183212,20 @@ ${cue.text}`).join("\n\n")}
                               "data-f": isTv ? "1" : void 0,
                               onClick: () => setManualSyncTapTime(realTimeRef.current),
                               className: "mt-4 w-full rounded-xl bg-aurora-500/80 px-4 py-3 text-sm font-semibold text-white transition hover:bg-aurora-400/80",
-                              children: t2("subtitleManualSyncTapButton")
+                              children: t("subtitleManualSyncTapButton")
                             }
                           ),
-                          /* @__PURE__ */ jsx("p", { className: "mt-3 text-[11px] text-slate-500", children: t2("subtitleManualSyncSecondHint") })
+                          /* @__PURE__ */ jsx("p", { className: "mt-3 text-[11px] text-slate-500", children: t("subtitleManualSyncSecondHint") })
                         ] }) : /* @__PURE__ */ jsxs(Fragment2, { children: [
-                          /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-200", children: manualSyncBusy ? t2("subtitleManualSyncApplying") : t2("subtitleManualSyncPickPrompt") }),
+                          /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-200", children: manualSyncBusy ? t("subtitleManualSyncApplying") : t("subtitleManualSyncPickPrompt") }),
                           manualSyncBusy && /* @__PURE__ */ jsxs("div", { className: "mt-3 flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-3", children: [
                             /* @__PURE__ */ jsx("span", { className: "h-4 w-4 animate-spin rounded-full border-2 border-white/25 border-t-white/80" }),
-                            /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-300", children: t2("subtitleManualSyncRefining") })
+                            /* @__PURE__ */ jsx("span", { className: "text-xs text-slate-300", children: t("subtitleManualSyncRefining") })
                           ] }),
                           /* @__PURE__ */ jsx("div", { className: `mt-3 max-h-64 space-y-1 overflow-y-auto ${manualSyncBusy ? "pointer-events-none opacity-40" : ""}`, children: (() => {
                             const near = cues.filter((cue) => Math.abs(cue.start - manualSyncTapTime) <= 120).sort((a, b) => Math.abs(a.start - manualSyncTapTime) - Math.abs(b.start - manualSyncTapTime)).slice(0, 40).sort((a, b) => a.start - b.start);
                             if (near.length === 0) {
-                              return /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t2("subtitleManualSyncNoCues") });
+                              return /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("subtitleManualSyncNoCues") });
                             }
                             return near.map((cue) => /* @__PURE__ */ jsxs(
                               "button",
@@ -183256,7 +183256,7 @@ ${cue.text}`).join("\n\n")}
                               "data-f": isTv ? "1" : void 0,
                               onClick: () => setManualSyncTapTime(null),
                               className: "mt-3 text-xs text-slate-400 underline-offset-2 hover:text-white hover:underline",
-                              children: t2("cancel2")
+                              children: t("cancel2")
                             }
                           )
                         ] })
@@ -183304,7 +183304,7 @@ ${cue.text}`).join("\n\n")}
                 ),
                 showCastMenu && /* @__PURE__ */ jsxs("div", { className: `absolute z-[60] border border-white/10 p-4 ${desktopChrome ? "bottom-[92px] right-6 w-72 rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : landscapeChrome ? "right-[26px] top-[72px] w-[260px] rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : portraitChrome ? "inset-x-3 bottom-[172px] rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : "bottom-20 right-4 w-72 rounded-2xl bg-slate-900/95 shadow-2xl backdrop-blur"}`, children: [
                   /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
-                    /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.2em] text-slate-400", children: t2("castTitle") }),
+                    /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.2em] text-slate-400", children: t("castTitle") }),
                     /* @__PURE__ */ jsx(
                       "button",
                       {
@@ -183313,12 +183313,12 @@ ${cue.text}`).join("\n\n")}
                         onClick: () => void scanCastDevices(),
                         disabled: castScanning,
                         className: "text-[11px] text-slate-400 underline-offset-2 hover:text-white hover:underline disabled:opacity-50",
-                        children: t2("castRescan")
+                        children: t("castRescan")
                       }
                     )
                   ] }),
                   castTarget && /* @__PURE__ */ jsxs("div", { className: "mt-3 rounded-xl border border-aurora-400/30 bg-aurora-400/10 p-3", children: [
-                    /* @__PURE__ */ jsx("p", { className: "text-[11px] uppercase tracking-[0.18em] text-aurora-200", children: t2("castPlayingOn") }),
+                    /* @__PURE__ */ jsx("p", { className: "text-[11px] uppercase tracking-[0.18em] text-aurora-200", children: t("castPlayingOn") }),
                     /* @__PURE__ */ jsx("p", { className: "mt-1 truncate text-sm text-white", children: castTarget.name }),
                     /* @__PURE__ */ jsxs("div", { className: "mt-2 flex gap-2", children: [
                       /* @__PURE__ */ jsx(
@@ -183328,7 +183328,7 @@ ${cue.text}`).join("\n\n")}
                           "data-f": isTv ? "1" : void 0,
                           onClick: () => void sendToCast(castTarget, "pause"),
                           className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
-                          children: t2("castPause")
+                          children: t("castPause")
                         }
                       ),
                       /* @__PURE__ */ jsx(
@@ -183338,7 +183338,7 @@ ${cue.text}`).join("\n\n")}
                           "data-f": isTv ? "1" : void 0,
                           onClick: () => void sendToCast(castTarget, "resume"),
                           className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
-                          children: t2("castResume")
+                          children: t("castResume")
                         }
                       ),
                       /* @__PURE__ */ jsx(
@@ -183348,12 +183348,12 @@ ${cue.text}`).join("\n\n")}
                           "data-f": isTv ? "1" : void 0,
                           onClick: () => void sendToCast(castTarget, "stop"),
                           className: "rounded-full border border-white/15 px-3 py-1 text-[11px] text-slate-200 hover:bg-white/10",
-                          children: t2("castStop")
+                          children: t("castStop")
                         }
                       )
                     ] })
                   ] }),
-                  /* @__PURE__ */ jsx("div", { className: "mt-3 max-h-56 space-y-1 overflow-y-auto", children: castScanning && castDevices.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t2("castScanning") }) : castDevices.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t2("castNoDevices") }) : castDevices.filter((device) => device.kind !== "airplay").map((device) => /* @__PURE__ */ jsxs(
+                  /* @__PURE__ */ jsx("div", { className: "mt-3 max-h-56 space-y-1 overflow-y-auto", children: castScanning && castDevices.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("castScanning") }) : castDevices.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-500", children: t("castNoDevices") }) : castDevices.filter((device) => device.kind !== "airplay").map((device) => /* @__PURE__ */ jsxs(
                     "button",
                     {
                       type: "button",
@@ -183385,12 +183385,12 @@ ${cue.text}`).join("\n\n")}
                         const show = v.webkitShowPlaybackTargetPicker;
                         airplayLog(`row click, picker=${typeof show}, readyState=${v.readyState}`);
                         if (typeof show === "function") show.call(v);
-                        else setCastError(t2("castFailed"));
+                        else setCastError(t("castFailed"));
                       },
                       className: "flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-left transition hover:bg-white/10 disabled:cursor-default disabled:opacity-50",
                       children: [
                         /* @__PURE__ */ jsx("span", { className: "truncate text-sm text-slate-200", children: "AirPlay" }),
-                        /* @__PURE__ */ jsx("span", { className: `shrink-0 text-[10px] uppercase tracking-[0.16em] ${airplayPrepare === "failed" ? "text-rose-300" : "text-slate-500"}`, children: airplayPrepare === "failed" ? t2("castPrepareFailed") : airplaySession && airplayTargetReady && airplayMediaReady ? "AirPlay" : t2("castPreparing") })
+                        /* @__PURE__ */ jsx("span", { className: `shrink-0 text-[10px] uppercase tracking-[0.16em] ${airplayPrepare === "failed" ? "text-rose-300" : "text-slate-500"}`, children: airplayPrepare === "failed" ? t("castPrepareFailed") : airplaySession && airplayTargetReady && airplayMediaReady ? "AirPlay" : t("castPreparing") })
                       ]
                     }
                   ),
@@ -183408,7 +183408,7 @@ ${cue.text}`).join("\n\n")}
                     onClick: (e) => e.stopPropagation(),
                     children: [
                       /* @__PURE__ */ jsxs("div", { className: "flex w-full flex-col border-b border-white/10 py-3 sm:w-40 sm:border-b-0 sm:border-r", children: [
-                        /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t2("subtitleLanguages") }),
+                        /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleLanguages") }),
                         /* @__PURE__ */ jsxs("div", { className: "overflow-y-auto overscroll-contain", style: { maxHeight: "260px" }, children: [
                           /* @__PURE__ */ jsxs(
                             "button",
@@ -183424,7 +183424,7 @@ ${cue.text}`).join("\n\n")}
                               },
                               className: `flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-white/5 ${selectedLang === null ? "bg-white/5" : ""} ${activeSubId === null ? dtActiveTextClass : "text-slate-300"}`,
                               children: [
-                                /* @__PURE__ */ jsx("span", { children: t2("off") }),
+                                /* @__PURE__ */ jsx("span", { children: t("off") }),
                                 activeSubId === null && /* @__PURE__ */ jsx("span", { className: desktopChrome ? "h-1.5 w-1.5 rounded-full bg-white" : "h-2 w-2 rounded-full bg-aurora-400" })
                               ]
                             }
@@ -183452,7 +183452,7 @@ ${cue.text}`).join("\n\n")}
                         ] })
                       ] }),
                       /* @__PURE__ */ jsxs("div", { className: "flex w-full flex-col border-b border-white/10 py-3 sm:w-44 sm:border-b-0 sm:border-r", children: [
-                        /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t2("subtitleVariants") }),
+                        /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleVariants") }),
                         /* @__PURE__ */ jsx("div", { className: "overflow-y-auto overscroll-contain", style: { maxHeight: "260px" }, children: selectedLang ? subtitleGroups[selectedLang]?.map((sub) => {
                           const isActive = sub.id === activeSubId;
                           return /* @__PURE__ */ jsxs(
@@ -183468,17 +183468,17 @@ ${cue.text}`).join("\n\n")}
                               children: [
                                 /* @__PURE__ */ jsxs("div", { className: "text-left", children: [
                                   /* @__PURE__ */ jsx("div", { className: isActive ? dtActiveTextClass : "text-slate-300", children: LANG_NAMES[selectedLang] ?? selectedLang }),
-                                  /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-500", children: sub.source === "embedded" ? "Embedded track" : t2("subtitleProvider") })
+                                  /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-500", children: sub.source === "embedded" ? "Embedded track" : t("subtitleProvider") })
                                 ] }),
                                 isActive && /* @__PURE__ */ jsx("span", { className: dtMenuDotClass })
                               ]
                             },
                             sub.id
                           );
-                        }) : /* @__PURE__ */ jsx("div", { className: "px-4 py-2 text-sm text-slate-600", children: t2("selectLanguage") }) })
+                        }) : /* @__PURE__ */ jsx("div", { className: "px-4 py-2 text-sm text-slate-600", children: t("selectLanguage") }) })
                       ] }),
                       /* @__PURE__ */ jsxs("div", { className: "w-full py-3 sm:w-48", children: [
-                        /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t2("subtitleSettings") }),
+                        /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleSettings") }),
                         subtitleLoadError && subtitleOptions.length === 0 && /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[11px] leading-5 text-rose-300", children: subtitleLoadError }),
                         /* @__PURE__ */ jsxs("div", { className: "px-4 pb-2", children: [
                           /* @__PURE__ */ jsx(
@@ -183493,7 +183493,7 @@ ${cue.text}`).join("\n\n")}
                               },
                               disabled: cues.length < 2,
                               className: `mt-2 w-full rounded-lg border px-3 py-2 text-left text-xs font-semibold uppercase tracking-[0.18em] transition ${cues.length >= 2 ? "border-white/15 bg-white/5 text-slate-200 hover:border-white/25 hover:bg-white/10" : "border-white/10 bg-white/5 text-slate-500"}`,
-                              children: t2("subtitleManualSync")
+                              children: t("subtitleManualSync")
                             }
                           ),
                           subtitleAutoSyncState.type !== "idle" && subtitleAutoSyncState.type !== "analyzing" && /* @__PURE__ */ jsxs("div", { className: "mt-2 text-[11px] leading-5 text-slate-400", children: [
@@ -183505,16 +183505,16 @@ ${cue.text}`).join("\n\n")}
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: undoSubtitleAutoSync,
                                 className: `ml-2 transition ${desktopChrome ? "text-[rgb(var(--player-accent))] hover:text-[rgb(var(--player-accent)/0.8)]" : "text-aurora-300 hover:text-aurora-200"}`,
-                                children: t2("undo")
+                                children: t("undo")
                               }
                             )
                           ] }),
-                          subtitleAutoSyncState.type === "analyzing" && /* @__PURE__ */ jsx("div", { className: "mt-2 text-[11px] leading-5 text-slate-400", children: t2("subtitleAutoSyncAnalyzing") })
+                          subtitleAutoSyncState.type === "analyzing" && /* @__PURE__ */ jsx("div", { className: "mt-2 text-[11px] leading-5 text-slate-400", children: t("subtitleAutoSyncAnalyzing") })
                         ] }),
                         [
-                          { label: t2("delay"), value: subDelay, unit: "s", dec: () => setSubDelay((v) => Math.max(-30, Math.round((v - 0.1) * 10) / 10)), inc: () => setSubDelay((v) => Math.min(30, Math.round((v + 0.1) * 10) / 10)) },
-                          { label: t2("size"), value: subSize, unit: "%", dec: () => setSubSize((v) => Math.max(50, v - 10)), inc: () => setSubSize((v) => Math.min(200, v + 10)) },
-                          { label: t2("verticalPosition"), value: subVerticalPos, unit: "%", dec: () => setSubVerticalPos((v) => Math.max(0, v - 5)), inc: () => setSubVerticalPos((v) => Math.min(90, v + 5)) }
+                          { label: t("delay"), value: subDelay, unit: "s", dec: () => setSubDelay((v) => Math.max(-30, Math.round((v - 0.1) * 10) / 10)), inc: () => setSubDelay((v) => Math.min(30, Math.round((v + 0.1) * 10) / 10)) },
+                          { label: t("size"), value: subSize, unit: "%", dec: () => setSubSize((v) => Math.max(50, v - 10)), inc: () => setSubSize((v) => Math.min(200, v + 10)) },
+                          { label: t("verticalPosition"), value: subVerticalPos, unit: "%", dec: () => setSubVerticalPos((v) => Math.max(0, v - 5)), inc: () => setSubVerticalPos((v) => Math.min(90, v + 5)) }
                         ].map(({ label, value, unit, dec, inc }) => /* @__PURE__ */ jsxs("div", { className: "px-4 py-2", children: [
                           /* @__PURE__ */ jsx("div", { className: "mb-1.5 text-xs text-slate-400", children: label }),
                           /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
@@ -183550,8 +183550,8 @@ ${cue.text}`).join("\n\n")}
                 ),
                 overlayContent,
                 showStillWatchingPrompt && /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-[58] flex items-center justify-center bg-black/55 px-4 backdrop-blur-sm", onClick: (e) => e.stopPropagation(), children: /* @__PURE__ */ jsxs("div", { className: "w-full max-w-md rounded-3xl border border-white/10 bg-slate-950/90 p-6 text-center shadow-2xl", children: [
-                  /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.24em] text-slate-400", children: t2("playbackTitle") }),
-                  /* @__PURE__ */ jsx("h3", { className: "mt-3 text-2xl font-semibold text-white", children: t2("stillWatching") }),
+                  /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.24em] text-slate-400", children: t("playbackTitle") }),
+                  /* @__PURE__ */ jsx("h3", { className: "mt-3 text-2xl font-semibold text-white", children: t("stillWatching") }),
                   /* @__PURE__ */ jsxs("div", { className: "mt-5 flex flex-col gap-3 sm:flex-row sm:justify-center", children: [
                     /* @__PURE__ */ jsx(
                       "button",
@@ -183560,7 +183560,7 @@ ${cue.text}`).join("\n\n")}
                         "data-f": isTv ? "1" : void 0,
                         onClick: handleStillWatchingContinue,
                         className: "rounded-full bg-accent-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-400",
-                        children: t2("stillWatchingContinue")
+                        children: t("stillWatchingContinue")
                       }
                     ),
                     /* @__PURE__ */ jsx(
@@ -183570,7 +183570,7 @@ ${cue.text}`).join("\n\n")}
                         "data-f": isTv ? "1" : void 0,
                         onClick: handleClose,
                         className: "rounded-full border border-white/10 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:border-white/20 hover:text-white",
-                        children: `${t2("stillWatchingExit")} (${stillWatchingCountdown})`
+                        children: `${t("stillWatchingExit")} (${stillWatchingCountdown})`
                       }
                     )
                   ] })
@@ -183595,7 +183595,7 @@ ${cue.text}`).join("\n\n")}
                           onClick: () => seekToAbsolute(activeIntro.endMs / 1e3),
                           className: "flex items-center gap-2 py-1.5 pr-2 text-sm font-medium text-white",
                           children: [
-                            t2("skipIntro"),
+                            t("skipIntro"),
                             /* @__PURE__ */ jsx("svg", { className: "h-[15px] w-[15px]", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", children: /* @__PURE__ */ jsx("path", { d: "m9 6 6 6-6 6" }) })
                           ]
                         }
@@ -183606,8 +183606,8 @@ ${cue.text}`).join("\n\n")}
                           type: "button",
                           "data-f": isTv ? "1" : void 0,
                           onClick: () => setSkipIntroDismissed(true),
-                          title: t2("dismiss"),
-                          "aria-label": t2("dismiss"),
+                          title: t("dismiss"),
+                          "aria-label": t("dismiss"),
                           className: "flex h-7 w-7 flex-none items-center justify-center rounded-full text-slate-400 transition hover:bg-white/10 hover:text-white",
                           children: /* @__PURE__ */ jsx("svg", { className: "h-[13px] w-[13px]", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.4", strokeLinecap: "round", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12" }) })
                         }
@@ -183672,12 +183672,12 @@ ${cue.text}`).join("\n\n")}
                                   type: "button",
                                   ref: moreTriggerRef,
                                   onClick: () => setShowMoreMenu((open) => !open),
-                                  title: t2("moreActions"),
-                                  "aria-label": t2("moreActions"),
+                                  title: t("moreActions"),
+                                  "aria-label": t("moreActions"),
                                   className: `flex w-[54px] flex-none flex-col items-center gap-0.5 rounded-[10px] py-1 transition ${showMoreMenu ? "bg-[rgb(var(--player-accent)/0.34)] text-white" : "text-slate-200"}`,
                                   children: [
                                     playerIcon("more", "h-[17px] w-[17px]"),
-                                    /* @__PURE__ */ jsx("span", { className: "text-[10px] font-semibold leading-none", children: t2("plShortMore") })
+                                    /* @__PURE__ */ jsx("span", { className: "text-[10px] font-semibold leading-none", children: t("plShortMore") })
                                   ]
                                 }
                               )
@@ -183705,12 +183705,12 @@ ${cue.text}`).join("\n\n")}
                                 type: "button",
                                 ref: moreTriggerRef,
                                 onClick: () => setShowMoreMenu((open) => !open),
-                                title: t2("moreActions"),
-                                "aria-label": t2("moreActions"),
+                                title: t("moreActions"),
+                                "aria-label": t("moreActions"),
                                 className: `flex h-10 flex-none items-center gap-[7px] rounded-full border border-white/[0.12] px-3.5 transition ${showMoreMenu ? "bg-[rgb(var(--player-accent)/0.34)] text-white" : "text-slate-300"}`,
                                 children: [
                                   playerIcon("more", "h-[17px] w-[17px]"),
-                                  /* @__PURE__ */ jsx("span", { className: "text-[13px] font-medium leading-none", children: t2("plShortMore") })
+                                  /* @__PURE__ */ jsx("span", { className: "text-[13px] font-medium leading-none", children: t("plShortMore") })
                                 ]
                               }
                             )
@@ -183773,8 +183773,8 @@ ${cue.text}`).join("\n\n")}
                                 ref: audioDelayTriggerRef,
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => setShowAudioDelayMenu((open) => !open),
-                                title: t2("audioDelayTitle"),
-                                "aria-label": t2("audioDelayTitle"),
+                                title: t("audioDelayTitle"),
+                                "aria-label": t("audioDelayTitle"),
                                 className: `rounded px-1.5 py-0.5 text-xs font-medium tabular-nums transition ${effectiveAudioDelayMs !== 0 ? "bg-aurora-500/25 text-aurora-200" : "text-slate-300 hover:text-white"}`,
                                 children: effectiveAudioDelayMs === 0 ? "A/V" : `${effectiveAudioDelayMs > 0 ? "+" : ""}${effectiveAudioDelayMs} ms`
                               }
@@ -183788,8 +183788,8 @@ ${cue.text}`).join("\n\n")}
                                 type: "button",
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => setShowEpisodes((open) => !open),
-                                title: t2("plNextEpisode"),
-                                "aria-label": t2("plNextEpisode"),
+                                title: t("plNextEpisode"),
+                                "aria-label": t("plNextEpisode"),
                                 className: showEpisodes ? "text-aurora-300" : "text-slate-300 transition hover:text-white",
                                 children: /* @__PURE__ */ jsxs("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
                                   /* @__PURE__ */ jsx("path", { d: "M5 5l9 7-9 7V5z", fill: "currentColor", stroke: "none" }),
@@ -183810,7 +183810,7 @@ ${cue.text}`).join("\n\n")}
                                   }
                                   setShowSubMenu((v) => !v);
                                 },
-                                title: t2("subtitlesLabel"),
+                                title: t("subtitlesLabel"),
                                 className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${activeSubId ? "bg-aurora-400 text-black" : hasSubtitles || loadingSub || subtitleLoadError || resolvedImdbId ? "text-slate-300 hover:text-white" : "text-slate-500"}`,
                                 children: "CC"
                               }
@@ -183826,7 +183826,7 @@ ${cue.text}`).join("\n\n")}
                                   if (opening && castDevices.length === 0) void scanCastDevices();
                                   if (opening && isMpvEngine && !airplaySession) void prepareAirplaySession();
                                 },
-                                title: t2("castTitle"),
+                                title: t("castTitle"),
                                 className: `shrink-0 rounded px-1 py-0.5 transition ${castTarget ? "text-aurora-300" : "text-slate-300 hover:text-white"}`,
                                 children: /* @__PURE__ */ jsxs("svg", { width: "18", height: "18", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.8", strokeLinecap: "round", children: [
                                   /* @__PURE__ */ jsx("path", { d: "M2 16.1a5 5 0 0 1 5.9 5.9" }),
@@ -183843,9 +183843,9 @@ ${cue.text}`).join("\n\n")}
                                 ref: audioTriggerRef,
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => setShowAudioMenu((v) => !v),
-                                title: t2("audioLanguage"),
+                                title: t("audioLanguage"),
                                 className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showAudioMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
-                                children: toAudioLangGroup((audioTracks.find((t3) => t3.index === activeAudioTrack) ?? audioTracks[0])?.language)?.toUpperCase() ?? "AUD"
+                                children: toAudioLangGroup((audioTracks.find((t2) => t2.index === activeAudioTrack) ?? audioTracks[0])?.language)?.toUpperCase() ?? "AUD"
                               }
                             ),
                             aspect: /* @__PURE__ */ jsx(
@@ -183855,7 +183855,7 @@ ${cue.text}`).join("\n\n")}
                                 ref: aspectTriggerRef,
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => setShowAspectMenu((value) => !value),
-                                title: t2("aspectRatio"),
+                                title: t("aspectRatio"),
                                 className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showAspectMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
                                 children: aspectLabel
                               }
@@ -183867,7 +183867,7 @@ ${cue.text}`).join("\n\n")}
                                 ref: cropTriggerRef,
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => setShowCropZoomMenu((value) => !value),
-                                title: t2("cropZoom"),
+                                title: t("cropZoom"),
                                 className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showCropZoomMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
                                 children: cropZoomLabel
                               }
@@ -183875,13 +183875,13 @@ ${cue.text}`).join("\n\n")}
                             audioOutput: /* @__PURE__ */ jsx(
                               "span",
                               {
-                                title: t2("currentAudioOutput"),
+                                title: t("currentAudioOutput"),
                                 className: "shrink-0 rounded-full border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-300",
                                 children: audioIndicator
                               }
                             ),
                             segmentBadges: mediaType === "tv" ? /* @__PURE__ */ jsxs(Fragment2, { children: [
-                              /* @__PURE__ */ jsx("span", { className: `rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${introSegment ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-white/5 text-slate-300"}`, children: introSegment ? `${introKind === "recap" ? "Recap" : "Intro"} found` : t2("introDebugMissing") }),
+                              /* @__PURE__ */ jsx("span", { className: `rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${introSegment ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-white/5 text-slate-300"}`, children: introSegment ? `${introKind === "recap" ? "Recap" : "Intro"} found` : t("introDebugMissing") }),
                               /* @__PURE__ */ jsx("span", { className: `rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] ${outroSegment ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-300" : "border-white/10 bg-white/5 text-slate-300"}`, children: outroSegment ? "Outro found" : "Outro missing" })
                             ] }) : null,
                             mute: /* @__PURE__ */ jsx("button", { type: "button", "data-f": isTv ? "1" : void 0, onClick: toggleMute, className: "text-slate-300 hover:text-white", children: muted || volume === 0 ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) }),
@@ -183917,7 +183917,7 @@ ${cue.text}`).join("\n\n")}
                                   setShowWiki((v) => !v);
                                   setShowSoundtrack(false);
                                 },
-                                title: t2("info"),
+                                title: t("info"),
                                 className: `rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showWiki ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
                                 children: "Wiki"
                               }
@@ -183931,9 +183931,9 @@ ${cue.text}`).join("\n\n")}
                                   setShowSoundtrack((v) => !v);
                                   setShowWiki(false);
                                 },
-                                title: t2("soundtrack"),
+                                title: t("soundtrack"),
                                 className: `rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showSoundtrack ? "bg-green-500 text-black" : "text-slate-300 hover:text-white"}`,
-                                children: t2("soundtrack")
+                                children: t("soundtrack")
                               }
                             ),
                             tuning: /* @__PURE__ */ jsx(
@@ -183943,7 +183943,7 @@ ${cue.text}`).join("\n\n")}
                                 ref: tuningTriggerRef,
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => setShowTuningPanel((v) => !v),
-                                title: t2("vtTitle"),
+                                title: t("vtTitle"),
                                 className: `transition ${showTuningPanel ? "text-aurora-300" : "text-slate-300 hover:text-white"}`,
                                 children: /* @__PURE__ */ jsxs("svg", { className: "h-5 w-5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", strokeLinecap: "round", children: [
                                   /* @__PURE__ */ jsx("path", { d: "M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3" }),
@@ -183958,7 +183958,7 @@ ${cue.text}`).join("\n\n")}
                                 type: "button",
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => setShowMoreMenu((value) => !value),
-                                title: t2("moreActions"),
+                                title: t("moreActions"),
                                 className: `shrink-0 rounded px-1.5 py-0.5 text-xs font-bold uppercase tracking-wider transition ${showMoreMenu ? "bg-aurora-400 text-black" : "text-slate-300 hover:text-white"}`,
                                 children: "\u2022\u2022\u2022"
                               }
@@ -183975,7 +183975,7 @@ ${cue.text}`).join("\n\n")}
                           className: "z-50 w-[244px] rounded-[1.1rem] border border-white/10 bg-base-800/95 p-3 shadow-2xl backdrop-blur-md",
                           onClick: (event) => event.stopPropagation(),
                           children: [
-                            /* @__PURE__ */ jsx("p", { className: "px-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500", children: t2("audioDelayTitle") }),
+                            /* @__PURE__ */ jsx("p", { className: "px-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500", children: t("audioDelayTitle") }),
                             /* @__PURE__ */ jsxs("div", { className: "mt-2 flex items-center justify-between gap-2", children: [
                               /* @__PURE__ */ jsx(
                                 "button",
@@ -184006,7 +184006,7 @@ ${cue.text}`).join("\n\n")}
                               )
                             ] }),
                             outputIsBluetooth && getBluetoothAudioAutoOffset() ? /* @__PURE__ */ jsxs("p", { className: "mt-2 px-1 text-[11px] leading-snug text-slate-500", children: [
-                              t2("btAudioAutoOffset"),
+                              t("btAudioAutoOffset"),
                               " (",
                               BLUETOOTH_AUDIO_OFFSET_MS,
                               " ms)"
@@ -184018,7 +184018,7 @@ ${cue.text}`).join("\n\n")}
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => setAudioDelayMs(0),
                                 className: "mt-2 w-full rounded-lg px-2 py-1.5 text-xs text-aurora-300 transition hover:bg-white/5",
-                                children: t2("reset")
+                                children: t("reset")
                               }
                             ) : null
                           ]
@@ -184031,7 +184031,7 @@ ${cue.text}`).join("\n\n")}
                           className: `${dtMenuSurfaceClass} ${newChrome ? "" : "min-w-[140px]"}`,
                           onClick: (e) => e.stopPropagation(),
                           children: [
-                            pickerHeading(t2("audio")),
+                            pickerHeading(t("audio")),
                             audioTracks.map((track) => {
                               const isActive = activeAudioTrack === track.index || activeAudioTrack === null && track === audioTracks[0];
                               const label = toAudioLangGroup(track.language)?.toUpperCase() ?? `Track ${track.index}`;
@@ -184055,7 +184055,7 @@ ${cue.text}`).join("\n\n")}
                                  och en nollställningsrad hade tryckt menyn upp över
                                  titelraden i liggande läge — det står i README:n. */
                               /* @__PURE__ */ jsxs("div", { className: "mt-1 flex items-center justify-between gap-2 border-t border-white/[0.08] px-3 pb-1 pt-2.5", children: [
-                                /* @__PURE__ */ jsx("span", { className: portraitChrome ? "text-sm text-slate-300" : "text-[13px] text-slate-300", children: t2("delay") }),
+                                /* @__PURE__ */ jsx("span", { className: portraitChrome ? "text-sm text-slate-300" : "text-[13px] text-slate-300", children: t("delay") }),
                                 /* @__PURE__ */ jsxs("div", { className: "flex flex-none items-center gap-1.5", children: [
                                   /* @__PURE__ */ jsx(
                                     "button",
@@ -184085,7 +184085,7 @@ ${cue.text}`).join("\n\n")}
                                 ] })
                               ] })
                             ) : desktopChrome && useMpv && showsControl("audioDelay") ? /* @__PURE__ */ jsxs("div", { className: "mt-1 border-t border-white/[0.08] px-3 pb-1 pt-2.5", children: [
-                              /* @__PURE__ */ jsx("p", { className: "text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500", children: t2("audioDelayTitle") }),
+                              /* @__PURE__ */ jsx("p", { className: "text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500", children: t("audioDelayTitle") }),
                               /* @__PURE__ */ jsxs("div", { className: "mt-2 flex items-center gap-2", children: [
                                 /* @__PURE__ */ jsx(
                                   "button",
@@ -184114,7 +184114,7 @@ ${cue.text}`).join("\n\n")}
                                 )
                               ] }),
                               outputIsBluetooth && getBluetoothAudioAutoOffset() ? /* @__PURE__ */ jsxs("p", { className: "mt-2 text-[11px] leading-snug text-slate-500", children: [
-                                t2("btAudioAutoOffset"),
+                                t("btAudioAutoOffset"),
                                 " (",
                                 BLUETOOTH_AUDIO_OFFSET_MS,
                                 " ms)"
@@ -184125,7 +184125,7 @@ ${cue.text}`).join("\n\n")}
                                   type: "button",
                                   onClick: () => setAudioDelayMs(0),
                                   className: "mt-1.5 py-1 text-[13px] text-[rgb(var(--player-accent))] transition hover:text-[rgb(var(--player-accent)/0.8)]",
-                                  children: t2("reset")
+                                  children: t("reset")
                                 }
                               ) : null
                             ] }) : null
@@ -184139,7 +184139,7 @@ ${cue.text}`).join("\n\n")}
                           className: `${dtMenuSurfaceClass} ${newChrome ? "" : "min-w-[150px]"}`,
                           onClick: (e) => e.stopPropagation(),
                           children: [
-                            pickerHeading(t2("aspectRatio")),
+                            pickerHeading(t("aspectRatio")),
                             ["auto", "contain", "fill", "ratio_16_9", "ratio_4_3"].map((mode) => {
                               const isActive = aspectRatioMode === mode;
                               return /* @__PURE__ */ jsxs(
@@ -184153,7 +184153,7 @@ ${cue.text}`).join("\n\n")}
                                   },
                                   className: dtMenuRowClass(isActive),
                                   children: [
-                                    /* @__PURE__ */ jsx("span", { children: getAspectRatioLabel(mode, t2) }),
+                                    /* @__PURE__ */ jsx("span", { children: getAspectRatioLabel(mode, t) }),
                                     isActive && /* @__PURE__ */ jsx("span", { className: dtMenuDotClass })
                                   ]
                                 },
@@ -184170,7 +184170,7 @@ ${cue.text}`).join("\n\n")}
                           className: `${dtMenuSurfaceClass} ${newChrome ? "" : "min-w-[150px]"}`,
                           onClick: (e) => e.stopPropagation(),
                           children: [
-                            pickerHeading(t2("cropZoom")),
+                            pickerHeading(t("cropZoom")),
                             ["off", "crop", "zoom", "zoom_plus"].map((mode) => {
                               const isActive = cropZoomMode === mode;
                               return /* @__PURE__ */ jsxs(
@@ -184184,7 +184184,7 @@ ${cue.text}`).join("\n\n")}
                                   },
                                   className: dtMenuRowClass(isActive),
                                   children: [
-                                    /* @__PURE__ */ jsx("span", { children: getCropZoomLabel(mode, t2) }),
+                                    /* @__PURE__ */ jsx("span", { children: getCropZoomLabel(mode, t) }),
                                     isActive && /* @__PURE__ */ jsx("span", { className: dtMenuDotClass })
                                   ]
                                 },
@@ -184202,7 +184202,7 @@ ${cue.text}`).join("\n\n")}
                           className: portraitChrome ? "z-50 rounded-t-2xl border-t border-white/[0.07] bg-base-950/[0.96] px-3 pb-6 pt-3 shadow-[0_-20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : newChrome ? dtMenuSurfaceClass : "z-50 w-64 rounded-[1.6rem] border border-white/10 bg-base-800/95 p-2.5 shadow-2xl backdrop-blur-md",
                           onClick: (e) => e.stopPropagation(),
                           children: [
-                            portraitChrome ? pickerHeading(t2("moreActions")) : null,
+                            portraitChrome ? pickerHeading(t("moreActions")) : null,
                             phoneOverflowIds.map((id4) => renderPhoneOverflowRow(id4, phoneControls[id4])),
                             dvColorFallback && /* @__PURE__ */ jsxs(
                               "button",
@@ -184217,9 +184217,9 @@ ${cue.text}`).join("\n\n")}
                                     /* @__PURE__ */ jsx("path", { d: "M12 3a9 9 0 0 1 0 18z", fill: "currentColor", stroke: "none" })
                                   ] }),
                                   /* @__PURE__ */ jsxs("span", { className: dtMoreTextClass, children: [
-                                    t2("dvColorLabel"),
+                                    t("dvColorLabel"),
                                     ": ",
-                                    dvColorFallbackActive ? t2("dvColorAuto") : t2("dvColorOff")
+                                    dvColorFallbackActive ? t("dvColorAuto") : t("dvColorOff")
                                   ] })
                                 ]
                               }
@@ -184237,9 +184237,9 @@ ${cue.text}`).join("\n\n")}
                                 children: [
                                   /* @__PURE__ */ jsx("svg", { className: dtMoreIconClass, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z", strokeLinecap: "round", strokeLinejoin: "round" }) }),
                                   /* @__PURE__ */ jsxs("span", { className: dtMoreTextClass, children: [
-                                    t2("nightModeMenuLabel"),
+                                    t("nightModeMenuLabel"),
                                     ": ",
-                                    t2(nightMode === "off" ? "nightModeOff" : nightMode === "mild" ? "nightModeMenuMild" : "nightModeMenuStrong")
+                                    t(nightMode === "off" ? "nightModeOff" : nightMode === "mild" ? "nightModeMenuMild" : "nightModeMenuStrong")
                                   ] })
                                 ]
                               }
@@ -184256,7 +184256,7 @@ ${cue.text}`).join("\n\n")}
                                     /* @__PURE__ */ jsx("path", { d: "M10 13a5 5 0 0 0 7.07 0l3.54-3.54a5 5 0 1 0-7.07-7.07L11 4", strokeLinecap: "round", strokeLinejoin: "round" }),
                                     /* @__PURE__ */ jsx("path", { d: "M14 11a5 5 0 0 0-7.07 0L3.39 14.54a5 5 0 1 0 7.07 7.07L13 20", strokeLinecap: "round", strokeLinejoin: "round" })
                                   ] }),
-                                  /* @__PURE__ */ jsx("span", { className: dtMoreTextClass, children: copiedLink ? t2("copied") : t2("copyStreamLink") })
+                                  /* @__PURE__ */ jsx("span", { className: dtMoreTextClass, children: copiedLink ? t("copied") : t("copyStreamLink") })
                                 ]
                               }
                             ),
@@ -184275,7 +184275,7 @@ ${cue.text}`).join("\n\n")}
                                       /* @__PURE__ */ jsx("path", { d: "m7 10 5 5 5-5", strokeLinecap: "round", strokeLinejoin: "round" }),
                                       /* @__PURE__ */ jsx("path", { d: "M5 21h14", strokeLinecap: "round" })
                                     ] }),
-                                    /* @__PURE__ */ jsx("span", { className: dtMoreTextClass, children: downloadState.type === "picking-folder" ? t2("preparingDownload") : downloadState.type === "downloading" ? `${t2("downloading")} ${downloadState.progress}%` : downloadState.type === "done" ? t2("downloadComplete") : downloadState.type === "cancelled" ? t2("cancel") : t2("downloadThisVideo") })
+                                    /* @__PURE__ */ jsx("span", { className: dtMoreTextClass, children: downloadState.type === "picking-folder" ? t("preparingDownload") : downloadState.type === "downloading" ? `${t("downloading")} ${downloadState.progress}%` : downloadState.type === "done" ? t("downloadComplete") : downloadState.type === "cancelled" ? t("cancel") : t("downloadThisVideo") })
                                   ]
                                 }
                               ),
@@ -184286,7 +184286,7 @@ ${cue.text}`).join("\n\n")}
                                   "data-f": isTv ? "1" : void 0,
                                   onClick: () => void handleCancelDownload(),
                                   className: "mr-3 flex h-7 w-7 flex-none items-center justify-center rounded-full border border-white/10 text-slate-300 transition hover:border-red-400/40 hover:text-red-300",
-                                  title: t2("cancel"),
+                                  title: t("cancel"),
                                   children: /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12", strokeLinecap: "round" }) })
                                 }
                               )
@@ -184304,7 +184304,7 @@ ${cue.text}`).join("\n\n")}
                                     /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }),
                                     /* @__PURE__ */ jsx("path", { d: "M4 5h3v14H4z", opacity: ".55" })
                                   ] }),
-                                  /* @__PURE__ */ jsx("span", { className: dtMoreTextClass, children: isDesktopTauriEnv ? `${t2("openInExternalPrefix")} ${getExternalPlayerApp()}` : t2("openInExternalPlayer") })
+                                  /* @__PURE__ */ jsx("span", { className: dtMoreTextClass, children: isDesktopTauriEnv ? `${t("openInExternalPrefix")} ${getExternalPlayerApp()}` : t("openInExternalPlayer") })
                                 ]
                               }
                             ),
@@ -184382,7 +184382,7 @@ ${cue.text}`).join("\n\n")}
     onDismiss,
     onPlayNow
   }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const isTv = useTvMode();
     const tvStation = isTv ? { "data-f": "" } : {};
     const [skipStraightToNext] = useState(
@@ -184404,8 +184404,8 @@ ${cue.text}`).join("\n\n")}
       onPlayNowRef.current();
     }, [skipStraightToNext, urlReady, allowManualPlayWhenNotReady]);
     useEffect(() => {
-      const t3 = setTimeout(() => setVisible(true), 10);
-      return () => clearTimeout(t3);
+      const t2 = setTimeout(() => setVisible(true), 10);
+      return () => clearTimeout(t2);
     }, []);
     useEffect(() => {
       if (autoPlaySeconds == null) return;
@@ -184459,12 +184459,12 @@ ${cue.text}`).join("\n\n")}
             ] }) }) }),
             /* @__PURE__ */ jsxs("div", { className: "min-w-0 flex-1", children: [
               /* @__PURE__ */ jsxs("p", { className: "text-[10px] uppercase tracking-[0.18em] text-slate-500", children: [
-                t2("nextOnSeries"),
+                t("nextOnSeries"),
                 " ",
                 /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: seriesTitle })
               ] }),
               /* @__PURE__ */ jsxs("p", { className: "mt-0.5 text-xs font-medium text-white", children: [
-                t2("episodeNumber").replace("{n}", String(episode)),
+                t("episodeNumber").replace("{n}", String(episode)),
                 " ",
                 /* @__PURE__ */ jsxs("span", { className: "text-slate-400", children: [
                   "(S",
@@ -184494,7 +184494,7 @@ ${cue.text}`).join("\n\n")}
                 className: "flex items-center gap-1.5 text-xs text-slate-500 transition hover:text-slate-300",
                 children: [
                   /* @__PURE__ */ jsx("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12", strokeLinecap: "round" }) }),
-                  t2("dismiss")
+                  t("dismiss")
                 ]
               }
             ),
@@ -184507,7 +184507,7 @@ ${cue.text}`).join("\n\n")}
                 className: "flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white transition hover:bg-white/20",
                 children: [
                   /* @__PURE__ */ jsx("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }),
-                  t2("playNow"),
+                  t("playNow"),
                   " ",
                   countdown !== null ? `(${countdown})` : ""
                 ]
@@ -184521,12 +184521,12 @@ ${cue.text}`).join("\n\n")}
                 className: "flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1 text-xs font-medium text-white transition hover:bg-white/10",
                 children: [
                   /* @__PURE__ */ jsx("svg", { width: "12", height: "12", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M8 5v14l11-7z" }) }),
-                  t2("playNow"),
+                  t("playNow"),
                   " ",
                   countdown !== null ? `(${countdown})` : ""
                 ]
               }
-            ) : /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-400 tabular-nums", children: countdown !== null ? t2("startingIn").replace("{seconds}", String(countdown)) : t2("startingSoon") })
+            ) : /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-400 tabular-nums", children: countdown !== null ? t("startingIn").replace("{seconds}", String(countdown)) : t("startingSoon") })
           ] })
         ]
       }
@@ -186029,373 +186029,10 @@ ${cue.text}`).join("\n\n")}
     };
   }
 
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/stream-download.ts
-  var sleep3 = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  function streamNeedsDebrid(stream) {
-    return !stream.directUrl;
-  }
-  function hasDebridKey() {
-    return Boolean((getPlaybackAccessKey() ?? "").trim());
-  }
-  async function resolveDownloadFromStream(stream, t2) {
-    if (stream.directUrl) {
-      const filename = stream.directUrl.split("/").pop()?.split("?")[0] ?? "download";
-      return { url: stream.directUrl, filename };
-    }
-    if (!stream.infoHash) throw new Error(t2("noPlayableStream"));
-    if (!(getPlaybackAccessKey() ?? "")) throw new Error(lt("debridKeyMissing"));
-    const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${stream.infoHash}`);
-    for (let attempt = 0; attempt < 60; attempt += 1) {
-      if (attempt > 0) await sleep3(3e3);
-      const info = await getPlaybackSourceInfo(added.id);
-      if (info.status === "waiting_files_selection") {
-        await selectPlaybackFiles(info.id, "all");
-        continue;
-      }
-      if (info.status === "downloaded") {
-        const resolved = await Promise.all(
-          info.links.map(async (link) => {
-            try {
-              return await resolvePlaybackLink(link);
-            } catch {
-              return null;
-            }
-          })
-        );
-        const playable = resolved.filter((entry) => Boolean(entry));
-        const videoEntries = playable.filter((entry) => VIDEO_EXTS.test(entry.filename));
-        const best = [...videoEntries.length > 0 ? videoEntries : playable].sort((a, b) => b.filesize - a.filesize)[0];
-        if (!best) throw new Error(t2("resolveLinkFailed"));
-        return { url: best.download, filename: best.filename };
-      }
-      if (["error", "magnet_error", "dead", "virus"].includes(info.status)) {
-        throw new Error(lt("torrentFailed").replace("{status}", String(info.status)));
-      }
-    }
-    throw new Error("Timeout: torrenten blev inte klar i tid");
-  }
-  function triggerBrowserDownload(url, filename) {
-    if (typeof document === "undefined") return;
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    if (filename) anchor.download = filename;
-    anchor.rel = "noopener noreferrer";
-    anchor.target = "_blank";
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-  }
-
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
-  init_jsx_runtime_shim();
-  function qualityRank(name) {
-    const n = name.toLowerCase();
-    if (n.includes("4k") || n.includes("2160p")) return 4;
-    if (n.includes("1080p")) return 3;
-    if (n.includes("720p")) return 2;
-    return 1;
-  }
-  function extractSize(title) {
-    const m2 = title.match(/(\d+(?:\.\d+)?)\s*(GB|MB)/i);
-    return m2 ? `${m2[1]} ${m2[2].toUpperCase()}` : null;
-  }
-  function StreamsScraperDetailsDownloadButton({ item, className, iconOnly = false, season, episode }) {
-    const forceMobileIconOnly = typeof className === "string" && className.includes("!h-10") && className.includes("!w-10");
-    const effectiveIconOnly = iconOnly || forceMobileIconOnly;
-    const { t: t2 } = useLang();
-    const [state, setState] = useState({ type: "idle" });
-    const [visaFelText, setVisaFelText] = useState(false);
-    const esRef = useRef(null);
-    const timerRef = useRef(null);
-    const btnRef = useRef(null);
-    const posRef = useRef({ top: 0, right: 0 });
-    useEffect(() => {
-      if (state.type !== "error") setVisaFelText(false);
-    }, [state.type]);
-    useEffect(() => () => {
-      esRef.current?.close();
-      if (timerRef.current) clearTimeout(timerRef.current);
-    }, []);
-    const imdbId = item.imdbId;
-    const mediaType = item.type === "tv" ? "tv" : "movie";
-    if (!imdbId) return null;
-    async function handleClick() {
-      if (state.type !== "idle" && state.type !== "error") return;
-      if (btnRef.current) {
-        const r = btnRef.current.getBoundingClientRect();
-        posRef.current = { top: r.bottom + 8, right: window.innerWidth - r.right };
-      }
-      setState({ type: "loading-streams" });
-      try {
-        const targetImdbId = imdbId;
-        const requestContext = getPrimaryStreamProviderRequestContext2();
-        const tType = mediaType === "tv" ? "series" : "movie";
-        const addonStreams = resolveCoreAddonStreams({
-          imdbId: targetImdbId,
-          type: tType === "series" ? "series" : "movie",
-          season,
-          episode
-        }).catch(() => []);
-        const browserStreamUrl = requestContext.browserStreamUrl({
-          imdbId: targetImdbId,
-          mediaType: tType
-        });
-        const cacheFetch = browserStreamUrl ? fetch(browserStreamUrl, {
-          headers: { Accept: "application/json" }
-        }).then((r) => r.ok ? r.json() : { streams: [] }).catch(() => ({ streams: [] })) : Promise.resolve({ streams: [] });
-        const [res, cacheData, community] = await Promise.all([
-          fetch(`/api/streams?imdbId=${targetImdbId}&type=${tType}`, {
-            headers: requestContext.streamHeaders
-          }),
-          cacheFetch,
-          addonStreams
-        ]);
-        const scraperStreams = res.ok ? (await res.json()).streams : [];
-        const communityStreams = community.map((entry, index3) => ({
-          infoHash: "",
-          name: entry.title,
-          // Samma som i strömpanelen: filnamn eller beskrivning på
-          // sekundärraden, och storleken med så valet av ström kan väga den.
-          title: entry.filename ?? entry.description ?? entry.title,
-          fileIdx: index3,
-          cached: true,
-          downloadable: true,
-          cachedFiles: [],
-          directUrl: entry.url,
-          sizeBytes: entry.sizeBytes,
-          subtitleLangs: entry.subtitles?.map((sub) => sub.lang).filter((lang) => Boolean(lang)),
-          source: lt("communitySource")
-        }));
-        const data = { streams: [...scraperStreams, ...communityStreams] };
-        if (data.streams.length === 0) throw new Error(t2("noStreamsFound"));
-        const cachedTitles = /* @__PURE__ */ new Set();
-        const cachedHashes = /* @__PURE__ */ new Set();
-        for (const s of cacheData.streams ?? []) {
-          if (s.title) cachedTitles.add(s.title.trim());
-          const hash = s.infoHash?.toLowerCase() ?? s.url?.match(/\/([a-f0-9]{40})\//i)?.[1]?.toLowerCase();
-          if (hash) cachedHashes.add(hash);
-        }
-        const streams = data.streams.map((s) => ({
-          ...s,
-          cached: cachedHashes.has(s.infoHash) || cachedTitles.has((s.title ?? "").trim())
-        }));
-        streams.sort((a, b) => {
-          if (a.cached !== b.cached) return a.cached ? -1 : 1;
-          return qualityRank(b.name) - qualityRank(a.name);
-        });
-        setState({ type: "picking-stream", streams });
-      } catch (err) {
-        setState({ type: "error", message: err instanceof Error ? err.message : "Fel" });
-      }
-    }
-    async function handlePickStream(stream) {
-      if (!isPluginDesktopHost()) {
-        setState({ type: "loading-streams" });
-        try {
-          const resolved = await resolveDownloadFromStream(stream, t2);
-          triggerBrowserDownload(resolved.url, resolved.filename);
-          setState({ type: "done", filename: resolved.filename });
-          timerRef.current = setTimeout(() => setState({ type: "idle" }), 3e3);
-        } catch (err) {
-          setState({ type: "error", message: err instanceof Error ? err.message : t2("startDownloadFailed") });
-        }
-        return;
-      }
-      setState({ type: "picking-folder", stream });
-      try {
-        const res = await fetch("/api/pick-folder", { method: "POST" });
-        if (!res.ok) throw new Error(t2("folderPickFailed"));
-        const data = await res.json();
-        if (!data.path) {
-          setState({ type: "idle" });
-          return;
-        }
-        await startDownload(stream, data.path);
-      } catch (err) {
-        setState({ type: "error", message: err instanceof Error ? err.message : "Fel vid mappval" });
-      }
-    }
-    async function startDownload(stream, folder) {
-      esRef.current?.close();
-      let resolved;
-      try {
-        resolved = await resolveDownloadFromStream(stream, t2);
-      } catch (error) {
-        setState({ type: "error", message: error instanceof Error ? error.message : t2("prepareDownloadFailed") });
-        return;
-      }
-      const res = await fetch("/api/download", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          directUrl: resolved.url,
-          folder,
-          filename: resolved.filename
-        })
-      });
-      if (!res.ok) {
-        setState({ type: "error", message: t2("startDownloadFailed") });
-        return;
-      }
-      const { jobId } = await res.json();
-      setState({ type: "downloading", jobId, progress: 0, filename: t2("fetchingShort") });
-      const es = new EventSource(`/api/download/progress?jobId=${jobId}`);
-      esRef.current = es;
-      es.onmessage = (e) => {
-        try {
-          const job = JSON.parse(e.data);
-          if (job.status === "done") {
-            es.close();
-            setState({ type: "done", filename: job.filename });
-            timerRef.current = setTimeout(() => setState({ type: "idle" }), 3e3);
-          } else if (job.status === "error") {
-            es.close();
-            setState({ type: "error", message: job.error ?? t2("downloadFailed") });
-          } else {
-            setState({ type: "downloading", jobId, progress: job.progress, filename: job.filename });
-          }
-        } catch {
-          es.close();
-          setState({ type: "error", message: t2("unexpectedServerResponse") });
-        }
-      };
-      es.onerror = () => {
-        es.close();
-        setState({ type: "error", message: t2("downloadJobLost") });
-      };
-    }
-    const btnBase = `flex h-9 items-center rounded-full border border-white/10 text-xs text-slate-300 transition hover:border-white/30 hover:text-white ${effectiveIconOnly ? "w-9 justify-center px-0" : "gap-1.5 px-3.5"} ${className ?? ""}`;
-    if (state.type === "picking-stream") {
-      const vw2 = typeof window !== "undefined" ? window.innerWidth : 1024;
-      const vh2 = typeof window !== "undefined" ? window.innerHeight : 768;
-      const isNarrow = vw2 < 480;
-      const ddWidth = Math.min(320, vw2 - 16);
-      const ddRight = Math.min(Math.max(posRef.current.right, 8), Math.max(8, vw2 - ddWidth - 8));
-      const maxHeight = Math.max(160, vh2 - posRef.current.top - 8);
-      const dropdownStyle = isNarrow ? { left: 8, right: 8, top: posRef.current.top, width: "auto", maxHeight, zIndex: 9999 } : { top: posRef.current.top, right: ddRight, width: ddWidth, maxHeight, zIndex: 9999 };
-      const dropdown = /* @__PURE__ */ jsxs(
-        "div",
-        {
-          className: "fixed flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0d1220] p-2 shadow-2xl",
-          style: dropdownStyle,
-          children: [
-            /* @__PURE__ */ jsx("p", { className: "mb-2 px-2 text-[10px] uppercase tracking-[0.2em] text-slate-500", children: t2("pickStreamToDownload") }),
-            /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-y-auto space-y-1", children: state.streams.map((s, i) => /* @__PURE__ */ jsxs(
-              "button",
-              {
-                type: "button",
-                onClick: () => void handlePickStream(s),
-                className: "flex w-full flex-col rounded-xl px-3 py-2 text-left text-xs text-slate-300 hover:bg-white/5 transition",
-                children: [
-                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-                    /* @__PURE__ */ jsx(
-                      "span",
-                      {
-                        className: `flex-none rounded px-1.5 py-0.5 text-[8px] uppercase tracking-[0.15em] font-medium ${s.cached ? "bg-green-500/20 text-green-400" : "bg-amber-500/20 text-amber-400"}`,
-                        children: s.cached ? "Available" : "Download"
-                      }
-                    ),
-                    /* @__PURE__ */ jsx("span", { className: "truncate", children: s.name }),
-                    extractSize(s.title) && /* @__PURE__ */ jsx("span", { className: "ml-auto flex-none text-[10px] text-slate-400", children: extractSize(s.title) })
-                  ] }),
-                  s.title && /* @__PURE__ */ jsx("span", { className: "mt-0.5 line-clamp-1 text-[10px] text-slate-500", children: s.title })
-                ]
-              },
-              `${s.infoHash || s.directUrl || ""}-${i}`
-            )) })
-          ]
-        }
-      );
-      return /* @__PURE__ */ jsxs(Fragment2, { children: [
-        /* @__PURE__ */ jsx(
-          "button",
-          {
-            type: "button",
-            className: btnBase,
-            onClick: () => setState({ type: "idle" }),
-            title: effectiveIconOnly ? t2("closeDownload") : void 0,
-            "aria-label": effectiveIconOnly ? t2("closeDownload") : void 0,
-            children: effectiveIconOnly ? "\u2715" : `\u2193 ${t2("close")}`
-          }
-        ),
-        typeof document !== "undefined" && (0, import_react_dom2.createPortal)(dropdown, document.body)
-      ] });
-    }
-    if (state.type === "downloading") {
-      return /* @__PURE__ */ jsxs(
-        "button",
-        {
-          type: "button",
-          className: btnBase,
-          disabled: true,
-          title: effectiveIconOnly ? t2("downloading") : void 0,
-          "aria-label": effectiveIconOnly ? t2("downloading") : void 0,
-          children: [
-            /* @__PURE__ */ jsx("svg", { className: "h-3 w-3 animate-spin", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }),
-            !effectiveIconOnly ? state.progress > 0 ? `${state.progress}%` : t2("preparing") : null
-          ]
-        }
-      );
-    }
-    if (state.type === "done") {
-      return /* @__PURE__ */ jsx(
-        "button",
-        {
-          type: "button",
-          className: `${btnBase} border-green-400/30 text-green-400`,
-          disabled: true,
-          title: effectiveIconOnly ? t2("downloadComplete") : void 0,
-          "aria-label": effectiveIconOnly ? t2("downloadComplete") : void 0,
-          children: effectiveIconOnly ? "\u2713" : `\u2713 ${t2("done")}`
-        }
-      );
-    }
-    if (state.type === "error") {
-      if (effectiveIconOnly && !visaFelText) {
-        return /* @__PURE__ */ jsx(
-          "button",
-          {
-            type: "button",
-            className: `${btnBase} border-red-400/30 text-red-400`,
-            onClick: () => setVisaFelText(true),
-            title: state.message,
-            "aria-label": `${t2("downloadFailedRetry")}: ${state.message}`,
-            children: "!"
-          }
-        );
-      }
-      return /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
-        /* @__PURE__ */ jsx("span", { className: "max-w-[180px] truncate text-[10px] text-red-400", children: state.message }),
-        /* @__PURE__ */ jsx("button", { type: "button", className: `${btnBase} border-red-400/30 text-red-400`, onClick: () => {
-          setVisaFelText(false);
-          setState({ type: "idle" });
-        }, children: `\u2717 ${t2("tryAgain")}` })
-      ] });
-    }
-    return /* @__PURE__ */ jsxs(
-      "button",
-      {
-        ref: btnRef,
-        type: "button",
-        className: btnBase,
-        onClick: () => void handleClick(),
-        disabled: state.type === "loading-streams" || state.type === "picking-folder",
-        title: effectiveIconOnly ? t2("download") : void 0,
-        "aria-label": effectiveIconOnly ? t2("download") : void 0,
-        children: [
-          state.type === "loading-streams" || state.type === "picking-folder" ? /* @__PURE__ */ jsx("svg", { className: "h-3 w-3 animate-spin", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 4v10m0 0 4-4m-4 4-4-4M4 18h16" }) }),
-          !effectiveIconOnly ? t2("download") : null
-        ]
-      }
-    );
-  }
-
   // ../Lumio-scraper/plugins/streams-scraper/runtime/stream-provider-stream-utils.ts
-  var VIDEO_EXTS2 = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i;
+  var VIDEO_EXTS = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i;
   var SLATE_MIN_BYTES = 20 * 1024 * 1024;
-  function qualityRank2(name) {
+  function qualityRank(name) {
     const normalized = name.toLowerCase();
     if (normalized.includes("4k") || normalized.includes("2160p")) return 4;
     if (normalized.includes("1080p")) return 3;
@@ -186606,7 +186243,7 @@ ${cue.text}`).join("\n\n")}
     return candidates.slice(0, 3);
   }
   function getPreferredTorrentFileIds(info, options) {
-    const videoFiles = info.files.filter((file) => VIDEO_EXTS2.test(file.path));
+    const videoFiles = info.files.filter((file) => VIDEO_EXTS.test(file.path));
     if (options.seasonNumber != null && options.episodeNumber != null) {
       const match = videoFiles.find(
         (file) => matchesEpisodeIdentifier(file.path, options.seasonNumber, options.episodeNumber)
@@ -186623,7 +186260,7 @@ ${cue.text}`).join("\n\n")}
   }
   function pickBestUnrestrictedLink(links, options) {
     if (links.length === 0) return null;
-    const videoLinks = links.filter((link) => VIDEO_EXTS2.test(link.filename) && !looksLikeSampleOrExtra(link.filename));
+    const videoLinks = links.filter((link) => VIDEO_EXTS.test(link.filename) && !looksLikeSampleOrExtra(link.filename));
     const playable = videoLinks.length > 0 ? videoLinks : links;
     if (options.seasonNumber != null && options.episodeNumber != null) {
       return playable.find(
@@ -186672,8 +186309,371 @@ ${cue.text}`).join("\n\n")}
     return deviceLacksDvCache;
   }
 
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/stream-download.ts
+  var sleep3 = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  function streamNeedsDebrid(stream) {
+    return !stream.directUrl;
+  }
+  function hasDebridKey() {
+    return Boolean((getPlaybackAccessKey() ?? "").trim());
+  }
+  async function resolveDownloadFromStream(stream, t) {
+    if (stream.directUrl) {
+      const filename = stream.directUrl.split("/").pop()?.split("?")[0] ?? "download";
+      return { url: stream.directUrl, filename };
+    }
+    if (!stream.infoHash) throw new Error(t("noPlayableStream"));
+    if (!(getPlaybackAccessKey() ?? "")) throw new Error(lt("debridKeyMissing"));
+    const added = await queueMagnetForPlayback(`magnet:?xt=urn:btih:${stream.infoHash}`);
+    for (let attempt = 0; attempt < 60; attempt += 1) {
+      if (attempt > 0) await sleep3(3e3);
+      const info = await getPlaybackSourceInfo(added.id);
+      if (info.status === "waiting_files_selection") {
+        await selectPlaybackFiles(info.id, "all");
+        continue;
+      }
+      if (info.status === "downloaded") {
+        const resolved = await Promise.all(
+          info.links.map(async (link) => {
+            try {
+              return await resolvePlaybackLink(link);
+            } catch {
+              return null;
+            }
+          })
+        );
+        const playable = resolved.filter((entry) => Boolean(entry));
+        const videoEntries = playable.filter((entry) => VIDEO_EXTS.test(entry.filename));
+        const best = [...videoEntries.length > 0 ? videoEntries : playable].sort((a, b) => b.filesize - a.filesize)[0];
+        if (!best) throw new Error(t("resolveLinkFailed"));
+        return { url: best.download, filename: best.filename };
+      }
+      if (["error", "magnet_error", "dead", "virus"].includes(info.status)) {
+        throw new Error(lt("torrentFailed").replace("{status}", String(info.status)));
+      }
+    }
+    throw new Error("Timeout: torrenten blev inte klar i tid");
+  }
+  function triggerBrowserDownload(url, filename) {
+    if (typeof document === "undefined") return;
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    if (filename) anchor.download = filename;
+    anchor.rel = "noopener noreferrer";
+    anchor.target = "_blank";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+  }
+
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/details-download-button.tsx
+  init_jsx_runtime_shim();
+  function qualityRank2(name) {
+    const n = name.toLowerCase();
+    if (n.includes("4k") || n.includes("2160p")) return 4;
+    if (n.includes("1080p")) return 3;
+    if (n.includes("720p")) return 2;
+    return 1;
+  }
+  function extractSize(title) {
+    const m2 = title.match(/(\d+(?:\.\d+)?)\s*(GB|MB)/i);
+    return m2 ? `${m2[1]} ${m2[2].toUpperCase()}` : null;
+  }
+  function StreamsScraperDetailsDownloadButton({ item, className, iconOnly = false, season, episode }) {
+    const forceMobileIconOnly = typeof className === "string" && className.includes("!h-10") && className.includes("!w-10");
+    const effectiveIconOnly = iconOnly || forceMobileIconOnly;
+    const { t } = useLang();
+    const [state, setState] = useState({ type: "idle" });
+    const [visaFelText, setVisaFelText] = useState(false);
+    const esRef = useRef(null);
+    const timerRef = useRef(null);
+    const btnRef = useRef(null);
+    const posRef = useRef({ top: 0, right: 0 });
+    useEffect(() => {
+      if (state.type !== "error") setVisaFelText(false);
+    }, [state.type]);
+    useEffect(() => () => {
+      esRef.current?.close();
+      if (timerRef.current) clearTimeout(timerRef.current);
+    }, []);
+    const imdbId = item.imdbId;
+    const mediaType = item.type === "tv" ? "tv" : "movie";
+    if (!imdbId) return null;
+    async function handleClick() {
+      if (state.type !== "idle" && state.type !== "error") return;
+      if (btnRef.current) {
+        const r = btnRef.current.getBoundingClientRect();
+        posRef.current = { top: r.bottom + 8, right: window.innerWidth - r.right };
+      }
+      setState({ type: "loading-streams" });
+      try {
+        const targetImdbId = imdbId;
+        const requestContext = getPrimaryStreamProviderRequestContext2();
+        const tType = mediaType === "tv" ? "series" : "movie";
+        const addonStreams = resolveCoreAddonStreams({
+          imdbId: targetImdbId,
+          type: tType === "series" ? "series" : "movie",
+          season,
+          episode
+        }).catch(() => []);
+        const browserStreamUrl = requestContext.browserStreamUrl({
+          imdbId: targetImdbId,
+          mediaType: tType
+        });
+        const cacheFetch = browserStreamUrl ? fetch(browserStreamUrl, {
+          headers: { Accept: "application/json" }
+        }).then((r) => r.ok ? r.json() : { streams: [] }).catch(() => ({ streams: [] })) : Promise.resolve({ streams: [] });
+        const [res, cacheData, community] = await Promise.all([
+          fetch(`/api/streams?imdbId=${targetImdbId}&type=${tType}`, {
+            headers: requestContext.streamHeaders
+          }),
+          cacheFetch,
+          addonStreams
+        ]);
+        const scraperStreams = res.ok ? (await res.json()).streams : [];
+        const communityStreams = community.map((entry, index3) => ({
+          infoHash: "",
+          name: entry.title,
+          // Samma som i strömpanelen: filnamn eller beskrivning på
+          // sekundärraden, och storleken med så valet av ström kan väga den.
+          title: entry.filename ?? entry.description ?? entry.title,
+          fileIdx: index3,
+          cached: true,
+          downloadable: true,
+          cachedFiles: [],
+          directUrl: entry.url,
+          sizeBytes: entry.sizeBytes,
+          subtitleLangs: entry.subtitles?.map((sub) => sub.lang).filter((lang) => Boolean(lang)),
+          source: lt("communitySource")
+        }));
+        const data = { streams: [...scraperStreams, ...communityStreams] };
+        if (data.streams.length === 0) throw new Error(t("noStreamsFound"));
+        const cachedTitles = /* @__PURE__ */ new Set();
+        const cachedHashes = /* @__PURE__ */ new Set();
+        for (const s of cacheData.streams ?? []) {
+          if (s.title) cachedTitles.add(s.title.trim());
+          const hash = s.infoHash?.toLowerCase() ?? s.url?.match(/\/([a-f0-9]{40})\//i)?.[1]?.toLowerCase();
+          if (hash) cachedHashes.add(hash);
+        }
+        const streams = data.streams.map((s) => ({
+          ...s,
+          cached: cachedHashes.has(s.infoHash) || cachedTitles.has((s.title ?? "").trim())
+        }));
+        streams.sort((a, b) => {
+          if (a.cached !== b.cached) return a.cached ? -1 : 1;
+          return qualityRank2(b.name) - qualityRank2(a.name);
+        });
+        setState({ type: "picking-stream", streams });
+      } catch (err) {
+        setState({ type: "error", message: err instanceof Error ? err.message : "Fel" });
+      }
+    }
+    async function handlePickStream(stream) {
+      if (!isPluginDesktopHost()) {
+        setState({ type: "loading-streams" });
+        try {
+          const resolved = await resolveDownloadFromStream(stream, t);
+          triggerBrowserDownload(resolved.url, resolved.filename);
+          setState({ type: "done", filename: resolved.filename });
+          timerRef.current = setTimeout(() => setState({ type: "idle" }), 3e3);
+        } catch (err) {
+          setState({ type: "error", message: err instanceof Error ? err.message : t("startDownloadFailed") });
+        }
+        return;
+      }
+      setState({ type: "picking-folder", stream });
+      try {
+        const res = await fetch("/api/pick-folder", { method: "POST" });
+        if (!res.ok) throw new Error(t("folderPickFailed"));
+        const data = await res.json();
+        if (!data.path) {
+          setState({ type: "idle" });
+          return;
+        }
+        await startDownload(stream, data.path);
+      } catch (err) {
+        setState({ type: "error", message: err instanceof Error ? err.message : "Fel vid mappval" });
+      }
+    }
+    async function startDownload(stream, folder) {
+      esRef.current?.close();
+      let resolved;
+      try {
+        resolved = await resolveDownloadFromStream(stream, t);
+      } catch (error) {
+        setState({ type: "error", message: error instanceof Error ? error.message : t("prepareDownloadFailed") });
+        return;
+      }
+      const res = await fetch("/api/download", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          directUrl: resolved.url,
+          folder,
+          filename: resolved.filename
+        })
+      });
+      if (!res.ok) {
+        setState({ type: "error", message: t("startDownloadFailed") });
+        return;
+      }
+      const { jobId } = await res.json();
+      setState({ type: "downloading", jobId, progress: 0, filename: t("fetchingShort") });
+      const es = new EventSource(`/api/download/progress?jobId=${jobId}`);
+      esRef.current = es;
+      es.onmessage = (e) => {
+        try {
+          const job = JSON.parse(e.data);
+          if (job.status === "done") {
+            es.close();
+            setState({ type: "done", filename: job.filename });
+            timerRef.current = setTimeout(() => setState({ type: "idle" }), 3e3);
+          } else if (job.status === "error") {
+            es.close();
+            setState({ type: "error", message: job.error ?? t("downloadFailed") });
+          } else {
+            setState({ type: "downloading", jobId, progress: job.progress, filename: job.filename });
+          }
+        } catch {
+          es.close();
+          setState({ type: "error", message: t("unexpectedServerResponse") });
+        }
+      };
+      es.onerror = () => {
+        es.close();
+        setState({ type: "error", message: t("downloadJobLost") });
+      };
+    }
+    const btnBase = `flex h-9 items-center rounded-full border border-white/10 text-xs text-slate-300 transition hover:border-white/30 hover:text-white ${effectiveIconOnly ? "w-9 justify-center px-0" : "gap-1.5 px-3.5"} ${className ?? ""}`;
+    if (state.type === "picking-stream") {
+      const vw2 = typeof window !== "undefined" ? window.innerWidth : 1024;
+      const vh2 = typeof window !== "undefined" ? window.innerHeight : 768;
+      const isNarrow = vw2 < 480;
+      const ddWidth = Math.min(320, vw2 - 16);
+      const ddRight = Math.min(Math.max(posRef.current.right, 8), Math.max(8, vw2 - ddWidth - 8));
+      const maxHeight = Math.max(160, vh2 - posRef.current.top - 8);
+      const dropdownStyle = isNarrow ? { left: 8, right: 8, top: posRef.current.top, width: "auto", maxHeight, zIndex: 9999 } : { top: posRef.current.top, right: ddRight, width: ddWidth, maxHeight, zIndex: 9999 };
+      const dropdown = /* @__PURE__ */ jsxs(
+        "div",
+        {
+          className: "fixed flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0d1220] p-2 shadow-2xl",
+          style: dropdownStyle,
+          children: [
+            /* @__PURE__ */ jsx("p", { className: "mb-2 px-2 text-[10px] uppercase tracking-[0.2em] text-slate-500", children: t("pickStreamToDownload") }),
+            /* @__PURE__ */ jsx("div", { className: "min-h-0 flex-1 overflow-y-auto space-y-1", children: state.streams.map((s, i) => /* @__PURE__ */ jsxs(
+              "button",
+              {
+                type: "button",
+                onClick: () => void handlePickStream(s),
+                className: "flex w-full flex-col rounded-xl px-3 py-2 text-left text-xs text-slate-300 hover:bg-white/5 transition",
+                children: [
+                  /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+                    /* @__PURE__ */ jsx(
+                      "span",
+                      {
+                        className: `flex-none rounded px-1.5 py-0.5 text-[8px] uppercase tracking-[0.15em] font-medium ${s.cached ? "bg-green-500/20 text-green-400" : "bg-amber-500/20 text-amber-400"}`,
+                        children: s.cached ? "Available" : "Download"
+                      }
+                    ),
+                    /* @__PURE__ */ jsx("span", { className: "truncate", children: s.name }),
+                    extractSize(s.title) && /* @__PURE__ */ jsx("span", { className: "ml-auto flex-none text-[10px] text-slate-400", children: extractSize(s.title) })
+                  ] }),
+                  s.title && /* @__PURE__ */ jsx("span", { className: "mt-0.5 line-clamp-1 text-[10px] text-slate-500", children: s.title })
+                ]
+              },
+              `${s.infoHash || s.directUrl || ""}-${i}`
+            )) })
+          ]
+        }
+      );
+      return /* @__PURE__ */ jsxs(Fragment2, { children: [
+        /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            className: btnBase,
+            onClick: () => setState({ type: "idle" }),
+            title: effectiveIconOnly ? t("closeDownload") : void 0,
+            "aria-label": effectiveIconOnly ? t("closeDownload") : void 0,
+            children: effectiveIconOnly ? "\u2715" : `\u2193 ${t("close")}`
+          }
+        ),
+        typeof document !== "undefined" && (0, import_react_dom2.createPortal)(dropdown, document.body)
+      ] });
+    }
+    if (state.type === "downloading") {
+      return /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          className: btnBase,
+          disabled: true,
+          title: effectiveIconOnly ? t("downloading") : void 0,
+          "aria-label": effectiveIconOnly ? t("downloading") : void 0,
+          children: [
+            /* @__PURE__ */ jsx("svg", { className: "h-3 w-3 animate-spin", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }),
+            !effectiveIconOnly ? state.progress > 0 ? `${state.progress}%` : t("preparing") : null
+          ]
+        }
+      );
+    }
+    if (state.type === "done") {
+      return /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          className: `${btnBase} border-green-400/30 text-green-400`,
+          disabled: true,
+          title: effectiveIconOnly ? t("downloadComplete") : void 0,
+          "aria-label": effectiveIconOnly ? t("downloadComplete") : void 0,
+          children: effectiveIconOnly ? "\u2713" : `\u2713 ${t("done")}`
+        }
+      );
+    }
+    if (state.type === "error") {
+      if (effectiveIconOnly && !visaFelText) {
+        return /* @__PURE__ */ jsx(
+          "button",
+          {
+            type: "button",
+            className: `${btnBase} border-red-400/30 text-red-400`,
+            onClick: () => setVisaFelText(true),
+            title: state.message,
+            "aria-label": `${t("downloadFailedRetry")}: ${state.message}`,
+            children: "!"
+          }
+        );
+      }
+      return /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsx("span", { className: "max-w-[180px] truncate text-[10px] text-red-400", children: state.message }),
+        /* @__PURE__ */ jsx("button", { type: "button", className: `${btnBase} border-red-400/30 text-red-400`, onClick: () => {
+          setVisaFelText(false);
+          setState({ type: "idle" });
+        }, children: `\u2717 ${t("tryAgain")}` })
+      ] });
+    }
+    return /* @__PURE__ */ jsxs(
+      "button",
+      {
+        ref: btnRef,
+        type: "button",
+        className: btnBase,
+        onClick: () => void handleClick(),
+        disabled: state.type === "loading-streams" || state.type === "picking-folder",
+        title: effectiveIconOnly ? t("download") : void 0,
+        "aria-label": effectiveIconOnly ? t("download") : void 0,
+        children: [
+          state.type === "loading-streams" || state.type === "picking-folder" ? /* @__PURE__ */ jsx("svg", { className: "h-3 w-3 animate-spin", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M12 4v10m0 0 4-4m-4 4-4-4M4 18h16" }) }),
+          !effectiveIconOnly ? t("download") : null
+        ]
+      }
+    );
+  }
+
   // ../Lumio-scraper/plugins/streams-scraper/runtime/instant-play-provider.ts
-  var VIDEO_EXTS3 = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
+  var VIDEO_EXTS2 = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
   function toMediaItem(movie) {
     return {
       id: movie.id,
@@ -186799,7 +186799,7 @@ ${cue.text}`).join("\n\n")}
       try {
         const info = await getPlaybackSourceInfo(torrentId);
         if (info.status === "waiting_files_selection") {
-          const videoFiles = info.files.filter((file) => VIDEO_EXTS3.test(file.path));
+          const videoFiles = info.files.filter((file) => VIDEO_EXTS2.test(file.path));
           const preferred = videoFiles.filter((file) => !isLikelySamplePath(file.path)).sort((left, right) => right.bytes - left.bytes);
           const best = preferred[0] ?? videoFiles.sort((left, right) => right.bytes - left.bytes)[0];
           if (best) {
@@ -186820,8 +186820,8 @@ ${cue.text}`).join("\n\n")}
             })
           );
           const candidates = unrestricted.filter((entry) => Boolean(entry));
-          const preferred = candidates.filter((entry) => VIDEO_EXTS3.test(entry.filename) && !isLikelySamplePath(entry.filename)).sort((left, right) => right.filesize - left.filesize);
-          const videos = candidates.filter((entry) => VIDEO_EXTS3.test(entry.filename)).sort((left, right) => right.filesize - left.filesize);
+          const preferred = candidates.filter((entry) => VIDEO_EXTS2.test(entry.filename) && !isLikelySamplePath(entry.filename)).sort((left, right) => right.filesize - left.filesize);
+          const videos = candidates.filter((entry) => VIDEO_EXTS2.test(entry.filename)).sort((left, right) => right.filesize - left.filesize);
           const chosen = preferred[0] ?? videos[0] ?? candidates[0];
           if (!chosen) continue;
           return {
@@ -187135,7 +187135,7 @@ ${cue.text}`).join("\n\n")}
   };
 
   // ../Lumio-scraper/plugins/streams-scraper/runtime/resume-resolver.ts
-  var VIDEO_EXTS4 = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
+  var VIDEO_EXTS3 = /\.(mp4|mkv|avi|mov|m4v|ts|wmv|webm|flv|m2ts)$/i;
   function isLikelySamplePath2(path) {
     const value = path.toLowerCase();
     return /\bsample\b/.test(value) || /\btrailer\b/.test(value) || /\bfeaturette\b/.test(value) || /\bextras?\b/.test(value);
@@ -187154,7 +187154,7 @@ ${cue.text}`).join("\n\n")}
       if (delay2 > 0) await new Promise((resolve) => setTimeout(resolve, delay2));
       const info = await getPlaybackSourceInfo(added.id);
       if (info.status === "waiting_files_selection") {
-        const videoFiles = info.files.filter((file) => VIDEO_EXTS4.test(file.path));
+        const videoFiles = info.files.filter((file) => VIDEO_EXTS3.test(file.path));
         const byEpisode = epTag ? videoFiles.filter((file) => epTag.test(file.path)) : [];
         const preferred = (byEpisode.length > 0 ? byEpisode : videoFiles).filter((file) => !isLikelySamplePath2(file.path)).sort((left, right) => right.bytes - left.bytes);
         const best = preferred[0] ?? videoFiles.sort((left, right) => right.bytes - left.bytes)[0];
@@ -187175,8 +187175,8 @@ ${cue.text}`).join("\n\n")}
         const candidates = unrestricted.filter((entry) => Boolean(entry));
         const byEpisode = epTag ? candidates.filter((entry) => epTag.test(entry.filename)) : [];
         const pool = byEpisode.length > 0 ? byEpisode : candidates;
-        const preferred = pool.filter((entry) => VIDEO_EXTS4.test(entry.filename) && !isLikelySamplePath2(entry.filename)).sort((left, right) => right.filesize - left.filesize);
-        const videos = pool.filter((entry) => VIDEO_EXTS4.test(entry.filename)).sort((left, right) => right.filesize - left.filesize);
+        const preferred = pool.filter((entry) => VIDEO_EXTS3.test(entry.filename) && !isLikelySamplePath2(entry.filename)).sort((left, right) => right.filesize - left.filesize);
+        const videos = pool.filter((entry) => VIDEO_EXTS3.test(entry.filename)).sort((left, right) => right.filesize - left.filesize);
         const chosen = preferred[0] ?? videos[0] ?? pool[0];
         if (!chosen) return null;
         return { url: chosen.download, filename: chosen.filename, refreshed: true };
@@ -187356,7 +187356,7 @@ ${cue.text}`).join("\n\n")}
     backdropUrl,
     year
   }) {
-    const { t: t2, lang } = useLang();
+    const { t, lang } = useLang();
     const harCommunityK\u00E4lla = getEnabledCoreStreamAddons().length > 0;
     const [hasPlaybackAccess, setHasPlaybackAccess] = useState(() => getEnabledScraperAccessState().hasPlaybackAccess);
     const [hasEnabledScraper] = useState(() => getEnabledScraperAccessState().hasEnabledScraper);
@@ -187734,7 +187734,7 @@ ${cue.text}`).join("\n\n")}
             if (fileIds.length > 0) {
               await selectPlaybackFiles(info.id, fileIds.join(","));
             } else {
-              const videoFiles = info.files.filter((f) => VIDEO_EXTS2.test(f.path));
+              const videoFiles = info.files.filter((f) => VIDEO_EXTS.test(f.path));
               if (videoFiles.length === 0) return null;
               await selectPlaybackFiles(info.id, String(videoFiles[0].id));
             }
@@ -187776,7 +187776,7 @@ ${cue.text}`).join("\n\n")}
         try {
           const info = await getPlaybackSourceInfo(torrentId);
           if (info.status === "waiting_files_selection") {
-            const videoFiles = info.files.filter((f) => VIDEO_EXTS2.test(f.path));
+            const videoFiles = info.files.filter((f) => VIDEO_EXTS.test(f.path));
             const match = videoFiles.find((f) => matchesEpisodeIdentifier(f.path, targetSeason, targetEpisode)) ?? videoFiles[0];
             if (!match) return null;
             await selectPlaybackFiles(info.id, String(match.id));
@@ -187790,7 +187790,7 @@ ${cue.text}`).join("\n\n")}
               } catch {
               }
             }
-            const videoLinks = results.filter((l) => VIDEO_EXTS2.test(l.filename));
+            const videoLinks = results.filter((l) => VIDEO_EXTS.test(l.filename));
             const epRe = new RegExp(
               `[Ss]0*${targetSeason}[Ee]0*${targetEpisode}(?![0-9])`
             );
@@ -188098,11 +188098,11 @@ ${cue.text}`).join("\n\n")}
         if (aBad !== bBad) return aBad ? 1 : -1;
         if (a.cached !== b.cached) return a.cached ? -1 : 1;
         if (Boolean(a.downloadable) !== Boolean(b.downloadable)) return a.downloadable ? -1 : 1;
-        return qualityRank2(b.name) - qualityRank2(a.name);
+        return qualityRank(b.name) - qualityRank(a.name);
       });
       try {
         if (streamProviderRequests.length === 0 && !harCommunityK\u00E4lla) {
-          setStreamsError(t2("noScrapersEnabled"));
+          setStreamsError(t("noScrapersEnabled"));
           setLoadingStreams(false);
           return;
         }
@@ -188316,7 +188316,7 @@ ${cue.text}`).join("\n\n")}
         });
         if (!published && allStreams.length === 0 && (streamProviderRequests.length > 0 || harCommunityK\u00E4lla)) {
           const details = [...providerErrors].reverse().find((entry) => entry && entry.trim().length > 0) ?? null;
-          setStreamsError(details ?? t2("noStreams"));
+          setStreamsError(details ?? t("noStreams"));
         }
         const torrentio = streamProviderRequests.find((req) => req.config.preset === "torrentio");
         if (torrentio && torrentio.accessKey) {
@@ -188457,7 +188457,7 @@ ${cue.text}`).join("\n\n")}
           const streams3 = applyCachedLookup(apiStreamsList.flat(), providerLookup);
           streams3.sort((a, b) => {
             if (a.cached !== b.cached) return a.cached ? -1 : 1;
-            return qualityRank2(b.name) - qualityRank2(a.name);
+            return qualityRank(b.name) - qualityRank(a.name);
           });
           const candidates2 = buildAutoplayCandidates(streams3, {
             maxSizeGb: getAutoPlayMaxStreamSizeGb(),
@@ -188505,7 +188505,7 @@ ${cue.text}`).join("\n\n")}
           return;
         }
         const streams2 = apiStreamsList.flat();
-        streams2.sort((a, b) => qualityRank2(b.name) - qualityRank2(a.name));
+        streams2.sort((a, b) => qualityRank(b.name) - qualityRank(a.name));
         const candidates = buildAutoplayCandidates(streams2, {
           maxSizeGb: getAutoPlayMaxStreamSizeGb(),
           maxResolution: getAutoPlayMaxResolution(),
@@ -188578,7 +188578,7 @@ ${cue.text}`).join("\n\n")}
       let selectedStream = stream;
       const streamWasCached = stream.cached;
       if (!stream.cached && streams && streams.length > 1) {
-        const cachedKnown = streams.filter((s) => s.cached && (s.infoHash || s.directUrl)).sort((a, b) => qualityRank2(b.name) - qualityRank2(a.name));
+        const cachedKnown = streams.filter((s) => s.cached && (s.infoHash || s.directUrl)).sort((a, b) => qualityRank(b.name) - qualityRank(a.name));
         if (cachedKnown.length > 0) {
           selectedStream = cachedKnown[0];
         } else if (effectiveImdbId && mediaType === "tv" && selectedSeason && selectedEpisode) {
@@ -188594,7 +188594,7 @@ ${cue.text}`).join("\n\n")}
               const enriched = applyCachedLookup(streams, providerLookup);
               enriched.sort((a, b) => {
                 if (a.cached !== b.cached) return a.cached ? -1 : 1;
-                return qualityRank2(b.name) - qualityRank2(a.name);
+                return qualityRank(b.name) - qualityRank(a.name);
               });
               setStreams(enriched);
               const cachedBest = enriched.find((s) => s.cached && (s.infoHash || s.directUrl));
@@ -188661,7 +188661,7 @@ ${cue.text}`).join("\n\n")}
         preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage())
       });
       if (candidates.length === 0) return false;
-      setStep({ type: "processing", message: mediaType === "tv" ? t2("startingEpisode") : t2("startingMovie") });
+      setStep({ type: "processing", message: mediaType === "tv" ? t("startingEpisode") : t("startingMovie") });
       for (const candidate of candidates) {
         try {
           const resolved = await resolveAutoplayCandidate(candidate);
@@ -188677,7 +188677,7 @@ ${cue.text}`).join("\n\n")}
               infoHash: candidate.infoHash ?? null
             });
             if (opened) return true;
-            setStep({ type: "processing", message: mediaType === "tv" ? t2("startingEpisode") : t2("startingMovie") });
+            setStep({ type: "processing", message: mediaType === "tv" ? t("startingEpisode") : t("startingMovie") });
           }
         } catch {
         }
@@ -188780,7 +188780,7 @@ ${cue.text}`).join("\n\n")}
         onAutoPlayFallback?.();
         return false;
       }
-      setStep({ type: "processing", message: mediaType === "tv" ? t2("startingEpisode") : t2("startingMovie") });
+      setStep({ type: "processing", message: mediaType === "tv" ? t("startingEpisode") : t("startingMovie") });
       autoplayLoopActiveRef.current = true;
       try {
         for (const candidate of pool) {
@@ -188870,7 +188870,7 @@ ${cue.text}`).join("\n\n")}
           }
           if (info.status === "waiting_files_selection") {
             stopPolling();
-            const videoFiles = info.files.filter((f) => VIDEO_EXTS2.test(f.path));
+            const videoFiles = info.files.filter((f) => VIDEO_EXTS.test(f.path));
             if (selectedEpisode && selectedSeason) {
               const match = videoFiles.find(
                 (f) => matchesEpisodeIdentifier(f.path, selectedSeason.season_number, selectedEpisode.episode_number)
@@ -188923,13 +188923,13 @@ ${cue.text}`).join("\n\n")}
                   (s) => s.infoHash?.toLowerCase() === info.hash?.toLowerCase() ? { ...s, cached: false } : s
                 ) ?? null
               );
-              setStep({ type: "error", message: t2("streamNotCached") ?? "Stream not cached \u2014 try another" });
+              setStep({ type: "error", message: t("streamNotCached") ?? "Stream not cached \u2014 try another" });
               return;
             }
             if (!downloadStartedAt) downloadStartedAt = Date.now();
             if (Date.now() - downloadStartedAt > downloadTimeoutMs) {
               stopPolling();
-              setStep({ type: "error", message: t2("downloadTimeout") ?? "Download timeout \u2014 try another stream" });
+              setStep({ type: "error", message: t("downloadTimeout") ?? "Download timeout \u2014 try another stream" });
               return;
             }
           }
@@ -188973,7 +188973,7 @@ ${cue.text}`).join("\n\n")}
         if (!isPlayAttemptActive(attemptId)) return;
         const resolved = results.filter((r) => r !== null);
         if (resolved.length === 0) throw new Error("No playable links returned");
-        const videoLinks = resolved.filter((l) => VIDEO_EXTS2.test(l.filename) && !/^sample\b/i.test(l.filename));
+        const videoLinks = resolved.filter((l) => VIDEO_EXTS.test(l.filename) && !/^sample\b/i.test(l.filename));
         const playable = videoLinks.length > 0 ? videoLinks : resolved;
         if (playable.length === 1) {
           if (await openPlayer(playable[0], attemptId)) setStep({ type: "idle" });
@@ -189585,7 +189585,7 @@ ${cue.text}`).join("\n\n")}
           misslyckades(lt("debridKeyMissing"));
           return;
         }
-        const resolved = await resolveDownloadFromStream(stream, t2);
+        const resolved = await resolveDownloadFromStream(stream, t);
         if (!isPluginDesktopHost()) {
           triggerBrowserDownload(resolved.url, resolved.filename);
           setRadNedladdning((current2) => ({ ...current2, [nyckel]: { typ: "klar" } }));
@@ -189593,7 +189593,7 @@ ${cue.text}`).join("\n\n")}
         }
         const mapp = await fetch("/api/pick-folder", { method: "POST" });
         if (!mapp.ok) {
-          misslyckades(t2("folderPickFailed"));
+          misslyckades(t("folderPickFailed"));
           return;
         }
         const { path } = await mapp.json();
@@ -189611,23 +189611,23 @@ ${cue.text}`).join("\n\n")}
           body: JSON.stringify({ directUrl: resolved.url, folder: path, filename: resolved.filename })
         });
         if (!jobb.ok) {
-          misslyckades(t2("startDownloadFailed"));
+          misslyckades(t("startDownloadFailed"));
           return;
         }
         setRadNedladdning((current2) => ({ ...current2, [nyckel]: { typ: "klar" } }));
       } catch (error) {
-        misslyckades(error instanceof Error ? error.message : t2("startDownloadFailed"));
+        misslyckades(error instanceof Error ? error.message : t("startDownloadFailed"));
       }
     }
     if (!hasPlaybackAccess) {
       return /* @__PURE__ */ jsxs("section", { children: [
         /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.24em] text-slate-400", children: lt(hasEnabledScraper ? "debridMissingTitle" : "noScraperTitle") }),
-        /* @__PURE__ */ jsx("p", { className: "mt-3 text-sm text-slate-400", children: lt(hasEnabledScraper ? "debridMissingBody" : "noScraperBody").replace("{path}", `${t2("settings")} \u2192 ${t2("settingsPageSources")}`) })
+        /* @__PURE__ */ jsx("p", { className: "mt-3 text-sm text-slate-400", children: lt(hasEnabledScraper ? "debridMissingBody" : "noScraperBody").replace("{path}", `${t("settings")} \u2192 ${t("settingsPageSources")}`) })
       ] });
     }
     const isLoading = step.type === "processing" || step.type === "torrent_polling";
     const showStartupSplash = isLoading || playerHideStartSplash;
-    const splashLabel = step.type === "torrent_polling" && step.status === "downloading" ? `${t2("downloadingFile")} ${Math.max(0, Math.min(100, Number(step.progress) || 0))}%` : mediaType === "tv" ? t2("startingEpisode") : t2("startingMovie");
+    const splashLabel = step.type === "torrent_polling" && step.status === "downloading" ? `${t("downloadingFile")} ${Math.max(0, Math.min(100, Number(step.progress) || 0))}%` : mediaType === "tv" ? t("startingEpisode") : t("startingMovie");
     return /* @__PURE__ */ jsxs(Fragment2, { children: [
       showStartupSplash && bodyMounted ? (0, import_react_dom3.createPortal)(
         /* @__PURE__ */ jsxs(
@@ -189660,7 +189660,7 @@ ${cue.text}`).join("\n\n")}
                   /* @__PURE__ */ jsx("svg", { className: "h-4 w-4 animate-spin", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.219-8.56", strokeLinecap: "round" }) }),
                   splashLabel
                 ] }),
-                /* @__PURE__ */ jsx("button", { type: "button", onClick: resetStep, className: "mt-2 text-xs text-slate-600 transition hover:text-slate-400", children: t2("cancel") })
+                /* @__PURE__ */ jsx("button", { type: "button", onClick: resetStep, className: "mt-2 text-xs text-slate-600 transition hover:text-slate-400", children: t("cancel") })
               ] })
             ]
           }
@@ -189670,12 +189670,12 @@ ${cue.text}`).join("\n\n")}
       /* @__PURE__ */ jsxs("section", { className: "space-y-4", children: [
         mediaType === "tv" && !selectedSeason && /* @__PURE__ */ jsxs("div", { children: [
           !hasTmdbId && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: "Seasons unavailable \u2014 this title is from local sample data without a real TMDb ID." }),
-          hasTmdbId && loadingSeasons && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t2("loadingSeasons") }),
+          hasTmdbId && loadingSeasons && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("loadingSeasons") }),
           hasTmdbId && seasonsError && /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
             /* @__PURE__ */ jsx("p", { className: "text-sm text-red-400", children: seasonsError }),
-            /* @__PURE__ */ jsx("button", { type: "button", onClick: () => void loadSeasons(), className: "text-xs text-slate-500 hover:text-slate-300", children: t2("retry") })
+            /* @__PURE__ */ jsx("button", { type: "button", onClick: () => void loadSeasons(), className: "text-xs text-slate-500 hover:text-slate-300", children: t("retry") })
           ] }),
-          hasTmdbId && !seasonsError && seasons && seasons.length === 0 && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t2("noSeasons") }),
+          hasTmdbId && !seasonsError && seasons && seasons.length === 0 && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("noSeasons") }),
           seasons && seasons.length > 0 && /* @__PURE__ */ jsx("div", { className: "flex flex-col gap-2", children: seasons.map((s) => /* @__PURE__ */ jsxs(
             "button",
             {
@@ -189709,8 +189709,8 @@ ${cue.text}`).join("\n\n")}
               ]
             }
           ),
-          loadingEpisodes && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t2("loadingEpisodes") }),
-          episodes && episodes.length === 0 && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t2("noEpisodes") }),
+          loadingEpisodes && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("loadingEpisodes") }),
+          episodes && episodes.length === 0 && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("noEpisodes") }),
           episodes && episodes.length > 0 && /* @__PURE__ */ jsxs(Fragment2, { children: [
             /* @__PURE__ */ jsx("div", { className: "space-y-0.5", children: (() => {
               const todayMs = (/* @__PURE__ */ new Date()).setHours(0, 0, 0, 0);
@@ -189737,8 +189737,8 @@ ${cue.text}`).join("\n\n")}
                   index3 === firstUnairedIndex && firstUnairedIndex > 0 && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2 py-2", children: [
                     /* @__PURE__ */ jsx("div", { className: "h-px flex-1 bg-white/10" }),
                     /* @__PURE__ */ jsxs("span", { className: "whitespace-nowrap text-[10px] text-slate-500", children: [
-                      t2("notAiredYet"),
-                      formattedNextDate ? ` \xB7 ${t2("nextAirs")}: ${formattedNextDate}` : ""
+                      t("notAiredYet"),
+                      formattedNextDate ? ` \xB7 ${t("nextAirs")}: ${formattedNextDate}` : ""
                     ] }),
                     /* @__PURE__ */ jsx("div", { className: "h-px flex-1 bg-white/10" })
                   ] }),
@@ -189774,7 +189774,7 @@ ${cue.text}`).join("\n\n")}
                         "button",
                         {
                           type: "button",
-                          title: watched ? t2("markUnwatched") : t2("markWatched"),
+                          title: watched ? t("markUnwatched") : t("markWatched"),
                           onClick: (e) => handleToggleWatched(e, ep),
                           className: `mr-2 flex h-5 w-5 flex-none items-center justify-center rounded-full border-2 text-[9px] transition ${watched ? "border-aurora-300 bg-transparent text-aurora-300 shadow-[0_0_0_1px_rgba(147,197,253,0.08)] hover:border-slate-300 hover:text-slate-300" : "border-white/10 bg-transparent text-transparent hover:border-aurora-300/60"}`,
                           children: /* @__PURE__ */ jsx("span", { className: watched ? "" : "opacity-0", children: "\u2713" })
@@ -189792,7 +189792,7 @@ ${cue.text}`).join("\n\n")}
                         }
                       ),
                       ep.air_date && /* @__PURE__ */ jsx("p", { className: "text-xs text-slate-400", children: new Date(ep.air_date).toLocaleDateString(lang === "sv" ? "sv-SE" : "en-US", { day: "numeric", month: "long", year: "numeric" }) }),
-                      /* @__PURE__ */ jsx("p", { className: "text-xs leading-relaxed text-slate-400", children: ep.overview || t2("noOverview") })
+                      /* @__PURE__ */ jsx("p", { className: "text-xs leading-relaxed text-slate-400", children: ep.overview || t("noOverview") })
                     ] })
                   ] })
                 ] }, ep.episode_number);
@@ -189804,7 +189804,7 @@ ${cue.text}`).join("\n\n")}
                 type: "button",
                 onClick: handleMarkSeasonWatched,
                 className: "text-xs text-slate-500 hover:text-slate-300",
-                children: t2("markAllWatched")
+                children: t("markAllWatched")
               }
             )
           ] })
@@ -189839,16 +189839,16 @@ ${cue.text}`).join("\n\n")}
             /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "10", stroke: "currentColor", strokeOpacity: "0.2", strokeWidth: "3" }),
             /* @__PURE__ */ jsx("path", { d: "M22 12a10 10 0 0 0-10-10", stroke: "currentColor", strokeWidth: "3", strokeLinecap: "round" })
           ] }),
-          /* @__PURE__ */ jsx("span", { children: t2("searchingStreams") })
+          /* @__PURE__ */ jsx("span", { children: t("searchingStreams") })
         ] }),
         streamsError && /* @__PURE__ */ jsx("p", { className: "text-sm text-red-400", children: streamsError }),
-        streams && streams.length === 0 && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t2("noStreams") }),
+        streams && streams.length === 0 && /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("noStreams") }),
         streams && streams.length > 0 && step.type === "idle" && (() => {
           const visible = applyStreamFilters(streams, streamFilters);
           const filtered = streams.filter((_, i) => visible[i]);
           const hiddenCount = streams.length - filtered.length;
           return /* @__PURE__ */ jsxs(Fragment2, { children: [
-            filtered.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t2("allFiltered") }) : /* @__PURE__ */ jsx(
+            filtered.length === 0 ? /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-400", children: t("allFiltered") }) : /* @__PURE__ */ jsx(
               StreamList,
               {
                 deviceLacksDolbyVision,
@@ -189879,13 +189879,13 @@ ${cue.text}`).join("\n\n")}
                 /* @__PURE__ */ jsx("path", { d: "M22 12a10 10 0 0 0-10-10", stroke: "currentColor", strokeWidth: "3", strokeLinecap: "round" })
               ] }),
               /* @__PURE__ */ jsxs("span", { children: [
-                t2("sourcesStillSearching"),
+                t("sourcesStillSearching"),
                 " ",
                 pending2.join(", ")
               ] })
             ] }),
             failed.length > 0 && /* @__PURE__ */ jsxs("p", { children: [
-              t2("sourcesNoAnswer"),
+              t("sourcesNoAnswer"),
               " ",
               failed.join(", ")
             ] })
@@ -189893,14 +189893,14 @@ ${cue.text}`).join("\n\n")}
         })(),
         step.type === "processing" && /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-3", children: [
           /* @__PURE__ */ jsx("span", { className: "text-sm text-slate-300", children: step.message }),
-          /* @__PURE__ */ jsx("button", { type: "button", onClick: resetStep, className: "text-xs text-slate-500 hover:text-slate-300", children: t2("cancel") })
+          /* @__PURE__ */ jsx("button", { type: "button", onClick: resetStep, className: "text-xs text-slate-500 hover:text-slate-300", children: t("cancel") })
         ] }),
         step.type === "torrent_polling" && /* @__PURE__ */ jsx(TorrentProgress, { step, onCancel: resetStep }),
         step.type === "select_files" && /* @__PURE__ */ jsx(SelectFiles, { info: step.torrentInfo, onSelect: handleSelectFiles, onCancel: resetStep }),
         step.type === "links" && /* @__PURE__ */ jsx(LinkList, { links: step.links, onPlay: openPlayer, onBack: resetStep }),
         step.type === "error" && /* @__PURE__ */ jsxs("div", { className: "space-y-1", children: [
           /* @__PURE__ */ jsx("p", { className: "text-sm text-red-400", children: step.message }),
-          /* @__PURE__ */ jsx("button", { type: "button", onClick: resetStep, className: "text-xs text-slate-500 hover:text-slate-300", children: t2("tryAgain") })
+          /* @__PURE__ */ jsx("button", { type: "button", onClick: resetStep, className: "text-xs text-slate-500 hover:text-slate-300", children: t("tryAgain") })
         ] }),
         step.type === "idle" && /* @__PURE__ */ jsxs("div", { children: [
           /* @__PURE__ */ jsx(
@@ -189909,7 +189909,7 @@ ${cue.text}`).join("\n\n")}
               type: "button",
               onClick: () => setShowManual((v) => !v),
               className: "text-xs text-slate-500 hover:text-slate-300",
-              children: showManual ? t2("hideManual") : lt("addManually")
+              children: showManual ? t("hideManual") : lt("addManually")
             }
           ),
           showManual && /* @__PURE__ */ jsxs("form", { onSubmit: handleManualSubmit, className: "mt-2 flex gap-2", children: [
@@ -189929,7 +189929,7 @@ ${cue.text}`).join("\n\n")}
                 type: "submit",
                 disabled: !manualInput.trim(),
                 className: "rounded-xl bg-aurora-500/80 px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-white transition hover:bg-aurora-400/80 disabled:opacity-40",
-                children: t2("go")
+                children: t("go")
               }
             )
           ] })
@@ -190081,6 +190081,7 @@ ${cue.text}`).join("\n\n")}
     streamKey,
     deviceLacksDolbyVision = false
   }) {
+    const { t } = useLang();
     const unsupported = (s) => deviceLacksDolbyVision && streamUnsupportedOnDevice(s);
     const byPlayability = (items) => [...items].sort((a, b) => Number(unsupported(a)) - Number(unsupported(b)));
     const sourceOf = (s) => s.source ?? "scraper";
@@ -190177,7 +190178,7 @@ ${cue.text}`).join("\n\n")}
   }
   function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }) {
     const isTvMode = useTvMode();
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const [copied, setCopied] = useState(false);
     const url = streamHttpUrl(stream);
     const sizeBytes = getStreamSizeBytes(stream);
@@ -190196,8 +190197,8 @@ ${cue.text}`).join("\n\n")}
             "span",
             {
               className: "flex-shrink-0 rounded-full bg-amber-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-amber-300",
-              title: t2("streamDeviceUnsupportedHint"),
-              children: t2("streamDeviceUnsupported")
+              title: t("streamDeviceUnsupportedHint"),
+              children: t("streamDeviceUnsupported")
             }
           ) : null
         ] }),
@@ -190212,8 +190213,8 @@ ${cue.text}`).join("\n\n")}
                 window.setTimeout(() => setCopied(false), 1800);
               });
             },
-            title: copied ? t2("copied") : t2("copyStreamUrl"),
-            "aria-label": t2("copyStreamUrl"),
+            title: copied ? t("copied") : t("copyStreamUrl"),
+            "aria-label": t("copyStreamUrl"),
             className: "flex-shrink-0 rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:border-white/30 hover:text-white",
             children: copied ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4 text-green-400", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M20 6 9 17l-5-5", strokeLinecap: "round", strokeLinejoin: "round" }) }) : /* @__PURE__ */ jsxs("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
               /* @__PURE__ */ jsx("rect", { x: "9", y: "9", width: "13", height: "13", rx: "2" }),
@@ -190226,8 +190227,8 @@ ${cue.text}`).join("\n\n")}
           {
             type: "button",
             onClick: () => openInExternalAndroidPlayer(url, stream.name),
-            title: t2("openInExternalPlayer"),
-            "aria-label": t2("openInExternalPlayer"),
+            title: t("openInExternalPlayer"),
+            "aria-label": t("openInExternalPlayer"),
             className: "flex-shrink-0 rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:border-white/30 hover:text-white",
             children: /* @__PURE__ */ jsxs("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
               /* @__PURE__ */ jsx("path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", strokeLinecap: "round", strokeLinejoin: "round" }),
@@ -190240,8 +190241,8 @@ ${cue.text}`).join("\n\n")}
           {
             type: "button",
             onClick: () => openInVlc(url),
-            title: t2("openInVlc"),
-            "aria-label": t2("openInVlc"),
+            title: t("openInVlc"),
+            "aria-label": t("openInVlc"),
             className: "flex-shrink-0 rounded-full bg-orange-500/90 p-2 text-white transition hover:bg-orange-500",
             children: /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M12 2.5c-.5 0-.9.3-1.1.8L9.6 7h4.8l-1.3-3.7c-.2-.5-.6-.8-1.1-.8zM8.9 8.8 6 18.2c-.3.9.4 1.8 1.3 1.8h9.4c.9 0 1.6-.9 1.3-1.8l-2.9-9.4H8.9z" }) })
           }
@@ -190258,8 +190259,8 @@ ${cue.text}`).join("\n\n")}
             type: "button",
             onClick: () => onDownload(stream),
             disabled: status?.typ === "laddar",
-            title: status?.typ === "fel" ? status.meddelande : t2("download"),
-            "aria-label": status?.typ === "fel" ? `${t2("download")}: ${status.meddelande}` : t2("download"),
+            title: status?.typ === "fel" ? status.meddelande : t("download"),
+            "aria-label": status?.typ === "fel" ? `${t("download")}: ${status.meddelande}` : t("download"),
             className: `flex-shrink-0 rounded-full p-2 transition ${status?.typ === "fel" ? "bg-red-500/20 text-red-300 hover:bg-red-500/30" : status?.typ === "klar" ? "bg-emerald-500/20 text-emerald-300" : "bg-white/10 text-white/80 hover:bg-white/20 disabled:opacity-50"}`,
             children: status?.typ === "laddar" ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4 animate-spin motion-reduce:animate-none", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 1 1-6.2-8.56", strokeLinecap: "round" }) }) : status?.typ === "klar" ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2.5", children: /* @__PURE__ */ jsx("path", { d: "M20 6 9 17l-5-5", strokeLinecap: "round", strokeLinejoin: "round" }) }) : /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M12 3v12m0 0-4-4m4 4 4-4M4 19h16", strokeLinecap: "round", strokeLinejoin: "round" }) })
           }
@@ -190271,14 +190272,14 @@ ${cue.text}`).join("\n\n")}
             ...isTvMode ? { "data-f": "" } : {},
             onClick: () => onPlay(stream),
             className: isTvMode ? "min-h-[44px] flex-shrink-0 rounded-full bg-accent-500 px-5 text-sm font-semibold text-white transition hover:bg-accent-400" : "flex-shrink-0 rounded-full bg-accent-500 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-accent-400",
-            children: t2("play")
+            children: t("play")
           }
         )
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-start gap-x-3 gap-y-1", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex flex-none flex-col gap-1", children: [
           /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-baseline gap-x-2 gap-y-1", children: [
-            stream.cached ? /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400", children: t2("streamAvailable") }) : /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400", children: t2("streamDownload") }),
+            stream.cached ? /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400", children: t("streamAvailable") }) : /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400", children: t("streamDownload") }),
             sizeLabel ? /* @__PURE__ */ jsx("span", { className: "shrink-0 rounded bg-white/5 px-1.5 py-0.5 text-[11px] font-medium tabular-nums text-slate-300", children: sizeLabel }) : null
           ] }),
           ljudFlaggor.length > 0 || undertextFlaggor.length > 0 ? /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-x-2 gap-y-1", children: [
@@ -190286,7 +190287,7 @@ ${cue.text}`).join("\n\n")}
               "span",
               {
                 className: "shrink-0 text-[11px] leading-none tracking-[0.08em]",
-                title: `${t2("audio")}: ${ljudSprak.join(", ").toUpperCase()}`,
+                title: `${t("audio")}: ${ljudSprak.join(", ").toUpperCase()}`,
                 children: ljudFlaggor.join("")
               }
             ) : null,
@@ -190294,7 +190295,7 @@ ${cue.text}`).join("\n\n")}
               "span",
               {
                 className: "shrink-0 rounded bg-white/5 px-1 py-0.5 text-[11px] leading-none tracking-[0.08em]",
-                title: `${t2("subtitleLanguages")}: ${undertextSprak.join(", ").toUpperCase()}`,
+                title: `${t("subtitleLanguages")}: ${undertextSprak.join(", ").toUpperCase()}`,
                 children: [
                   /* @__PURE__ */ jsx("span", { className: "mr-0.5 text-[9px] text-slate-500", children: "CC" }),
                   undertextFlaggor.join("")
@@ -190311,22 +190312,22 @@ ${cue.text}`).join("\n\n")}
     step,
     onCancel
   }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const safeProgress = Math.max(0, Math.min(100, Number(step.progress) || 0));
-    const label = step.status === "downloading" ? `${t2("downloading")} ${safeProgress}%` : step.status === "queued" ? t2("queued") : step.status === "magnet_conversion" ? lt("convertingMagnet") : step.statusLabel ?? step.status;
+    const label = step.status === "downloading" ? `${t("downloading")} ${safeProgress}%` : step.status === "queued" ? t("queued") : step.status === "magnet_conversion" ? lt("convertingMagnet") : step.statusLabel ?? step.status;
     return /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between text-sm", children: [
         /* @__PURE__ */ jsx("span", { className: "text-slate-300", children: label }),
-        /* @__PURE__ */ jsx("button", { type: "button", onClick: onCancel, className: "text-xs text-slate-500 hover:text-slate-300", children: t2("cancel") })
+        /* @__PURE__ */ jsx("button", { type: "button", onClick: onCancel, className: "text-xs text-slate-500 hover:text-slate-300", children: t("cancel") })
       ] }),
       step.status === "downloading" && /* @__PURE__ */ jsx("div", { className: "h-1.5 w-full overflow-hidden rounded-full bg-slate-800", children: /* @__PURE__ */ jsx("div", { className: "h-full rounded-full bg-aurora-500 transition-all duration-1000", style: { width: `${safeProgress}%` } }) })
     ] });
   }
   function SelectFiles({ info, onSelect, onCancel }) {
-    const { t: t2 } = useLang();
-    const videoFiles = info.files.filter((f) => VIDEO_EXTS2.test(f.path));
+    const { t } = useLang();
+    const videoFiles = info.files.filter((f) => VIDEO_EXTS.test(f.path));
     return /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
-      /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-300", children: t2("selectFile") }),
+      /* @__PURE__ */ jsx("p", { className: "text-sm text-slate-300", children: t("selectFile") }),
       /* @__PURE__ */ jsxs("div", { className: "space-y-1 rounded-xl border border-white/10 bg-slate-900 p-3", children: [
         videoFiles.map((file) => /* @__PURE__ */ jsxs(
           "button",
@@ -190344,13 +190345,13 @@ ${cue.text}`).join("\n\n")}
           },
           file.id
         )),
-        videoFiles.length === 0 && /* @__PURE__ */ jsx("p", { className: "px-3 py-2 text-sm text-slate-400", children: t2("noVideoFiles") })
+        videoFiles.length === 0 && /* @__PURE__ */ jsx("p", { className: "px-3 py-2 text-sm text-slate-400", children: t("noVideoFiles") })
       ] }),
-      /* @__PURE__ */ jsx("button", { type: "button", onClick: onCancel, className: "text-xs text-slate-500 hover:text-slate-300", children: t2("cancel") })
+      /* @__PURE__ */ jsx("button", { type: "button", onClick: onCancel, className: "text-xs text-slate-500 hover:text-slate-300", children: t("cancel") })
     ] });
   }
   function LinkList({ links, onPlay, onBack }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const [copied, setCopied] = useState(null);
     function handleCopy(url, id4) {
       void navigator.clipboard.writeText(url).catch(() => {
@@ -190374,7 +190375,7 @@ ${cue.text}`).join("\n\n")}
               type: "button",
               onClick: () => onPlay(link),
               className: "rounded-full bg-accent-500 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-accent-400",
-              children: t2("play")
+              children: t("play")
             }
           ),
           /* @__PURE__ */ jsx(
@@ -190383,12 +190384,12 @@ ${cue.text}`).join("\n\n")}
               type: "button",
               onClick: () => handleCopy(link.download, link.id),
               className: "rounded-full border border-white/10 px-3 py-1.5 text-xs uppercase tracking-[0.18em] text-slate-300 transition hover:border-white/30 hover:text-white",
-              children: copied === link.id ? t2("copied") : t2("copyLink")
+              children: copied === link.id ? t("copied") : t("copyLink")
             }
           )
         ] })
       ] }, link.id)),
-      /* @__PURE__ */ jsx("button", { type: "button", onClick: onBack, className: "text-xs text-slate-500 hover:text-slate-300", children: t2("backToStreams") })
+      /* @__PURE__ */ jsx("button", { type: "button", onClick: onBack, className: "text-xs text-slate-500 hover:text-slate-300", children: t("backToStreams") })
     ] });
   }
 
@@ -190445,7 +190446,7 @@ ${cue.text}`).join("\n\n")}
   function DebridServiceRow({
     service
   }) {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     const [value, setValue] = useState(() => getStreamProviderAccessKey(service.id));
     const hasKey = value.trim().length > 0;
     return /* @__PURE__ */ jsxs("div", { className: "flex flex-col gap-3 rounded-xl border border-white/10 bg-slate-900/60 px-5 py-4 sm:flex-row sm:items-center", children: [
@@ -190484,7 +190485,7 @@ ${cue.text}`).join("\n\n")}
     ] });
   }
   function DebridSettingsSection() {
-    const { t: t2 } = useLang();
+    const { t } = useLang();
     return /* @__PURE__ */ jsxs("div", { className: "space-y-3", children: [
       /* @__PURE__ */ jsx("p", { className: "px-1 text-sm leading-relaxed text-slate-400", children: lt("debridSectionDesc") }),
       /* @__PURE__ */ jsx("div", { className: "space-y-4", children: DEBRID_SERVICES.map((service) => /* @__PURE__ */ jsx(DebridServiceRow, { service }, service.id)) }),
@@ -190498,7 +190499,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.132",
+    version: "1.0.133",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

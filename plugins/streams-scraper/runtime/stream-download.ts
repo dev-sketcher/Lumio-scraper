@@ -12,6 +12,8 @@
  * Håller ingen React-state: den som anropar äger sitt eget UI-tillstånd.
  */
 
+// VIDEO_EXTS saknades helt — ReferenceError vid nedladdning av ett paket med flera filer (TS2304, som grinden inte fångade).
+import { VIDEO_EXTS } from './stream-provider-stream-utils'
 import { lt } from './local-strings'
 import type { StreamResult } from '@/app/api/streams/route'
 import type { StringKey } from '@/lib/i18n'

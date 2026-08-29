@@ -25,7 +25,7 @@ const DEBRID_LABEL_BY_ID = new Map(DEBRID_SERVICES.map((service) => [service.id,
 export const StreamsScraperPlugin: LumioPlugin = {
   id: 'com.lumio.streams-scraper',
   name: { en: 'Stream Scraper', sv: 'Stream Scraper' },
-  version: '1.0.132',
+  version: '1.0.133',
   description: {
     en: 'Adds streaming sources via multiple scrapers and plugin-managed playback.',
     sv: 'Lägger till strömningskällor via flera scrapers och pluginhanterad uppspelning.',
