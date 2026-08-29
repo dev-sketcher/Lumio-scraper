@@ -2144,6 +2144,14 @@ function scraperInCooldown(configId: string): boolean {
   }
 
   async function tryInitialAutoplay(streamList: StreamResult[]) {
+    // Helskärm direkt: laddskärmen ligger uppe under hela upplösningen, och
+    // steget 'processing' sätts först när strömlistan är hämtad. Hängde
+    // helskärmen på steget stod telefonens navigeringsfält kvar över halva
+    // laddtiden.
+    if (isAndroidTauriEnv) {
+      immersiveForLoadingRef.current = true
+      setAndroidImmersive(true)
+    }
     if (!selectedSeason || !selectedEpisode) return false
     const candidates = buildAutoplayCandidates(streamList, {
       maxSizeGb: getAutoPlayMaxStreamSizeGb(),
@@ -2202,6 +2210,14 @@ function scraperInCooldown(configId: string): boolean {
   }
 
   async function tryPlayRequestAutoplay(streamList: StreamResult[], attemptId: number, initialTimeOverride?: number) {
+    // Helskärm direkt: laddskärmen ligger uppe under hela upplösningen, och
+    // steget 'processing' sätts först när strömlistan är hämtad. Hängde
+    // helskärmen på steget stod telefonens navigeringsfält kvar över halva
+    // laddtiden.
+    if (isAndroidTauriEnv) {
+      immersiveForLoadingRef.current = true
+      setAndroidImmersive(true)
+    }
     lastAutoplayStreamsRef.current = streamList
     if (initialTimeOverride === undefined) playbackRecoveryAttemptsRef.current = 0
     // Build the pool in the sidebar's own display order — a play button should

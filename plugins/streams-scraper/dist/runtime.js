@@ -188224,6 +188224,10 @@ ${cue.text}`).join("\n\n")}
       }, attemptId);
     }
     async function tryInitialAutoplay(streamList) {
+      if (isAndroidTauriEnv) {
+        immersiveForLoadingRef.current = true;
+        setAndroidImmersive(true);
+      }
       if (!selectedSeason || !selectedEpisode) return false;
       const candidates = buildAutoplayCandidates(streamList, {
         maxSizeGb: getAutoPlayMaxStreamSizeGb(),
@@ -188269,6 +188273,10 @@ ${cue.text}`).join("\n\n")}
       return firstPlaySeenRef.current;
     }
     async function tryPlayRequestAutoplay(streamList, attemptId, initialTimeOverride) {
+      if (isAndroidTauriEnv) {
+        immersiveForLoadingRef.current = true;
+        setAndroidImmersive(true);
+      }
       lastAutoplayStreamsRef.current = streamList;
       if (initialTimeOverride === void 0) playbackRecoveryAttemptsRef.current = 0;
       const playable = streamList.filter((s) => Boolean(s.directUrl) || Boolean(s.infoHash));
@@ -190009,7 +190017,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.127",
+    version: "1.0.128",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
