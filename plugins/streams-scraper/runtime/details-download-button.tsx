@@ -1,6 +1,7 @@
 'use client'
 
 import { lt } from './local-strings'
+import { isInformationalStream } from '@/lib/stream-provider-runtime/stream-provider-stream-utils'
 import { resolveCoreAddonStreams } from '@/lib/stremio/streams'
 import { hasDebridKey } from './stream-download'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
@@ -166,7 +167,7 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
         })),
       )
 
-      const data = { streams: [...scraperStreams, ...communityStreams] }
+      const data = { streams: [...scraperStreams, ...communityStreams].filter((stream) => !isInformationalStream(stream)) }
       if (data.streams.length === 0) throw new Error(t('noStreamsFound'))
 
       const cachedTitles = new Set<string>()

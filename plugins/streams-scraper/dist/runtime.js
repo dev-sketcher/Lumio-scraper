@@ -167583,6 +167583,18 @@
       showTraktCommentsDesc: "Public Trakt comments under movies and series. Spoiler-marked ones stay hidden until you click them.",
       showTraktCommentsNeedsTrakt: "Requires a connected Trakt account (Tracking \u2192 Trakt).",
       traktCommentsConnectHint: "Connect Trakt under Settings \u2192 Tracking to see comments.",
+      traktCommentWrite: "Write a comment",
+      traktCommentPlaceholder: "What did you think?",
+      traktCommentEnglishHint: "Trakt only accepts comments in English, at least 5 words. Spoilers must be marked.",
+      traktCommentWords: "{n} words",
+      traktCommentSpoilerToggle: "Contains spoilers",
+      traktCommentSend: "Post",
+      traktCommentLooksSwedish: "This looks like Swedish \u2014 Trakt removes comments that are not in English and can suspend the account.",
+      traktCommentSendAnyway: "Post anyway",
+      traktCommentBanned: "Trakt has disabled commenting for this account.",
+      traktCommentRateLimited: "Wait a moment before posting again.",
+      traktCommentReviewNote: "From 200 words this is posted as a review.",
+      traktCommentFailed: "The comment could not be posted.",
       shortcutsBindableTitle: "KEYS (CLICK TO CHANGE)",
       shortcutsTracks: "Tracks",
       shortcutsGlobal: "Global",
@@ -169903,6 +169915,18 @@
       showTraktCommentsDesc: "Publika Trakt-kommentarer under filmer och serier. Spoilerm\xE4rkta d\xF6ljs tills du klickar p\xE5 dem.",
       showTraktCommentsNeedsTrakt: "Kr\xE4ver ett anslutet Trakt-konto (Sp\xE5rning \u2192 Trakt).",
       traktCommentsConnectHint: "Anslut Trakt under Inst\xE4llningar \u2192 Sp\xE5rning f\xF6r att se kommentarer.",
+      traktCommentWrite: "Skriv kommentar",
+      traktCommentPlaceholder: "Vad tyckte du?",
+      traktCommentEnglishHint: "Trakt tar bara emot kommentarer p\xE5 engelska, minst 5 ord. Spoilers m\xE5ste markeras.",
+      traktCommentWords: "{n} ord",
+      traktCommentSpoilerToggle: "Inneh\xE5ller spoilers",
+      traktCommentSend: "Skicka",
+      traktCommentLooksSwedish: "Det h\xE4r ser ut som svenska \u2014 Trakt tar bort kommentarer p\xE5 andra spr\xE5k \xE4n engelska och kan st\xE4nga av kontot.",
+      traktCommentSendAnyway: "Skicka \xE4nd\xE5",
+      traktCommentBanned: "Trakt har st\xE4ngt av kommentering f\xF6r det h\xE4r kontot.",
+      traktCommentRateLimited: "V\xE4nta en stund innan du skickar igen.",
+      traktCommentReviewNote: "Fr\xE5n 200 ord publiceras det som en recension.",
+      traktCommentFailed: "Kommentaren kunde inte skickas.",
       shortcutsBindableTitle: "TANGENTER (KLICKA F\xD6R ATT \xC4NDRA)",
       shortcutsTracks: "Sp\xE5r",
       shortcutsGlobal: "Globalt",
@@ -172977,6 +173001,293 @@
     ] });
   }
 
+  // ../Lumio-scraper/plugins/streams-scraper/runtime/stream-provider-stream-utils.ts
+  var VIDEO_EXTS = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i;
+  var SLATE_MIN_BYTES = 20 * 1024 * 1024;
+  function qualityRank(name) {
+    const normalized = name.toLowerCase();
+    if (normalized.includes("4k") || normalized.includes("2160p")) return 4;
+    if (normalized.includes("1080p")) return 3;
+    if (normalized.includes("720p")) return 2;
+    return 1;
+  }
+  function streamResolution(name) {
+    const normalized = name.toLowerCase();
+    if (normalized.includes("2160p") || /\b4k\b|\buhd\b/.test(normalized)) return 2160;
+    if (normalized.includes("1440p")) return 1440;
+    if (normalized.includes("1080p")) return 1080;
+    if (normalized.includes("720p")) return 720;
+    if (normalized.includes("480p")) return 480;
+    return null;
+  }
+  function escapeRegExp(value) {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+  function matchesEpisodeIdentifier(value, seasonNumber, episodeNumber) {
+    const season = String(seasonNumber);
+    const episode = String(episodeNumber);
+    const paddedSeason = season.padStart(2, "0");
+    const paddedEpisode = episode.padStart(2, "0");
+    const patterns = [
+      `[Ss]0*${escapeRegExp(season)}[Ee]0*${escapeRegExp(episode)}(?!\\d)`,
+      `(?<!\\d)0*${escapeRegExp(season)}x0*${escapeRegExp(episode)}(?!\\d)`,
+      `[Ss]eason[ ._-]*0*${escapeRegExp(season)}[ ._-]*[Ee]p(?:isode)?[ ._-]*0*${escapeRegExp(episode)}(?!\\d)`,
+      `(?<!\\d)${escapeRegExp(paddedSeason)}[ ._-]*${escapeRegExp(paddedEpisode)}(?!\\d)`
+    ];
+    return patterns.some((pattern) => new RegExp(pattern, "i").test(value));
+  }
+  function looksLikeSampleOrExtra(path) {
+    const normalized = path.toLowerCase();
+    return /\bsample\b/.test(normalized) || /\btrailer\b/.test(normalized) || /\bextras?\b/.test(normalized) || /\bfeaturette\b/.test(normalized) || /\bbehind[\s._-]?the[\s._-]?scenes\b/.test(normalized);
+  }
+  function cachedFromStreamLabel(name, title) {
+    const text = `${name ?? ""} ${title ?? ""}`.toUpperCase();
+    const tokens = text.match(/\[[^\]]+\]/g) ?? [];
+    for (const token of tokens) {
+      if (/[⚡]/.test(token)) return true;
+      const body = token.slice(1, -1).replace(/\s+/g, "");
+      if (/[A-Z]{2,16}\+/.test(body)) return true;
+      if (/(CACHED|INSTANT)/.test(body)) return true;
+      if (/(⬇|↓|🔽|⏬|DOWNLOAD)/.test(token)) return false;
+    }
+    return null;
+  }
+  function normalizeStreamTitle(value) {
+    return (value ?? "").trim().toLowerCase();
+  }
+  function streamKeyForLookup(infoHash, fileIdx) {
+    const hash = infoHash.trim().toLowerCase();
+    if (!hash) return null;
+    const normalizedFileIdx = Number.isFinite(fileIdx) ? Math.trunc(fileIdx) : null;
+    return `${hash}@${normalizedFileIdx != null ? normalizedFileIdx : "*"}`;
+  }
+  function applyCachedLookup(streams, lookup) {
+    if (!lookup) return streams;
+    return streams.map((stream) => {
+      const hash = stream.infoHash.trim().toLowerCase();
+      const title = normalizeStreamTitle(stream.title || stream.name);
+      const exactKey = streamKeyForLookup(hash, stream.fileIdx);
+      const wildcardKey = hash ? `${hash}@*` : null;
+      const providerHasStreamInfo = Boolean(
+        exactKey && lookup.downloadableStreamKeys?.has(exactKey) || wildcardKey && lookup.downloadableStreamKeys?.has(wildcardKey) || hash && (lookup.downloadableHashes.has(hash) || lookup.cachedHashes.has(hash)) || title && (lookup.downloadableTitles.has(title) || lookup.cachedTitles.has(title))
+      );
+      const lookupCachedByStream = Boolean(
+        exactKey && lookup.cachedStreamKeys?.has(exactKey) || wildcardKey && lookup.cachedStreamKeys?.has(wildcardKey) || hash && lookup.cachedHashes.has(hash) || title && lookup.cachedTitles.has(title)
+      );
+      const lookupDownloadableByStream = Boolean(
+        exactKey && lookup.downloadableStreamKeys?.has(exactKey) || wildcardKey && lookup.downloadableStreamKeys?.has(wildcardKey) || hash && lookup.downloadableHashes.has(hash) || title && lookup.downloadableTitles.has(title)
+      );
+      return {
+        ...stream,
+        cached: providerHasStreamInfo ? lookupCachedByStream || stream.cached : stream.cached,
+        downloadable: providerHasStreamInfo ? lookupDownloadableByStream || Boolean(stream.directUrl) : stream.downloadable || Boolean(stream.directUrl)
+      };
+    });
+  }
+  function filterVisibleStreams(streams, options) {
+    if (options.hideUnknown) {
+      return streams.filter((stream) => stream.cached || stream.downloadable || Boolean(stream.directUrl));
+    }
+    return options.hideUncached ? streams.filter((stream) => stream.cached) : streams;
+  }
+  function parseSizeBytes(text) {
+    const match = text.match(/(\d+(?:[.,]\d+)?)\s*(tib|gib|mib|tb|gb|mb)\b/i);
+    if (!match) return null;
+    const value = Number.parseFloat(match[1].replace(",", "."));
+    if (!Number.isFinite(value) || value <= 0) return null;
+    const unit = match[2].toLowerCase();
+    const multiplier = unit === "tb" || unit === "tib" ? 1024 ** 4 : unit === "gb" || unit === "gib" ? 1024 ** 3 : 1024 ** 2;
+    return value * multiplier;
+  }
+  function getStreamSizeBytes(stream) {
+    const cachedFileBytes = stream.cachedFiles.flatMap((entry) => Object.values(entry)).reduce((sum, file) => sum + (Number.isFinite(file.filesize) ? file.filesize : 0), 0);
+    if (cachedFileBytes > 0) return cachedFileBytes;
+    if (typeof stream.sizeBytes === "number" && stream.sizeBytes > 0) return stream.sizeBytes;
+    return parseSizeBytes(`${stream.name} ${stream.title} ${stream.description ?? ""}`);
+  }
+  var STREAM_LANGUAGE_PATTERNS = [
+    { code: "en", pattern: /\b(?:en|eng|english)\b/i },
+    { code: "sv", pattern: /\b(?:sv|swe|swedish|svenska)\b/i },
+    { code: "no", pattern: /\b(?:no|nor|norwegian|norsk)\b/i },
+    { code: "da", pattern: /\b(?:da|dan|danish)\b/i },
+    { code: "fi", pattern: /\b(?:fi|fin|finnish|suomi)\b/i },
+    { code: "de", pattern: /\b(?:de|ger|deu|german|deutsch)\b/i },
+    { code: "fr", pattern: /\b(?:fr|fra|fre|french|fran[cç]ais)\b/i },
+    { code: "es", pattern: /\b(?:es|spa|spanish|espa[ñn]ol)\b/i },
+    { code: "it", pattern: /\b(?:it|ita|italian|italiano)\b/i },
+    { code: "pt", pattern: /\b(?:pt|por|portuguese|portugu[eê]s)\b/i },
+    { code: "nl", pattern: /\b(?:nl|nld|dut|dutch|nederlands)\b/i },
+    { code: "pl", pattern: /\b(?:pl|pol|polish)\b/i },
+    { code: "ru", pattern: /\b(?:ru|rus|russian)\b/i },
+    { code: "tr", pattern: /\b(?:tr|tur|turkish|t[üu]rk[çc]e)\b/i },
+    { code: "ja", pattern: /\b(?:ja|jpn|japanese)\b/i },
+    { code: "ko", pattern: /\b(?:ko|kor|korean)\b/i }
+  ];
+  var LANG_FLAGS = {
+    en: "\u{1F1EC}\u{1F1E7}",
+    sv: "\u{1F1F8}\u{1F1EA}",
+    no: "\u{1F1F3}\u{1F1F4}",
+    da: "\u{1F1E9}\u{1F1F0}",
+    fi: "\u{1F1EB}\u{1F1EE}",
+    de: "\u{1F1E9}\u{1F1EA}",
+    fr: "\u{1F1EB}\u{1F1F7}",
+    es: "\u{1F1EA}\u{1F1F8}",
+    it: "\u{1F1EE}\u{1F1F9}",
+    pt: "\u{1F1F5}\u{1F1F9}",
+    nl: "\u{1F1F3}\u{1F1F1}",
+    pl: "\u{1F1F5}\u{1F1F1}",
+    ru: "\u{1F1F7}\u{1F1FA}",
+    tr: "\u{1F1F9}\u{1F1F7}",
+    ja: "\u{1F1EF}\u{1F1F5}",
+    ko: "\u{1F1F0}\u{1F1F7}",
+    zh: "\u{1F1E8}\u{1F1F3}",
+    hi: "\u{1F1EE}\u{1F1F3}",
+    ar: "\u{1F1F8}\u{1F1E6}",
+    cs: "\u{1F1E8}\u{1F1FF}",
+    hu: "\u{1F1ED}\u{1F1FA}",
+    ro: "\u{1F1F7}\u{1F1F4}",
+    uk: "\u{1F1FA}\u{1F1E6}",
+    el: "\u{1F1EC}\u{1F1F7}",
+    he: "\u{1F1EE}\u{1F1F1}",
+    th: "\u{1F1F9}\u{1F1ED}",
+    vi: "\u{1F1FB}\u{1F1F3}",
+    id: "\u{1F1EE}\u{1F1E9}"
+  };
+  function langFlag(code) {
+    return LANG_FLAGS[code.toLowerCase().split(/[-_]/)[0]] ?? null;
+  }
+  function getStreamSubtitleLanguages(stream) {
+    if (!stream.subtitleLangs?.length) return [];
+    const sedda = /* @__PURE__ */ new Set();
+    for (const r\u00E5 of stream.subtitleLangs) {
+      const kod = r\u00E5.toLowerCase().split(/[-_]/)[0];
+      if (kod.length >= 2 && LANG_FLAGS[kod]) sedda.add(kod);
+    }
+    return [...sedda];
+  }
+  function getStreamAudioLanguages(stream) {
+    const source = `${stream.name} ${stream.title} ${stream.description ?? ""}`.toLowerCase();
+    return STREAM_LANGUAGE_PATTERNS.filter(({ pattern }) => pattern.test(source)).map(({ code }) => code);
+  }
+  function browserCodecScore(stream) {
+    const haystack = `${stream.name ?? ""} ${stream.title ?? ""}`;
+    if (/\b(x265|h[.\s]?265|hevc)\b/i.test(haystack)) return 0;
+    if (/\b(x264|h[.\s]?264|avc)\b/i.test(haystack)) return 2;
+    return 1;
+  }
+  var INFORMATIONAL_STREAM_URL = /\/status\/video\/|elfhosted\.com\/assets\/|^https?:\/\/(www\.)?github\.com\//i;
+  var INFORMATIONAL_STREAM_TEXT = /rate.?limit exceeded|searches disabled|release (is )?not (yet )?out|not (yet )?released|invalid (config|credentials|token)|configure (the )?addon/i;
+  function isInformationalStream(stream) {
+    if (stream.directUrl && INFORMATIONAL_STREAM_URL.test(stream.directUrl)) return true;
+    if (stream.infoHash) return false;
+    return INFORMATIONAL_STREAM_TEXT.test(`${stream.name ?? ""} ${stream.title ?? ""} ${stream.description ?? ""}`);
+  }
+  function buildAutoplayCandidates(streamList, options) {
+    const maxSizeBytes = options.maxSizeGb ? options.maxSizeGb * 1024 ** 3 : null;
+    const preferredAudioLanguage = (options.preferredAudioLanguage ?? "").trim().toLowerCase();
+    let candidates = streamList.filter((stream) => (Boolean(stream.directUrl) || Boolean(stream.infoHash)) && !isInformationalStream(stream));
+    if (maxSizeBytes) {
+      candidates = candidates.filter((stream) => {
+        const sizeBytes = getStreamSizeBytes(stream);
+        return sizeBytes == null || sizeBytes <= maxSizeBytes;
+      });
+    }
+    if (options.maxResolution) {
+      const cap = options.maxResolution;
+      candidates = candidates.filter((stream) => {
+        const resolution = streamResolution(`${stream.name} ${stream.title}`);
+        return resolution == null || resolution <= cap;
+      });
+    }
+    if (preferredAudioLanguage) {
+      const matches = candidates.filter((stream) => {
+        const languages = getStreamAudioLanguages(stream);
+        return languages.length > 0 && languages.includes(preferredAudioLanguage);
+      });
+      const unknown = candidates.filter((stream) => getStreamAudioLanguages(stream).length === 0);
+      if (matches.length > 0) {
+        candidates = [...matches, ...unknown];
+      }
+    }
+    candidates = [...candidates].sort((a, b) => {
+      const aBad = streamUnsupportedOnDevice(a) ? 1 : 0;
+      const bBad = streamUnsupportedOnDevice(b) ? 1 : 0;
+      if (aBad !== bBad) return aBad - bBad;
+      const aCached = a.cached ? 1 : 0;
+      const bCached = b.cached ? 1 : 0;
+      if (bCached !== aCached) return bCached - aCached;
+      if (options.preferH264) return browserCodecScore(b) - browserCodecScore(a);
+      return 0;
+    });
+    return candidates.slice(0, 3);
+  }
+  function getPreferredTorrentFileIds(info, options) {
+    const videoFiles = info.files.filter((file) => VIDEO_EXTS.test(file.path));
+    if (options.seasonNumber != null && options.episodeNumber != null) {
+      const match = videoFiles.find(
+        (file) => matchesEpisodeIdentifier(file.path, options.seasonNumber, options.episodeNumber)
+      );
+      return match ? [match.id] : [];
+    }
+    const maxBytes = options.maxSizeGb && options.maxSizeGb > 0 ? options.maxSizeGb * 1024 ** 3 : 15 * 1024 ** 3;
+    const filtered = videoFiles.filter((file) => !looksLikeSampleOrExtra(file.path)).filter((file) => (file.bytes ?? 0) >= 200 * 1024 * 1024);
+    const withinLimit = filtered.filter((file) => file.bytes <= maxBytes);
+    const pool = withinLimit.length > 0 ? withinLimit : filtered;
+    if (pool.length === 0) return videoFiles.length > 0 ? [videoFiles[0].id] : [];
+    const best = [...pool].sort((a, b) => b.bytes - a.bytes)[0];
+    return best ? [best.id] : [];
+  }
+  function pickBestUnrestrictedLink(links, options) {
+    if (links.length === 0) return null;
+    const videoLinks = links.filter((link) => VIDEO_EXTS.test(link.filename) && !looksLikeSampleOrExtra(link.filename));
+    const playable = videoLinks.length > 0 ? videoLinks : links;
+    if (options.seasonNumber != null && options.episodeNumber != null) {
+      return playable.find(
+        (link) => matchesEpisodeIdentifier(link.filename, options.seasonNumber, options.episodeNumber)
+      ) ?? playable[0] ?? null;
+    }
+    const maxBytes = options.maxSizeGb && options.maxSizeGb > 0 ? options.maxSizeGb * 1024 ** 3 : 15 * 1024 ** 3;
+    const meaningful = playable.filter((link) => link.filesize >= 200 * 1024 * 1024);
+    const withinLimit = meaningful.filter((link) => link.filesize <= maxBytes);
+    const pool = withinLimit.length > 0 ? withinLimit : meaningful.length > 0 ? meaningful : playable;
+    return [...pool].sort((a, b) => b.filesize - a.filesize)[0] ?? null;
+  }
+  function streamLooksDolbyVision(stream) {
+    const text = `${stream.name} ${stream.title}`;
+    const separated = /(?:^|[.\s_\-\[(])(dv|dovi)(?:$|[.\s_\-\])])/i;
+    return separated.test(text) || /dolby[.\s_-]?vision/i.test(text);
+  }
+  function streamLooksLosslessAudio(stream) {
+    return /(true[.\s_-]?hd|dts[.\s_-]?hd|dts[.\s_-]?x|\bdtsma\b)/i.test(
+      `${stream.name} ${stream.title}`
+    );
+  }
+  function streamLooksDolbyVisionWithFallback(stream) {
+    const text = `${stream.name} ${stream.title}`;
+    if (/(?:^|[.\s_\-\[(])(?:p|profile[.\s_-]?)5(?:$|[.\s_\-\])])/i.test(text)) return false;
+    if (/(?:^|[.\s_\-\[(])(?:p|profile[.\s_-]?)8(?:\.\d)?(?:$|[.\s_\-\])])/i.test(text)) return true;
+    return /(?:^|[.\s_\-\[(])hdr(?:10\+?)?(?:$|[.\s_\-\])])/i.test(text);
+  }
+  var deviceLacksLosslessAudioCache = false;
+  function setDeviceLacksLosslessAudio(value) {
+    deviceLacksLosslessAudioCache = value;
+  }
+  function deviceLacksLosslessAudioSync() {
+    return deviceLacksLosslessAudioCache;
+  }
+  function streamUnsupportedOnDevice(stream) {
+    if (deviceLacksLosslessAudioSync() && streamLooksLosslessAudio(stream)) return true;
+    if (deviceLacksDolbyVisionSync() && streamLooksDolbyVision(stream) && !streamLooksDolbyVisionWithFallback(stream)) return true;
+    return false;
+  }
+  var deviceLacksDvCache = false;
+  function setDeviceLacksDolbyVision(value) {
+    deviceLacksDvCache = value;
+  }
+  function deviceLacksDolbyVisionSync() {
+    return deviceLacksDvCache;
+  }
+
   // lib/stremio/streams.ts
   function isUrlDeliverableStream(stream) {
     return Boolean(stream.url || stream.externalUrl || stream.ytId);
@@ -173008,7 +173319,7 @@
     gib: 1024 ** 3,
     tib: 1024 ** 4
   };
-  function parseSizeBytes(text) {
+  function parseSizeBytes2(text) {
     const match = SIZE_TOKEN.exec(text);
     if (!match) return void 0;
     const value = Number.parseFloat(match[1].replace(",", "."));
@@ -173026,7 +173337,7 @@
     const fritext = `${stream.name ?? ""} ${stream.title ?? ""} ${stream.description ?? ""}`;
     return {
       filename: hintFilename ?? FILNAMN_MONSTER.exec(fritext)?.[0],
-      sizeBytes: hintSize ?? parseSizeBytes(fritext),
+      sizeBytes: hintSize ?? parseSizeBytes2(fritext),
       description: beskrivning
     };
   }
@@ -173163,286 +173474,6 @@
       ut.push({ url: "", infoHash, fileIdx, ...common });
     }
     return ut;
-  }
-
-  // ../Lumio-scraper/plugins/streams-scraper/runtime/stream-provider-stream-utils.ts
-  var VIDEO_EXTS = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i;
-  var SLATE_MIN_BYTES = 20 * 1024 * 1024;
-  function qualityRank(name) {
-    const normalized = name.toLowerCase();
-    if (normalized.includes("4k") || normalized.includes("2160p")) return 4;
-    if (normalized.includes("1080p")) return 3;
-    if (normalized.includes("720p")) return 2;
-    return 1;
-  }
-  function streamResolution(name) {
-    const normalized = name.toLowerCase();
-    if (normalized.includes("2160p") || /\b4k\b|\buhd\b/.test(normalized)) return 2160;
-    if (normalized.includes("1440p")) return 1440;
-    if (normalized.includes("1080p")) return 1080;
-    if (normalized.includes("720p")) return 720;
-    if (normalized.includes("480p")) return 480;
-    return null;
-  }
-  function escapeRegExp(value) {
-    return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  }
-  function matchesEpisodeIdentifier(value, seasonNumber, episodeNumber) {
-    const season = String(seasonNumber);
-    const episode = String(episodeNumber);
-    const paddedSeason = season.padStart(2, "0");
-    const paddedEpisode = episode.padStart(2, "0");
-    const patterns = [
-      `[Ss]0*${escapeRegExp(season)}[Ee]0*${escapeRegExp(episode)}(?!\\d)`,
-      `(?<!\\d)0*${escapeRegExp(season)}x0*${escapeRegExp(episode)}(?!\\d)`,
-      `[Ss]eason[ ._-]*0*${escapeRegExp(season)}[ ._-]*[Ee]p(?:isode)?[ ._-]*0*${escapeRegExp(episode)}(?!\\d)`,
-      `(?<!\\d)${escapeRegExp(paddedSeason)}[ ._-]*${escapeRegExp(paddedEpisode)}(?!\\d)`
-    ];
-    return patterns.some((pattern) => new RegExp(pattern, "i").test(value));
-  }
-  function looksLikeSampleOrExtra(path) {
-    const normalized = path.toLowerCase();
-    return /\bsample\b/.test(normalized) || /\btrailer\b/.test(normalized) || /\bextras?\b/.test(normalized) || /\bfeaturette\b/.test(normalized) || /\bbehind[\s._-]?the[\s._-]?scenes\b/.test(normalized);
-  }
-  function cachedFromStreamLabel(name, title) {
-    const text = `${name ?? ""} ${title ?? ""}`.toUpperCase();
-    const tokens = text.match(/\[[^\]]+\]/g) ?? [];
-    for (const token of tokens) {
-      if (/[⚡]/.test(token)) return true;
-      const body = token.slice(1, -1).replace(/\s+/g, "");
-      if (/[A-Z]{2,16}\+/.test(body)) return true;
-      if (/(CACHED|INSTANT)/.test(body)) return true;
-      if (/(⬇|↓|🔽|⏬|DOWNLOAD)/.test(token)) return false;
-    }
-    return null;
-  }
-  function normalizeStreamTitle(value) {
-    return (value ?? "").trim().toLowerCase();
-  }
-  function streamKeyForLookup(infoHash, fileIdx) {
-    const hash = infoHash.trim().toLowerCase();
-    if (!hash) return null;
-    const normalizedFileIdx = Number.isFinite(fileIdx) ? Math.trunc(fileIdx) : null;
-    return `${hash}@${normalizedFileIdx != null ? normalizedFileIdx : "*"}`;
-  }
-  function applyCachedLookup(streams, lookup) {
-    if (!lookup) return streams;
-    return streams.map((stream) => {
-      const hash = stream.infoHash.trim().toLowerCase();
-      const title = normalizeStreamTitle(stream.title || stream.name);
-      const exactKey = streamKeyForLookup(hash, stream.fileIdx);
-      const wildcardKey = hash ? `${hash}@*` : null;
-      const providerHasStreamInfo = Boolean(
-        exactKey && lookup.downloadableStreamKeys?.has(exactKey) || wildcardKey && lookup.downloadableStreamKeys?.has(wildcardKey) || hash && (lookup.downloadableHashes.has(hash) || lookup.cachedHashes.has(hash)) || title && (lookup.downloadableTitles.has(title) || lookup.cachedTitles.has(title))
-      );
-      const lookupCachedByStream = Boolean(
-        exactKey && lookup.cachedStreamKeys?.has(exactKey) || wildcardKey && lookup.cachedStreamKeys?.has(wildcardKey) || hash && lookup.cachedHashes.has(hash) || title && lookup.cachedTitles.has(title)
-      );
-      const lookupDownloadableByStream = Boolean(
-        exactKey && lookup.downloadableStreamKeys?.has(exactKey) || wildcardKey && lookup.downloadableStreamKeys?.has(wildcardKey) || hash && lookup.downloadableHashes.has(hash) || title && lookup.downloadableTitles.has(title)
-      );
-      return {
-        ...stream,
-        cached: providerHasStreamInfo ? lookupCachedByStream || stream.cached : stream.cached,
-        downloadable: providerHasStreamInfo ? lookupDownloadableByStream || Boolean(stream.directUrl) : stream.downloadable || Boolean(stream.directUrl)
-      };
-    });
-  }
-  function filterVisibleStreams(streams, options) {
-    if (options.hideUnknown) {
-      return streams.filter((stream) => stream.cached || stream.downloadable || Boolean(stream.directUrl));
-    }
-    return options.hideUncached ? streams.filter((stream) => stream.cached) : streams;
-  }
-  function parseSizeBytes2(text) {
-    const match = text.match(/(\d+(?:[.,]\d+)?)\s*(tib|gib|mib|tb|gb|mb)\b/i);
-    if (!match) return null;
-    const value = Number.parseFloat(match[1].replace(",", "."));
-    if (!Number.isFinite(value) || value <= 0) return null;
-    const unit = match[2].toLowerCase();
-    const multiplier = unit === "tb" || unit === "tib" ? 1024 ** 4 : unit === "gb" || unit === "gib" ? 1024 ** 3 : 1024 ** 2;
-    return value * multiplier;
-  }
-  function getStreamSizeBytes(stream) {
-    const cachedFileBytes = stream.cachedFiles.flatMap((entry) => Object.values(entry)).reduce((sum, file) => sum + (Number.isFinite(file.filesize) ? file.filesize : 0), 0);
-    if (cachedFileBytes > 0) return cachedFileBytes;
-    if (typeof stream.sizeBytes === "number" && stream.sizeBytes > 0) return stream.sizeBytes;
-    return parseSizeBytes2(`${stream.name} ${stream.title} ${stream.description ?? ""}`);
-  }
-  var STREAM_LANGUAGE_PATTERNS = [
-    { code: "en", pattern: /\b(?:en|eng|english)\b/i },
-    { code: "sv", pattern: /\b(?:sv|swe|swedish|svenska)\b/i },
-    { code: "no", pattern: /\b(?:no|nor|norwegian|norsk)\b/i },
-    { code: "da", pattern: /\b(?:da|dan|danish)\b/i },
-    { code: "fi", pattern: /\b(?:fi|fin|finnish|suomi)\b/i },
-    { code: "de", pattern: /\b(?:de|ger|deu|german|deutsch)\b/i },
-    { code: "fr", pattern: /\b(?:fr|fra|fre|french|fran[cç]ais)\b/i },
-    { code: "es", pattern: /\b(?:es|spa|spanish|espa[ñn]ol)\b/i },
-    { code: "it", pattern: /\b(?:it|ita|italian|italiano)\b/i },
-    { code: "pt", pattern: /\b(?:pt|por|portuguese|portugu[eê]s)\b/i },
-    { code: "nl", pattern: /\b(?:nl|nld|dut|dutch|nederlands)\b/i },
-    { code: "pl", pattern: /\b(?:pl|pol|polish)\b/i },
-    { code: "ru", pattern: /\b(?:ru|rus|russian)\b/i },
-    { code: "tr", pattern: /\b(?:tr|tur|turkish|t[üu]rk[çc]e)\b/i },
-    { code: "ja", pattern: /\b(?:ja|jpn|japanese)\b/i },
-    { code: "ko", pattern: /\b(?:ko|kor|korean)\b/i }
-  ];
-  var LANG_FLAGS = {
-    en: "\u{1F1EC}\u{1F1E7}",
-    sv: "\u{1F1F8}\u{1F1EA}",
-    no: "\u{1F1F3}\u{1F1F4}",
-    da: "\u{1F1E9}\u{1F1F0}",
-    fi: "\u{1F1EB}\u{1F1EE}",
-    de: "\u{1F1E9}\u{1F1EA}",
-    fr: "\u{1F1EB}\u{1F1F7}",
-    es: "\u{1F1EA}\u{1F1F8}",
-    it: "\u{1F1EE}\u{1F1F9}",
-    pt: "\u{1F1F5}\u{1F1F9}",
-    nl: "\u{1F1F3}\u{1F1F1}",
-    pl: "\u{1F1F5}\u{1F1F1}",
-    ru: "\u{1F1F7}\u{1F1FA}",
-    tr: "\u{1F1F9}\u{1F1F7}",
-    ja: "\u{1F1EF}\u{1F1F5}",
-    ko: "\u{1F1F0}\u{1F1F7}",
-    zh: "\u{1F1E8}\u{1F1F3}",
-    hi: "\u{1F1EE}\u{1F1F3}",
-    ar: "\u{1F1F8}\u{1F1E6}",
-    cs: "\u{1F1E8}\u{1F1FF}",
-    hu: "\u{1F1ED}\u{1F1FA}",
-    ro: "\u{1F1F7}\u{1F1F4}",
-    uk: "\u{1F1FA}\u{1F1E6}",
-    el: "\u{1F1EC}\u{1F1F7}",
-    he: "\u{1F1EE}\u{1F1F1}",
-    th: "\u{1F1F9}\u{1F1ED}",
-    vi: "\u{1F1FB}\u{1F1F3}",
-    id: "\u{1F1EE}\u{1F1E9}"
-  };
-  function langFlag(code) {
-    return LANG_FLAGS[code.toLowerCase().split(/[-_]/)[0]] ?? null;
-  }
-  function getStreamSubtitleLanguages(stream) {
-    if (!stream.subtitleLangs?.length) return [];
-    const sedda = /* @__PURE__ */ new Set();
-    for (const r\u00E5 of stream.subtitleLangs) {
-      const kod = r\u00E5.toLowerCase().split(/[-_]/)[0];
-      if (kod.length >= 2 && LANG_FLAGS[kod]) sedda.add(kod);
-    }
-    return [...sedda];
-  }
-  function getStreamAudioLanguages(stream) {
-    const source = `${stream.name} ${stream.title} ${stream.description ?? ""}`.toLowerCase();
-    return STREAM_LANGUAGE_PATTERNS.filter(({ pattern }) => pattern.test(source)).map(({ code }) => code);
-  }
-  function browserCodecScore(stream) {
-    const haystack = `${stream.name ?? ""} ${stream.title ?? ""}`;
-    if (/\b(x265|h[.\s]?265|hevc)\b/i.test(haystack)) return 0;
-    if (/\b(x264|h[.\s]?264|avc)\b/i.test(haystack)) return 2;
-    return 1;
-  }
-  function buildAutoplayCandidates(streamList, options) {
-    const maxSizeBytes = options.maxSizeGb ? options.maxSizeGb * 1024 ** 3 : null;
-    const preferredAudioLanguage = (options.preferredAudioLanguage ?? "").trim().toLowerCase();
-    let candidates = streamList.filter((stream) => Boolean(stream.directUrl) || Boolean(stream.infoHash));
-    if (maxSizeBytes) {
-      candidates = candidates.filter((stream) => {
-        const sizeBytes = getStreamSizeBytes(stream);
-        return sizeBytes == null || sizeBytes <= maxSizeBytes;
-      });
-    }
-    if (options.maxResolution) {
-      const cap = options.maxResolution;
-      candidates = candidates.filter((stream) => {
-        const resolution = streamResolution(`${stream.name} ${stream.title}`);
-        return resolution == null || resolution <= cap;
-      });
-    }
-    if (preferredAudioLanguage) {
-      const matches = candidates.filter((stream) => {
-        const languages = getStreamAudioLanguages(stream);
-        return languages.length > 0 && languages.includes(preferredAudioLanguage);
-      });
-      const unknown = candidates.filter((stream) => getStreamAudioLanguages(stream).length === 0);
-      if (matches.length > 0) {
-        candidates = [...matches, ...unknown];
-      }
-    }
-    candidates = [...candidates].sort((a, b) => {
-      const aBad = streamUnsupportedOnDevice(a) ? 1 : 0;
-      const bBad = streamUnsupportedOnDevice(b) ? 1 : 0;
-      if (aBad !== bBad) return aBad - bBad;
-      const aCached = a.cached ? 1 : 0;
-      const bCached = b.cached ? 1 : 0;
-      if (bCached !== aCached) return bCached - aCached;
-      if (options.preferH264) return browserCodecScore(b) - browserCodecScore(a);
-      return 0;
-    });
-    return candidates.slice(0, 3);
-  }
-  function getPreferredTorrentFileIds(info, options) {
-    const videoFiles = info.files.filter((file) => VIDEO_EXTS.test(file.path));
-    if (options.seasonNumber != null && options.episodeNumber != null) {
-      const match = videoFiles.find(
-        (file) => matchesEpisodeIdentifier(file.path, options.seasonNumber, options.episodeNumber)
-      );
-      return match ? [match.id] : [];
-    }
-    const maxBytes = options.maxSizeGb && options.maxSizeGb > 0 ? options.maxSizeGb * 1024 ** 3 : 15 * 1024 ** 3;
-    const filtered = videoFiles.filter((file) => !looksLikeSampleOrExtra(file.path)).filter((file) => (file.bytes ?? 0) >= 200 * 1024 * 1024);
-    const withinLimit = filtered.filter((file) => file.bytes <= maxBytes);
-    const pool = withinLimit.length > 0 ? withinLimit : filtered;
-    if (pool.length === 0) return videoFiles.length > 0 ? [videoFiles[0].id] : [];
-    const best = [...pool].sort((a, b) => b.bytes - a.bytes)[0];
-    return best ? [best.id] : [];
-  }
-  function pickBestUnrestrictedLink(links, options) {
-    if (links.length === 0) return null;
-    const videoLinks = links.filter((link) => VIDEO_EXTS.test(link.filename) && !looksLikeSampleOrExtra(link.filename));
-    const playable = videoLinks.length > 0 ? videoLinks : links;
-    if (options.seasonNumber != null && options.episodeNumber != null) {
-      return playable.find(
-        (link) => matchesEpisodeIdentifier(link.filename, options.seasonNumber, options.episodeNumber)
-      ) ?? playable[0] ?? null;
-    }
-    const maxBytes = options.maxSizeGb && options.maxSizeGb > 0 ? options.maxSizeGb * 1024 ** 3 : 15 * 1024 ** 3;
-    const meaningful = playable.filter((link) => link.filesize >= 200 * 1024 * 1024);
-    const withinLimit = meaningful.filter((link) => link.filesize <= maxBytes);
-    const pool = withinLimit.length > 0 ? withinLimit : meaningful.length > 0 ? meaningful : playable;
-    return [...pool].sort((a, b) => b.filesize - a.filesize)[0] ?? null;
-  }
-  function streamLooksDolbyVision(stream) {
-    const text = `${stream.name} ${stream.title}`;
-    const separated = /(?:^|[.\s_\-\[(])(dv|dovi)(?:$|[.\s_\-\])])/i;
-    return separated.test(text) || /dolby[.\s_-]?vision/i.test(text);
-  }
-  function streamLooksLosslessAudio(stream) {
-    return /(true[.\s_-]?hd|dts[.\s_-]?hd|dts[.\s_-]?x|\bdtsma\b)/i.test(
-      `${stream.name} ${stream.title}`
-    );
-  }
-  function streamLooksDolbyVisionWithFallback(stream) {
-    const text = `${stream.name} ${stream.title}`;
-    if (/(?:^|[.\s_\-\[(])(?:p|profile[.\s_-]?)5(?:$|[.\s_\-\])])/i.test(text)) return false;
-    if (/(?:^|[.\s_\-\[(])(?:p|profile[.\s_-]?)8(?:\.\d)?(?:$|[.\s_\-\])])/i.test(text)) return true;
-    return /(?:^|[.\s_\-\[(])hdr(?:10\+?)?(?:$|[.\s_\-\])])/i.test(text);
-  }
-  var deviceLacksLosslessAudioCache = false;
-  function setDeviceLacksLosslessAudio(value) {
-    deviceLacksLosslessAudioCache = value;
-  }
-  function deviceLacksLosslessAudioSync() {
-    return deviceLacksLosslessAudioCache;
-  }
-  function streamUnsupportedOnDevice(stream) {
-    if (deviceLacksLosslessAudioSync() && streamLooksLosslessAudio(stream)) return true;
-    if (deviceLacksDolbyVisionSync() && streamLooksDolbyVision(stream) && !streamLooksDolbyVisionWithFallback(stream)) return true;
-    return false;
-  }
-  var deviceLacksDvCache = false;
-  function setDeviceLacksDolbyVision(value) {
-    deviceLacksDvCache = value;
-  }
-  function deviceLacksDolbyVisionSync() {
-    return deviceLacksDvCache;
   }
 
   // lib/async-utils.ts
@@ -186912,7 +186943,7 @@ ${cue.text}`).join("\n\n")}
             source: result.addon.name || lt("communitySource")
           }))
         );
-        const data = { streams: [...scraperStreams, ...communityStreams] };
+        const data = { streams: [...scraperStreams, ...communityStreams].filter((stream) => !isInformationalStream(stream)) };
         if (data.streams.length === 0) throw new Error(t("noStreamsFound"));
         const cachedTitles = /* @__PURE__ */ new Set();
         const cachedHashes = /* @__PURE__ */ new Set();
@@ -188589,6 +188620,7 @@ ${cue.text}`).join("\n\n")}
         const providerErrors = [];
         const mergeStreams = (items) => {
           for (const stream of items) {
+            if (isInformationalStream(stream)) continue;
             const key = stream.directUrl ? `url:${stream.directUrl}` : `hash:${stream.infoHash}`;
             const sourceKey = stream.source ?? "scraper";
             const dedupeKey = `${key}::${sourceKey}`;
@@ -190838,7 +190870,7 @@ ${cue.text}`).join("\n\n")}
     const [copied, setCopied] = useState(false);
     const url = streamHttpUrl(stream);
     const sizeBytes = getStreamSizeBytes(stream);
-    const titleShowsSize = parseSizeBytes2(stream.title ?? "") !== null;
+    const titleShowsSize = parseSizeBytes(stream.title ?? "") !== null;
     const ljudSprak = getStreamAudioLanguages(stream).slice(0, 4);
     const ljudFlaggor = ljudSprak.map((kod) => langFlag(kod)).filter((flagga) => Boolean(flagga));
     const undertextSprak = getStreamSubtitleLanguages(stream).slice(0, 4);

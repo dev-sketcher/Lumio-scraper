@@ -72,6 +72,7 @@ import {
   getStreamSizeBytes,
   getStreamAudioLanguages,
   getStreamSubtitleLanguages,
+  isInformationalStream,
   langFlag,
   looksLikeSampleOrExtra,
   matchesEpisodeIdentifier,
@@ -1496,6 +1497,9 @@ function scraperInCooldown(configId: string): boolean {
 
       const mergeStreams = (items: StreamResult[]) => {
         for (const stream of items) {
+          // Notisklipp och info-länkar är inte strömmar — bort innan de kan
+          // bli kandidater eller rader (se isInformationalStream).
+          if (isInformationalStream(stream)) continue
           const key = stream.directUrl ? `url:${stream.directUrl}` : `hash:${stream.infoHash}`
           const sourceKey = stream.source ?? 'scraper'
           const dedupeKey = `${key}::${sourceKey}`

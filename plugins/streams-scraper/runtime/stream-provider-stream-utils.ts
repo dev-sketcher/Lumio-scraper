@@ -322,6 +322,27 @@ function browserCodecScore(stream: StreamResult): number {
   return 1
 }
 
+/**
+ * Notis-"strömmar": poster som ser ut som strömmar men inte är filmen.
+ *
+ * Aggregatorer och ElfHosted-instanser svarar ibland med en riktig mp4 som
+ * bara SÄGER något — "release not out yet", "rate limit exceeded" — eller en
+ * post vars länk går till ett GitHub-repo. Båda gick igenom som kandidater:
+ * en användare fick ett minutlångt notisklipp uppspelat som avsnitt, och
+ * Spela-knappen "dog" när de två första kandidaterna avvisades av
+ * livskontrollen. De hör inte hemma i listan, i autostarten eller i
+ * nedladdningen — ingen har någonsin velat spela dem.
+ */
+export const INFORMATIONAL_STREAM_URL = /\/status\/video\/|elfhosted\.com\/assets\/|^https?:\/\/(www\.)?github\.com\//i
+const INFORMATIONAL_STREAM_TEXT = /rate.?limit exceeded|searches disabled|release (is )?not (yet )?out|not (yet )?released|invalid (config|credentials|token)|configure (the )?addon/i
+
+export function isInformationalStream(stream: Pick<StreamResult, 'name' | 'title' | 'directUrl' | 'infoHash'> & { description?: string }): boolean {
+  if (stream.directUrl && INFORMATIONAL_STREAM_URL.test(stream.directUrl)) return true
+  // En torrent bär alltid en riktig fil; texten avgör bara för URL-poster.
+  if (stream.infoHash) return false
+  return INFORMATIONAL_STREAM_TEXT.test(`${stream.name ?? ''} ${stream.title ?? ''} ${stream.description ?? ''}`)
+}
+
 export function buildAutoplayCandidates(
   streamList: StreamResult[],
   options: {
@@ -338,7 +359,7 @@ export function buildAutoplayCandidates(
   const maxSizeBytes = options.maxSizeGb ? options.maxSizeGb * 1024 ** 3 : null
   const preferredAudioLanguage = (options.preferredAudioLanguage ?? '').trim().toLowerCase()
 
-  let candidates = streamList.filter((stream) => Boolean(stream.directUrl) || Boolean(stream.infoHash))
+  let candidates = streamList.filter((stream) => (Boolean(stream.directUrl) || Boolean(stream.infoHash)) && !isInformationalStream(stream))
 
   if (maxSizeBytes) {
     candidates = candidates.filter((stream) => {
