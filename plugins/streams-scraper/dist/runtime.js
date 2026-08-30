@@ -167580,7 +167580,7 @@
       traktConflictMerge: "Merge (keep both)",
       traktConflictTrakt: "Trakt wins",
       traktConflictLocal: "This device wins",
-      showTraktCommentsDesc: "Public Trakt comments under movies and series. Spoiler-marked ones stay hidden until you click them.",
+      showTraktCommentsDesc: "Public Trakt comments under movies and series, and a button to write your own. Spoiler-marked ones stay hidden until you click them. Trakt only accepts comments in English.",
       showTraktCommentsNeedsTrakt: "Requires a connected Trakt account (Tracking \u2192 Trakt).",
       traktCommentsConnectHint: "Connect Trakt under Settings \u2192 Tracking to see comments.",
       traktCommentWrite: "Write a comment",
@@ -169912,7 +169912,7 @@
       traktConflictMerge: "Sl\xE5 ihop (beh\xE5ll b\xE5da)",
       traktConflictTrakt: "Trakt vinner",
       traktConflictLocal: "Den h\xE4r enheten vinner",
-      showTraktCommentsDesc: "Publika Trakt-kommentarer under filmer och serier. Spoilerm\xE4rkta d\xF6ljs tills du klickar p\xE5 dem.",
+      showTraktCommentsDesc: "Publika Trakt-kommentarer under filmer och serier, och en knapp f\xF6r att skriva egna. Spoilerm\xE4rkta d\xF6ljs tills du klickar p\xE5 dem. Trakt tar bara emot kommentarer p\xE5 engelska.",
       showTraktCommentsNeedsTrakt: "Kr\xE4ver ett anslutet Trakt-konto (Sp\xE5rning \u2192 Trakt).",
       traktCommentsConnectHint: "Anslut Trakt under Inst\xE4llningar \u2192 Sp\xE5rning f\xF6r att se kommentarer.",
       traktCommentWrite: "Skriv kommentar",
@@ -191184,7 +191184,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.142",
+    version: "1.0.143",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
