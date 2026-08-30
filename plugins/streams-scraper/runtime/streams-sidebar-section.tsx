@@ -570,6 +570,24 @@ export function StreamsSidebarSection({
   const [playerForceProxy, setPlayerForceProxy] = useState(false)
   /** Request-headers strömmen kräver (Stremio proxyHeaders.request) — följer med in i spelaren. */
   const [playerRequestHeaders, setPlayerRequestHeaders] = useState<Record<string, string> | undefined>(undefined)
+  /**
+   * När en käll-URL senast kom ur en sökning eller en debrid-upplösning.
+   *
+   * Livskontrollen före uppspelning (ensurePlayableSource) är till för LÄNKAR
+   * SOM KAN HA DÖTT — återupptagning dagen efter, ett nätbyte. Den kördes på
+   * varje start, också på länkar som löstes sekunder tidigare, och kostade då
+   * en fast ~1,5 s (sondens budget) plus en extra anslutning mot debrid-
+   * tjänsten före varje start. Mätt: "play stream requested" → "player session
+   * opening" låg på exakt 1,5 s i rad efter rad. En färsk länk hoppar över
+   * sonden; dör den ändå fångar spelarens första-bild-vakt det och går vidare
+   * till nästa kandidat, precis som förut.
+   */
+  const freshSourceUrlsRef = useRef<Map<string, number>>(new Map())
+  const FRESH_SOURCE_MS = 10 * 60_000
+  const rememberFreshSource = (url: string | undefined) => {
+    if (url) freshSourceUrlsRef.current.set(url, Date.now())
+  }
+  const isFreshSource = (url: string) => (freshSourceUrlsRef.current.get(url) ?? 0) > Date.now() - FRESH_SOURCE_MS
   // Next-episode state
   const [nextEpCard, setNextEpCard] = useState<{
     season: number
@@ -1492,6 +1510,7 @@ function scraperInCooldown(configId: string): boolean {
       const publishPartial = (items: StreamResult[]) => {
         if (requestId !== searchRequestIdRef.current || items.length === 0) return
         const merged = mergeStreams(items)
+        for (const item of items) rememberFreshSource(item.directUrl)
         if (!published) published = true
         if (firstStreamsAtMs == null) firstStreamsAtMs = Math.round(performance.now() - searchStartedAt)
         // Show partial results immediately; do not wait on cache enrichment/filters.
@@ -2248,6 +2267,7 @@ function scraperInCooldown(configId: string): boolean {
             forceProxy: resolved.forceProxy,
             infoHash: candidate.infoHash ?? null,
             requestHeaders: resolved.requestHeaders,
+            freshlyResolved: true,
           })
           if (opened) return true
           // Rejected source: stay in the loading state while the next candidate
@@ -2475,6 +2495,7 @@ function scraperInCooldown(configId: string): boolean {
           forceProxy: resolved.forceProxy,
           infoHash: candidate.infoHash ?? null,
           requestHeaders: resolved.requestHeaders,
+          freshlyResolved: true,
         }, attemptId)
         if (!opened) {
           // Rejected before the player ever saw it (dead/IP-bound link that
@@ -2775,6 +2796,8 @@ function scraperInCooldown(configId: string): boolean {
     infoHash?: string | null
     /** Headers källan kräver (Stremio proxyHeaders.request). */
     requestHeaders?: Record<string, string>
+    /** URL:en löstes just nu (debrid) — hoppa över livskontrollen. */
+    freshlyResolved?: boolean
   }, attemptId?: number): Promise<boolean> {
     if (!isPlayAttemptActive(attemptId)) return false
     // Never open a player session without a resolved source. Opening an empty
@@ -2799,10 +2822,13 @@ function scraperInCooldown(configId: string): boolean {
     //
     // Ahead of the VLC intercept on purpose: VLC on a phone streams the URL
     // itself, so a dead link there is exactly as broken as one in mpv.
-    const source = await ensurePlayableSource(config.url, {
-      filename: config.filename,
-      infoHash: config.infoHash !== undefined ? config.infoHash : playAttemptInfoHashRef.current,
-    })
+    const skipProbe = config.freshlyResolved === true || isFreshSource(config.url)
+    const source = skipProbe
+      ? { url: config.url, filename: config.filename, refreshed: false }
+      : await ensurePlayableSource(config.url, {
+          filename: config.filename,
+          infoHash: config.infoHash !== undefined ? config.infoHash : playAttemptInfoHashRef.current,
+        })
     if (!isPlayAttemptActive(attemptId)) return false
     if (!source) {
       sendTelemetry('playback.open', 'error', 'source rejected: not serving media', {
@@ -2848,6 +2874,7 @@ function scraperInCooldown(configId: string): boolean {
       season: config.season ?? null,
       episode: config.episode ?? null,
       refreshed: source.refreshed,
+      probeSkipped: skipProbe,
       ...urlDiagnostics(source.url),
       filename: (source.filename ?? '').slice(0, 80),
     })
@@ -2883,6 +2910,7 @@ function scraperInCooldown(configId: string): boolean {
       episode: selectedEpisode?.episode_number,
       initialTime: undefined,
       forceProxy: false,
+      freshlyResolved: true,
     }, attemptId)
     // Reset next-ep state for this new playback session
     nextEpUrlRef.current = null

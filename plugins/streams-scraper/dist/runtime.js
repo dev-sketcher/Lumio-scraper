@@ -179349,6 +179349,20 @@ ${cue.text}`).join("\n\n")}
     const phoneChrome = landscapeChrome || portraitChrome;
     const newChrome = true;
     const dtStation = isTv ? { "data-f": "1" } : {};
+    const tvSurface2 = (id4) => isTv ? { "data-tv-surface": id4, "data-panel-root": "1" } : {};
+    useEffect(() => {
+      if (!isTv || openSurface === null) return;
+      const raf = window.requestAnimationFrame(() => {
+        const root = playerRootRef.current;
+        if (!root) return;
+        const panels = root.querySelectorAll("[data-panel-root]");
+        const surface = root.querySelector(`[data-tv-surface="${openSurface}"]`) ?? (panels.length > 0 ? panels[panels.length - 1] : null);
+        if (!surface || surface === root) return;
+        const target = surface.querySelector("[data-init]") ?? surface.querySelector('[aria-current="true"][data-f], [data-f][aria-pressed="true"]') ?? surface.querySelector("[data-f]");
+        target?.focus();
+      });
+      return () => window.cancelAnimationFrame(raf);
+    }, [isTv, openSurface]);
     const playerAccentRgb = playerLayout.seekBarColor === "white" ? "255 255 255" : playerLayout.seekBarColor === "red" ? "239 68 68" : playerLayout.seekBarColor === "amber" ? "251 191 36" : "124 156 255";
     const hiddenControls = useMemo(() => new Set(playerLayout.hidden), [playerLayout.hidden]);
     const showsControl = (id4) => !hiddenControls.has(id4);
@@ -184508,7 +184522,7 @@ ${cue.text}`).join("\n\n")}
                     )
                   }
                 ),
-                showCastMenu && /* @__PURE__ */ jsxs("div", { className: `absolute z-[60] border border-white/10 p-4 ${desktopChrome ? "bottom-[92px] right-6 w-72 rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : landscapeChrome ? "right-[26px] top-[72px] w-[260px] rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : portraitChrome ? "inset-x-3 bottom-[172px] rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : "bottom-20 right-4 w-72 rounded-2xl bg-slate-900/95 shadow-2xl backdrop-blur"}`, children: [
+                showCastMenu && /* @__PURE__ */ jsxs("div", { ...tvSurface2("cast"), className: `absolute z-[60] border border-white/10 p-4 ${desktopChrome ? "bottom-[92px] right-6 w-72 rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : landscapeChrome ? "right-[26px] top-[72px] w-[260px] rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : portraitChrome ? "inset-x-3 bottom-[172px] rounded-xl bg-base-800/95 shadow-[0_20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : "bottom-20 right-4 w-72 rounded-2xl bg-slate-900/95 shadow-2xl backdrop-blur"}`, children: [
                   /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between", children: [
                     /* @__PURE__ */ jsx("p", { className: "text-xs uppercase tracking-[0.2em] text-slate-400", children: t("castTitle") }),
                     /* @__PURE__ */ jsx(
@@ -184609,6 +184623,7 @@ ${cue.text}`).join("\n\n")}
                 /* @__PURE__ */ jsxs(
                   "div",
                   {
+                    ...tvSurface2("subs"),
                     style: { ...getAnchoredMenuStyle(subTriggerRef.current), right: 16, left: "auto" },
                     className: `z-[70] flex max-h-[75vh] w-[min(calc(100vw-2rem),20rem)] flex-col overflow-y-auto rounded-xl border border-white/10 shadow-xl backdrop-blur-sm sm:max-h-none sm:w-auto sm:flex-row sm:overflow-visible ${desktopChrome ? "bg-base-800/95" : "bg-slate-900/95"}`,
                     onClick: (e) => e.stopPropagation(),
@@ -185262,6 +185277,7 @@ ${cue.text}`).join("\n\n")}
                       showAudioMenu && audioTracks.length > 0 && /* @__PURE__ */ jsxs(
                         "div",
                         {
+                          ...tvSurface2("audio"),
                           style: pickerStyle(audioTriggerRef.current, landscapeChrome ? 200 : 210),
                           className: `${dtMenuSurfaceClass} ${newChrome ? "" : "min-w-[140px]"}`,
                           onClick: (e) => e.stopPropagation(),
@@ -185274,6 +185290,7 @@ ${cue.text}`).join("\n\n")}
                                 "button",
                                 {
                                   type: "button",
+                                  ...dtStation,
                                   "data-f": isTv ? "1" : void 0,
                                   onClick: () => switchAudioTrack(track),
                                   className: dtMenuRowClass(isActive),
@@ -185296,6 +185313,7 @@ ${cue.text}`).join("\n\n")}
                                     "button",
                                     {
                                       type: "button",
+                                      ...dtStation,
                                       onClick: () => setAudioDelayMs(audioDelayMs - AUDIO_DELAY_STEP_MS),
                                       "aria-label": `\u2212${AUDIO_DELAY_STEP_MS} ms`,
                                       className: `flex flex-none items-center justify-center rounded-full border border-white/[0.14] text-slate-300 ${portraitChrome ? "h-8 w-8 text-base" : "h-[30px] w-[30px] text-[15px]"}`,
@@ -185311,6 +185329,7 @@ ${cue.text}`).join("\n\n")}
                                     "button",
                                     {
                                       type: "button",
+                                      ...dtStation,
                                       onClick: () => setAudioDelayMs(audioDelayMs + AUDIO_DELAY_STEP_MS),
                                       "aria-label": `+${AUDIO_DELAY_STEP_MS} ms`,
                                       className: `flex flex-none items-center justify-center rounded-full border border-white/[0.14] text-slate-300 ${portraitChrome ? "h-8 w-8 text-base" : "h-[30px] w-[30px] text-[15px]"}`,
@@ -185326,6 +185345,7 @@ ${cue.text}`).join("\n\n")}
                                   "button",
                                   {
                                     type: "button",
+                                    ...dtStation,
                                     onClick: () => setAudioDelayMs(audioDelayMs - AUDIO_DELAY_STEP_MS),
                                     "aria-label": `\u2212${AUDIO_DELAY_STEP_MS} ms`,
                                     className: "h-8 w-[34px] flex-none rounded-lg border border-white/[0.14] text-slate-300 transition hover:bg-white/10 hover:text-white",
@@ -185341,6 +185361,7 @@ ${cue.text}`).join("\n\n")}
                                   "button",
                                   {
                                     type: "button",
+                                    ...dtStation,
                                     onClick: () => setAudioDelayMs(audioDelayMs + AUDIO_DELAY_STEP_MS),
                                     "aria-label": `+${AUDIO_DELAY_STEP_MS} ms`,
                                     className: "h-8 w-[34px] flex-none rounded-lg border border-white/[0.14] text-slate-300 transition hover:bg-white/10 hover:text-white",
@@ -185358,6 +185379,7 @@ ${cue.text}`).join("\n\n")}
                                 "button",
                                 {
                                   type: "button",
+                                  ...dtStation,
                                   onClick: () => setAudioDelayMs(0),
                                   className: "mt-1.5 py-1 text-[13px] text-[rgb(var(--player-accent))] transition hover:text-[rgb(var(--player-accent)/0.8)]",
                                   children: t("reset")
@@ -185370,6 +185392,7 @@ ${cue.text}`).join("\n\n")}
                       showAspectMenu && /* @__PURE__ */ jsxs(
                         "div",
                         {
+                          ...tvSurface2("aspect"),
                           style: pickerStyle(aspectTriggerRef.current, landscapeChrome ? 180 : 170),
                           className: `${dtMenuSurfaceClass} ${newChrome ? "" : "min-w-[150px]"}`,
                           onClick: (e) => e.stopPropagation(),
@@ -185381,6 +185404,7 @@ ${cue.text}`).join("\n\n")}
                                 "button",
                                 {
                                   type: "button",
+                                  ...dtStation,
                                   "data-f": isTv ? "1" : void 0,
                                   onClick: () => {
                                     setAspectRatioMode(mode);
@@ -185401,6 +185425,7 @@ ${cue.text}`).join("\n\n")}
                       showCropZoomMenu && /* @__PURE__ */ jsxs(
                         "div",
                         {
+                          ...tvSurface2("zoom"),
                           style: pickerStyle(cropTriggerRef.current, 180),
                           className: `${dtMenuSurfaceClass} ${newChrome ? "" : "min-w-[150px]"}`,
                           onClick: (e) => e.stopPropagation(),
@@ -185412,6 +185437,7 @@ ${cue.text}`).join("\n\n")}
                                 "button",
                                 {
                                   type: "button",
+                                  ...dtStation,
                                   "data-f": isTv ? "1" : void 0,
                                   onClick: () => {
                                     setCropZoomMode(mode);
@@ -185433,6 +185459,7 @@ ${cue.text}`).join("\n\n")}
                         "div",
                         {
                           ref: moreMenuRef,
+                          ...tvSurface2("more"),
                           style: portraitChrome ? { position: "fixed", left: 0, right: 0, bottom: 0, maxHeight: "70vh", overflowY: "auto" } : newChrome ? pickerStyle(moreTriggerRef.current, landscapeChrome ? 244 : 262) : getAnchoredMenuStyle(moreTriggerRef.current),
                           className: portraitChrome ? "z-50 rounded-t-2xl border-t border-white/[0.07] bg-base-950/[0.96] px-3 pb-6 pt-3 shadow-[0_-20px_60px_rgba(0,0,0,0.6)] backdrop-blur-md" : newChrome ? dtMenuSurfaceClass : "z-50 w-64 rounded-[1.6rem] border border-white/10 bg-base-800/95 p-2.5 shadow-2xl backdrop-blur-md",
                           onClick: (e) => e.stopPropagation(),
@@ -185443,6 +185470,7 @@ ${cue.text}`).join("\n\n")}
                               "button",
                               {
                                 type: "button",
+                                ...dtStation,
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => setDvColorFallbackMuted((current2) => !current2),
                                 className: dtMoreRowClass,
@@ -185463,6 +185491,7 @@ ${cue.text}`).join("\n\n")}
                               "button",
                               {
                                 type: "button",
+                                ...dtStation,
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => {
                                   const next2 = nightMode === "off" ? "mild" : nightMode === "mild" ? "strong" : "off";
@@ -185483,6 +185512,7 @@ ${cue.text}`).join("\n\n")}
                               "button",
                               {
                                 type: "button",
+                                ...dtStation,
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => void handleCopyStreamLink(),
                                 className: dtMoreRowClass,
@@ -185500,6 +185530,7 @@ ${cue.text}`).join("\n\n")}
                                 "button",
                                 {
                                   type: "button",
+                                  ...dtStation,
                                   "data-f": isTv ? "1" : void 0,
                                   onClick: () => void handleDownload(),
                                   disabled: downloadState.type === "picking-folder" || downloadState.type === "downloading",
@@ -185518,6 +185549,7 @@ ${cue.text}`).join("\n\n")}
                                 "button",
                                 {
                                   type: "button",
+                                  ...dtStation,
                                   "data-f": isTv ? "1" : void 0,
                                   onClick: () => void handleCancelDownload(),
                                   className: "mr-3 flex h-7 w-7 flex-none items-center justify-center rounded-full border border-white/10 text-slate-300 transition hover:border-red-400/40 hover:text-red-300",
@@ -185530,6 +185562,7 @@ ${cue.text}`).join("\n\n")}
                               "button",
                               {
                                 type: "button",
+                                ...dtStation,
                                 "data-f": isTv ? "1" : void 0,
                                 onClick: () => void handleOpenExternal(),
                                 onMouseDown: (e) => e.stopPropagation(),
@@ -187866,6 +187899,12 @@ ${cue.text}`).join("\n\n")}
     const [playerInitialTime, setPlayerInitialTime] = useState(void 0);
     const [playerForceProxy, setPlayerForceProxy] = useState(false);
     const [playerRequestHeaders, setPlayerRequestHeaders] = useState(void 0);
+    const freshSourceUrlsRef = useRef(/* @__PURE__ */ new Map());
+    const FRESH_SOURCE_MS = 10 * 6e4;
+    const rememberFreshSource = (url) => {
+      if (url) freshSourceUrlsRef.current.set(url, Date.now());
+    };
+    const isFreshSource = (url) => (freshSourceUrlsRef.current.get(url) ?? 0) > Date.now() - FRESH_SOURCE_MS;
     const [nextEpCard, setNextEpCard] = useState(null);
     const [nextEpUrlReady, setNextEpUrlReady] = useState(false);
     const nextEpUrlRef = useRef(null);
@@ -188557,6 +188596,7 @@ ${cue.text}`).join("\n\n")}
         const publishPartial = (items) => {
           if (requestId !== searchRequestIdRef.current || items.length === 0) return;
           const merged = mergeStreams(items);
+          for (const item of items) rememberFreshSource(item.directUrl);
           if (!published) published = true;
           if (firstStreamsAtMs == null) firstStreamsAtMs = Math.round(performance.now() - searchStartedAt);
           setStreams(sortByPriority(normalizeCached(merged)));
@@ -189117,7 +189157,8 @@ ${cue.text}`).join("\n\n")}
               initialTime: playRequestInitialTime ?? void 0,
               forceProxy: resolved.forceProxy,
               infoHash: candidate.infoHash ?? null,
-              requestHeaders: resolved.requestHeaders
+              requestHeaders: resolved.requestHeaders,
+              freshlyResolved: true
             });
             if (opened) return true;
             setStep({ type: "processing", message: mediaType === "tv" ? t("startingEpisode") : t("startingMovie") });
@@ -189256,7 +189297,8 @@ ${cue.text}`).join("\n\n")}
             initialTime: initialTimeOverride ?? playRequestInitialTime ?? void 0,
             forceProxy: resolved.forceProxy,
             infoHash: candidate.infoHash ?? null,
-            requestHeaders: resolved.requestHeaders
+            requestHeaders: resolved.requestHeaders,
+            freshlyResolved: true
           }, attemptId);
           if (!opened) {
             if (attemptId !== playAttemptRef.current) return false;
@@ -189533,7 +189575,8 @@ ${cue.text}`).join("\n\n")}
         onAutoPlayFallback?.();
         return false;
       }
-      const source = await ensurePlayableSource(config.url, {
+      const skipProbe = config.freshlyResolved === true || isFreshSource(config.url);
+      const source = skipProbe ? { url: config.url, filename: config.filename, refreshed: false } : await ensurePlayableSource(config.url, {
         filename: config.filename,
         infoHash: config.infoHash !== void 0 ? config.infoHash : playAttemptInfoHashRef.current
       });
@@ -189567,6 +189610,7 @@ ${cue.text}`).join("\n\n")}
         season: config.season ?? null,
         episode: config.episode ?? null,
         refreshed: source.refreshed,
+        probeSkipped: skipProbe,
         ...urlDiagnostics(source.url),
         filename: (source.filename ?? "").slice(0, 80)
       });
@@ -189595,7 +189639,8 @@ ${cue.text}`).join("\n\n")}
         season: selectedSeason?.season_number,
         episode: selectedEpisode?.episode_number,
         initialTime: void 0,
-        forceProxy: false
+        forceProxy: false,
+        freshlyResolved: true
       }, attemptId);
       nextEpUrlRef.current = null;
       pendingCardInfo.current = null;
