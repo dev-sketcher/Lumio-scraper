@@ -4336,12 +4336,15 @@ function StreamList({
           <div key={group.source ?? 'all'} className="space-y-2">
             {/* Gruppetikett och källväljare på SAMMA rad: etiketten till vänster,
                 väljaren till höger. Två rader ovanför listan var en för mycket. */}
-            <div className={`flex min-h-6 items-center justify-between gap-3 ${gi > 0 ? 'pt-2' : ''}`}>
+            {/* min-w-0 på etiketten: i Safari (iPhone som fjärr) fick en lång
+                källrubrik hela raden att bli bredare än vyn — flex-barn har
+                min-width:auto och truncate biter inte utan min-w-0. */}
+            <div className={`flex min-h-6 min-w-0 items-center justify-between gap-3 overflow-hidden ${gi > 0 ? 'pt-2' : ''}`}>
               {group.source ? (
-                <p className="truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <p className="min-w-0 flex-1 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                   {group.source}
                 </p>
-              ) : <span />}
+              ) : <span className="min-w-0 flex-1" />}
               {showHeader ? header : null}
             </div>
             {renderRows(group.items, group.source ?? 'all')}

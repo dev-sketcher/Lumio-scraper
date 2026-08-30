@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.139
+
+- Safari/iPhone (fjärr): en lång källrubrik över strömlistan gjorde raderna
+  bredare än vyn så de försvann ut till höger. Rubriken klipps nu med
+  ellips (min-w-0 på flex-barnet) i stället för att trycka ut bredden.
+
 ## 1.0.138
 
 - Inline under avsnittet visar sektionen aldrig sina egna säsongs- och

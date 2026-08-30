@@ -166886,6 +166886,9 @@
       addAndPlay: "Add & Play",
       searchingStreams: "Searching for streams\u2026",
       allSources: "All sources",
+      tvSearchTypeTab: "Type",
+      tvSearchSpace: "Space",
+      tvSearchDelete: "Delete",
       sourcesStillSearching: "Still searching:",
       sourceFilter: "Source",
       sourcesNoAnswer: "No answer from:",
@@ -167067,6 +167070,11 @@
       subtitleLanguages: "Subtitle Languages",
       subtitleVariants: "Subtitles Variants",
       subtitleSettings: "Subtitles Settings",
+      subtitleLoadFile: "Open subtitle file\u2026",
+      subtitleExternalGroup: "Own file",
+      subtitleEmbeddedTrack: "Embedded track",
+      subtitleFileUnsupported: "This format can only be shown by the built-in player on Mac (mpv). Use .srt or .vtt here.",
+      subtitleFileLoadFailed: "Could not load the subtitle file. {message}",
       selectLanguage: "Select a language",
       on: "On",
       off: "Off",
@@ -167570,6 +167578,8 @@
       traktConflictTrakt: "Trakt wins",
       traktConflictLocal: "This device wins",
       showTraktCommentsDesc: "Public Trakt comments under movies and series. Spoiler-marked ones stay hidden until you click them.",
+      showTraktCommentsNeedsTrakt: "Requires a connected Trakt account (Tracking \u2192 Trakt).",
+      traktCommentsConnectHint: "Connect Trakt under Settings \u2192 Tracking to see comments.",
       shortcutsBindableTitle: "KEYS (CLICK TO CHANGE)",
       shortcutsTracks: "Tracks",
       shortcutsGlobal: "Global",
@@ -169194,6 +169204,9 @@
       addAndPlay: "L\xE4gg till & Spela",
       searchingStreams: "S\xF6ker str\xF6mmar\u2026",
       allSources: "Alla k\xE4llor",
+      tvSearchTypeTab: "Skriv",
+      tvSearchSpace: "Mellanslag",
+      tvSearchDelete: "Radera",
       sourcesStillSearching: "S\xF6ker fortfarande:",
       sourceFilter: "K\xE4lla",
       sourcesNoAnswer: "Inget svar fr\xE5n:",
@@ -169375,6 +169388,11 @@
       subtitleLanguages: "Undertextspr\xE5k",
       subtitleVariants: "Undertextvarianter",
       subtitleSettings: "Undertextinst\xE4llningar",
+      subtitleLoadFile: "\xD6ppna undertextfil\u2026",
+      subtitleExternalGroup: "Egen fil",
+      subtitleEmbeddedTrack: "Inb\xE4ddat sp\xE5r",
+      subtitleFileUnsupported: "Det h\xE4r formatet kan bara den inbyggda spelaren p\xE5 Mac (mpv) visa. Anv\xE4nd .srt eller .vtt h\xE4r.",
+      subtitleFileLoadFailed: "Kunde inte l\xE4sa in undertextfilen. {message}",
       selectLanguage: "V\xE4lj ett spr\xE5k",
       on: "P\xE5",
       off: "Av",
@@ -169878,6 +169896,8 @@
       traktConflictTrakt: "Trakt vinner",
       traktConflictLocal: "Den h\xE4r enheten vinner",
       showTraktCommentsDesc: "Publika Trakt-kommentarer under filmer och serier. Spoilerm\xE4rkta d\xF6ljs tills du klickar p\xE5 dem.",
+      showTraktCommentsNeedsTrakt: "Kr\xE4ver ett anslutet Trakt-konto (Sp\xE5rning \u2192 Trakt).",
+      traktCommentsConnectHint: "Anslut Trakt under Inst\xE4llningar \u2192 Sp\xE5rning f\xF6r att se kommentarer.",
       shortcutsBindableTitle: "TANGENTER (KLICKA F\xD6R ATT \xC4NDRA)",
       shortcutsTracks: "Sp\xE5r",
       shortcutsGlobal: "Globalt",
@@ -178570,6 +178590,9 @@ ${cue.text}`).join("\n\n")}
     }, [subDelay]);
     const [subtitleAutoSyncState, setSubtitleAutoSyncState] = useState({ type: "idle" });
     const [subSize, setSubSize] = useState(() => getDefaultSubtitleSize());
+    const [externalSubtitles, setExternalSubtitles] = useState([]);
+    const externalVttRef = useRef(/* @__PURE__ */ new Map());
+    const externalFileInputRef = useRef(null);
     const [subVerticalPos, setSubVerticalPos] = useState(() => getDefaultSubtitleVerticalPosition());
     const [subOpacity, setSubOpacity] = useState(() => getDefaultSubtitleOpacity());
     const [subTextColor, setSubTextColor] = useState(() => getSubtitleTextColor());
@@ -180196,6 +180219,30 @@ ${cue.text}`).join("\n\n")}
         setSubtitleLoadError(null);
         return;
       }
+      if (sub.source === "external") {
+        setActiveSubId(sub.id);
+        setSubtitleLoadError(null);
+        if (useMpv) {
+          try {
+            await mpvCommand2(["sub-add", sub.url, "select"]);
+            await refreshMpvSubtitleTracks();
+            setCues([]);
+          } catch (error) {
+            setSubtitleLoadError(error instanceof Error ? t("vpSubMpvFailedWith").replace("{message}", error.message) : t("vpSubMpvFailed"));
+          }
+          setLoadingSub(false);
+          return;
+        }
+        const vtt = externalVttRef.current.get(sub.id);
+        if (vtt) {
+          setCues(parseVtt(vtt));
+        } else {
+          setCues([]);
+          setSubtitleLoadError(t("subtitleFileUnsupported"));
+        }
+        setLoadingSub(false);
+        return;
+      }
       setLoadingSub(true);
       setActiveSubId(sub.id);
       const loadingGuard = window.setTimeout(() => {
@@ -181207,14 +181254,18 @@ ${cue.text}`).join("\n\n")}
       }));
     }, [embeddedSubtitleTracks, mpvSubtitleTracks, useMpv]);
     const subtitleOptions = useMemo(() => {
-      const merged = getPreferEmbeddedSubtitles() ? [...embeddedSubtitleOptions, ...subtitles] : [...subtitles, ...embeddedSubtitleOptions];
+      const merged = [
+        // Egna filer först: den som öppnat en fil vill åt just den.
+        ...externalSubtitles,
+        ...getPreferEmbeddedSubtitles() ? [...embeddedSubtitleOptions, ...subtitles] : [...subtitles, ...embeddedSubtitleOptions]
+      ];
       const seen = /* @__PURE__ */ new Set();
       return merged.filter((option) => {
         if (seen.has(option.id)) return false;
         seen.add(option.id);
         return true;
       });
-    }, [subtitles, embeddedSubtitleOptions]);
+    }, [subtitles, embeddedSubtitleOptions, externalSubtitles]);
     useEffect(() => {
       if (embeddedSubtitleOptions.length === 0) return;
       setSubtitleLoadError((current2) => current2 === t("vpNoSubsFound") ? null : current2);
@@ -181617,6 +181668,52 @@ ${cue.text}`).join("\n\n")}
       }
       onOutroStartRef.current?.();
     }, [episode, hasStarted, imdbId, mediaType, outroSegment, realTime, season, wikiTmdbId]);
+    const handleExternalSubtitleFile = useCallback(async (file) => {
+      setSubtitleLoadError(null);
+      try {
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        const decode = (label, fatal) => new TextDecoder(label, { fatal }).decode(bytes);
+        let content2;
+        if (bytes[0] === 255 && bytes[1] === 254 || bytes[0] === 254 && bytes[1] === 255) {
+          content2 = decode(bytes[0] === 255 ? "utf-16le" : "utf-16be", false);
+        } else {
+          try {
+            content2 = decode("utf-8", true);
+          } catch {
+            content2 = decode("windows-1252", false);
+          }
+        }
+        content2 = content2.replace(/^\uFEFF/, "");
+        const response = await fetch("/api/subtitles/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name: file.name, content: content2 })
+        });
+        if (!response.ok) throw new Error(`upload ${response.status}`);
+        const payload = await response.json();
+        if (!payload.path) throw new Error("upload: no path");
+        const id4 = `external:${Date.now()}`;
+        const option = {
+          id: id4,
+          language: "external",
+          lang3: "ext",
+          url: payload.path,
+          source: "external",
+          label: file.name
+        };
+        externalVttRef.current.set(id4, payload.vtt ?? null);
+        void fetch(`/api/debug-log?msg=${encodeURIComponent(
+          `[ext-sub] ${file.name} bytes=${bytes.length} vtt=${payload.vtt ? payload.vtt.length : "null"} cues=${payload.vtt ? parseVtt(payload.vtt).length : 0} mpv=${useMpv}`
+        )}`).catch(() => {
+        });
+        setExternalSubtitles((current2) => [option, ...current2]);
+        void selectSubtitle(option, { manual: true });
+      } catch (error) {
+        setSubtitleLoadError(
+          error instanceof Error ? t("subtitleFileLoadFailed").replace("{message}", error.message) : t("subtitleFileLoadFailed").replace("{message}", "")
+        );
+      }
+    }, [selectSubtitle, t]);
     const subtitleGroups = subtitleOptions.reduce((acc, s) => {
       var _a;
       ;
@@ -183448,7 +183545,7 @@ ${cue.text}`).join("\n\n")}
                                 },
                                 className: `flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-white/5 ${selectedLang === lang2 ? "bg-white/5" : ""} ${isActive ? dtActiveTextClass : "text-slate-300"}`,
                                 children: [
-                                  /* @__PURE__ */ jsx("span", { children: LANG_NAMES[lang2] ?? lang2.toUpperCase() }),
+                                  /* @__PURE__ */ jsx("span", { children: lang2 === "external" ? t("subtitleExternalGroup") : LANG_NAMES[lang2] ?? lang2.toUpperCase() }),
                                   isActive && /* @__PURE__ */ jsx("span", { className: desktopChrome ? "h-1.5 w-1.5 rounded-full bg-white" : "h-2 w-2 rounded-full bg-aurora-400" })
                                 ]
                               },
@@ -183473,8 +183570,8 @@ ${cue.text}`).join("\n\n")}
                               className: `flex w-full items-center justify-between px-4 py-2 text-sm transition hover:bg-white/5 ${isActive ? "bg-white/5" : ""}`,
                               children: [
                                 /* @__PURE__ */ jsxs("div", { className: "text-left", children: [
-                                  /* @__PURE__ */ jsx("div", { className: isActive ? dtActiveTextClass : "text-slate-300", children: LANG_NAMES[selectedLang] ?? selectedLang }),
-                                  /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-500", children: sub.source === "embedded" ? "Embedded track" : t("subtitleProvider") })
+                                  /* @__PURE__ */ jsx("div", { className: isActive ? dtActiveTextClass : "text-slate-300", children: sub.source === "external" ? sub.label ?? t("subtitleExternalGroup") : LANG_NAMES[selectedLang] ?? selectedLang }),
+                                  /* @__PURE__ */ jsx("div", { className: "text-xs text-slate-500", children: sub.source === "embedded" ? t("subtitleEmbeddedTrack") : sub.source === "external" ? t("subtitleExternalGroup") : t("subtitleProvider") })
                                 ] }),
                                 isActive && /* @__PURE__ */ jsx("span", { className: dtMenuDotClass })
                               ]
@@ -183485,6 +183582,35 @@ ${cue.text}`).join("\n\n")}
                       ] }),
                       /* @__PURE__ */ jsxs("div", { className: "w-full py-3 sm:w-48", children: [
                         /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[10px] font-semibold uppercase tracking-widest text-slate-500", children: t("subtitleSettings") }),
+                        /* @__PURE__ */ jsxs("div", { className: "px-4 pb-2", children: [
+                          /* @__PURE__ */ jsx(
+                            "input",
+                            {
+                              ref: externalFileInputRef,
+                              type: "file",
+                              accept: ".srt,.vtt,.ass,.ssa,.sub,.txt,text/vtt,text/plain,application/x-subrip",
+                              className: "hidden",
+                              onChange: (event) => {
+                                const file = event.target.files?.[0];
+                                event.target.value = "";
+                                if (file) void handleExternalSubtitleFile(file);
+                              }
+                            }
+                          ),
+                          /* @__PURE__ */ jsxs(
+                            "button",
+                            {
+                              type: "button",
+                              "data-f": isTv ? "1" : void 0,
+                              onClick: () => externalFileInputRef.current?.click(),
+                              className: "flex w-full items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-left text-xs text-slate-200 transition hover:border-white/20 hover:bg-white/[0.08]",
+                              children: [
+                                /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5 flex-none text-slate-400", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", "aria-hidden": true, children: /* @__PURE__ */ jsx("path", { strokeLinecap: "round", strokeLinejoin: "round", d: "M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M12 4v11M7.5 8.5 12 4l4.5 4.5" }) }),
+                                /* @__PURE__ */ jsx("span", { children: t("subtitleLoadFile") })
+                              ]
+                            }
+                          )
+                        ] }),
                         subtitleLoadError && subtitleOptions.length === 0 && /* @__PURE__ */ jsx("div", { className: "px-4 pb-2 text-[11px] leading-5 text-rose-300", children: subtitleLoadError }),
                         /* @__PURE__ */ jsxs("div", { className: "px-4 pb-2", children: [
                           /* @__PURE__ */ jsx(
@@ -190262,8 +190388,8 @@ ${cue.text}`).join("\n\n")}
         return /* @__PURE__ */ jsx("div", { className: "space-y-2", children: renderRows(group.items, "all") }, "all");
       }
       return /* @__PURE__ */ jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsxs("div", { className: `flex min-h-6 items-center justify-between gap-3 ${gi > 0 ? "pt-2" : ""}`, children: [
-          group.source ? /* @__PURE__ */ jsx("p", { className: "truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500", children: group.source }) : /* @__PURE__ */ jsx("span", {}),
+        /* @__PURE__ */ jsxs("div", { className: `flex min-h-6 min-w-0 items-center justify-between gap-3 overflow-hidden ${gi > 0 ? "pt-2" : ""}`, children: [
+          group.source ? /* @__PURE__ */ jsx("p", { className: "min-w-0 flex-1 truncate text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500", children: group.source }) : /* @__PURE__ */ jsx("span", { className: "min-w-0 flex-1" }),
           showHeader ? header : null
         ] }),
         renderRows(group.items, group.source ?? "all")
@@ -190631,7 +190757,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.138",
+    version: "1.0.139",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
