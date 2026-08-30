@@ -4464,7 +4464,7 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
       : `${Math.round(sizeBytes / 1024 ** 2)} MB`
     : null
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900 px-4 py-3 space-y-2">
+    <div className="rounded-xl bg-[#fcfcff0a] px-4 py-3 space-y-2">
       <div className="flex items-start justify-between gap-2">
         {/* flex-wrap + min-w-0: med tre taggar (källa/cachad/stöds ej) tog
             raden mer plats än bredden och den externa spelarikonen la sig
@@ -4472,7 +4472,7 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
           <span className="min-w-0 break-words text-sm font-medium text-white">{stream.name}</span>
           {stream.source ? (
-            <span className="max-w-[120px] truncate rounded-full border border-white/10 bg-white/5 px-1.5 py-0.5 text-[8px] uppercase tracking-[0.14em] text-slate-300">
+            <span className="max-w-[140px] truncate rounded-full bg-[#fcfcff14] px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] text-slate-300">
               {stream.source}
             </span>
           ) : null}
@@ -4499,7 +4499,7 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
             }}
             title={copied ? t('copied') : t('copyStreamUrl')}
             aria-label={t('copyStreamUrl')}
-            className="flex-shrink-0 rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:border-white/30 hover:text-white"
+            className="flex-shrink-0 rounded-full bg-[#fcfcff14] p-2 text-slate-300 transition hover:bg-[#fcfcff22] hover:text-white"
           >
             {copied ? (
               <svg className="h-4 w-4 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -4522,7 +4522,7 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
             onClick={() => openInExternalAndroidPlayer(url, stream.name)}
             title={t('openInExternalPlayer')}
             aria-label={t('openInExternalPlayer')}
-            className="flex-shrink-0 rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:border-white/30 hover:text-white"
+            className="flex-shrink-0 rounded-full bg-[#fcfcff14] p-2 text-slate-300 transition hover:bg-[#fcfcff22] hover:text-white"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" strokeLinecap="round" strokeLinejoin="round" />
@@ -4585,74 +4585,66 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
           {...(isTvMode ? { 'data-f': '' } : {})}
           onClick={() => onPlay(stream)}
           className={isTvMode
-            ? 'min-h-[44px] flex-shrink-0 rounded-full bg-accent-500 px-5 text-sm font-semibold text-white transition hover:bg-accent-400'
-            : 'flex-shrink-0 rounded-full bg-accent-500 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-accent-400'}
+            ? 'min-h-[44px] flex-shrink-0 rounded-full bg-accent-500 px-5 text-sm font-normal text-white transition hover:bg-accent-400'
+            : 'flex-shrink-0 rounded-full bg-accent-500 px-3 py-1.5 text-[10px] font-normal uppercase tracking-[0.18em] text-white transition hover:bg-accent-400'}
         >
           {t('play')}
         </button>
       </div>
-      {/* Under namnet: två korta rader till vänster, filnamnet till höger.
-          Vänsterkolumnen bär det man väljer ström EFTER — cachad, storlek,
-          språk — och filnamnet får resten av bredden.
-
-          flex-wrap + min-w på texten: på en smal telefon skulle en fast
-          vänsterkolumn annars klämma filnamnet till en remsa på några tecken.
-          Med brytningen hoppar filnamnet ner på egen rad i stället, och
-          kolumnerna återstår så fort bredden finns. */}
-      <div className="flex flex-wrap items-start gap-x-3 gap-y-1">
-        <div className="flex flex-none flex-col gap-1">
-          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            {stream.cached ? (
-              <span className="flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400">
-                {t('streamAvailable')}
-              </span>
-            ) : (
-              <span className="flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400">
-                {t('streamDownload')}
-              </span>
-            )}
-            {/* Storleken beräknas från cachade filer eller släppnamnet, så den
-                visas oavsett scraper/debrid — förut syntes den bara i fil- och
-                länklistorna längre ner. */}
-            {sizeLabel ? (
-              <span className="shrink-0 rounded bg-white/5 px-1.5 py-0.5 text-[11px] font-medium tabular-nums text-slate-300">
-                {sizeLabel}
-              </span>
-            ) : null}
-          </div>
+      {/* Under namnet: EN rad med det man väljer ström efter — cachad,
+          storlek, ljud- och undertextspråk — som chips i samma glas som
+          resten av appen, och filnamnet på egen rad under. Filnamnet är det
+          längsta och minst skannbara på kortet; på egen rad får det hela
+          bredden utan att klämma chipsen på en smal telefon, och två
+          strömmar blir jämförbara rad för rad. */}
+      <div className="space-y-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
+          {stream.cached ? (
+            <span className={`${metaChipClass} text-[9px] font-medium uppercase tracking-[0.14em] text-green-400`}>
+              {t('streamAvailable')}
+            </span>
+          ) : (
+            <span className={`${metaChipClass} text-[9px] font-medium uppercase tracking-[0.14em] text-orange-400`}>
+              {t('streamDownload')}
+            </span>
+          )}
+          {/* Storleken beräknas från cachade filer eller släppnamnet, så den
+              visas oavsett scraper/debrid. */}
+          {sizeLabel ? (
+            <span className={`${metaChipClass} text-[10px] font-medium tabular-nums text-slate-200`}>{sizeLabel}</span>
+          ) : null}
           {/* Språkmärkning. Ljudspråken läses ur släppnamnet ("MULTi", "SWE",
               "DUAL"), undertexterna kommer BARA från addonens egna uppgifter —
               de står nästan aldrig i namnet, och en gissning där hade blivit
               fel oftare än rätt. Högst fyra flaggor per grupp, och koderna
-              står i title-attributet. Hela raden uteblir när ingenting kunde
-              läsas ut — en tom rad är sämre än ingen. */}
-          {ljudFlaggor.length > 0 || undertextFlaggor.length > 0 ? (
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-              {ljudFlaggor.length > 0 ? (
-                <span
-                  className="shrink-0 text-[11px] leading-none tracking-[0.08em]"
-                  title={`${t('audio')}: ${ljudSprak.join(', ').toUpperCase()}`}
-                >
-                  {ljudFlaggor.join('')}
-                </span>
-              ) : null}
-              {undertextFlaggor.length > 0 ? (
-                <span
-                  className="shrink-0 rounded bg-white/5 px-1 py-0.5 text-[11px] leading-none tracking-[0.08em]"
-                  title={`${t('subtitleLanguages')}: ${undertextSprak.join(', ').toUpperCase()}`}
-                >
-                  <span className="mr-0.5 text-[9px] text-slate-500">CC</span>
-                  {undertextFlaggor.join('')}
-                </span>
-              ) : null}
-            </div>
+              står i title-attributet. Chipsen uteblir när ingenting kunde
+              läsas ut — ett tomt chip är sämre än inget. */}
+          {ljudFlaggor.length > 0 ? (
+            <span
+              className={`${metaChipClass} text-[11px] tracking-[0.08em]`}
+              title={`${t('audio')}: ${ljudSprak.join(', ').toUpperCase()}`}
+            >
+              {ljudFlaggor.join('')}
+            </span>
+          ) : null}
+          {undertextFlaggor.length > 0 ? (
+            <span
+              className={`${metaChipClass} text-[11px] tracking-[0.08em]`}
+              title={`${t('subtitleLanguages')}: ${undertextSprak.join(', ').toUpperCase()}`}
+            >
+              <span className="mr-1 text-[9px] text-slate-500">CC</span>
+              {undertextFlaggor.join('')}
+            </span>
           ) : null}
         </div>
-        <p className="min-w-[11rem] flex-1 break-all text-xs text-slate-400">{stream.title}</p>
+        <p className="break-all text-[11px] leading-snug text-slate-400">{stream.title}</p>
       </div>
     </div>
   )
 }
+
+/** Metadata-chips på strömkortet: samma kantlösa glas som appens övriga chips. Ingen blur här — ett kort per ström gånger fyra chips blir många lager i en lång lista. */
+const metaChipClass = 'inline-flex items-center rounded-full bg-[#fcfcff14] px-2 py-0.5 leading-4'
 
 function TorrentProgress({
   step,

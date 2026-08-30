@@ -190502,11 +190502,11 @@ ${cue.text}`).join("\n\n")}
     const undertextSprak = getStreamSubtitleLanguages(stream).slice(0, 4);
     const undertextFlaggor = undertextSprak.map((kod) => langFlag(kod)).filter((flagga) => Boolean(flagga));
     const sizeLabel = sizeBytes && sizeBytes > 0 && !titleShowsSize ? sizeBytes >= 1024 ** 3 ? `${(sizeBytes / 1024 ** 3).toFixed(sizeBytes >= 10 * 1024 ** 3 ? 1 : 2)} GB` : `${Math.round(sizeBytes / 1024 ** 2)} MB` : null;
-    return /* @__PURE__ */ jsxs("div", { className: "rounded-xl border border-white/10 bg-slate-900 px-4 py-3 space-y-2", children: [
+    return /* @__PURE__ */ jsxs("div", { className: "rounded-xl bg-[#fcfcff0a] px-4 py-3 space-y-2", children: [
       /* @__PURE__ */ jsxs("div", { className: "flex items-start justify-between gap-2", children: [
         /* @__PURE__ */ jsxs("div", { className: "flex min-w-0 flex-1 flex-wrap items-center gap-1.5", children: [
           /* @__PURE__ */ jsx("span", { className: "min-w-0 break-words text-sm font-medium text-white", children: stream.name }),
-          stream.source ? /* @__PURE__ */ jsx("span", { className: "max-w-[120px] truncate rounded-full border border-white/10 bg-white/5 px-1.5 py-0.5 text-[8px] uppercase tracking-[0.14em] text-slate-300", children: stream.source }) : null,
+          stream.source ? /* @__PURE__ */ jsx("span", { className: "max-w-[140px] truncate rounded-full bg-[#fcfcff14] px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] text-slate-300", children: stream.source }) : null,
           unsupported ? /* @__PURE__ */ jsx(
             "span",
             {
@@ -190529,7 +190529,7 @@ ${cue.text}`).join("\n\n")}
             },
             title: copied ? t("copied") : t("copyStreamUrl"),
             "aria-label": t("copyStreamUrl"),
-            className: "flex-shrink-0 rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:border-white/30 hover:text-white",
+            className: "flex-shrink-0 rounded-full bg-[#fcfcff14] p-2 text-slate-300 transition hover:bg-[#fcfcff22] hover:text-white",
             children: copied ? /* @__PURE__ */ jsx("svg", { className: "h-4 w-4 text-green-400", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: /* @__PURE__ */ jsx("path", { d: "M20 6 9 17l-5-5", strokeLinecap: "round", strokeLinejoin: "round" }) }) : /* @__PURE__ */ jsxs("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
               /* @__PURE__ */ jsx("rect", { x: "9", y: "9", width: "13", height: "13", rx: "2" }),
               /* @__PURE__ */ jsx("path", { d: "M5 15V5a2 2 0 0 1 2-2h10", strokeLinecap: "round", strokeLinejoin: "round" })
@@ -190543,7 +190543,7 @@ ${cue.text}`).join("\n\n")}
             onClick: () => openInExternalAndroidPlayer(url, stream.name),
             title: t("openInExternalPlayer"),
             "aria-label": t("openInExternalPlayer"),
-            className: "flex-shrink-0 rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition hover:border-white/30 hover:text-white",
+            className: "flex-shrink-0 rounded-full bg-[#fcfcff14] p-2 text-slate-300 transition hover:bg-[#fcfcff22] hover:text-white",
             children: /* @__PURE__ */ jsxs("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "2", children: [
               /* @__PURE__ */ jsx("path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", strokeLinecap: "round", strokeLinejoin: "round" }),
               /* @__PURE__ */ jsx("path", { d: "M15 3h6v6M10 14 21 3", strokeLinecap: "round", strokeLinejoin: "round" })
@@ -190585,43 +190585,40 @@ ${cue.text}`).join("\n\n")}
             type: "button",
             ...isTvMode ? { "data-f": "" } : {},
             onClick: () => onPlay(stream),
-            className: isTvMode ? "min-h-[44px] flex-shrink-0 rounded-full bg-accent-500 px-5 text-sm font-semibold text-white transition hover:bg-accent-400" : "flex-shrink-0 rounded-full bg-accent-500 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-accent-400",
+            className: isTvMode ? "min-h-[44px] flex-shrink-0 rounded-full bg-accent-500 px-5 text-sm font-normal text-white transition hover:bg-accent-400" : "flex-shrink-0 rounded-full bg-accent-500 px-3 py-1.5 text-[10px] font-normal uppercase tracking-[0.18em] text-white transition hover:bg-accent-400",
             children: t("play")
           }
         )
       ] }),
-      /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-start gap-x-3 gap-y-1", children: [
-        /* @__PURE__ */ jsxs("div", { className: "flex flex-none flex-col gap-1", children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-baseline gap-x-2 gap-y-1", children: [
-            stream.cached ? /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-green-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-green-400", children: t("streamAvailable") }) : /* @__PURE__ */ jsx("span", { className: "flex-shrink-0 rounded-full bg-orange-500/20 px-1.5 py-0.5 text-[8px] font-medium uppercase tracking-[0.14em] text-orange-400", children: t("streamDownload") }),
-            sizeLabel ? /* @__PURE__ */ jsx("span", { className: "shrink-0 rounded bg-white/5 px-1.5 py-0.5 text-[11px] font-medium tabular-nums text-slate-300", children: sizeLabel }) : null
-          ] }),
-          ljudFlaggor.length > 0 || undertextFlaggor.length > 0 ? /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-x-2 gap-y-1", children: [
-            ljudFlaggor.length > 0 ? /* @__PURE__ */ jsx(
-              "span",
-              {
-                className: "shrink-0 text-[11px] leading-none tracking-[0.08em]",
-                title: `${t("audio")}: ${ljudSprak.join(", ").toUpperCase()}`,
-                children: ljudFlaggor.join("")
-              }
-            ) : null,
-            undertextFlaggor.length > 0 ? /* @__PURE__ */ jsxs(
-              "span",
-              {
-                className: "shrink-0 rounded bg-white/5 px-1 py-0.5 text-[11px] leading-none tracking-[0.08em]",
-                title: `${t("subtitleLanguages")}: ${undertextSprak.join(", ").toUpperCase()}`,
-                children: [
-                  /* @__PURE__ */ jsx("span", { className: "mr-0.5 text-[9px] text-slate-500", children: "CC" }),
-                  undertextFlaggor.join("")
-                ]
-              }
-            ) : null
-          ] }) : null
+      /* @__PURE__ */ jsxs("div", { className: "space-y-1.5", children: [
+        /* @__PURE__ */ jsxs("div", { className: "flex flex-wrap items-center gap-1.5", children: [
+          stream.cached ? /* @__PURE__ */ jsx("span", { className: `${metaChipClass} text-[9px] font-medium uppercase tracking-[0.14em] text-green-400`, children: t("streamAvailable") }) : /* @__PURE__ */ jsx("span", { className: `${metaChipClass} text-[9px] font-medium uppercase tracking-[0.14em] text-orange-400`, children: t("streamDownload") }),
+          sizeLabel ? /* @__PURE__ */ jsx("span", { className: `${metaChipClass} text-[10px] font-medium tabular-nums text-slate-200`, children: sizeLabel }) : null,
+          ljudFlaggor.length > 0 ? /* @__PURE__ */ jsx(
+            "span",
+            {
+              className: `${metaChipClass} text-[11px] tracking-[0.08em]`,
+              title: `${t("audio")}: ${ljudSprak.join(", ").toUpperCase()}`,
+              children: ljudFlaggor.join("")
+            }
+          ) : null,
+          undertextFlaggor.length > 0 ? /* @__PURE__ */ jsxs(
+            "span",
+            {
+              className: `${metaChipClass} text-[11px] tracking-[0.08em]`,
+              title: `${t("subtitleLanguages")}: ${undertextSprak.join(", ").toUpperCase()}`,
+              children: [
+                /* @__PURE__ */ jsx("span", { className: "mr-1 text-[9px] text-slate-500", children: "CC" }),
+                undertextFlaggor.join("")
+              ]
+            }
+          ) : null
         ] }),
-        /* @__PURE__ */ jsx("p", { className: "min-w-[11rem] flex-1 break-all text-xs text-slate-400", children: stream.title })
+        /* @__PURE__ */ jsx("p", { className: "break-all text-[11px] leading-snug text-slate-400", children: stream.title })
       ] })
     ] });
   }
+  var metaChipClass = "inline-flex items-center rounded-full bg-[#fcfcff14] px-2 py-0.5 leading-4";
   function TorrentProgress({
     step,
     onCancel
