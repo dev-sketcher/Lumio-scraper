@@ -73,6 +73,7 @@ import {
   getStreamAudioLanguages,
   getStreamSubtitleLanguages,
   isInformationalStream,
+  recordStreamHostStartMs,
   langFlag,
   looksLikeSampleOrExtra,
   matchesEpisodeIdentifier,
@@ -2548,7 +2549,27 @@ function scraperInCooldown(configId: string): boolean {
         // working first stream moments before it started and burned 12 s per
         // slow candidate (~30 s total). Real failures still advance in <1 s
         // via the onLoadFailed signal; only silent hangs pay the full window.
+        /**
+         * Gardering: har första bilden inte kommit på 4 s värms nästa
+         * kandidat — samma URL som loopen ändå provar härnäst, så ett byte
+         * efter en seg/död kandidat slipper betala hela den kalla första-
+         * byte-väntan en gång till. Ingen värmning alls när det går fort.
+         */
+        const openedAt = Date.now()
+        const nextCandidate = pool[pool.indexOf(candidate) + 1]
+        const hedge = nextCandidate?.directUrl
+          ? window.setTimeout(() => {
+              if (!firstPlaySeenRef.current && attemptId === playAttemptRef.current) {
+                warmSourceCache(nextCandidate.directUrl!)
+              }
+            }, 4_000)
+          : null
         const started = await waitForFirstPlay(attemptId, 20_000)
+        if (hedge !== null) window.clearTimeout(hedge)
+        // Värdens verkliga starttid in i minnet — det är den som avgör vem
+        // som får vara toppkandidat nästa gång. Misslyckanden räknas som
+        // fulla 20 s, för det var vad de kostade användaren.
+        recordStreamHostStartMs(resolved.url, started ? Date.now() - openedAt : 20_000)
         sendTelemetry('playback.autoplay', started ? 'ok' : 'info', started ? 'candidate playing' : 'candidate did not start -> next', {
           directUrl: Boolean(candidate.directUrl),
           infoHash: Boolean(candidate.infoHash),

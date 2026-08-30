@@ -1,4 +1,5 @@
 import type { StreamResult } from '@/types/api-responses'
+import { getScopedStorageItem, setScopedStorageItem } from '@/lib/profile-storage'
 import type { RdTorrentInfo, RdUnrestrictedLink } from '@/lib/stream-provider-runtime/real-debrid/types'
 
 export const VIDEO_EXTS = /\.(mp4|mkv|avi|mov|wmv|flv|m4v|webm|ts|m2ts)$/i
@@ -343,6 +344,51 @@ export function isInformationalStream(stream: Pick<StreamResult, 'name' | 'title
   return INFORMATIONAL_STREAM_TEXT.test(`${stream.name ?? ''} ${stream.title ?? ''} ${stream.description ?? ''}`)
 }
 
+/**
+ * Minne över hur lång tid en värds strömmar tar till FÖRSTA BILD.
+ *
+ * Uppmätt på telefon: mediafusion-länkar tog ~18 s till första byte (sondens
+ * 12 s + omförsökets 6 s) medan torrentio-länkar från samma lista startade på
+ * 2–3 s. Kvaliteten säger inget om det — bara historiken gör. Ett glidande
+ * medel per värd (EMA 0,4) sparas per profil, och autostarten sorterar värdar
+ * med långsam historik (>8 s) sist. Inga extra anrop någonstans: vi mäter
+ * bara det som ändå händer.
+ */
+const HOST_START_KEY = 'stream_host_start_ms_v1'
+const SLOW_HOST_START_MS = 8_000
+
+function hostOf(url: string | undefined): string | null {
+  if (!url) return null
+  try { return new URL(url).host.toLowerCase() } catch { return null }
+}
+
+function readHostStartMap(): Record<string, number> {
+  try {
+    const raw = getScopedStorageItem(HOST_START_KEY)
+    const parsed = raw ? JSON.parse(raw) as Record<string, number> : {}
+    return parsed && typeof parsed === 'object' ? parsed : {}
+  } catch { return {} }
+}
+
+export function recordStreamHostStartMs(url: string | undefined, ms: number): void {
+  const host = hostOf(url)
+  if (!host || !Number.isFinite(ms) || ms <= 0) return
+  try {
+    const map = readHostStartMap()
+    const prev = map[host]
+    map[host] = Math.round(prev ? prev * 0.6 + ms * 0.4 : ms)
+    const hosts = Object.keys(map)
+    if (hosts.length > 40) delete map[hosts[0]]
+    setScopedStorageItem(HOST_START_KEY, JSON.stringify(map))
+  } catch { /* minnet är en optimering, aldrig ett krav */ }
+}
+
+export function streamHostIsSlow(url: string | undefined): boolean {
+  const host = hostOf(url)
+  if (!host) return false
+  return (readHostStartMap()[host] ?? 0) > SLOW_HOST_START_MS
+}
+
 export function buildAutoplayCandidates(
   streamList: StreamResult[],
   options: {
@@ -391,6 +437,11 @@ export function buildAutoplayCandidates(
   // the full magnet-queue → poll-download path (8-15s). Promote cached to the
   // front so autoplay tries them first and only falls back to uncached if
   // every cached attempt fails.
+  const hostStartMap = readHostStartMap()
+  const slowTier = (stream: StreamResult): number => {
+    const host = hostOf(stream.directUrl)
+    return host && (hostStartMap[host] ?? 0) > SLOW_HOST_START_MS ? 1 : 0
+  }
   candidates = [...candidates].sort((a, b) => {
     // Format enheten inte kan avkoda sist — autoplay ska aldrig lägga sina
     // tre försök på strömmar som är dömda att misslyckas.
@@ -400,6 +451,11 @@ export function buildAutoplayCandidates(
     const aCached = a.cached ? 1 : 0
     const bCached = b.cached ? 1 : 0
     if (bCached !== aCached) return bCached - aCached
+    // Värdar som historiskt tagit >8 s till första bild sist — en kall
+    // mediafusion-länk som toppval är 20 sekunder ingen bett om.
+    const aSlow = slowTier(a)
+    const bSlow = slowTier(b)
+    if (aSlow !== bSlow) return aSlow - bSlow
     // Secondary key (browser only): prefer H.264 so the browser can play it
     // natively. Cache order still dominates for autoplay latency.
     if (options.preferH264) return browserCodecScore(b) - browserCodecScore(a)

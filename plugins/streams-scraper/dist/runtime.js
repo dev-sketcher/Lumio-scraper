@@ -168479,7 +168479,9 @@
       onboardingLanguageHint: "Subtitles in your preferred language are selected automatically when available, with the fallback used when the primary is missing.",
       onboardingPluginsEyebrow: "PLUGINS",
       onboardingPluginsTitle: "Choose your plugins",
-      onboardingPluginsDesc: "Tick the plugins you want to install right away. Everything can be added or removed later under Settings \u2192 Plugins.",
+      onboardingPluginsDesc: "Tick the plugins you want active. Built-in plugins are enabled right away and fetch their latest runtime when online; community plugins are fetched from their developer. Everything can be added or removed later under Settings \u2192 Plugins.",
+      onboardingBundledBadge: "Built in",
+      onboardingInstalledBadge: "Already active",
       onboardingOfficialGroup: "Official",
       onboardingExternalGroup: "External",
       onboardingThirdParty: "Third-party",
@@ -168494,6 +168496,8 @@
       streamsLayoutDesc: "In the side panel, or as a section on the page above Recommendations. Series get streams under each episode.",
       streamsLayoutSidebar: "Side panel",
       streamsLayoutInline: "On the page",
+      castCountTitle: "Cast members shown",
+      castCountDesc: "How many of the cast appear on the details page. Phones page them eight at a time; desktop scrolls.",
       gestTabLabel: "Gestures",
       gestTitle: "Swipe gestures",
       gestHint: "What a swipe does in the player. Phone and tablet only.",
@@ -168529,12 +168533,12 @@
       onboardingPerfNetMeasuring: "Measuring your connection speed\u2026",
       onboardingPerfNetResult: "Connection \u2248 {mbps} Mbit/s \u2014 the suggested ceiling follows it.",
       onboardingPerfNetFailed: "Could not measure the connection; the suggestion is based on the device alone.",
-      onboardingWillInstall: "{count} plugin(s) will be installed when you finish.",
+      onboardingWillInstall: "{count} plugin(s) will be enabled \u2014 latest runtime fetched \u2014 when you finish.",
       onboardingInstallFailed: "{names} could not be installed right now \u2014 you can find them under Settings \u2192 Plugins.",
-      onboardingOpenAppNow: "Open Lumio now",
-      onboardingInstallProgress: "Installing plugins {done} / {total}",
+      onboardingOpenAppNow: "Open Lumio",
+      onboardingInstallProgress: "Enabling plugins and fetching latest runtimes {done} / {total}",
       onboardingInstallQueued: "Queued",
-      onboardingInstallWorking: "Downloading\u2026",
+      onboardingInstallWorking: "Enabling \xB7 fetching latest\u2026",
       onboardingInstallDone: "Done",
       onboardingInstallError: "Failed",
       onboardingInstallBackground: "This continues in the background \u2014 you can open Lumio right away and check Settings \u2192 Plugins later.",
@@ -170807,7 +170811,9 @@
       onboardingLanguageHint: "Undertexter p\xE5 ditt f\xF6redragna spr\xE5k v\xE4ljs automatiskt n\xE4r de finns, och reservspr\xE5ket anv\xE4nds n\xE4r det prim\xE4ra saknas.",
       onboardingPluginsEyebrow: "TILL\xC4GG",
       onboardingPluginsTitle: "V\xE4lj dina till\xE4gg",
-      onboardingPluginsDesc: "Bocka f\xF6r de till\xE4gg du vill installera direkt. Allt g\xE5r att l\xE4gga till eller ta bort senare under Inst\xE4llningar \u2192 Plugins.",
+      onboardingPluginsDesc: "Bocka f\xF6r de till\xE4gg du vill ha aktiva. Inbyggda till\xE4gg aktiveras direkt och h\xE4mtar senaste runtime n\xE4r n\xE4tet finns; till\xE4gg fr\xE5n communityn h\xE4mtas fr\xE5n utvecklaren. Allt g\xE5r att l\xE4gga till eller ta bort senare under Inst\xE4llningar \u2192 Plugins.",
+      onboardingBundledBadge: "Inbyggt",
+      onboardingInstalledBadge: "Redan aktivt",
       onboardingOfficialGroup: "Officiella",
       onboardingExternalGroup: "Externa",
       onboardingThirdParty: "Tredjepart",
@@ -170822,6 +170828,8 @@
       streamsLayoutDesc: "I sidopanelen, eller som en sektion p\xE5 sidan ovanf\xF6r Rekommendationer. Serier f\xE5r str\xF6mmarna under varje avsnitt.",
       streamsLayoutSidebar: "Sidopanel",
       streamsLayoutInline: "P\xE5 sidan",
+      castCountTitle: "Antal sk\xE5despelare",
+      castCountDesc: "Hur m\xE5nga ur ensemblen som visas p\xE5 detaljsidan. Telefonen visar dem i sidor om \xE5tta; skrivbordet rullar.",
       gestTabLabel: "Gester",
       gestTitle: "Svepgester",
       gestHint: "Vad ett svep g\xF6r i spelaren. Endast telefon och surfplatta.",
@@ -170857,12 +170865,12 @@
       onboardingPerfNetMeasuring: "M\xE4ter anslutningens hastighet\u2026",
       onboardingPerfNetResult: "Anslutning \u2248 {mbps} Mbit/s \u2014 f\xF6rslaget f\xF6ljer den.",
       onboardingPerfNetFailed: "Anslutningen gick inte att m\xE4ta; f\xF6rslaget bygger bara p\xE5 enheten.",
-      onboardingWillInstall: "{count} till\xE4gg installeras n\xE4r du \xE4r klar.",
+      onboardingWillInstall: "{count} till\xE4gg aktiveras \u2014 senaste runtime h\xE4mtas \u2014 n\xE4r du \xE4r klar.",
       onboardingInstallFailed: "{names} kunde inte installeras just nu \u2014 du hittar dem under Inst\xE4llningar \u2192 Plugins.",
-      onboardingOpenAppNow: "\xD6ppna Lumio nu",
-      onboardingInstallProgress: "Installerar plugins {done} / {total}",
+      onboardingOpenAppNow: "\xD6ppna Lumio",
+      onboardingInstallProgress: "Aktiverar till\xE4gg och h\xE4mtar senaste runtime {done} / {total}",
       onboardingInstallQueued: "I k\xF6",
-      onboardingInstallWorking: "H\xE4mtar\u2026",
+      onboardingInstallWorking: "Aktiverar \xB7 h\xE4mtar senaste\u2026",
       onboardingInstallDone: "Klar",
       onboardingInstallError: "Misslyckades",
       onboardingInstallBackground: "Det h\xE4r forts\xE4tter i bakgrunden \u2014 du kan \xF6ppna Lumio direkt och titta under Inst\xE4llningar \u2192 Plugins senare.",
@@ -173194,6 +173202,38 @@
     if (stream.infoHash) return false;
     return INFORMATIONAL_STREAM_TEXT.test(`${stream.name ?? ""} ${stream.title ?? ""} ${stream.description ?? ""}`);
   }
+  var HOST_START_KEY = "stream_host_start_ms_v1";
+  var SLOW_HOST_START_MS = 8e3;
+  function hostOf(url) {
+    if (!url) return null;
+    try {
+      return new URL(url).host.toLowerCase();
+    } catch {
+      return null;
+    }
+  }
+  function readHostStartMap() {
+    try {
+      const raw = getScopedStorageItem(HOST_START_KEY);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return parsed && typeof parsed === "object" ? parsed : {};
+    } catch {
+      return {};
+    }
+  }
+  function recordStreamHostStartMs(url, ms) {
+    const host = hostOf(url);
+    if (!host || !Number.isFinite(ms) || ms <= 0) return;
+    try {
+      const map = readHostStartMap();
+      const prev = map[host];
+      map[host] = Math.round(prev ? prev * 0.6 + ms * 0.4 : ms);
+      const hosts = Object.keys(map);
+      if (hosts.length > 40) delete map[hosts[0]];
+      setScopedStorageItem(HOST_START_KEY, JSON.stringify(map));
+    } catch {
+    }
+  }
   function buildAutoplayCandidates(streamList, options) {
     const maxSizeBytes = options.maxSizeGb ? options.maxSizeGb * 1024 ** 3 : null;
     const preferredAudioLanguage = (options.preferredAudioLanguage ?? "").trim().toLowerCase();
@@ -173221,6 +173261,11 @@
         candidates = [...matches, ...unknown];
       }
     }
+    const hostStartMap = readHostStartMap();
+    const slowTier = (stream) => {
+      const host = hostOf(stream.directUrl);
+      return host && (hostStartMap[host] ?? 0) > SLOW_HOST_START_MS ? 1 : 0;
+    };
     candidates = [...candidates].sort((a, b) => {
       const aBad = streamUnsupportedOnDevice(a) ? 1 : 0;
       const bBad = streamUnsupportedOnDevice(b) ? 1 : 0;
@@ -173228,6 +173273,9 @@
       const aCached = a.cached ? 1 : 0;
       const bCached = b.cached ? 1 : 0;
       if (bCached !== aCached) return bCached - aCached;
+      const aSlow = slowTier(a);
+      const bSlow = slowTier(b);
+      if (aSlow !== bSlow) return aSlow - bSlow;
       if (options.preferH264) return browserCodecScore(b) - browserCodecScore(a);
       return 0;
     });
@@ -189436,7 +189484,16 @@ ${cue.text}`).join("\n\n")}
             });
             continue;
           }
+          const openedAt = Date.now();
+          const nextCandidate = pool[pool.indexOf(candidate) + 1];
+          const hedge = nextCandidate?.directUrl ? window.setTimeout(() => {
+            if (!firstPlaySeenRef.current && attemptId === playAttemptRef.current) {
+              warmSourceCache(nextCandidate.directUrl);
+            }
+          }, 4e3) : null;
           const started = await waitForFirstPlay(attemptId, 2e4);
+          if (hedge !== null) window.clearTimeout(hedge);
+          recordStreamHostStartMs(resolved.url, started ? Date.now() - openedAt : 2e4);
           sendTelemetry("playback.autoplay", started ? "ok" : "info", started ? "candidate playing" : "candidate did not start -> next", {
             directUrl: Boolean(candidate.directUrl),
             infoHash: Boolean(candidate.infoHash),
