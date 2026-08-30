@@ -2,6 +2,7 @@
 
 import { lt } from './local-strings'
 import { resolveCoreAddonStreams } from '@/lib/stremio/streams'
+import { hasDebridKey } from './stream-download'
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import type { StreamResult } from '@/app/api/streams/route'
@@ -102,7 +103,11 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
         type: tType === 'series' ? 'series' : 'movie',
         season,
         episode,
-      }).catch(() => [])
+      }, {
+        // Torrent-strömmar bara när en debridtjänst kan lösa dem — Lumio
+        // laddar aldrig ner torrents själv.
+        includeTorrentStreams: hasDebridKey(),
+      }).then((r) => r.results).catch(() => [])
 
       const browserStreamUrl = requestContext.browserStreamUrl({
         imdbId: targetImdbId,
@@ -135,23 +140,31 @@ export function StreamsScraperDetailsDownloadButton({ item, className, iconOnly 
       // Addonens strömmar bär directUrl och är därmed spelbara direkt — de
       // sorteras som cachade (vilket de i praktiken är) och namnges efter
       // addonen så det syns var de kommer ifrån.
-      const communityStreams: StreamResult[] = community.map((entry, index) => ({
-        infoHash: '',
-        name: entry.title,
-        // Samma som i strömpanelen: filnamn eller beskrivning på
-        // sekundärraden, och storleken med så valet av ström kan väga den.
-        title: entry.filename ?? entry.description ?? entry.title,
-        fileIdx: index,
-        cached: true,
-        downloadable: true,
-        cachedFiles: [],
-        directUrl: entry.url,
-        sizeBytes: entry.sizeBytes,
-        subtitleLangs: entry.subtitles
-          ?.map((sub) => sub.lang)
-          .filter((lang): lang is string => Boolean(lang)),
-        source: lt('communitySource'),
-      }))
+      const communityStreams: StreamResult[] = community.flatMap((result) =>
+        result.streams.map((entry, index): StreamResult => ({
+          // Torrent-ström (infoHash utan URL) går samma debrid-väg som
+          // scraper-strömmarna; en färdig URL är spelbar direkt och sorteras
+          // som cachad. Namnges efter addonen så det syns var den kommer ifrån.
+          infoHash: entry.infoHash ?? '',
+          name: entry.title,
+          // Samma som i strömpanelen: filnamn eller beskrivning på
+          // sekundärraden, och storleken med så valet av ström kan väga den.
+          title: entry.filename ?? entry.description ?? entry.title,
+          fileIdx: entry.infoHash ? entry.fileIdx ?? null : index,
+          cached: Boolean(entry.url),
+          downloadable: true,
+          cachedFiles: [],
+          directUrl: entry.url || undefined,
+          sizeBytes: entry.sizeBytes,
+          subtitleLangs: entry.subtitles
+            ?.map((sub) => sub.lang)
+            .filter((lang): lang is string => Boolean(lang)),
+          requestHeaders: entry.requestHeaders,
+          notWebReady: entry.notWebReady,
+          bingeGroup: entry.bingeGroup,
+          source: result.addon.name || lt('communitySource'),
+        })),
+      )
 
       const data = { streams: [...scraperStreams, ...communityStreams] }
       if (data.streams.length === 0) throw new Error(t('noStreamsFound'))

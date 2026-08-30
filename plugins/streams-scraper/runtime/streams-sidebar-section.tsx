@@ -2,7 +2,7 @@
 
 import { lt } from './local-strings'
 import { getEnabledCoreStreamAddons } from '@/lib/media-stream/core-addons'
-import { resolveCoreAddonStreams } from '@/lib/stremio/streams'
+import { resolveCoreAddonStreams, type AddonResult } from '@/lib/stremio/streams'
 import { hasDebridKey, resolveDownloadFromStream, streamNeedsDebrid, triggerBrowserDownload } from './stream-download'
 import { resolveFreshLinkFromHash } from './resume-resolver'
 import React, { useEffect, useRef, useState, type MutableRefObject } from 'react'
@@ -455,6 +455,8 @@ export function StreamsSidebarSection({
   /** Vilka källor som fortfarande söker respektive inte svarade — visas under
    *  listan så en tidig, delvis lista inte ser färdig ut. */
   const [sourceStatus, setSourceStatus] = useState<Record<string, SourceStatus>>({})
+  /** Varför en källa hamnade på 'error' — visas efter namnet i statusraden. */
+  const [sourceReasons, setSourceReasons] = useState<Record<string, string>>({})
   /** Vald källa i strömlistan (null = alla). Ligger i sektionen, inte i
    *  StreamList: väljaren ritas på brödsmuleraden för serier och över listan
    *  för film, medan filtreringen sker i listan. */
@@ -566,6 +568,8 @@ export function StreamsSidebarSection({
   const [playerEpisode, setPlayerEpisode] = useState<number | undefined>(undefined)
   const [playerInitialTime, setPlayerInitialTime] = useState<number | undefined>(undefined)
   const [playerForceProxy, setPlayerForceProxy] = useState(false)
+  /** Request-headers strömmen kräver (Stremio proxyHeaders.request) — följer med in i spelaren. */
+  const [playerRequestHeaders, setPlayerRequestHeaders] = useState<Record<string, string> | undefined>(undefined)
   // Next-episode state
   const [nextEpCard, setNextEpCard] = useState<{
     season: number
@@ -962,7 +966,7 @@ export function StreamsSidebarSection({
     return firstLine || urlFilename
   }
 
-  async function resolveAutoplayCandidate(stream: StreamResult): Promise<{ url: string; filename?: string; forceProxy: boolean } | null> {
+  async function resolveAutoplayCandidate(stream: StreamResult): Promise<{ url: string; filename?: string; forceProxy: boolean; requestHeaders?: Record<string, string> } | null> {
     if (stream.directUrl) {
       // Return the direct URL as-is. Whether it actually plays is verified in
       // the player via onFirstPlay (the autoplay loop moves to the next
@@ -974,6 +978,7 @@ export function StreamsSidebarSection({
         url: stream.directUrl,
         filename: filenameForPlayback(urlFilename, stream.title),
         forceProxy: false,
+        requestHeaders: stream.requestHeaders,
       }
     }
 
@@ -1520,13 +1525,19 @@ function scraperInCooldown(configId: string): boolean {
       const desktopHost = isPluginDesktopHost()
       const communityLabel = lt('communitySource')
 
-      const settleSource = (name: string, status: SourceOutcome) => {
+      const settleSource = (name: string, status: SourceOutcome, reason?: string) => {
         if (requestId !== searchRequestIdRef.current) return
         setSourceStatus((prev) => ({ ...prev, [name]: status }))
+        if (reason) setSourceReasons((prev) => ({ ...prev, [name]: reason }))
       }
+      // Community-addonsen är egna källor i statusraden — med namn, inte en
+      // klump. Det är enda sättet att kunna säga VILKEN addon som inte svarade.
+      const communityAddons = harCommunityKälla ? getEnabledCoreStreamAddons() : []
+      const communitySourceName = (addon: { name: string }) => addon.name || communityLabel
+      setSourceReasons({})
       setSourceStatus(Object.fromEntries([
         ...streamProviderRequests.map((req) => [req.name, 'pending' as const]),
-        ...(harCommunityKälla ? [[communityLabel, 'pending' as const]] : []),
+        ...communityAddons.map((addon) => [communitySourceName(addon), 'pending' as const]),
       ]))
 
       const runScraperOnce = async (req: ScraperRequest): Promise<SourceRun> => {
@@ -1646,19 +1657,32 @@ function scraperInCooldown(configId: string): boolean {
        * Varje addon publiceras när den svarar och har en egen budget; en addon
        * som hänger (uppmätt: 25 s) håller inte längre tillbaka listan.
        */
-      const mapCommunity = (entries: Awaited<ReturnType<typeof resolveCoreAddonStreams>>): StreamResult[] =>
-        entries.map((entry, index) => ({
-          infoHash: '',
+      const mapCommunity = (result: AddonResult): StreamResult[] =>
+        result.streams
+          // notWebReady = får inte spelas rakt i en webbläsare. Native går
+          // alltid via källcachen, men en LAN-/fjärrklient spelar i <video>
+          // och skulle bara få ett fel — visa inte det som ett val.
+          .filter((entry) => !(entry.notWebReady && isClientSession()))
+          .map((entry, index) => ({
+          // Torrent-ström (infoHash utan URL) går samma debrid-väg som
+          // scraper-strömmarna — förut kastades de, så samma addon gav
+          // strömmar som scraper men noll som community-addon.
+          infoHash: entry.infoHash ?? '',
           name: entry.title,
           // Sekundärraden visade samma korta namn en gång till. Filnamnet
           // först, addonens beskrivning (storlek, seeders, språk) därnäst —
           // och namnet bara om varken finns.
           title: entry.filename ?? entry.description ?? entry.title,
-          fileIdx: index,
-          cached: true,
+          fileIdx: entry.infoHash ? entry.fileIdx ?? null : index,
+          // En färdig URL är i praktiken cachad; en torrent vet vi inget om
+          // förrän debrid svarat, så den sorteras som nedladdningsbar.
+          cached: Boolean(entry.url),
           downloadable: true,
           cachedFiles: [],
-          directUrl: entry.url,
+          directUrl: entry.url || undefined,
+          requestHeaders: entry.requestHeaders,
+          notWebReady: entry.notWebReady,
+          bingeGroup: entry.bingeGroup,
           // Storleken kommer ur behaviorHints.videoSize eller addonens
           // fritext; utan den räknades raden som "storlek okänd" och föll
           // dessutom igenom storleksfiltret utan att kunna prövas.
@@ -1670,45 +1694,52 @@ function scraperInCooldown(configId: string): boolean {
           subtitleLangs: entry.subtitles
             ?.map((sub) => sub.lang)
             .filter((lang): lang is string => Boolean(lang)),
-          source: communityLabel,
+          source: communitySourceName(result.addon),
         }))
 
-      const communityStartedAt = performance.now()
-      const communityPromise: Promise<StreamResult[]> = harCommunityKälla && effectiveImdbId
+      /** Addonens utfall → statusrad + telemetri. Förut sväljdes 404, timeout
+       *  och CORS som "tom"; nu står det efter namnet vad som hände. */
+      const settleAddon = (result: AddonResult, streams: number) => {
+        const name = communitySourceName(result.addon)
+        const o = result.outcome
+        const outcome: SourceOutcome = o.kind === 'ok' && streams > 0 ? 'ok'
+          : o.kind === 'ok' || o.kind === 'empty' || o.kind === 'skipped' ? 'empty'
+          : 'error'
+        const reason = o.kind === 'timeout' ? lt('addonReasonTimeout')
+          : o.kind === 'http' ? lt('addonReasonHttp').replace('{status}', String(o.status))
+          : o.kind === 'network' ? lt('addonReasonNetwork')
+          : o.kind === 'invalid' ? lt('addonReasonInvalid')
+          : undefined
+        sourceReport[name] = { ms: Math.round(result.ms), outcome, path: 'addon', streams }
+        settleSource(name, outcome, reason)
+      }
+
+      // Utan IMDb-id frågas ändå: addons som deklarerar `tmdb:` i sina
+      // idPrefixes får TMDB-id:t i stället. Övriga hoppas över inne i lösaren.
+      const communityPromise: Promise<StreamResult[]> = communityAddons.length > 0 && (effectiveImdbId || numericTmdbId)
         ? resolveCoreAddonStreams(
             {
               imdbId: effectiveImdbId,
+              tmdbId: numericTmdbId,
               type: mediaType === 'tv' ? 'series' : 'movie',
               season: season != null ? Number(season) : null,
               episode: episode != null ? Number(episode) : null,
             },
             {
               timeoutMs: COMMUNITY_TIMEOUT_MS,
-              onAddon: (entries) => {
-                const list = mapCommunity(entries)
+              // Torrent-strömmar bara när en debridtjänst kan lösa dem —
+              // Lumio laddar aldrig ner torrents själv.
+              includeTorrentStreams: hasDebridKey(),
+              onAddon: (result) => {
+                const list = mapCommunity(result)
                 if (list.length > 0) publishPartial(list)
+                settleAddon(result, list.length)
               },
             },
           )
-            .then((entries) => {
-              const list = mapCommunity(entries)
-              sourceReport[communityLabel] = {
-                ms: Math.round(performance.now() - communityStartedAt),
-                outcome: list.length > 0 ? 'ok' : 'empty',
-                path: 'addon',
-                streams: list.length,
-              }
-              settleSource(communityLabel, list.length > 0 ? 'ok' : 'empty')
-              return list
-            })
+            .then(({ results }) => results.flatMap(mapCommunity))
             .catch(() => {
-              sourceReport[communityLabel] = {
-                ms: Math.round(performance.now() - communityStartedAt),
-                outcome: 'error',
-                path: 'addon',
-                streams: 0,
-              }
-              settleSource(communityLabel, 'error')
+              for (const addon of communityAddons) settleSource(communitySourceName(addon), 'error')
               return []
             })
         : Promise.resolve([])
@@ -2143,6 +2174,7 @@ function scraperInCooldown(configId: string): boolean {
         initialTime: undefined,
         forceProxy: false,
         infoHash: selectedStream.infoHash ?? null,
+        requestHeaders: selectedStream.requestHeaders,
       }, attemptId)
       return
     }
@@ -2215,6 +2247,7 @@ function scraperInCooldown(configId: string): boolean {
             initialTime: playRequestInitialTime ?? undefined,
             forceProxy: resolved.forceProxy,
             infoHash: candidate.infoHash ?? null,
+            requestHeaders: resolved.requestHeaders,
           })
           if (opened) return true
           // Rejected source: stay in the loading state while the next candidate
@@ -2412,7 +2445,7 @@ function scraperInCooldown(configId: string): boolean {
     try {
       for (const candidate of pool) {
         if (attemptId !== playAttemptRef.current) return false
-        let resolved: { url: string; filename?: string; forceProxy: boolean } | null = null
+        let resolved: { url: string; filename?: string; forceProxy: boolean; requestHeaders?: Record<string, string> } | null = null
         try {
           resolved = await resolveAutoplayCandidate(candidate)
         } catch (err) {
@@ -2441,6 +2474,7 @@ function scraperInCooldown(configId: string): boolean {
           initialTime: initialTimeOverride ?? playRequestInitialTime ?? undefined,
           forceProxy: resolved.forceProxy,
           infoHash: candidate.infoHash ?? null,
+          requestHeaders: resolved.requestHeaders,
         }, attemptId)
         if (!opened) {
           // Rejected before the player ever saw it (dead/IP-bound link that
@@ -2739,6 +2773,8 @@ function scraperInCooldown(configId: string): boolean {
     initialTime?: number
     forceProxy?: boolean
     infoHash?: string | null
+    /** Headers källan kräver (Stremio proxyHeaders.request). */
+    requestHeaders?: Record<string, string>
   }, attemptId?: number): Promise<boolean> {
     if (!isPlayAttemptActive(attemptId)) return false
     // Never open a player session without a resolved source. Opening an empty
@@ -2824,6 +2860,7 @@ function scraperInCooldown(configId: string): boolean {
     // använder den för att känna igen en återupptagning.
     nextEpExpectedStartRef.current = config.initialTime ?? null
     setPlayerForceProxy(config.forceProxy ?? false)
+    setPlayerRequestHeaders(config.requestHeaders)
     setPlayerHideStartSplash(true)
     setPlayerSplashFading(false)
     // Every player session goes through here (manual pick, autoplay, next
@@ -3845,7 +3882,12 @@ function scraperInCooldown(configId: string): boolean {
                   <span>{t('sourcesStillSearching')} {pending.join(', ')}</span>
                 </p>
               )}
-              {failed.length > 0 && <p>{t('sourcesNoAnswer')} {failed.join(', ')}</p>}
+              {failed.length > 0 && (
+                <p>
+                  {t('sourcesNoAnswer')}{' '}
+                  {failed.map((n) => (sourceReasons[n] ? `${n} (${sourceReasons[n]})` : n)).join(', ')}
+                </p>
+              )}
             </div>
           )
         })()}
@@ -4019,6 +4061,7 @@ function scraperInCooldown(configId: string): boolean {
           year={year}
           initialTime={playerInitialTime}
           forceProxy={playerForceProxy}
+          requestHeaders={playerRequestHeaders}
           onTimeUpdate={handleTimeUpdate}
           onOutroStart={handleOutroStart}
           /**
