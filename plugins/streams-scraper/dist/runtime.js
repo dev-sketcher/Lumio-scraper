@@ -179907,7 +179907,7 @@ ${cue.text}`).join("\n\n")}
         const audioReady = mpvStartupTracksReady && (audioTracks.length > 0 || hardTimeout);
         const subtitlesReady = mpvStartupTracksReady && (!loadingSub || elapsed > 2500);
         const introReady = introDataReady || elapsed > 2e3;
-        const extraHoldDone = elapsed > ((initialTime ?? 0) > 0 ? 600 : 800);
+        const extraHoldDone = elapsed > ((initialTime ?? 0) > 0 ? 400 : 500);
         if (audioReady && audioAt === null) audioAt = elapsed;
         if (subtitlesReady && subsAt === null) subsAt = elapsed;
         if (introReady && introAt === null) introAt = elapsed;
@@ -179926,7 +179926,7 @@ ${cue.text}`).join("\n\n")}
               // att data kom — det är där en förladdning skulle löna sig.
               subtitlesTimedOut: subsAt !== null && subsAt > 2500,
               introTimedOut: introAt !== null && introAt > 2e3,
-              heldByCosmetic: elapsed <= ((initialTime ?? 0) > 0 ? 700 : 900)
+              heldByCosmetic: elapsed <= ((initialTime ?? 0) > 0 ? 500 : 600)
             }
           });
           setMpvStartupHoldReady(true);
@@ -191127,7 +191127,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.141",
+    version: "1.0.142",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
