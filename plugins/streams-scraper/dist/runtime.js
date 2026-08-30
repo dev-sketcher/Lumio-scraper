@@ -179862,12 +179862,15 @@ ${cue.text}`).join("\n\n")}
       void refreshMpvAudioTracks();
       void refreshMpvSubtitleTracks();
     }, [showAudioMenu, showSubMenu, refreshMpvAudioTracks, refreshMpvSubtitleTracks, useMpv]);
+    const firstFrameRenderedRef = useRef(false);
+    firstFrameRenderedRef.current = mpv.firstFrameRendered;
     useEffect(() => {
       if (!useMpv) return;
       if (!mpv.fileLoaded || mpvStartupHoldReady) return;
       const tickAt = Date.now();
       let cancelled = false;
       let audioAt = null;
+      let firstFrameAt = null;
       let subsAt = null;
       let introAt = null;
       void refreshMpvAudioTracks();
@@ -179911,7 +179914,9 @@ ${cue.text}`).join("\n\n")}
         if (audioReady && audioAt === null) audioAt = elapsed;
         if (subtitlesReady && subsAt === null) subsAt = elapsed;
         if (introReady && introAt === null) introAt = elapsed;
-        if (extraHoldDone && audioReady && subtitlesReady && introReady) {
+        const firstFrame = firstFrameRenderedRef.current;
+        if (firstFrame && firstFrameAt === null) firstFrameAt = elapsed;
+        if ((extraHoldDone || firstFrame) && audioReady && subtitlesReady && introReady) {
           window.clearInterval(interval);
           void emitDesktopPlaybackTelemetry({
             stage: "player.startup_hold",
@@ -179926,6 +179931,8 @@ ${cue.text}`).join("\n\n")}
               // att data kom — det är där en förladdning skulle löna sig.
               subtitlesTimedOut: subsAt !== null && subsAt > 2500,
               introTimedOut: introAt !== null && introAt > 2e3,
+              firstFrameAtMs: firstFrameAt,
+              releasedOnFirstFrame: firstFrame && !extraHoldDone,
               heldByCosmetic: elapsed <= ((initialTime ?? 0) > 0 ? 500 : 600)
             }
           });
@@ -188593,14 +188600,31 @@ ${cue.text}`).join("\n\n")}
         };
         const searchStartedAt = performance.now();
         let firstStreamsAtMs = null;
+        let warmedCandidate = false;
+        const warmAutoplayCandidate = (list) => {
+          if (warmedCandidate || isClientSession()) return;
+          const playbackPlanned = autoPlayInitialEpisode && !didAttemptInitialAutoplay.current || pendingPlayRequestToken != null;
+          if (!playbackPlanned || document.querySelector("[data-lumio-player-open]")) return;
+          const top = buildAutoplayCandidates(list, {
+            maxSizeGb: getAutoPlayMaxStreamSizeGb(),
+            maxResolution: getAutoPlayMaxResolution(),
+            preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage())
+          })[0];
+          if (!top?.directUrl) return;
+          warmedCandidate = true;
+          warmSourceCache(top.directUrl);
+          sendTelemetry("streams.lookup", "info", "autoplay candidate warmed", { requestId, ...urlDiagnostics(top.directUrl) });
+        };
         const publishPartial = (items) => {
           if (requestId !== searchRequestIdRef.current || items.length === 0) return;
           const merged = mergeStreams(items);
           for (const item of items) rememberFreshSource(item.directUrl);
           if (!published) published = true;
           if (firstStreamsAtMs == null) firstStreamsAtMs = Math.round(performance.now() - searchStartedAt);
-          setStreams(sortByPriority(normalizeCached(merged)));
+          const prepared = sortByPriority(normalizeCached(merged));
+          setStreams(prepared);
           setLoadingStreams(false);
+          warmAutoplayCandidate(prepared);
         };
         const sourceReport = {};
         const isSlowPreset = (req) => req.config.preset === "jackettio" || req.config.preset === "aiostreams";
@@ -188779,6 +188803,7 @@ ${cue.text}`).join("\n\n")}
           const prepared = sortByPriority(normalizeCached(merged));
           setStreams(prepared);
           setLoadingStreams(false);
+          warmAutoplayCandidate(prepared);
         }
         sendTelemetry("streams.lookup", "ok", "search streams completed", {
           imdbId: effectiveImdbId,

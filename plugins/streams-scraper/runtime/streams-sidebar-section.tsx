@@ -25,6 +25,7 @@ import { getWatchedForSeries, markSeasonWatched, onWatchedEpisodesChanged, setWa
 import { VideoPlayerModal } from '@/components/player/video-player-modal'
 import { isRemoteSession } from '@/lib/remote-session'
 import { isClientSession } from '@/lib/session-host'
+import { warmSourceCache } from '@/lib/tauri-mpv'
 import { isAndroidTauriEnv, openInExternalAndroidPlayer, setAndroidImmersive } from '@/lib/tauri-native-player'
 import { openInVlc, prefersVlc, resolveDirectStreamUrl, vlcSupported } from '@/lib/vlc-deep-link'
 import { applyStreamFilters, getStreamFilters, DEFAULT_FILTERS } from '@/lib/media-stream/filters'
@@ -1507,6 +1508,33 @@ function scraperInCooldown(configId: string): boolean {
 
       const searchStartedAt = performance.now()
       let firstStreamsAtMs: number | null = null
+      /**
+       * Förvärm den kandidat som strax kommer att spelas.
+       *
+       * Mätt: öppning → källcachen "started" tar ~1,5 s — redirect-kedjan
+       * Torrentio → debrid → CDN plus första byte. Den kedjan kan börja så fort
+       * listan finns i stället för efter klicket. BARA när uppspelningen redan
+       * är bestämd (autostart av avsnittet eller ett väntande spelönskemål):
+       * då är det samma URL som ändå hämtas om ett ögonblick, källcachen
+       * återanvänder sondens anslutning, och debrid-tjänsten ser inte en enda
+       * extra förfrågan. Ren bläddring värmer ingenting — varje värmning mot
+       * en Torbox-länk är ett API-anrop hos dem.
+       */
+      let warmedCandidate = false
+      const warmAutoplayCandidate = (list: StreamResult[]) => {
+        if (warmedCandidate || isClientSession()) return
+        const playbackPlanned = (autoPlayInitialEpisode && !didAttemptInitialAutoplay.current) || pendingPlayRequestToken != null
+        if (!playbackPlanned || document.querySelector('[data-lumio-player-open]')) return
+        const top = buildAutoplayCandidates(list, {
+          maxSizeGb: getAutoPlayMaxStreamSizeGb(),
+          maxResolution: getAutoPlayMaxResolution(),
+          preferredAudioLanguage: normalizeLanguageCode(getDefaultAudioLanguage()),
+        })[0]
+        if (!top?.directUrl) return
+        warmedCandidate = true
+        warmSourceCache(top.directUrl)
+        sendTelemetry('streams.lookup', 'info', 'autoplay candidate warmed', { requestId, ...urlDiagnostics(top.directUrl) })
+      }
       const publishPartial = (items: StreamResult[]) => {
         if (requestId !== searchRequestIdRef.current || items.length === 0) return
         const merged = mergeStreams(items)
@@ -1514,8 +1542,10 @@ function scraperInCooldown(configId: string): boolean {
         if (!published) published = true
         if (firstStreamsAtMs == null) firstStreamsAtMs = Math.round(performance.now() - searchStartedAt)
         // Show partial results immediately; do not wait on cache enrichment/filters.
-        setStreams(sortByPriority(normalizeCached(merged)))
+        const prepared = sortByPriority(normalizeCached(merged))
+        setStreams(prepared)
         setLoadingStreams(false)
+        warmAutoplayCandidate(prepared)
       }
 
       /**
@@ -1775,6 +1805,7 @@ function scraperInCooldown(configId: string): boolean {
         const prepared = sortByPriority(normalizeCached(merged))
         setStreams(prepared)
         setLoadingStreams(false)
+        warmAutoplayCandidate(prepared)
       }
       sendTelemetry('streams.lookup', 'ok', 'search streams completed', {
         imdbId: effectiveImdbId,
