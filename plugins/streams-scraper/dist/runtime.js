@@ -176434,13 +176434,23 @@
       return false;
     }
   }
-  function openInVlc(url) {
+  function positionExtra(startSeconds) {
+    const ms = Math.round((startSeconds ?? 0) * 1e3);
+    return ms > 0 ? `;l.position=${ms}` : "";
+  }
+  function openInVlc(url, startSeconds) {
     if (typeof window === "undefined") return false;
     if (!vlcSupported()) return false;
     const direct = resolveDirectStreamUrl(url);
     if (!direct) return false;
     const isAndroid = /Android/i.test(navigator.userAgent);
-    window.location.href = isAndroid ? `vlc://${direct}` : `vlc-x-callback://x-callback-url/stream?url=${encodeURIComponent(direct)}`;
+    if (isAndroid) {
+      const scheme = /^http:\/\//i.test(direct) ? "http" : "https";
+      const rest = direct.replace(/^https?:\/\//i, "");
+      window.location.href = `intent://${rest}#Intent;action=android.intent.action.VIEW;scheme=${scheme};package=org.videolan.vlc;type=video/*${positionExtra(startSeconds)};end`;
+      return true;
+    }
+    window.location.href = `vlc-x-callback://x-callback-url/stream?url=${encodeURIComponent(direct)}`;
     return true;
   }
   function isAppleMobile() {
@@ -176453,14 +176463,14 @@
       return false;
     }
   }
-  function openInExternalPlayer(url) {
+  function openInExternalPlayer(url, startSeconds) {
     if (typeof window === "undefined") return false;
     const direct = resolveDirectStreamUrl(url);
     if (!direct) return false;
     if (/Android/i.test(navigator.userAgent)) {
       const scheme = /^http:\/\//i.test(direct) ? "http" : "https";
       const rest = direct.replace(/^https?:\/\//i, "");
-      window.location.href = `intent://${rest}#Intent;action=android.intent.action.VIEW;scheme=${scheme};type=video/*;end`;
+      window.location.href = `intent://${rest}#Intent;action=android.intent.action.VIEW;scheme=${scheme};type=video/*${positionExtra(startSeconds)};end`;
       return true;
     }
     if (isAppleMobile()) {
@@ -179093,7 +179103,7 @@ ${cue.text}`).join("\n\n")}
       if (isClientSession()) {
         let vlcPref = false;
         vlcPref = getItem("remote_open_in_vlc") === "1";
-        if (vlcPref && openInVlc(url)) {
+        if (vlcPref && openInVlc(url, initialTime)) {
           onClose();
         }
       }
@@ -183878,7 +183888,7 @@ ${cue.text}`).join("\n\n")}
                         type: "button",
                         "data-f": isTv ? "1" : void 0,
                         onClick: () => {
-                          if (openInExternalPlayer(url)) {
+                          if (openInExternalPlayer(url, realTime > 0 ? realTime : initialTime)) {
                             (onOpenedExternally ?? onClose)();
                           }
                         },
@@ -189104,7 +189114,7 @@ ${cue.text}`).join("\n\n")}
       setPendingPlayRequestToken(null);
       saveLastPlayedStream(playbackTargetKey, stream);
       resetNextEpisodeState();
-      if (isRemoteSession() && prefersVlc() && stream.directUrl && openInVlc(stream.directUrl)) {
+      if (isRemoteSession() && prefersVlc() && stream.directUrl && openInVlc(stream.directUrl, playRequestInitialTime ?? void 0)) {
         setStep({ type: "idle" });
         onOpenedInVlc?.();
         return;
@@ -189294,7 +189304,7 @@ ${cue.text}`).join("\n\n")}
       const pool = ordered.slice(0, 5);
       if (isRemoteSession() && prefersVlc()) {
         const directCandidate = pool.find((s) => Boolean(s.directUrl));
-        if (directCandidate?.directUrl && openInVlc(directCandidate.directUrl)) {
+        if (directCandidate?.directUrl && openInVlc(directCandidate.directUrl, playRequestInitialTime ?? void 0)) {
           setStep({ type: "idle" });
           onOpenedInVlc?.();
           return true;
@@ -189653,7 +189663,7 @@ ${cue.text}`).join("\n\n")}
         setStep({ type: "error", message: lt("sourceNotServingMedia") });
         return false;
       }
-      if (isRemoteSession() && prefersVlc() && openInVlc(source.url)) {
+      if (isRemoteSession() && prefersVlc() && openInVlc(source.url, config.initialTime)) {
         setStep({ type: "idle" });
         onOpenedInVlc?.();
         return true;

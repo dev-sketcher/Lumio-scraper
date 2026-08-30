@@ -2160,7 +2160,7 @@ function scraperInCooldown(configId: string): boolean {
     // already carries a direct http(s) URL (Comet/Jackettio/Torrentio resolve).
     // Torrent-only picks (infoHash, no URL) fall through to the normal resolve
     // flow, which still ends at the VLC intercept in beginPlayerSession.
-    if (isRemoteSession() && prefersVlc() && stream.directUrl && openInVlc(stream.directUrl)) {
+    if (isRemoteSession() && prefersVlc() && stream.directUrl && openInVlc(stream.directUrl, playRequestInitialTime ?? undefined)) {
       setStep({ type: 'idle' })
       onOpenedInVlc?.()
       return
@@ -2456,7 +2456,7 @@ function scraperInCooldown(configId: string): boolean {
     // through to the normal resolve, still ending at the VLC intercept.
     if (isRemoteSession() && prefersVlc()) {
       const directCandidate = pool.find((s) => Boolean(s.directUrl))
-      if (directCandidate?.directUrl && openInVlc(directCandidate.directUrl)) {
+      if (directCandidate?.directUrl && openInVlc(directCandidate.directUrl, playRequestInitialTime ?? undefined)) {
         setStep({ type: 'idle' })
         onOpenedInVlc?.()
         return true
@@ -2895,7 +2895,7 @@ function scraperInCooldown(configId: string): boolean {
     // they all funnel through here. Desktop is never affected: isRemoteSession()
     // is false there. Falls through to the normal player when there's no direct
     // http(s) URL to give VLC (openInVlc returns false, e.g. a local file).
-    if (isRemoteSession() && prefersVlc() && openInVlc(source.url)) {
+    if (isRemoteSession() && prefersVlc() && openInVlc(source.url, config.initialTime)) {
       setStep({ type: 'idle' })
       onOpenedInVlc?.()
       return true
