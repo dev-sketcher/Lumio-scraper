@@ -2057,6 +2057,8 @@ function scraperInCooldown(configId: string): boolean {
       cached: stream.cached,
       hasDirectUrl: Boolean(stream.directUrl),
       hasInfoHash: Boolean(stream.infoHash),
+      ...urlDiagnostics(stream.directUrl),
+      streamTitle: (stream.title ?? stream.name ?? '').slice(0, 80),
     })
     // Manual start of an episode/movie should always begin a fresh session:
     // no carried-over next-episode preload/card/splash state. It also
@@ -2810,6 +2812,8 @@ function scraperInCooldown(configId: string): boolean {
       season: config.season ?? null,
       episode: config.episode ?? null,
       refreshed: source.refreshed,
+      ...urlDiagnostics(source.url),
+      filename: (source.filename ?? '').slice(0, 80),
     })
     setPlayerTitle(title)
     setPlayerFilename(source.filename)
@@ -4108,6 +4112,24 @@ function scraperInCooldown(configId: string): boolean {
 }
 
 // ---- sub-components ----
+
+/** Diagnostik utan hemligheter: värd + de två första sökvägssegmenten av en
+ *  ström-URL. En användare fick FEL fil under RÄTT titel (mpv spelade förra
+ *  avsnittet) och loggen kunde inte visa vilken länk spelaren fått. Token och
+ *  query skickas aldrig. */
+function urlDiagnostics(url: string | null | undefined): { urlHost: string | null; urlHash: string | null } {
+  if (!url) return { urlHost: null, urlHash: null }
+  try {
+    const u = new URL(url)
+    // FNV-1a 32 bitar av hela URL:en: två identiska länkar får samma hash, en
+    // annan länk en annan — utan att länken (token) hamnar i loggen.
+    let h = 0x811c9dc5
+    for (let i = 0; i < url.length; i++) { h ^= url.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0 }
+    return { urlHost: u.hostname, urlHash: h.toString(16).padStart(8, '0') }
+  } catch {
+    return { urlHost: null, urlHash: null }
+  }
+}
 
 /** Källa → antal, i listans ordning. Delas av väljaren och listan så att
  *  siffrorna i rullistan alltid är samma som rubrikerna i listan. */

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.140
+
+- Telemetri för felsökning av "fel fil under rätt titel": uppspelningshändelserna
+  bär nu källans värdnamn, en hash av ström-URL:en (aldrig själva länken) och
+  strömmens filnamn/titel, så det går att se om två uppslag fick samma länk.
+
 ## 1.0.139
 
 - Safari/iPhone (fjärr): en lång källrubrik över strömlistan gjorde raderna

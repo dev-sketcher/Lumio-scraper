@@ -168837,6 +168837,7 @@
       vpSubHttp: "The subtitle service responded with an error.",
       vpSubLoadFailed: "Could not load subtitle.",
       vpSubDownloadTimeout: "Subtitle download took too long. Try again.",
+      vpWrongEpisodeWarning: "The source delivered {found}, not {wanted}. Pick another stream.",
       vpSubMpvFailedWith: "Could not load subtitle in mpv: {message}",
       vpSubMpvFailed: "Could not load subtitle in mpv.",
       vpNoSubsFound: "No subtitles were found for this title.",
@@ -171145,6 +171146,7 @@
       vpSubHttp: "Undertexttj\xE4nsten svarade med fel.",
       vpSubLoadFailed: "Kunde inte ladda undertext.",
       vpSubDownloadTimeout: "Undertextladdning tog f\xF6r l\xE5ng tid. F\xF6rs\xF6k igen.",
+      vpWrongEpisodeWarning: "K\xE4llan levererade {found}, inte {wanted}. V\xE4lj en annan str\xF6m.",
       vpSubMpvFailedWith: "Kunde inte ladda undertext i mpv: {message}",
       vpSubMpvFailed: "Kunde inte ladda undertext i mpv.",
       vpNoSubsFound: "Inga undertexter hittades f\xF6r den h\xE4r titeln.",
@@ -182360,6 +182362,8 @@ ${cue.text}`).join("\n\n")}
     const activePointersRef = useRef(/* @__PURE__ */ new Map());
     const screenBrightnessRef = useRef(1);
     const [gestureHud, setGestureHud] = useState(null);
+    const [sourceMismatchWarning, setSourceMismatchWarning] = useState(null);
+    const sourceMismatchTimerRef = useRef(null);
     const gestureHudTimerRef = useRef(null);
     const gestureRef = useRef(null);
     const GESTURE_SEEK_SPAN_SECONDS = 90;
@@ -183042,18 +183046,51 @@ ${cue.text}`).join("\n\n")}
                       }
                       if (!firstFrameLoggedRef.current) {
                         firstFrameLoggedRef.current = true;
-                        void emitDesktopPlaybackTelemetry({
-                          stage: "player.lifecycle",
-                          status: "ok",
-                          detail: "first_frame",
-                          context: {
-                            title,
-                            mediaId: mediaId ?? null,
-                            mediaSource: mediaSource ?? null,
-                            position: realTime,
-                            playbackTraceId
+                        void (async () => {
+                          let mpvFilename = null;
+                          let mpvMediaTitle = null;
+                          if (useMpv) {
+                            try {
+                              const { invoke: invoke5 } = await Promise.resolve().then(() => __toESM(require_core2()));
+                              mpvFilename = await invoke5("mpv_get_property_ts", { name: "filename" }).catch(() => null);
+                              mpvMediaTitle = await invoke5("mpv_get_property_ts", { name: "media-title" }).catch(() => null);
+                            } catch {
+                            }
                           }
-                        });
+                          void emitDesktopPlaybackTelemetry({
+                            stage: "player.lifecycle",
+                            status: "ok",
+                            detail: "first_frame",
+                            context: {
+                              title,
+                              mediaId: mediaId ?? null,
+                              mediaSource: mediaSource ?? null,
+                              position: realTime,
+                              playbackTraceId,
+                              requestedFilename: (filename ?? "").slice(0, 100),
+                              mpvFilename: (mpvFilename ?? "").slice(0, 120) || null,
+                              mpvMediaTitle: (mpvMediaTitle ?? "").slice(0, 120) || null,
+                              season: season ?? null,
+                              episode: episode ?? null
+                            }
+                          });
+                          if (typeof season === "number" && typeof episode === "number") {
+                            const probe = `${mpvMediaTitle ?? ""} ${mpvFilename ?? ""}`;
+                            const m2 = /S(\d{1,2})E(\d{1,3})/i.exec(probe);
+                            if (m2) {
+                              const foundS = Number(m2[1]);
+                              const foundE = Number(m2[2]);
+                              if (foundS !== season || foundE !== episode) {
+                                const pad = (n) => String(n).padStart(2, "0");
+                                const text = t("vpWrongEpisodeWarning").replace("{found}", `S${pad(foundS)}E${pad(foundE)}`).replace("{wanted}", `S${pad(season)}E${pad(episode)}`);
+                                setSourceMismatchWarning(text);
+                                if (sourceMismatchTimerRef.current) window.clearTimeout(sourceMismatchTimerRef.current);
+                                sourceMismatchTimerRef.current = window.setTimeout(() => setSourceMismatchWarning(null), 12e3);
+                                void emitDesktopPlaybackTelemetry({ stage: "player.lifecycle", status: "error", detail: "source_episode_mismatch", context: { wanted: `S${pad(season)}E${pad(episode)}`, found: `S${pad(foundS)}E${pad(foundE)}`, playbackTraceId } });
+                              }
+                            }
+                          }
+                        })();
                       }
                       setRequiresUserStart(false);
                       setControlsPaused(false);
@@ -183186,6 +183223,7 @@ ${cue.text}`).join("\n\n")}
                     onMouseMove: onMouseActivity
                   }
                 ),
+                sourceMismatchWarning ? /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-x-0 top-[max(4.5rem,calc(env(safe-area-inset-top)+3.5rem))] z-[57] flex justify-center px-4", children: /* @__PURE__ */ jsx("div", { role: "alert", className: "max-w-[min(92vw,34rem)] rounded-full border border-amber-300/30 bg-black/75 px-4 py-2 text-center text-sm font-medium text-amber-200 shadow-xl backdrop-blur-md", children: sourceMismatchWarning }) }) : null,
                 gestureHud ? /* @__PURE__ */ jsx("div", { className: "pointer-events-none absolute inset-0 z-[57] flex items-center justify-center", children: /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2.5 rounded-full bg-black/70 px-4 py-2.5 backdrop-blur-md", children: [
                   gestureHud.kind === "volume" ? /* @__PURE__ */ jsx("svg", { className: "h-[18px] w-[18px] text-white", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" }) }) : /* @__PURE__ */ jsxs("svg", { className: "h-[18px] w-[18px] text-white", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.9", strokeLinecap: "round", children: [
                     /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "4" }),
@@ -188695,7 +188733,9 @@ ${cue.text}`).join("\n\n")}
         title,
         cached: stream.cached,
         hasDirectUrl: Boolean(stream.directUrl),
-        hasInfoHash: Boolean(stream.infoHash)
+        hasInfoHash: Boolean(stream.infoHash),
+        ...urlDiagnostics(stream.directUrl),
+        streamTitle: (stream.title ?? stream.name ?? "").slice(0, 80)
       });
       setPendingPlayRequestToken(null);
       saveLastPlayedStream(playbackTargetKey, stream);
@@ -189256,7 +189296,9 @@ ${cue.text}`).join("\n\n")}
         title,
         season: config.season ?? null,
         episode: config.episode ?? null,
-        refreshed: source.refreshed
+        refreshed: source.refreshed,
+        ...urlDiagnostics(source.url),
+        filename: (source.filename ?? "").slice(0, 80)
       });
       setPlayerTitle(title);
       setPlayerFilename(source.filename);
@@ -190224,6 +190266,20 @@ ${cue.text}`).join("\n\n")}
       )
     ] });
   }
+  function urlDiagnostics(url) {
+    if (!url) return { urlHost: null, urlHash: null };
+    try {
+      const u = new URL(url);
+      let h = 2166136261;
+      for (let i = 0; i < url.length; i++) {
+        h ^= url.charCodeAt(i);
+        h = Math.imul(h, 16777619) >>> 0;
+      }
+      return { urlHost: u.hostname, urlHash: h.toString(16).padStart(8, "0") };
+    } catch {
+      return { urlHost: null, urlHash: null };
+    }
+  }
   function streamSourceEntries(streams) {
     return Array.from(
       streams.reduce((acc, s) => {
@@ -190757,7 +190813,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.139",
+    version: "1.0.140",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
