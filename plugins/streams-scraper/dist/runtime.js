@@ -168516,6 +168516,9 @@
       gestDoubleTapOff: "Off",
       gestHoldSpeedTitle: "Hold to fast-forward",
       gestHoldSpeedDesc: "Press and hold anywhere to play at double speed; release to return to normal.",
+      externalDisplayVideoOnlyTitle: "External display: video only there",
+      externalDisplayVideoOnlyDesc: "With glasses or an HDMI screen connected, the video plays only on the external display. The phone goes dark and shows the controls when you tap \u2014 less glare, longer battery.",
+      externalDisplayPlayingThere: "Playing on the external display",
       onboardingPerfEyebrow: "Performance",
       onboardingPerfTitle: "Matched to your device",
       onboardingPerfDesc: "We measured this device and set a ceiling for what autoplay may pick on its own. You can raise it now, or change it any time under Playback.",
@@ -168523,6 +168526,9 @@
       onboardingPerfCapLabel: "Largest stream autoplay may pick",
       onboardingPerfUnlimited: "No limit",
       onboardingPerfLater: "This only sets the starting point. Nothing is blocked \u2014 you can always pick any stream yourself from the list.",
+      onboardingPerfNetMeasuring: "Measuring your connection speed\u2026",
+      onboardingPerfNetResult: "Connection \u2248 {mbps} Mbit/s \u2014 the suggested ceiling follows it.",
+      onboardingPerfNetFailed: "Could not measure the connection; the suggestion is based on the device alone.",
       onboardingWillInstall: "{count} plugin(s) will be installed when you finish.",
       onboardingInstallFailed: "{names} could not be installed right now \u2014 you can find them under Settings \u2192 Plugins.",
       onboardingOpenAppNow: "Open Lumio now",
@@ -170838,6 +170844,9 @@
       gestDoubleTapOff: "Av",
       gestHoldSpeedTitle: "H\xE5ll f\xF6r snabbspolning",
       gestHoldSpeedDesc: "H\xE5ll fingret nedtryckt f\xF6r dubbel hastighet; sl\xE4pp f\xF6r att \xE5terg\xE5.",
+      externalDisplayVideoOnlyTitle: "Extern sk\xE4rm: videon bara d\xE4r",
+      externalDisplayVideoOnlyDesc: "Med glas\xF6gon eller en HDMI-sk\xE4rm ansluten spelas videon bara p\xE5 den externa sk\xE4rmen. Telefonen sl\xE4cks och visar kontrollerna n\xE4r du trycker \u2014 mindre bl\xE4ndning, l\xE4ngre batteri.",
+      externalDisplayPlayingThere: "Spelas p\xE5 den externa sk\xE4rmen",
       onboardingPerfEyebrow: "Prestanda",
       onboardingPerfTitle: "Anpassat efter din enhet",
       onboardingPerfDesc: "Vi m\xE4tte den h\xE4r enheten och satte ett tak f\xF6r vad autospelningen f\xE5r v\xE4lja p\xE5 egen hand. Du kan h\xF6ja det nu, eller \xE4ndra det n\xE4r som helst under Uppspelning.",
@@ -170845,6 +170854,9 @@
       onboardingPerfCapLabel: "St\xF6rsta str\xF6m autospelningen f\xE5r v\xE4lja",
       onboardingPerfUnlimited: "Ingen gr\xE4ns",
       onboardingPerfLater: "Det h\xE4r s\xE4tter bara utg\xE5ngsl\xE4get. Ingenting sp\xE4rras \u2014 du kan alltid v\xE4lja vilken str\xF6m du vill sj\xE4lv ur listan.",
+      onboardingPerfNetMeasuring: "M\xE4ter anslutningens hastighet\u2026",
+      onboardingPerfNetResult: "Anslutning \u2248 {mbps} Mbit/s \u2014 f\xF6rslaget f\xF6ljer den.",
+      onboardingPerfNetFailed: "Anslutningen gick inte att m\xE4ta; f\xF6rslaget bygger bara p\xE5 enheten.",
       onboardingWillInstall: "{count} till\xE4gg installeras n\xE4r du \xE4r klar.",
       onboardingInstallFailed: "{names} kunde inte installeras just nu \u2014 du hittar dem under Inst\xE4llningar \u2192 Plugins.",
       onboardingOpenAppNow: "\xD6ppna Lumio nu",
@@ -174706,6 +174718,11 @@
     if (typeof window === "undefined") return false;
     return getScopedStorageItem(KEY_BT_AUTO_OFFSET) === "1";
   }
+  var KEY_EXTERNAL_DISPLAY_VIDEO_ONLY = "playback_external_display_video_only";
+  function getExternalDisplayVideoOnly() {
+    if (typeof window === "undefined") return true;
+    return getScopedStorageItem(KEY_EXTERNAL_DISPLAY_VIDEO_ONLY) !== "0";
+  }
   var BLUETOOTH_AUDIO_OFFSET_MS = -150;
   function getNightMode() {
     const stored = getStoredString(KEY_NIGHT_MODE, DEFAULT_NIGHT_MODE);
@@ -175406,6 +175423,10 @@
     if (!isAndroidTauriEnv) return;
     void np({ cmd: "setScreenBrightness", value });
   }
+  function setAndroidExternalDisplayVideoOnly(on) {
+    if (!isAndroidTauriEnv) return;
+    void np({ cmd: "setExternalDisplayVideoOnly", on });
+  }
   function setAndroidImmersive(on, reason = "-") {
     if (!isAndroidTauriEnv) return;
     void fetch(`/api/debug-log?msg=${encodeURIComponent(`[immersive] ${on ? "P\xC5" : "av"} (${reason})`)}`).catch(() => {
@@ -175463,6 +175484,7 @@
     const [subtitleTracks, setSubtitleTracks] = useState([]);
     const [cueText, setCueText] = useState("");
     const [selectedAudio, setSelectedAudio] = useState(-1);
+    const [externalDisplay, setExternalDisplay] = useState(false);
     const prevRef = useRef({ fileLoaded: false, firstFrame: false, failToken: -1, timePos: 0 });
     useEffect(() => {
       if (!isAndroidTauriEnv || !enabled) return;
@@ -175477,6 +175499,7 @@
         setPaused(s.paused);
         setEnded(s.ended);
         setPausedForCache(s.pausedForCache);
+        setExternalDisplay(s.externalDisplay === true);
         setCoreIdle(!s.fileLoaded || s.paused);
         setSid(s.selectedSub > 0 ? s.selectedSub : null);
         const nextAudio = s.tracks?.audio ?? [];
@@ -175596,7 +175619,8 @@
       subtitleTracks,
       selectedAudio,
       setSubtitleTrack,
-      cueText
+      cueText,
+      externalDisplay
     };
   }
 
@@ -179754,6 +179778,18 @@ ${cue.text}`).join("\n\n")}
     const mpvDesktop = useMpvPlayer(isMpvEngine);
     const droid = useNativePlayer(isDroidEngine);
     const mpv = isDroidEngine ? droid : mpvDesktop;
+    const externalDisplayActive = isDroidEngine && droid.externalDisplay;
+    useEffect(() => {
+      if (!isDroidEngine) return;
+      setAndroidExternalDisplayVideoOnly(getExternalDisplayVideoOnly());
+    }, [isDroidEngine]);
+    useEffect(() => {
+      if (!externalDisplayActive) return;
+      setAndroidScreenBrightness(controlsVisible ? 0.45 : 0.02);
+      return () => {
+        setAndroidScreenBrightness(-1);
+      };
+    }, [externalDisplayActive, controlsVisible]);
     useEffect(() => {
       if (!isDroidEngine) return;
       setAndroidImmersive(true, "spelare-mount");
@@ -183476,6 +183512,23 @@ ${cue.text}`).join("\n\n")}
       }
     );
     const doubleTapHandledRef = useRef(false);
+    const clickLayerRef = useRef(null);
+    const revealTapGuardRef = useRef(false);
+    useEffect(() => {
+      const swallowRevealClick = (event) => {
+        if (!revealTapGuardRef.current) return;
+        revealTapGuardRef.current = false;
+        const root = playerRootRef.current;
+        const target = event.target;
+        if (!root || !target || !root.contains(target)) return;
+        if (clickLayerRef.current && target === clickLayerRef.current) return;
+        event.stopPropagation();
+        event.preventDefault();
+        suppressNextOverlayToggleRef.current = false;
+      };
+      document.addEventListener("click", swallowRevealClick, true);
+      return () => document.removeEventListener("click", swallowRevealClick, true);
+    }, []);
     const lastTapRef = useRef(null);
     const holdSpeedTimerRef = useRef(null);
     const holdSpeedActiveRef = useRef(false);
@@ -184139,6 +184192,7 @@ ${cue.text}`).join("\n\n")}
                     }
                   )
                 ] }),
+                externalDisplayActive ? /* @__PURE__ */ jsx("div", { className: "absolute inset-0 z-[15] flex items-end justify-center bg-black pb-[22vh]", "aria-hidden": true, children: /* @__PURE__ */ jsx("p", { className: "text-[12px] uppercase tracking-[0.2em] text-slate-600", children: t("externalDisplayPlayingThere") }) }) : null,
                 useMpv ? (
                   // Transparent area — mpv NSView renders behind the WKWebView here
                   /* @__PURE__ */ jsx("div", { style: { width: "100%", height: "100%", background: "transparent" } })
@@ -184314,15 +184368,22 @@ ${cue.text}`).join("\n\n")}
                 /* @__PURE__ */ jsx(
                   "div",
                   {
+                    ref: clickLayerRef,
                     className: `absolute inset-0 z-10 ${phoneChrome ? "touch-none select-none" : ""}`,
                     onPointerDown: (e) => {
                       suppressNextOverlayToggleRef.current = e.pointerType !== "mouse" && !controlsVisible;
-                      if (suppressNextOverlayToggleRef.current) onMouseActivity();
+                      if (suppressNextOverlayToggleRef.current) {
+                        revealTapGuardRef.current = true;
+                        onMouseActivity();
+                      }
                       onGesturePointerDown(e);
                     },
                     onPointerMove: onGesturePointerMove,
                     onPointerUp: (e) => {
                       activePointersRef.current.delete(e.pointerId);
+                      window.setTimeout(() => {
+                        revealTapGuardRef.current = false;
+                      }, 0);
                       if (activePointersRef.current.size < 2) pinchRef.current = null;
                       if (doubleTapHandledRef.current) {
                         doubleTapHandledRef.current = false;
@@ -191194,7 +191255,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.143",
+    version: "1.0.144",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."
