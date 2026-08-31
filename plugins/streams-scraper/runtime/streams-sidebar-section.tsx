@@ -4671,7 +4671,10 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
             </svg>
           </button>
         )}
-        {onDownload && (
+        {onDownload && !isTvMode && (
+          /* Nedladdning DÄR valet görs. INTE på TV: en filhämtning är en
+             skrivbordshandling, och ikonen var bara en station i vägen mellan
+             fjärren och Spela — gäller även samma panel inne i playern. */
           /* Nedladdning DÄR valet görs. Serier hade ingen väg alls: att klicka
              ett avsnitt öppnar den här panelen, och nedladdningen låg kvar på
              detaljsidan — som måste härleda avsnittet och söka strömmar en

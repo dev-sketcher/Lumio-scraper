@@ -87905,7 +87905,7 @@
         const isHydrated = (0, import_react_utils.useIsHydrated)();
         const imageRef = (0, import_react75.useRef)(null);
         const [status, setStatus] = (0, import_react75.useState)("pending");
-        const flush = (0, import_react75.useCallback)(() => {
+        const flush2 = (0, import_react75.useCallback)(() => {
           if (imageRef.current) {
             imageRef.current.onload = null;
             imageRef.current.onerror = null;
@@ -87915,15 +87915,15 @@
         const load = (0, import_react75.useCallback)(() => {
           if (!src) return "pending";
           if (ignoreFallback || shouldBypassImageLoad) return "loaded";
-          flush();
+          flush2();
           const img = new Image();
           img.onload = (event) => {
-            flush();
+            flush2();
             setStatus("loaded");
             onLoad == null ? void 0 : onLoad(event);
           };
           img.onerror = (error) => {
-            flush();
+            flush2();
             setStatus("failed");
             onError == null ? void 0 : onError(error);
           };
@@ -87950,7 +87950,7 @@
           ignoreFallback,
           loading,
           shouldBypassImageLoad,
-          flush
+          flush2
         ]);
         (0, import_use_safe_layout_effect.useSafeLayoutEffect)(() => {
           if (isHydrated) {
@@ -167548,7 +167548,28 @@
       themeSystem: "Follow system",
       uiScale: "Interface scale",
       uiScaleDesc: "Scales the entire interface. Useful on 4K and ultrawide screens.",
+      fullCastTitle: "Full cast & crew",
+      fullCastOpen: "Full cast",
+      heroCast: "Cast",
+      fullCastCastTab: "Cast",
+      fullCastCrewTab: "Crew",
+      fullCastSearch: "Search cast & crew",
+      fullCastSortBilling: "Billing order",
+      fullCastSortName: "Name",
+      fullCastSortPopularity: "Popularity",
+      fullCastKeyCrew: "Key crew",
+      fullCastStills: "Stills",
+      fullCastNoMatches: "No one matches the search.",
+      fullCastCounter: "{cast} cast \xB7 {crew} crew",
+      personCredits: "Credits",
+      personSortedByPopularity: "Sorted by popularity",
+      tvFontScale: "Text size",
+      tvFontScaleDesc: "Scales all text in TV mode without changing the layout.",
+      tvMenuScale: "Menu size",
+      tvMenuScaleDesc: "Scales the side menu \u2014 icons and labels \u2014 in TV mode.",
       menuScale: "Menu scale",
+      cornerScale: "Corner menu size",
+      cornerScaleDesc: "Scales the icons in the top-right corner. Per device \u2014 never mirrored to remote sessions.",
       menuScaleDesc: "Scales only the side menu \u2014 icons and labels \u2014 independently of the interface scale.",
       reduceMotion: "Reduce motion",
       reduceMotionDesc: "Turns off animations and soft transitions throughout the app.",
@@ -168975,8 +168996,24 @@
       liveTvEpgSources: "EPG sources",
       liveTvEpgSourceStats: "{channels} channels \xB7 {programmes} programmes",
       liveTvEpgUrlPlaceholder: "XMLTV URL (e.g. https://epgshare01.online/epgshare01/epg_ripper_SE1.xml.gz)",
-      liveTvNoEpgSourcesPrefix: "No EPG sources yet. Try",
-      liveTvNoEpgSourcesSuffix: "for Swedish channels.",
+      liveTvNoEpgSourcesPrefix: "No EPG sources yet.",
+      liveTvXtreamTitle: "Xtream login",
+      liveTvXtreamDesc: "For providers that use an Xtream Codes login (server, username, password) instead of an M3U link.",
+      liveTvXtreamServer: "Server URL",
+      liveTvXtreamUsername: "Username",
+      liveTvXtreamPassword: "Password",
+      liveTvXtreamConnect: "Log in & fetch",
+      liveTvXtreamConnecting: "Logging in\u2026",
+      liveTvXtreamDone: "Fetched",
+      liveTvXtreamAuthFailed: "Login rejected \u2014 check the username and password.",
+      liveTvXtreamError: "Could not reach the panel. Check the server URL.",
+      liveTvXtreamExpires: "Expires",
+      liveTvXtreamCategories: "Categories",
+      liveTvXtreamAllCategories: "All categories",
+      liveTvXtreamSearchCategories: "Search categories",
+      liveTvXtreamApplyCategories: "Update channels",
+      liveTvXtreamRemove: "Remove",
+      liveTvXtreamCapped: "Showing the first {max} of {total} channels \u2014 narrow the selection with categories.",
       liveTvFetchEpgForChannel: "Fetch EPG for this channel",
       liveTvNoEpg: "No EPG",
       liveTvNoGuideAvailable: "No guide available",
@@ -169890,7 +169927,28 @@
       themeSystem: "F\xF6lj systemet",
       uiScale: "Gr\xE4nssnittsskala",
       uiScaleDesc: "Skalar hela gr\xE4nssnittet. Bra p\xE5 4K- och ultrawide-sk\xE4rmar.",
+      fullCastTitle: "Rollista & team",
+      fullCastOpen: "Hela rollistan",
+      heroCast: "Rollista",
+      fullCastCastTab: "Roller",
+      fullCastCrewTab: "Team",
+      fullCastSearch: "S\xF6k i rollista & team",
+      fullCastSortBilling: "Rollordning",
+      fullCastSortName: "Namn",
+      fullCastSortPopularity: "Popularitet",
+      fullCastKeyCrew: "Nyckelpersoner",
+      fullCastStills: "Stillbilder",
+      fullCastNoMatches: "Ingen matchar s\xF6kningen.",
+      fullCastCounter: "{cast} roller \xB7 {crew} i teamet",
+      personCredits: "Filmografi",
+      personSortedByPopularity: "Sorterat p\xE5 popularitet",
+      tvFontScale: "Textstorlek",
+      tvFontScaleDesc: "Skalar all text i TV-l\xE4get utan att \xE4ndra layouten.",
+      tvMenuScale: "Menystorlek",
+      tvMenuScaleDesc: "Skalar sidomenyn \u2014 ikoner och etiketter \u2014 i TV-l\xE4get.",
       menuScale: "Menyskalning",
+      cornerScale: "H\xF6rnmenyns storlek",
+      cornerScaleDesc: "Skalar ikonerna i \xF6vre h\xF6gra h\xF6rnet. Per enhet \u2014 speglas aldrig till fj\xE4rrsessioner.",
       menuScaleDesc: "Skalar bara sidomenyn \u2014 ikoner och etiketter \u2014 oberoende av gr\xE4nssnittsskalan.",
       reduceMotion: "Minska r\xF6relse",
       reduceMotionDesc: "St\xE4nger av animationer och mjuka \xF6verg\xE5ngar i hela appen.",
@@ -171307,8 +171365,24 @@
       liveTvEpgSources: "EPG-k\xE4llor",
       liveTvEpgSourceStats: "{channels} kanaler \xB7 {programmes} program",
       liveTvEpgUrlPlaceholder: "XMLTV-URL (t.ex. https://epgshare01.online/epgshare01/epg_ripper_SE1.xml.gz)",
-      liveTvNoEpgSourcesPrefix: "Inga EPG-k\xE4llor \xE4nnu. Testa",
-      liveTvNoEpgSourcesSuffix: "f\xF6r svenska kanaler.",
+      liveTvNoEpgSourcesPrefix: "Inga EPG-k\xE4llor \xE4nnu.",
+      liveTvXtreamTitle: "Xtream-inloggning",
+      liveTvXtreamDesc: "F\xF6r leverant\xF6rer med Xtream Codes-inloggning (server, anv\xE4ndarnamn, l\xF6senord) i st\xE4llet f\xF6r M3U-l\xE4nk.",
+      liveTvXtreamServer: "Server-URL",
+      liveTvXtreamUsername: "Anv\xE4ndarnamn",
+      liveTvXtreamPassword: "L\xF6senord",
+      liveTvXtreamConnect: "Logga in & h\xE4mta",
+      liveTvXtreamConnecting: "Loggar in\u2026",
+      liveTvXtreamDone: "H\xE4mtat",
+      liveTvXtreamAuthFailed: "Inloggningen nekades \u2014 kontrollera anv\xE4ndarnamn och l\xF6senord.",
+      liveTvXtreamError: "Kunde inte n\xE5 panelen. Kontrollera server-URL:en.",
+      liveTvXtreamExpires: "G\xE5r ut",
+      liveTvXtreamCategories: "Kategorier",
+      liveTvXtreamAllCategories: "Alla kategorier",
+      liveTvXtreamSearchCategories: "S\xF6k kategorier",
+      liveTvXtreamApplyCategories: "Uppdatera kanaler",
+      liveTvXtreamRemove: "Ta bort",
+      liveTvXtreamCapped: "Visar de f\xF6rsta {max} av {total} kanalerna \u2014 avgr\xE4nsa med kategorier.",
       liveTvFetchEpgForChannel: "H\xE4mta EPG f\xF6r kanalen",
       liveTvNoEpg: "Ingen EPG",
       liveTvNoGuideAvailable: "Ingen tabl\xE5 tillg\xE4nglig",
@@ -171635,6 +171709,13 @@
       return await (0, import_core.invoke)("mpv_get_af") || "(tom)";
     } catch (e) {
       return `(ol\xE4sbar: ${String(e)})`;
+    }
+  }
+  async function mpvRenderIsGpu() {
+    try {
+      return await (0, import_core.invoke)("mpv_render_is_gpu");
+    } catch {
+      return false;
     }
   }
   async function mpvCommand(args) {
@@ -177315,22 +177396,22 @@
     if (credits.length === 0) return null;
     return /* @__PURE__ */ jsxs("div", { children: [
       /* @__PURE__ */ jsx("div", { className: "mb-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-500", children: title }),
-      /* @__PURE__ */ jsx("div", { className: "flex gap-2 overflow-x-auto pb-1", ...isTv ? { "data-row": "" } : {}, children: credits.map((credit) => /* @__PURE__ */ jsxs(
+      /* @__PURE__ */ jsx("div", { className: isTv ? "grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(120px,1fr))]" : "flex gap-2 overflow-x-auto pb-1", children: credits.map((credit) => /* @__PURE__ */ jsxs(
         "button",
         {
           type: "button",
           ...isTv && onCreditClick ? { "data-f": "" } : {},
           onClick: () => onCreditClick?.({ id: credit.id, mediaType: credit.mediaType, title: credit.title }),
-          className: `group relative w-[80px] flex-shrink-0 text-left ${onCreditClick ? "cursor-pointer" : "cursor-default"}`,
+          className: `group relative text-left ${isTv ? "w-full" : "w-[80px] flex-shrink-0"} ${onCreditClick ? "cursor-pointer" : "cursor-default"}`,
           children: [
             credit.posterUrl ? /* @__PURE__ */ jsx(
               "img",
               {
                 src: credit.posterUrl,
                 alt: credit.title,
-                className: "h-[120px] w-[80px] rounded-lg object-cover ring-1 ring-white/10 transition group-hover:scale-[1.03] group-hover:ring-white/40"
+                className: `${isTv ? "aspect-[2/3] h-auto w-full" : "h-[120px] w-[80px]"} rounded-lg object-cover ring-1 ring-white/10 transition group-hover:scale-[1.03] group-hover:ring-white/40`
               }
-            ) : /* @__PURE__ */ jsx("div", { className: "flex h-[120px] w-[80px] items-center justify-center rounded-lg bg-white/5 ring-1 ring-white/10", children: /* @__PURE__ */ jsxs("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", className: "text-slate-600", children: [
+            ) : /* @__PURE__ */ jsx("div", { className: `flex ${isTv ? "aspect-[2/3] w-full" : "h-[120px] w-[80px]"} items-center justify-center rounded-lg bg-white/5 ring-1 ring-white/10`, children: /* @__PURE__ */ jsxs("svg", { width: "20", height: "20", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", className: "text-slate-600", children: [
               /* @__PURE__ */ jsx("rect", { x: "2", y: "3", width: "20", height: "14", rx: "2" }),
               /* @__PURE__ */ jsx("path", { d: "m8 21 4-4 4 4" })
             ] }) }),
@@ -177354,6 +177435,7 @@
     const [person, setPerson] = useState(null);
     const [fetchError, setFetchError] = useState(false);
     const [errorKind, setErrorKind] = useState(null);
+    const isTvPerson = useTvMode();
     const [expanded, setExpanded] = useState(defaultExpanded);
     const [bioExpanded, setBioExpanded] = useState(false);
     useEffect(() => {
@@ -177474,7 +177556,7 @@
                 {
                   type: "button",
                   onClick: () => setBioExpanded((value) => !value),
-                  className: "text-xs font-medium text-accent-300 transition hover:text-accent-200",
+                  className: "text-[0.65rem] font-normal uppercase tracking-[0.22em] text-slate-400 transition hover:text-white focus-visible:text-white focus-visible:outline-none",
                   children: bioExpanded ? t("readLess") : t("readMore")
                 }
               )
@@ -177584,7 +177666,9 @@
               className: "text-sm leading-7 text-slate-300",
               style: bioExpanded ? void 0 : {
                 display: "-webkit-box",
-                WebkitLineClamp: 7,
+                // TV: skärmen är stor och vyn hade tomrum — visa mer av
+                // texten direkt i stället för att gömma den bakom Läs mer.
+                WebkitLineClamp: isTvPerson ? 14 : 7,
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden"
               },
@@ -177643,7 +177727,7 @@
     return /* @__PURE__ */ jsxs(
       "div",
       {
-        className: "absolute inset-y-0 right-0 z-40 flex w-[min(340px,88vw)] flex-col overflow-hidden",
+        className: "absolute inset-y-0 right-0 z-40 flex w-full flex-col overflow-hidden sm:w-[min(340px,88vw)]",
         style: {
           background: "rgb(var(--base-950) / 0.96)",
           backdropFilter: "blur(12px)",
@@ -177660,7 +177744,7 @@
                   type: "button",
                   ...isTv ? { "data-f": "" } : {},
                   onClick: onBack,
-                  className: "flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition hover:bg-white/10 hover:text-white",
+                  className: "flex h-9 w-9 items-center justify-center rounded-full bg-[#fcfcff14] text-slate-200 backdrop-blur-md transition hover:bg-[#fcfcff22] hover:text-white",
                   title: "Back",
                   children: /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.5, children: /* @__PURE__ */ jsx("path", { d: "m15 18-6-6 6-6" }) })
                 }
@@ -177674,7 +177758,7 @@
                 ref: closeRef,
                 ...isTv ? { "data-f": "", "data-init": "" } : {},
                 onClick: onClose,
-                className: "flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition hover:bg-white/10 hover:text-white",
+                className: "flex h-9 w-9 items-center justify-center rounded-full bg-[#fcfcff14] text-slate-200 backdrop-blur-md transition hover:bg-[#fcfcff22] hover:text-white",
                 children: /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.5, children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12" }) })
               }
             )
@@ -177781,12 +177865,12 @@
     return /* @__PURE__ */ jsxs(
       "div",
       {
-        className: "absolute inset-y-0 right-0 z-[80] flex w-[340px] flex-col overflow-hidden",
+        className: "absolute inset-y-0 right-0 z-[80] flex w-full flex-col overflow-hidden sm:w-[min(340px,88vw)]",
         style: { background: "rgb(var(--base-950) / 0.96)", backdropFilter: "blur(12px)", borderLeft: "1px solid rgba(255,255,255,0.07)" },
         onClick: (e) => e.stopPropagation(),
         ...isTv ? { "data-panel-root": "" } : {},
         children: [
-          /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between border-b border-white/[0.07] px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top),var(--android-inset-top,0px))]", children: [
+          /* @__PURE__ */ jsxs("div", { className: "flex items-center justify-between border-b border-white/[0.07] px-4 pb-3 pt-[max(0.75rem,calc(env(safe-area-inset-top)+0.5rem),calc(var(--android-inset-top,0px)+0.5rem))]", children: [
             /* @__PURE__ */ jsxs("div", { className: "flex items-center gap-2", children: [
               onBack ? /* @__PURE__ */ jsx(
                 "button",
@@ -177794,7 +177878,7 @@
                   type: "button",
                   ...isTv ? { "data-f": "" } : {},
                   onClick: onBack,
-                  className: "flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition hover:bg-white/10 hover:text-white",
+                  className: "flex h-9 w-9 items-center justify-center rounded-full bg-[#fcfcff14] text-slate-200 backdrop-blur-md transition hover:bg-[#fcfcff22] hover:text-white",
                   title: "Back",
                   children: /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.5, children: /* @__PURE__ */ jsx("path", { d: "m15 18-6-6 6-6" }) })
                 }
@@ -177808,7 +177892,7 @@
                 ref: closeRef,
                 ...isTv ? { "data-f": "", "data-init": "" } : {},
                 onClick: onClose,
-                className: "flex h-7 w-7 items-center justify-center rounded-full text-slate-500 transition hover:bg-white/10 hover:text-white",
+                className: "flex h-9 w-9 items-center justify-center rounded-full bg-[#fcfcff14] text-slate-200 backdrop-blur-md transition hover:bg-[#fcfcff22] hover:text-white",
                 children: /* @__PURE__ */ jsx("svg", { className: "h-3.5 w-3.5", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2.5, children: /* @__PURE__ */ jsx("path", { d: "M18 6 6 18M6 6l12 12" }) })
               }
             )
@@ -179503,11 +179587,22 @@ ${cue.text}`).join("\n\n")}
       let cancelled = false;
       void (async () => {
         try {
+          if (useMpv && await mpvRenderIsGpu()) {
+            const colorspace = await mpvCommand2(["get_property", "video-params/colorspace"]);
+            if (!cancelled && colorspace === "dolbyvision") {
+              void fetch(`/api/debug-log?msg=${encodeURIComponent("[dv] mpv gpu-v\xE4g: motorn renderar DV sj\xE4lv \u2014 ingen korrigering")}`).catch(() => {
+              });
+            }
+            return;
+          }
           const response = await fetch(`/api/video-color?url=${encodeURIComponent(url)}`);
           const data = await response.json();
           if (cancelled) return;
           if (data?.dolbyVisionProfile != null) {
             void fetch(`/api/debug-log?msg=${encodeURIComponent(`[dv] profil ${data.dolbyVisionProfile} bl_compat ${data.blCompatibilityId ?? "?"} korrigering ${data.needsColorFallback ? "P\xC5" : "av"}`)}`).catch(() => {
+            });
+          } else if (data?.colorTransfer === "smpte2084") {
+            void fetch(`/api/debug-log?msg=${encodeURIComponent("[dv] HDR (PQ) utan DOVI-post \u2014 ingen korrigering")}`).catch(() => {
             });
           }
           if (!data?.needsColorFallback) return;
@@ -179518,7 +179613,7 @@ ${cue.text}`).join("\n\n")}
       return () => {
         cancelled = true;
       };
-    }, [url, hasStarted]);
+    }, [url, hasStarted, useMpv]);
     const [streamQualityLabel, setStreamQualityLabel] = useState(null);
     useEffect(() => {
       if (!hasStarted || !getShowStreamQuality()) {
@@ -191063,7 +191158,10 @@ ${cue.text}`).join("\n\n")}
             children: /* @__PURE__ */ jsx("svg", { className: "h-4 w-4", viewBox: "0 0 24 24", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { d: "M12 2.5c-.5 0-.9.3-1.1.8L9.6 7h4.8l-1.3-3.7c-.2-.5-.6-.8-1.1-.8zM8.9 8.8 6 18.2c-.3.9.4 1.8 1.3 1.8h9.4c.9 0 1.6-.9 1.3-1.8l-2.9-9.4H8.9z" }) })
           }
         ),
-        onDownload && /* Nedladdning DÄR valet görs. Serier hade ingen väg alls: att klicka
+        onDownload && !isTvMode && /* Nedladdning DÄR valet görs. INTE på TV: en filhämtning är en
+           skrivbordshandling, och ikonen var bara en station i vägen mellan
+           fjärren och Spela — gäller även samma panel inne i playern. */
+        /* Nedladdning DÄR valet görs. Serier hade ingen väg alls: att klicka
            ett avsnitt öppnar den här panelen, och nedladdningen låg kvar på
            detaljsidan — som måste härleda avsnittet och söka strömmar en
            gång till. Här är både avsnitt och ström redan valda.
