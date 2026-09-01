@@ -2175,48 +2175,21 @@ function scraperInCooldown(configId: string): boolean {
     setPlayerSkipHomeKitClose(false)
     setPlayerSkipHomeKitOpen(false)
 
-    let selectedStream = stream
+    /**
+     * Den KLICKADE strömmen spelas. Punkt.
+     *
+     * Här fanns en "genväg": klickade man på en ocachad ström bytte koden
+     * tyst till den högst rankade CACHADE i listan. Det gav exakt den
+     * rapporterade buggen — varje ocachad Torrentio-rad spelade i stället
+     * första Debridio-träffen (samma länk för alla rader, och debridens
+     * "laddar ner"-platshållare när den cachade flaggan ljög). Länken från
+     * "öppna externt" var rätt eftersom den vägen inte passerar hit.
+     *
+     * Ett klick är ett val. Vill man ha snabbast möjliga start finns
+     * autouppspelningens egen kandidatslinga, som får välja fritt.
+     */
+    const selectedStream = stream
     const streamWasCached = stream.cached
-
-    // Prefer a cached stream for faster startup if user clicked an uncached one.
-    if (!stream.cached && streams && streams.length > 1) {
-      const cachedKnown = streams
-        .filter((s) => s.cached && (s.infoHash || s.directUrl))
-        .sort((a, b) => qualityRank(b.name) - qualityRank(a.name))
-      if (cachedKnown.length > 0) {
-        selectedStream = cachedKnown[0]
-      } else if (
-        effectiveImdbId &&
-        mediaType === 'tv' &&
-        selectedSeason &&
-        selectedEpisode
-      ) {
-        // Quick cache probe to avoid long RD waiting when a cached option exists.
-        try {
-          const providerLookup = await lookupPlaybackCachedStreams(
-            streams
-              .filter((candidate) => Boolean(candidate.infoHash))
-              .map((candidate) => ({
-                infoHash: candidate.infoHash,
-                title: candidate.title ?? '',
-                fileIdx: candidate.fileIdx ?? null,
-              })),
-          )
-          if (providerLookup) {
-            const enriched = applyCachedLookup(streams, providerLookup)
-            enriched.sort((a, b) => {
-              if (a.cached !== b.cached) return a.cached ? -1 : 1
-              return qualityRank(b.name) - qualityRank(a.name)
-            })
-            setStreams(enriched)
-            const cachedBest = enriched.find((s) => s.cached && (s.infoHash || s.directUrl))
-            if (cachedBest) selectedStream = cachedBest
-          }
-        } catch {
-          // Keep user-selected stream if probe fails.
-        }
-      }
-    }
 
     // Pre-configured scrapers (Comet/Jackettio) may return a direct play URL
     if (selectedStream.directUrl) {

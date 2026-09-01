@@ -167551,6 +167551,23 @@
       fullCastTitle: "Full cast & crew",
       fullCastOpen: "Full cast",
       heroCast: "Cast",
+      newSeasonBadge: "New season",
+      homeCardShape: "Card shape",
+      homeCardShapeDesc: "Poster cards or wide backdrop cards on the home rows.",
+      homeRowTitle: "Row name",
+      homeRowTitleDesc: "Your own heading for this row. Empty = the name the source provides.",
+      homeRowTitleDefault: "From the source",
+      homeRowSpoilers: "Spoiler guard",
+      homeRowSpoilersDesc: "Follow the spoiler settings on this row. Off shows episode titles and stills unmasked \u2014 useful where you have already watched, like Continue watching.",
+      cardShapePoster: "Poster",
+      cardShapeLandscape: "Landscape",
+      qrAddonOpen: "Add via phone",
+      qrAddonTitle: "Scan with your phone",
+      qrAddonHint: "Open the page, paste a Stremio manifest URL and send \u2014 it installs right here.",
+      qrAddonNoLan: "No LAN address found \u2014 connect the device to your network.",
+      qrAddonInstallFailed: "Could not install the addon.",
+      qrAddonInstalled: "{name} installed",
+      stremioAddonConfigRequired: "This addon must be configured first \u2014 open its configure page in a browser, pick your options, and paste the personal manifest URL it gives you.",
       fullCastCastTab: "Cast",
       fullCastCrewTab: "Crew",
       fullCastSearch: "Search cast & crew",
@@ -169930,6 +169947,23 @@
       fullCastTitle: "Rollista & team",
       fullCastOpen: "Hela rollistan",
       heroCast: "Rollista",
+      newSeasonBadge: "Ny s\xE4song",
+      homeCardShape: "Kortform",
+      homeCardShapeDesc: "St\xE5ende affischkort eller liggande breda kort p\xE5 hemraderna.",
+      homeRowTitle: "Radnamn",
+      homeRowTitleDesc: "Din egen rubrik f\xF6r raden. Tom = namnet k\xE4llan ger.",
+      homeRowTitleDefault: "Fr\xE5n k\xE4llan",
+      homeRowSpoilers: "Spoilerskydd",
+      homeRowSpoilersDesc: "F\xF6lj spoilerinst\xE4llningarna p\xE5 den h\xE4r raden. Av visar avsnittstitlar och bilder omaskerade \u2014 bra d\xE4r du redan sett, som Forts\xE4tt titta.",
+      cardShapePoster: "St\xE5ende",
+      cardShapeLandscape: "Liggande",
+      qrAddonOpen: "L\xE4gg till via mobilen",
+      qrAddonTitle: "Skanna med mobilen",
+      qrAddonHint: "\xD6ppna sidan, klistra in en Stremio-manifest-URL och skicka \u2014 den installeras direkt h\xE4r.",
+      qrAddonNoLan: "Ingen LAN-adress hittad \u2014 anslut enheten till n\xE4tverket.",
+      qrAddonInstallFailed: "Kunde inte installera addonen.",
+      qrAddonInstalled: "{name} installerad",
+      stremioAddonConfigRequired: "Addonen m\xE5ste konfigureras f\xF6rst \u2014 \xF6ppna dess konfigurationssida i en webbl\xE4sare, g\xF6r dina val och klistra in den personliga manifest-URL du f\xE5r d\xE4r.",
       fullCastCastTab: "Roller",
       fullCastCrewTab: "Team",
       fullCastSearch: "S\xF6k i rollista & team",
@@ -172083,8 +172117,12 @@
 
   // lib/stremio/install-addon.ts
   var NO_CATALOG_ADDON = "lumio:addon-has-no-catalog-or-stream";
+  var CONFIG_REQUIRED_ADDON = "lumio:addon-requires-configuration";
   async function installStremioAddonFromUrl(url) {
     const { baseUrl, manifest } = await fetchManifest(url);
+    if (manifest.behaviorHints?.configurationRequired === true) {
+      throw new Error(CONFIG_REQUIRED_ADDON);
+    }
     const hasCatalog = manifest.resources.includes("catalog");
     const hasStream = manifest.resources.includes("stream");
     if (!hasCatalog && !hasStream) {
@@ -189327,35 +189365,8 @@ ${cue.text}`).join("\n\n")}
       setPlayerSplashFading(false);
       setPlayerSkipHomeKitClose(false);
       setPlayerSkipHomeKitOpen(false);
-      let selectedStream = stream;
+      const selectedStream = stream;
       const streamWasCached = stream.cached;
-      if (!stream.cached && streams && streams.length > 1) {
-        const cachedKnown = streams.filter((s) => s.cached && (s.infoHash || s.directUrl)).sort((a, b) => qualityRank(b.name) - qualityRank(a.name));
-        if (cachedKnown.length > 0) {
-          selectedStream = cachedKnown[0];
-        } else if (effectiveImdbId && mediaType === "tv" && selectedSeason && selectedEpisode) {
-          try {
-            const providerLookup = await lookupPlaybackCachedStreams(
-              streams.filter((candidate) => Boolean(candidate.infoHash)).map((candidate) => ({
-                infoHash: candidate.infoHash,
-                title: candidate.title ?? "",
-                fileIdx: candidate.fileIdx ?? null
-              }))
-            );
-            if (providerLookup) {
-              const enriched = applyCachedLookup(streams, providerLookup);
-              enriched.sort((a, b) => {
-                if (a.cached !== b.cached) return a.cached ? -1 : 1;
-                return qualityRank(b.name) - qualityRank(a.name);
-              });
-              setStreams(enriched);
-              const cachedBest = enriched.find((s) => s.cached && (s.infoHash || s.directUrl));
-              if (cachedBest) selectedStream = cachedBest;
-            }
-          } catch {
-          }
-        }
-      }
       if (selectedStream.directUrl) {
         const urlFilename = filenameForPlayback(selectedStream.directUrl.split("/").pop()?.split("?")[0], selectedStream.title);
         await beginPlayerSession({
@@ -191410,7 +191421,7 @@ ${cue.text}`).join("\n\n")}
   var StreamsScraperPlugin = {
     id: "com.lumio.streams-scraper",
     name: { en: "Stream Scraper", sv: "Stream Scraper" },
-    version: "1.0.145",
+    version: "1.0.146",
     description: {
       en: "Adds streaming sources via multiple scrapers and plugin-managed playback.",
       sv: "L\xE4gger till str\xF6mningsk\xE4llor via flera scrapers och pluginhanterad uppspelning."

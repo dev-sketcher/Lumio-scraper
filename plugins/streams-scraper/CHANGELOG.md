@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.146
+
+- Den ström du KLICKAR på är den som spelas. En genväg bytte tyst ut en ocachad
+  träff mot den högst rankade cachade i listan — därför spelade varje ocachad
+  rad samma länk (första träffen från en annan källa), och när den källans
+  cachade flagga ljög fick man debridens "laddar ner"-platshållare. "Öppna
+  externt" gav rätt länk eftersom den vägen inte passerade genvägen.
+
 ## 1.0.140
 
 - Telemetri för felsökning av "fel fil under rätt titel": uppspelningshändelserna
