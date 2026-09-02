@@ -122,6 +122,9 @@ function getLastPlayedStream(key: string): LastPlayedStream | null {
   return readLastPlayedMap()[key] ?? null
 }
 
+let warmTimer: number | null = null
+let lastWarmedUrl: string | null = null
+
 function saveLastPlayedStream(key: string, stream: StreamResult): void {
   if (typeof window === 'undefined') return
   const map = readLastPlayedMap()
@@ -2133,6 +2136,25 @@ function scraperInCooldown(configId: string): boolean {
 
   // ---- RD playback ----
 
+  /**
+   * Förvärm källcachen för raden användaren PEKAR på. Debridens första byte är
+   * den största posten mellan klick och bild för en ocachad länk; startas den
+   * när pekaren landar (200 ms) i stället för vid klicket hinner en del av den
+   * väntan ske medan användaren fortfarande läser raden. Bara direkta URL:er
+   * (torrent-only har ingen länk att värma), en i taget, aldrig i klientsession.
+   */
+  function warmStreamOnHover(candidate: StreamResult) {
+    if (isClientSession() || !candidate.directUrl) return
+    if (candidate.directUrl === lastWarmedUrl) return
+    if (warmTimer !== null) window.clearTimeout(warmTimer)
+    const url = candidate.directUrl
+    warmTimer = window.setTimeout(() => {
+      warmTimer = null
+      lastWarmedUrl = url
+      warmSourceCache(url)
+    }, 200)
+  }
+
   async function handlePlayStream(stream: StreamResult) {
     const attemptId = playAttemptRef.current + 1
     playAttemptRef.current = attemptId
@@ -2188,8 +2210,21 @@ function scraperInCooldown(configId: string): boolean {
      * Ett klick är ett val. Vill man ha snabbast möjliga start finns
      * autouppspelningens egen kandidatslinga, som får välja fritt.
      */
-    const selectedStream = stream
-    const streamWasCached = stream.cached
+    // Samma FIL, cachad hos en annan källa: samma infoHash och samma fileIdx är
+    // bit för bit samma innehåll, så bara länken byts — inte strömmen. Det är
+    // inte genvägen från före 1.0.146: den bytte till en ANNAN release (högst
+    // rankad cachad i listan), vilket spelade fel film. Den här regeln kan inte.
+    // Vinsten: debridens första byte på en redan cachad länk är nära noll,
+    // mot 2–3 s för en ocachad (uppmätt 2026-09-02).
+    const sameFileCached = !stream.cached && stream.infoHash
+      ? (streams ?? []).find((s) =>
+          s !== stream
+          && s.cached
+          && s.infoHash === stream.infoHash
+          && (s.fileIdx ?? null) === (stream.fileIdx ?? null))
+      : undefined
+    const selectedStream = sameFileCached ?? stream
+    const streamWasCached = selectedStream.cached
 
     // Pre-configured scrapers (Comet/Jackettio) may return a direct play URL
     if (selectedStream.directUrl) {
@@ -3891,6 +3926,7 @@ function scraperInCooldown(configId: string): boolean {
                   <StreamList
                     deviceLacksDolbyVision={deviceLacksDolbyVision}
                     streams={filtered}
+                    onWarm={warmStreamOnHover}
                     sourceFilter={sourceFilter}
                     /* Väljaren som listans rubrikrad, för både film och serier
                        (se header-propen): etikett vänster, väljare höger, 8 px
@@ -4378,6 +4414,7 @@ function SourceFilterMenu({
 function StreamList({
   streams,
   onPlay,
+  onWarm,
   onDownload,
   downloadStatus = {},
   streamKey,
@@ -4387,6 +4424,8 @@ function StreamList({
 }: {
   streams: StreamResult[]
   onPlay: (s: StreamResult) => void
+  /** Pekaren landar på en rad: värdens källcache får börja hämta. */
+  onWarm?: (s: StreamResult) => void
   /** Nedladdning per rad. Utelämnad = ingen knapp (t.ex. i TV-läget). */
   onDownload?: (s: StreamResult) => void
   downloadStatus?: Record<string, { typ: 'laddar' } | { typ: 'klar' } | { typ: 'fel'; meddelande: string }>
@@ -4440,6 +4479,7 @@ function StreamList({
         key={`${keyPrefix}-${s.infoHash}-${i}`}
         stream={s}
         onPlay={onPlay}
+        onWarm={onWarm}
         onDownload={onDownload}
         status={streamKey ? downloadStatus[streamKey(s)] : undefined}
         unsupported={unsupported(s)}
@@ -4526,9 +4566,10 @@ function streamHttpUrl(stream: StreamResult): string | null {
   return null
 }
 
-function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: {
+function StreamRow({ stream, onPlay, onWarm, onDownload, status, unsupported = false }: {
   stream: StreamResult
   onPlay: (s: StreamResult) => void
+  onWarm?: (s: StreamResult) => void
   onDownload?: (s: StreamResult) => void
   status?: { typ: 'laddar' } | { typ: 'klar' } | { typ: 'fel'; meddelande: string }
   unsupported?: boolean
@@ -4687,6 +4728,8 @@ function StreamRow({ stream, onPlay, onDownload, status, unsupported = false }: 
           type="button"
           {...(isTvMode ? { 'data-f': '' } : {})}
           onClick={() => onPlay(stream)}
+          onMouseEnter={() => onWarm?.(stream)}
+          onFocus={() => onWarm?.(stream)}
           className={isTvMode
             ? 'min-h-[44px] flex-shrink-0 rounded-full bg-accent-500 px-5 text-sm font-normal text-white transition hover:bg-accent-400'
             : 'flex-shrink-0 rounded-full bg-accent-500 px-3 py-1.5 text-[10px] font-normal uppercase tracking-[0.18em] text-white transition hover:bg-accent-400'}

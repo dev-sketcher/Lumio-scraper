@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.147
+
+- Snabbare start utan att byta ström: klickar du på en ocachad rad och SAMMA fil
+  (samma infoHash och fileIdx) finns cachad hos en annan källa spelas den cachade
+  länken — samma innehåll bit för bit, bara utan debridens hämtning. Genvägen
+  som togs bort i 1.0.146 bytte till en annan release; det här kan den inte.
+- Källcachen förvärms för raden pekaren landar på (200 ms), så debridens första
+  byte för en direkt länk börjar medan du fortfarande läser raden. Aldrig i
+  klientsession, en i taget.
+
 ## 1.0.146
 
 - Den ström du KLICKAR på är den som spelas. En genväg bytte tyst ut en ocachad
