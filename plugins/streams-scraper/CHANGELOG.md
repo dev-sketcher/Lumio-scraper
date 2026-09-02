@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.148
+
+- Strömlistan filtrerar mot det avsnitt DU valt. Förut lästes värdens spelmål
+  (t.ex. återupptagningspunkten E10) medan listan visade avsnittet du klickat
+  (E01); i strict-läget göms då varje korrekt taggad fil och bara otaggade
+  blir kvar — "266 streams hidden by quality filters" på en serie som har dem.
+- Byggd mot appens main-träd (1.0.147 byggdes av misstag mot en arbetsgren;
+  skillnaden var mätmärken och en identitetsfix för addon-URL:er, inget som
+  påverkade funktion).
+
 ## 1.0.147
 
 - Snabbare start utan att byta ström: klickar du på en ocachad rad och SAMMA fil

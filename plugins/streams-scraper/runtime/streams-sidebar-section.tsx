@@ -3915,7 +3915,16 @@ function scraperInCooldown(configId: string): boolean {
         {streamsError && <p className="text-sm text-red-400">{streamsError}</p>}
         {streams && streams.length === 0 && <p className="text-sm text-slate-400">{t('noStreams')}</p>}
         {streams && streams.length > 0 && step.type === 'idle' && (() => {
-          const visible = applyStreamFilters(streams, streamFilters)
+          // Sidebarens EGET val styr filtret. Utan explicit kontext läses
+          // värdens globala spelmål (resume-punkt, t.ex. E10) medan listan
+          // visar det avsnitt användaren klickade (E01): strict gömde då varje
+          // korrekt taggad fil och lämnade bara otaggade kvar — "266 streams
+          // hidden by quality filters" på Silo (2026-09-02).
+          const visible = applyStreamFilters(streams, streamFilters, {
+            year: year ?? null,
+            season: selectedSeason?.season_number ?? null,
+            episode: selectedEpisode?.episode_number ?? null,
+          })
           const filtered = streams.filter((_, i) => visible[i])
           const hiddenCount = streams.length - filtered.length
           return (
